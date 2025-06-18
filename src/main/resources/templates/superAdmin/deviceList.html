@@ -24,6 +24,7 @@
                         <!-- Dynamically generated headers from universalColumns -->
                         <th th:each="column : ${universalColumns}" th:text="${column.columnName}" style="background-color: gray;"></th>
                         <th scope="col" style="background-color: gray;">Create Time</th>
+                        <th scope="col" style="background-color: gray;">Device User</th>
                         <th scope="col" style="background-color: gray;">Description</th>
 
                     </tr>
@@ -34,6 +35,15 @@
                         <td th:text="${device.categoryName}">categoryName</td>
                         <td th:each="universalColumn : ${universalColumns}" th:text="${device.allData[universalColumn.columnName]}"></td>
                         <td th:text="${device.presentTime}">userPassword</td>
+                        <td title="View Device User">
+                            <span th:each="du, iter : ${device.deviceUsers}"
+                                  th:if="${iter.last}"
+                                  th:text="${du.userName}">
+                            </span>
+                            <button class="btn btn-info btn-sm deviceUserHistory" th:data-device-id="${device.id}" th:data-button-id="componentsView" style="margin-left:5px;">
+                                &#128065;
+                            </button>
+                        </td>
                         <td>
                             <ul style="list-style: none; padding-left: 0;text-align: center;" >
                                 <li th:each="individualColumn : ${individualColumns}"
