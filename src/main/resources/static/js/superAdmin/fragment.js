@@ -113,6 +113,10 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
                        window.initUnOrderedDeviceGeneral,
                        window.initGlobalDivToggle
                    ],
+                  deviceList: [
+                             window.initDeviceInformationGeneral,
+                             window.initGlobalDivToggle
+                          ],
                    // Add more pageName: [function1, function2, window.initGlobalDivToggle] pairs as needed
                };
 
@@ -242,6 +246,10 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
                      window.initUnOrderedDeviceGeneral,
                      window.initGlobalDivToggle
                  ],
+                  deviceList: [
+                          window.initDeviceInformationGeneral,
+                          window.initGlobalDivToggle
+                       ],
                  // Add more pageName: [function1, function2, window.initGlobalDivToggle] pairs as needed
              };
 
