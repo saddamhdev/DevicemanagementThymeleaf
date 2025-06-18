@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team-a
+---
+# 1.1 ResourceQuota for team-a
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: team-a-quota
+  namespace: team-a
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
+    pods: "5"
+    services: "5"
+    configmaps: "10"
+    secrets: "10"
+---
+# 2. LimitRange for Namespace
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: team-a-default-limits
+  namespace: team-a
+spec:
+  limits:
+    - default:
+        cpu: "500m"
+        memory: "512Mi"
+      defaultRequest:
+        cpu: "200m"
+        memory: "256Mi"
+      type: Container
+---
+
+# 3. Secret for sensitive environment variables
+apiVersion: v1
+kind: Secret
+metadata:
+  name: devicemanagement-secret
+  namespace: team-a
+type: Opaque
+data:
+  SPRING_DATA_MONGODB_URI: bW9uZ29kYitzcnY6Ly9yb290OnJvb3RAZ2V0Q2x1c3Rlci5tb25nb2RiLm5ldC9BYmM/cmV0cnlXcml0ZXM9dHJ1ZSYjd3M9bWFqb3JpdHk=
+  SPRING_REDIS_HOST: cmVkaXMtc2VydmljZS5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2Fs
+  SPRING_REDIS_PORT: NjM3OQ==
+  SPRING_REDIS_PASSWORD: QCMxMjM0NTY3OA==
+---
+
+
