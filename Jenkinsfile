@@ -5,7 +5,7 @@ pipeline {
         PROD_HOST  = credentials('DO_HOST')
         PROD_USER  = credentials('DO_USER')
         DEPLOY_DIR = '/www/wwwroot/CITSNVN/devicemanagement'
-        JAR_NAME   = 'DeviceManagement-1.0.jar'
+        JAR_NAME   = 'DeviceManagement-1.1.jar'
         PORT       = '3079'
     }
 
