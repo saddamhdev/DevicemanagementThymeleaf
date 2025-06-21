@@ -16,11 +16,10 @@ function saveRequestBtnRequestColumn(){
             visibleType:visibleType
             },
             success: function(response) {
-
-                alert(response);
-
-               location.reload(); // Refresh the page
-
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
             },
             error: function(error) {
                 console.error("Error saving Request:", error);
@@ -46,8 +45,10 @@ function EditTableInformationOfRequest(requestId){
 
                  }, // Send serialized form data and category name
                  success: function(response) {
-                        alert( response);
-                       location.reload(); // Refresh the page
+                               CustomAlert(response);
+                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                     location.reload();
+                                 });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -150,8 +151,10 @@ function EditTableInformationOfRequest(requestId){
                 type: 'POST',
                 data: { requestId: requestId },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                            CustomAlert(result);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);

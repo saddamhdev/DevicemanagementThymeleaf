@@ -19,8 +19,10 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -97,7 +99,7 @@ function confirmExport(){
                  location.reload(); // Refresh the page
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -121,8 +123,10 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -159,8 +163,10 @@ function setRequestStatus(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                             CustomAlert(result);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);
@@ -180,8 +186,10 @@ function saveTableInformationOfDevice(requestId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -1456,14 +1464,14 @@ window.initRequestDataForPaymentExportTable = function () {    // Perform a sing
                                date: updatedDate
                            },
                            success: function(response) {
-                               // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
-                               hideModal();
-                               location.reload();
+                            CustomAlert(response);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                             CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -1544,7 +1552,7 @@ window.initRequestDataForPaymentExportTable = function () {    // Perform a sing
                                            // Show modal only if rows were added
                                            showModal();
                                        } else {
-                                           alert("No data found to display in the modal.");
+                                           CustomAlert("No data found to display in the modal.");
                                        }
                                    });
                                }
@@ -1622,7 +1630,7 @@ function addTableInformationOfServiceForPaymentExportModal() {
               const modal = new bootstrap.Modal(document.getElementById("exportModal"));
               modal.show();
           } else {
-              alert("Please select at least one row.");
+              CustomAlert("Please select at least one row.");
           }
 }
 
@@ -1670,6 +1678,6 @@ function confirmExport1() {
     })
     .catch(error => {
         console.error("Error:", error);
-        alert("Error occurred during export.");
+        CustomAlert("Error occurred during export.");
     });
 }

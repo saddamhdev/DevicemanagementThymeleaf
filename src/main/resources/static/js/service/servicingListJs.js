@@ -21,14 +21,14 @@ function ServiceReportExport(serviceId, requestInfo, actions, extractComponents,
         contentType: "application/json", // Specify JSON format for the payload
         data: JSON.stringify(payload), // Convert payload to JSON string
         success: function(response) {
-            alert("Excel file saved successfully!");
-            console.log("Response:", response);
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
         },
         error: function(xhr, status, error) {
-            console.error("Error:", error);
-            console.error("Status:", status);
-            console.error("Response:", xhr.responseText);
-            alert("Failed to save the Excel file.");
+
+            CustomAlert("Failed to save the Excel file.");
         }
     });
 }
@@ -83,7 +83,7 @@ function   addExtractDeviceToService(categoryName,deviceId){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          success: function(response) {
-             alert(response);
+
              hideModalExtract();
              var returnDeviceId=response;
                  var rowsHtmlExtraComponents = '';
@@ -181,8 +181,10 @@ function serviceReport(serviceId,selectedExtractListDeviceIds,selectedNeedAccess
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
         success: function(response) {
-            alert("Response: " + response);
-            location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -228,8 +230,10 @@ function serviceReportEdit(serviceId,selectedExtractListDeviceIds,selectedNeedAc
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
         success: function(response) {
-            alert("Response: " + response);
-            location.reload(); // Refresh the page
+                             CustomAlert(response);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -257,8 +261,10 @@ function addTableInformationOfServiceForEdit(serviceId) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page after success
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -296,8 +302,10 @@ function addTableInformationOfService22(serviceId) {
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
         success: function(response) {
-            alert("Response: " + response);
-            location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -2753,10 +2761,10 @@ window.initServicingListGeneral = function () {
 
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                     alert(result);
-                     location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

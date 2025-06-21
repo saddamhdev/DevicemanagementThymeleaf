@@ -23,11 +23,13 @@ function sendDeliveryDeviceAccept(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -49,8 +51,10 @@ function  editRequestColumnBtn(requestId){
                },
                success: function(result) {
 
-                   alert(result);
-                  location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
 
                },
                error: function(xhr, status, error) {
@@ -85,8 +89,10 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                     success: function(result) {
-                        alert(result);
-                        location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error deleting user:", error);
@@ -109,8 +115,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -132,8 +140,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                             CustomAlert(result);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -262,7 +272,7 @@ window.initRequestDataProposalGeneral = function () {
                                     // Show modal only if rows were added
                                     showModal();
                                 } else {
-                                    alert("No data found to display in the modal.");
+                                    CustomAlert("No data found to display in the modal.");
                                 }
                             });
                         }
@@ -288,7 +298,7 @@ window.initRequestDataProposalGeneral = function () {
                            });
 
                            if(selectedRows.length==0){
-                             alert("Please select a device.");
+                             CustomAlert("Please select a device.");
                            }
                            else if(selectedRows.length==1){
                             // Show a confirmation alert
@@ -302,7 +312,7 @@ window.initRequestDataProposalGeneral = function () {
                             }
                            }
                            else{
-                            alert("Please select only one device.");
+                            CustomAlert("Please select only one device.");
                            }
 
                        });

@@ -15,8 +15,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -66,8 +68,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          success: function(response) {
-             alert(response);
-             location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
          },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
@@ -103,8 +107,10 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -448,7 +454,7 @@ window.initDeviceInformationGeneral = function () {
                                                           showModal();
                                                        }
                                                        else{
-                                                         alert("No child device Found.");
+                                                         CustomAlert("No child device Found.");
                                                        }
 
                                                      });
@@ -981,8 +987,10 @@ window.initDeviceInformationGeneral = function () {
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
-                     alert(result);
-                     location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

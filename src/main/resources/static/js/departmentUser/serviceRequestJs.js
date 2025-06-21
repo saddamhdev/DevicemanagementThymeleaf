@@ -26,8 +26,10 @@ function distributeDevice(serviceId) {
         contentType: 'application/json', // Set content type to JSON
         data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -56,8 +58,10 @@ function  receiveDeviceFromCustomerCare(deviceId,serviceId,status){
 
                          },
                          success: function(result) {
-                             alert(result);
-                             location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                          },
                          error: function(xhr, status, error) {
                              console.error("Error In delivery:", error);
@@ -256,8 +260,10 @@ window.initServiceRequestGeneral = function () {
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
-                     alert(result);
-                     location.reload();
+                           CustomAlert(result);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

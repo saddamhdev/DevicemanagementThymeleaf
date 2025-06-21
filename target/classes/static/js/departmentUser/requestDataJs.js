@@ -295,7 +295,7 @@ function EditTableInformationOfRequest(requestId){
 
 window.initRequestDataGeneral = function () {
     $('#requestTable tbody').on('click', 'tr', function(event) {
-         alert("Do");
+
         var $row = $(this);
         var categoryName = $row.find('td:nth-child(2)').text();
         var buttonPressed = $(event.target).closest('button');
@@ -464,7 +464,9 @@ window.initRequestDataGeneral = function () {
                 type: 'POST',
                 data: { requestId: requestId },
                 success: function(result) {
-                    alert(result);
+                   // alert(result);
+                    CustomAlert(result);
+                    // use CustomAlert(result)
                     location.reload();
                 },
                 error: function(xhr, status, error) {

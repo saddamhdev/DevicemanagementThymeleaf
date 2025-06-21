@@ -29,8 +29,10 @@ function setDeviceStatusApprove(requestId,status,categoryName){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                               CustomAlert(result);
+                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                     location.reload();
+                                 });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);
@@ -50,8 +52,10 @@ function setCancelPurchaseDevice(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                                  CustomAlert(result);
+                                    $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                        location.reload();
+                                    });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);

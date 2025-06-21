@@ -13,8 +13,10 @@
          type: 'POST',
          data: formData, // Send serialized form data
          success: function(response) {
-             alert(response);
-             location.reload(); // Refresh the page on success
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
          },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
@@ -35,8 +37,10 @@ function editTableInformationOfDropDownList(listId, categoryName, dropDownListNa
         type: 'POST',
         data: formData, // Send serialized form data along with listId
         success: function(response) {
-            alert("Data updated successfully!");
-            location.reload(); // Refresh the page after successful save
+                             CustomAlert(response);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
         },
         error: function(xhr, status, error) {
             console.error("Error updating data: " + error);
@@ -266,10 +270,10 @@ else if (button.hasClass("Delete")) {
 
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                     alert(result);
-                     location.reload();
+                              CustomAlert(result);
+                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

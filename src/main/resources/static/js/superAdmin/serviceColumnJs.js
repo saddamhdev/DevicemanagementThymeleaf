@@ -16,9 +16,10 @@ function saveRequestBtn(){
             },
             success: function(response) {
 
-                alert(response);
-
-               location.reload(); // Refresh the page
+                                  CustomAlert(response);
+                                    $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                        location.reload();
+                                    });
 
             },
             error: function(error) {
@@ -45,8 +46,10 @@ function EditTableInformationOfService(serviceId){
 
                  }, // Send serialized form data and category name
                  success: function(response) {
-                        alert( response);
-                       location.reload(); // Refresh the page
+                               CustomAlert(response);
+                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                     location.reload();
+                                 });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -149,8 +152,10 @@ window.initServiceColumnGeneral = function () {
                 type: 'POST',
                 data: { serviceId: serviceId },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                                   CustomAlert(result);
+                                     $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                         location.reload();
+                                     });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);

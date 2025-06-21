@@ -481,4 +481,40 @@ function showDeviceUserHistory(deviceId,categoryName){
 
 
 }
+function CustomAlert(message, title = "Notice") {
+    const existingModal = document.getElementById("globalCustomAlertModal");
+    if (existingModal) existingModal.remove();
+
+    const modalHTML = `
+        <div class="modal fade" id="globalCustomAlertModal" tabindex="-1" aria-labelledby="globalCustomAlertLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="globalCustomAlertLabel">${title}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">${message}</div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    `;
+
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = modalHTML;
+    document.body.appendChild(wrapper.firstElementChild);
+
+    const modalElement = document.getElementById('globalCustomAlertModal');
+    const modalInstance = new bootstrap.Modal(modalElement);
+    modalInstance.show();
+// Auto hide modal after 40 seconds (40000 milliseconds)
+    setTimeout(() => {
+        modalInstance.hide();
+    }, 2000);
+    modalElement.addEventListener('hidden.bs.modal', () => {
+        modalElement.remove();
+    }, { once: true });
+}
 

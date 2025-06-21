@@ -18,34 +18,10 @@ function saveUserBtn(Id) {
             },
             success: function(response) {
 
-
-                alert(response);
-                /*var content = document.getElementById(Id);
-               if (content.style.display === "none") {
-                   content.style.display = "block";
-               } else {
-                   content.style.display = "none";
-                   $("#categoryName").val(" ");
-               }
-
-              //updateTable();
-              // add categoryName to Bottom.
-
-                var rowHtml = '<tr>' +
-                           '<th scope="row">' + totalRows + '</th>' +
-                           '<td>' + userName + '</td>' +
-                            '<td>' + userId + '</td>' +
-                             '<td>' + userPassword + '</td>' +
-                           '<td>' +
-                           '<button class="btn btn-primary btn-sm">Edit</button> ' +
-                           '<button class="btn btn-danger btn-sm">Delete</button>' +
-                           '</td>' +
-                           '</tr>';
-
-                       userTableBody.append(rowHtml);*/
-
-                        location.reload();
-
+                CustomAlert(response);
+                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                      location.reload();
+                  });
 
             },
             error: function(error) {

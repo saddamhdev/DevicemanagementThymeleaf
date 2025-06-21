@@ -1068,7 +1068,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                                  // Show modal only if rows were added
                                                  showModal();
                                              } else {
-                                                 alert("No data found to display in the modal.");
+                                                 CustomAlert("No data found to display in the modal.");
                                              }
                                          });
                                      }
@@ -1094,7 +1094,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                         });
 
                                         if(selectedRows.length==0){
-                                          alert("Please select a device.");
+                                          CustomAlert("Please select a device.");
                                         }
                                         else if(selectedRows.length==1){
                                          // Show a confirmation alert
@@ -1108,7 +1108,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                          }
                                         }
                                         else{
-                                         alert("Please select only one device.");
+                                         CustomAlert("Please select only one device.");
                                         }
 
                                     });
@@ -1210,7 +1210,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                                            // Show modal only if rows were added
                                                            showModal();
                                                        } else {
-                                                           alert("No data found to display in the modal.");
+                                                           CustomAlert("No data found to display in the modal.");
                                                        }
                                                    });
                                                }
@@ -1236,7 +1236,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                                   });
 
                                                   if(selectedRows.length==0){
-                                                    alert("Please select a device.");
+                                                    CustomAlert("Please select a device.");
                                                   }
                                                   else if(selectedRows.length==1){
                                                    // Show a confirmation alert
@@ -1250,7 +1250,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                                    }
                                                   }
                                                   else{
-                                                   alert("Please select only one device.");
+                                                   CustomAlert("Please select only one device.");
                                                   }
 
                                               });
@@ -1351,7 +1351,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                                         // Show modal only if rows were added
                                                         showModal();
                                                     } else {
-                                                        alert("No data found to display in the modal.");
+                                                        CustomAlert("No data found to display in the modal.");
                                                     }
                                                 });
                                             }
@@ -1442,7 +1442,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                   // Show modal only if rows were added
                                   showModal();
                               } else {
-                                  alert("No data found to display in the modal.");
+                                  CustomAlert("No data found to display in the modal.");
                               }
                           });
                       }
@@ -1521,7 +1521,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                                               // Show modal only if rows were added
                                               showModal();
                                           } else {
-                                              alert("No data found to display in the modal.");
+                                              CustomAlert("No data found to display in the modal.");
                                           }
                                       });
                                   }

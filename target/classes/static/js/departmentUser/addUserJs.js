@@ -23,8 +23,12 @@ function saveUserBtn(Id) {
             userDesignation: userDesignation
         },
         success: function(response) {
-            alert(response);
-            location.reload();
+            CustomAlert(response);
+           // CustomAlert("Deleted successfully!");
+           // Wait for modal close to reload page
+               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                   location.reload();
+               });
         },
         error: function(error) {
             console.error("Error saving category:", error);
