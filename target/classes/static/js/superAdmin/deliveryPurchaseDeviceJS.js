@@ -45,11 +45,13 @@ function addTableInformationAlternativeDeviceRequest(requestId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                             CustomAlert(response);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -70,9 +72,10 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                success: function(result) {
-
-                   alert(result);
-                  location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
 
                },
                error: function(xhr, status, error) {
@@ -107,8 +110,10 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                     success: function(result) {
-                        alert(result);
-                        location.reload();
+                            CustomAlert(result);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error deleting user:", error);
@@ -131,8 +136,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                             CustomAlert(result);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -154,8 +161,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                                    CustomAlert(result);
+                                      $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                          location.reload();
+                                      });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -190,11 +199,13 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -224,11 +235,13 @@ function approveFinalPurchaseDeviceDelivery(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                            CustomAlert(response);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });

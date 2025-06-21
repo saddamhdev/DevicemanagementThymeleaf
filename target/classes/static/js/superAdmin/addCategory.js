@@ -11,11 +11,10 @@
             url: "/superAdmin/addCategory", // URL to your controller method
             data: { categoryName: categoryName },
             success: function(response) {
-
-                alert(response);
-
-               location.reload(); // Refresh the page
-
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
             },
             error: function(error) {
                 console.error("Error saving category:", error);
@@ -51,12 +50,10 @@
                     },
                     success: function(result) {
 
-                 // i want to update categoryName by new name . $row.find('td:nth-child(2)').text();
-
-                        $row.find('td:nth-child(2)').text(newCategoryName);
-                        alert(result);
-                        location.reload(); // Refresh the page
-
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error updating category: " + error);
@@ -64,7 +61,7 @@
                 });
             } else {
                 // User cancelled the edit
-                alert("Edit cancelled");
+                CustomAlert("Edit cancelled");
             }
         }  else if (buttonPressed.hasClass('Delete')) {
          console.log("Row Index: " + rowIndex);
@@ -75,10 +72,10 @@
                 type: 'POST',
                 data: { categoryName: categoryName }, // Send category name as data
                 success: function(result) {
-                   // i want to remove rowIndex row remove from table body
-
-                      alert(result);
-                      location.reload(); // Refresh the page
+                                     CustomAlert(result);
+                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                           location.reload();
+                                       });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

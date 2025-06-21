@@ -19,8 +19,10 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -46,8 +48,10 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -89,8 +93,10 @@ function addTableInformationOfDeviceForService(categoryName,serviceId,problemNam
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          success: function(response) {
-             alert(response);
-             location.reload(); // Refresh the page
+                          CustomAlert(response);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
          },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
@@ -130,8 +136,10 @@ function addTableInformationOfDevice(categoryName,requestId) {
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          success: function(response) {
-             alert(response);
-             location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
          },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
@@ -171,8 +179,10 @@ function addTableInformationOfDevice(categoryName,requestId) {
           type: 'POST',
           data: formData, // Send serialized form data along with additional fields
           success: function(response) {
-              alert(response);
-              location.reload(); // Refresh the page
+                              CustomAlert(response);
+                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
           },
           error: function(xhr, status, error) {
               console.error("Error saving data: " + error);
@@ -221,11 +231,13 @@ function sendDeliveryDevice22(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                            CustomAlert(response);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -258,11 +270,13 @@ function sendDeliveryDeviceForService(serviceId,deviceId,problemName,solutionNam
 
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -278,8 +292,10 @@ function setRequestStatus(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                                     CustomAlert(result);
+                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                           location.reload();
+                                       });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);
@@ -299,8 +315,10 @@ function saveTableInformationOfDevice(requestId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -417,7 +435,7 @@ if(buttonId ==="deliverPurchase"){
                                     // Show modal only if rows were added
                                     showModal();
                                 } else {
-                                    alert("No data found to display in the modal.");
+                                    CustomAlert("No data found to display in the modal.");
                                 }
                             });
                         }
@@ -443,7 +461,7 @@ if(buttonId ==="deliverPurchase"){
                            });
 
                            if(selectedRows.length==0){
-                             alert("Please select a device.");
+                             CustomAlert("Please select a device.");
                            }
                            else if(selectedRows.length==1){
                             // Show a confirmation alert
@@ -457,7 +475,7 @@ if(buttonId ==="deliverPurchase"){
                             }
                            }
                            else{
-                            alert("Please select only one device.");
+                            CustomAlert("Please select only one device.");
                            }
 
                        });
@@ -1673,7 +1691,7 @@ window.initRequestDataPurchaseTable = function () {     // Perform a single AJAX
                            // Show modal only if rows were added
                            showModal();
                        } else {
-                           alert("No data found to display in the modal.");
+                           CustomAlert("No data found to display in the modal.");
                        }
                    });
                }
@@ -1698,7 +1716,7 @@ window.initRequestDataPurchaseTable = function () {     // Perform a single AJAX
                            });
 
                            if(selectedRows.length==0){
-                             alert("Please select a device.");
+                             CustomAlert("Please select a device.");
                            }
                            else if(selectedRows.length==1){
                             // Show a confirmation alert
@@ -1713,7 +1731,7 @@ window.initRequestDataPurchaseTable = function () {     // Perform a single AJAX
                             }
                            }
                            else{
-                            alert("Please select only one device.");
+                            CustomAlert("Please select only one device.");
                            }
 
                        });
@@ -2239,13 +2257,13 @@ window.initRequestDataPurchaseTable = function () {     // Perform a single AJAX
                            },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
+                               CustomAlert("Delivery date updated successfully!");
                                hideModal();
                                location.reload();
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                               CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -2326,7 +2344,7 @@ window.initRequestDataPurchaseTable = function () {     // Perform a single AJAX
                                            // Show modal only if rows were added
                                            showModal();
                                        } else {
-                                           alert("No data found to display in the modal.");
+                                           CustomAlert("No data found to display in the modal.");
                                        }
                                    });
                                }

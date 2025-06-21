@@ -16,8 +16,10 @@ function  sendDeviceToDepartment(deviceId,serviceId,status){
 
                          },
                          success: function(result) {
-                             alert(result);
-                             location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                          },
                          error: function(xhr, status, error) {
                              console.error("Error In delivery:", error);
@@ -43,8 +45,10 @@ function  receiveDeviceFromService(deviceId,serviceId,status){
 
                          },
                          success: function(result) {
-                             alert(result);
-                             location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                          },
                          error: function(xhr, status, error) {
                              console.error("Error In delivery:", error);
@@ -67,8 +71,10 @@ function addTableInformationOfService(deviceId,comment){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -93,8 +99,10 @@ function setServiceRequestAccept(serviceId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error In delivery:", error);
@@ -256,8 +264,10 @@ window.initServiceRequestGeneral = function () {
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
-                     alert(result);
-                     location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

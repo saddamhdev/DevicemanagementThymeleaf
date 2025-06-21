@@ -18,10 +18,10 @@ function purchaseRequest1(requestId,links) {
         departmentUserId:departmentUserId
         }),
         success: function(response) {
-        alert(response);
-            console.log("AJAX request successful:", response);
-             location.reload();
-            // Handle success response
+                             CustomAlert(response);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
         },
         error: function(error) {
             console.log("AJAX request failed:", error);
@@ -50,10 +50,10 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
         departmentUserId:departmentUserId
         }),
         success: function(response) {
-        alert(response);
-            console.log("AJAX request successful:", response);
-            location.reload();
-            // Handle success response
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
         },
         error: function(error) {
             console.log("AJAX request failed:", error);
@@ -240,7 +240,7 @@ else  if (buttonId === "chat") {
              });
 
              if(selectedRows.length==0){
-               alert("Please select a device.");
+               CustomAlert("Please select a device.");
              }
              else{
                // Show a confirmation alert
@@ -666,7 +666,7 @@ else if (buttonId === "view") {
                              });
 
                              if(selectedRows.length==0){
-                               alert("Please select a device.");
+                               CustomAlert("Please select a device.");
                              }
                              else{
                                // Show a confirmation alert
@@ -810,14 +810,14 @@ else if (buttonId === "view") {
                                     date: updatedDate
                                 },
                                 success: function(response) {
-                                    // Handle success (e.g., show a message or close the modal)
-                                    alert("Delivery date updated successfully!");
-                                    hideModal();
-                                    location.reload();
+                                                          CustomAlert(response);
+                                                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                                                location.reload();
+                                                            });
                                 },
                                 error: function(error) {
                                     // Handle error (e.g., show an error message)
-                                    alert("Error updating delivery date!");
+                                    CustomAlert("Error updating delivery date!");
                                 }
                             });
                          });
@@ -939,7 +939,7 @@ else if (buttonId === "view") {
                                                 // Show modal only if rows were added
                                                 showModal();
                                             } else {
-                                                alert("No data found to display in the modal.");
+                                                CustomAlert("No data found to display in the modal.");
                                             }
                                         });
                                     }

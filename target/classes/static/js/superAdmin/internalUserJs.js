@@ -17,26 +17,10 @@ function saveInternalUserBtn(branchName,userName,userId,userPassword) {
                  userPassword:userPassword
               },
               success: function(response) {
-                   alert(response);
-/*
-
-                       var rowHtml = '<tr>' +
-                           '<th scope="row">' + totalRows + '</th>' +
-                           '<td>' + branchName + '</td>' +
-                           '<td>' + userName + '</td>' +
-                            '<td>' + userId + '</td>' +
-                             '<td>' + userPassword + '</td>' +
-                           '<td>' +
-                           '<button class="btn btn-primary btn-sm">Edit</button> ' +
-                           '<button class="btn btn-danger btn-sm">Delete</button>' +
-                           '</td>' +
-                           '</tr>';
-
-                       internalUserTableBody.append(rowHtml);
-
-                       hideModal();*/
-
-                        location.reload();
+                                      CustomAlert(response);
+                                        $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                            location.reload();
+                                        });
 
               },
               error: function(error) {
@@ -76,8 +60,10 @@ function editInternalUserBtn($row) {
                  newUserPassword:newUserPassword
               },
               success: function(response) {
-                   alert(response);
-               location.reload();
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
               },
               error: function(error) {
                   console.error("Error saving category:", error);
@@ -153,10 +139,10 @@ function editInternalUserBtn($row) {
                     userPassword:userPassword
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                    alert(result);
-                     location.reload();
+                                  CustomAlert(result);
+                                    $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                        location.reload();
+                                    });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

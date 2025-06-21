@@ -23,11 +23,13 @@ function AcceptDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -57,11 +59,13 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                          CustomAlert(response);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -77,8 +81,10 @@ function setDeliveryMode(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error In delivery:", error);
@@ -213,7 +219,7 @@ window.initRequestDataGeneral = function () {
                         }
                        else if(result.inventory.cooAns=="Rejected")
                        {
-                       alert("Rejected Cause: \n"+result.inventory.rejectedCause);
+                       CustomAlert("Rejected Cause: \n"+result.inventory.rejectedCause);
                        }
                        else{
 
@@ -982,7 +988,7 @@ window.initRequestDataTable = function () {
                                                                      // Show modal only if rows were added
                                                                      showModal();
                                                                  } else {
-                                                                     alert("No data found to display in the modal.");
+                                                                     CustomAlert("No data found to display in the modal.");
                                                                  }
                                                              });
                                                          }
@@ -1008,7 +1014,7 @@ window.initRequestDataTable = function () {
                                                             });
 
                                                             if(selectedRows.length==0){
-                                                              alert("Please select a device.");
+                                                              CustomAlert("Please select a device.");
                                                             }
                                                             else if(selectedRows.length==1){
                                                              // Show a confirmation alert
@@ -1022,7 +1028,7 @@ window.initRequestDataTable = function () {
                                                              }
                                                             }
                                                             else{
-                                                             alert("Please select only one device.");
+                                                             CustomAlert("Please select only one device.");
                                                             }
 
                                                         });
@@ -1127,7 +1133,7 @@ window.initRequestDataTable = function () {
                                                  // Show modal only if rows were added
                                                  showModal();
                                              } else {
-                                                 alert("No data found to display in the modal.");
+                                                 CustomAlert("No data found to display in the modal.");
                                              }
                                          });
                                      }
@@ -1153,7 +1159,7 @@ window.initRequestDataTable = function () {
                                         });
 
                                         if(selectedRows.length==0){
-                                          alert("Please select a device.");
+                                          CustomAlert("Please select a device.");
                                         }
                                         else if(selectedRows.length==1){
                                          // Show a confirmation alert
@@ -1167,7 +1173,7 @@ window.initRequestDataTable = function () {
                                          }
                                         }
                                         else{
-                                         alert("Please select only one device.");
+                                         CustomAlert("Please select only one device.");
                                         }
 
                                     });
@@ -1269,7 +1275,7 @@ window.initRequestDataTable = function () {
                                                            // Show modal only if rows were added
                                                            showModal();
                                                        } else {
-                                                           alert("No data found to display in the modal.");
+                                                           CustomAlert("No data found to display in the modal.");
                                                        }
                                                    });
                                                }
@@ -1295,7 +1301,7 @@ window.initRequestDataTable = function () {
                                                   });
 
                                                   if(selectedRows.length==0){
-                                                    alert("Please select a device.");
+                                                    CustomAlert("Please select a device.");
                                                   }
                                                   else if(selectedRows.length==1){
                                                    // Show a confirmation alert
@@ -1309,7 +1315,7 @@ window.initRequestDataTable = function () {
                                                    }
                                                   }
                                                   else{
-                                                   alert("Please select only one device.");
+                                                   CustomAlert("Please select only one device.");
                                                   }
 
                                               });
@@ -1410,7 +1416,7 @@ window.initRequestDataTable = function () {
                                                         // Show modal only if rows were added
                                                         showModal();
                                                     } else {
-                                                        alert("No data found to display in the modal.");
+                                                        CustomAlert("No data found to display in the modal.");
                                                     }
                                                 });
                                             }
@@ -1501,7 +1507,7 @@ window.initRequestDataTable = function () {
                                   // Show modal only if rows were added
                                   showModal();
                               } else {
-                                  alert("No data found to display in the modal.");
+                                  CustomAlert("No data found to display in the modal.");
                               }
                           });
                       }
@@ -1580,7 +1586,7 @@ window.initRequestDataTable = function () {
                                               // Show modal only if rows were added
                                               showModal();
                                           } else {
-                                              alert("No data found to display in the modal.");
+                                              CustomAlert("No data found to display in the modal.");
                                           }
                                       });
                                   }

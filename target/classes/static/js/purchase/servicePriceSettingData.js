@@ -35,8 +35,10 @@ function addTableInformationOfService(serviceId) {
         contentType: 'application/json', // Send data as JSON
         data: JSON.stringify(mergedServiceData), // Convert data to JSON string
         success: function(response) {
-            alert("Response: " + response);
-            location.reload(); // Refresh the page after success
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -763,17 +765,15 @@ function setPriceData1(rowData) {
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSON
         success: function (response) {
-            console.log("Server Response:", response);
-            // Display a success message to the user
-            alert("Data saved successfully!");
-            location.reload();
+                            CustomAlert(response);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
             // Optionally refresh the table or update the UI
         },
         error: function (xhr, status, error) {
-            console.error("AJAX Error:", error);
-            console.error("Response Text:", xhr.responseText); // Log error details
-            // Display an error message to the user
-            alert("An error occurred while saving the data!");
+
+            CustomAlert("An error occurred while saving the data!");
         }
     });
 }
@@ -1003,13 +1003,14 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
                            },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
-                               hideModal();
-                               location.reload();
+                                                 CustomAlert(response);
+                                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                                       location.reload();
+                                                   });
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                               CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -1131,7 +1132,7 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
                                            // Show modal only if rows were added
                                            showModal();
                                        } else {
-                                           alert("No data found to display in the modal.");
+                                           CustomAlert("No data found to display in the modal.");
                                        }
                                    });
                                }

@@ -20,14 +20,15 @@ function addTableInformationOfService() {
         contentType: "application/json",
         data: JSON.stringify(mergedFormData),
         success: function(response) {
-            // Display the server response in an alert
-            alert( response);
-             location.reload(); // Refresh the page
+                                CustomAlert(response);
+                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                      location.reload();
+                                  });
         },
         error: function(xhr, status, error) {
             // Display the error in an alert for debugging purposes
-            alert("Error: " + error);
-            console.error("Error:", error);
+            CustomAlert("Error: " + error);
+
         }
     });
 }
@@ -677,7 +678,6 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                                 var problemName = $(this).data('problemName');
                                 var solutionName = $(this).data('solutionName');
                                 var deviceId=$(this).data('deviceId');
-                                alert(deviceId);
                                  var htmlToAdd = `
                                   <div class="mb-3" style="margin-right: 0%; text-align: right;">
                                       <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
@@ -707,14 +707,14 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                                             deviceId:deviceId
                                         },
                                         success: function(response) {
-                                            // Handle success (e.g., show a message or close the modal)
-                                            alert(response);
-                                            hideModal();
-                                            location.reload();
+                                                 CustomAlert(response);
+                                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                                       location.reload();
+                                                   });
                                         },
                                         error: function(error) {
                                             // Handle error (e.g., show an error message)
-                                            alert("Error updating delivery date!");
+                                            CustomAlert("Error updating delivery date!");
                                         }
                                     });
 
@@ -792,7 +792,7 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                                     // Show modal only if rows were added
                                     showModal();
                                 } else {
-                                    alert("No data found to display in the modal.");
+                                    CustomAlert("No data found to display in the modal.");
                                 }
                             });
                         }

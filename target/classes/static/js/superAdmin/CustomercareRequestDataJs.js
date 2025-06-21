@@ -13,8 +13,10 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         success: function(response) {
-            alert(response);
-            location.reload(); // Refresh the page
+              CustomAlert(response);
+                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                    location.reload();
+                });
         },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
@@ -52,8 +54,10 @@ function setRequestStatusApprove(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                             CustomAlert(result);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);
@@ -73,8 +77,10 @@ function setCancelRequest(requestId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                                CustomAlert(result);
+                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                      location.reload();
+                                  });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);
@@ -211,7 +217,7 @@ function setCancelRequest(requestId,status){
                         }
                        else if(result.inventory.cooAns=="Rejected")
                        {
-                       alert("Rejected Cause: \n"+result.inventory.rejectedCause);
+                       CustomAlert("Rejected Cause: \n"+result.inventory.rejectedCause);
                        }
                        else{
 

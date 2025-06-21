@@ -23,9 +23,7 @@ function saveUserBtn(Id) {
             userDesignation: userDesignation
         },
         success: function(response) {
-            CustomAlert(response);
-           // CustomAlert("Deleted successfully!");
-           // Wait for modal close to reload page
+              CustomAlert(response);
                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
                    location.reload();
                });
@@ -58,8 +56,10 @@ function editUserBtn($row, userIdData) {
             newUserDesignation: newUserDesignation
         },
         success: function(response) {
-            alert(response);
-            location.reload();
+            CustomAlert(response);
+              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                  location.reload();
+              });
         },
         error: function(error) {
             console.error("Error updating user:", error);
@@ -126,8 +126,10 @@ window.initAddUserGeneral = function () {
                 type: 'POST',
                 data: { userId: userId },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                    CustomAlert(result);
+                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                      location.reload();
+                  });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting user:", error);

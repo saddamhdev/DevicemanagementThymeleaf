@@ -10,8 +10,10 @@ function  saveTableInformationOfRequest(){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -165,9 +167,10 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                success: function(result) {
-
-                   alert(result);
-                  location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
 
                },
                error: function(xhr, status, error) {
@@ -184,8 +187,10 @@ function setReceivedStatus(requestId,status){
                      status:status
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -204,8 +209,10 @@ function setRequestStatus(requestId,status){
                      status:status
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -224,8 +231,10 @@ function setRequestStatus(requestId,status){
                      cause:$('#rejectCause').val()
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -259,11 +268,13 @@ function acceptDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -284,8 +295,10 @@ function EditTableInformationOfRequest(requestId){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                        alert( response);
-                       location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -567,7 +580,7 @@ window.initRequestDataGeneral = function () {
                                               // Show modal only if rows were added
                                               showModal();
                                           } else {
-                                              alert("No data found to display in the modal.");
+                                              CustomAlert("No data found to display in the modal.");
                                           }
                                       });
                                   }
@@ -593,7 +606,7 @@ window.initRequestDataGeneral = function () {
                                      });
 
                                      if(selectedRows.length==0){
-                                       alert("Please select a device.");
+                                       CustomAlert("Please select a device.");
                                      }
                                      else if(selectedRows.length==1){
                                       // Show a confirmation alert
@@ -607,7 +620,7 @@ window.initRequestDataGeneral = function () {
                                       }
                                      }
                                      else{
-                                      alert("Please select only one device.");
+                                      CustomAlert("Please select only one device.");
                                      }
 
                                  });

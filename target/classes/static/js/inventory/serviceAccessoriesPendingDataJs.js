@@ -58,11 +58,13 @@ function addTableInformationOfService() {
            contentType: "application/json",
            data: JSON.stringify(requestData),
            success: function (response) {
-               alert(response); // Display success response
-               location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
            },
            error: function (xhr, status, error) {
-               alert("Error: " + error); // Display error response
+               CustomAlert("Error: " + error); // Display error response
                console.error("Error:", error);
            }
        });
@@ -864,13 +866,14 @@ window.initServiceAccessoriesPendingDataTable = function () {
                            },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
-                               hideModal();
-                               location.reload();
+                               CustomAlert(response);
+                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                     location.reload();
+                                 });
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                               CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -995,9 +998,9 @@ window.initServiceAccessoriesPendingDataTable = function () {
 
                                             // Check selection conditions and respond accordingly
                                                 if (selectedDeviceIds.length === 0) {
-                                                    alert("Please select at least one device.");
+                                                    CustomAlert("Please select at least one device.");
                                                 } else if (selectedDeviceIds.length > 1) {
-                                                    alert("Please select only one device.");
+                                                    CustomAlert("Please select only one device.");
                                                 } else {
                                                     // Only one device is selected
                                                     console.log("Selected Device ID:", selectedDeviceIds[0]);
@@ -1021,13 +1024,13 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                                                },
                                                                success: function(response) {
                                                                    // Handle success (e.g., show a message or close the modal)
-                                                                   alert("Delivery was completed successfully!");
+                                                                   CustomAlert("Delivery was completed successfully!");
                                                                    hideModal();
                                                                    location.reload();
                                                                },
                                                                error: function(error) {
                                                                    // Handle error (e.g., show an error message)
-                                                                   alert("Error updating delivery date!");
+                                                                   CustomAlert("Error updating delivery date!");
                                                                }
                                                            });
 
@@ -1122,7 +1125,7 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                            // Show modal only if rows were added
                                            showModal();
                                        } else {
-                                           alert("No data found to display in the modal.");
+                                           CustomAlert("No data found to display in the modal.");
                                        }
                                    });
                                }

@@ -16,8 +16,10 @@ function deliveryDeviceToCustomerCare(deviceId,serviceId,status){
 
                          },
                          success: function(result) {
-                             alert(result);
-                             location.reload();
+                              CustomAlert(result);
+                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
                          },
                          error: function(xhr, status, error) {
                              console.error("Error In delivery:", error);
@@ -44,8 +46,10 @@ function setServiceRequestAccept1(serviceId,status){
 
                 },
                 success: function(result) {
-                    alert(result);
-                    location.reload();
+                           CustomAlert(result);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error In delivery:", error);
@@ -675,10 +679,10 @@ window.initDeviceInOutListGeneral = function () {
 
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                     alert(result);
-                     location.reload();
+                             CustomAlert(result);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

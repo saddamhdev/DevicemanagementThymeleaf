@@ -58,11 +58,13 @@ function addTableInformationOfService() {
            contentType: "application/json",
            data: JSON.stringify(requestData),
            success: function (response) {
-               alert(response); // Display success response
-               location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
            },
            error: function (xhr, status, error) {
-               alert("Error: " + error); // Display error response
+               CustomAlert("Error: " + error); // Display error response
                console.error("Error:", error);
            }
        });
@@ -94,11 +96,13 @@ function sendDeliveryDeviceAcceptForService(serviceId,deviceId,problemName,solut
 
                   }),
              success: function (response) {
-                 alert(response); // Display success response
-                 location.reload(); // Refresh the page
+                                    CustomAlert(response);
+                                      $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                          location.reload();
+                                      });
              },
              error: function (xhr, status, error) {
-                 alert("Error: " + error); // Display error response
+                 CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
              }
          });
@@ -833,7 +837,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                                // Show modal only if rows were added
                                showModal();
                            } else {
-                               alert("No data found to display in the modal.");
+                               CustomAlert("No data found to display in the modal.");
                            }
                        });
                    }
@@ -858,7 +862,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                            });
 
                            if(selectedRows.length==0){
-                             alert("Please select a device.");
+                             CustomAlert("Please select a device.");
                            }
                            else if(selectedRows.length==1){
                             // Show a confirmation alert
@@ -872,7 +876,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                             }
                            }
                            else{
-                            alert("Please select only one device.");
+                            CustomAlert("Please select only one device.");
                            }
 
                        });
@@ -1006,13 +1010,13 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                            },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
+                               CustomAlert("Delivery date updated successfully!");
                                hideModal();
                                location.reload();
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                               CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -1137,9 +1141,9 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
 
                                             // Check selection conditions and respond accordingly
                                                 if (selectedDeviceIds.length === 0) {
-                                                    alert("Please select at least one device.");
+                                                    CustomAlert("Please select at least one device.");
                                                 } else if (selectedDeviceIds.length > 1) {
-                                                    alert("Please select only one device.");
+                                                    CustomAlert("Please select only one device.");
                                                 } else {
                                                     // Only one device is selected
                                                     console.log("Selected Device ID:", selectedDeviceIds[0]);
@@ -1163,13 +1167,13 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                                                                },
                                                                success: function(response) {
                                                                    // Handle success (e.g., show a message or close the modal)
-                                                                   alert("Delivery was completed successfully!");
+                                                                   CustomAlert("Delivery was completed successfully!");
                                                                    hideModal();
                                                                    location.reload();
                                                                },
                                                                error: function(error) {
                                                                    // Handle error (e.g., show an error message)
-                                                                   alert("Error updating delivery date!");
+                                                                   CustomAlert("Error updating delivery date!");
                                                                }
                                                            });
 
@@ -1264,7 +1268,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                                            // Show modal only if rows were added
                                            showModal();
                                        } else {
-                                           alert("No data found to display in the modal.");
+                                           CustomAlert("No data found to display in the modal.");
                                        }
                                    });
                                }

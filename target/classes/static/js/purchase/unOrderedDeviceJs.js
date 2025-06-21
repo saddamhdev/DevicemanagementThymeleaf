@@ -15,8 +15,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -59,8 +61,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          success: function(response) {
-             alert(response);
-             location.reload(); // Refresh the page
+                           CustomAlert(response);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
          },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
@@ -84,8 +88,10 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  success: function(response) {
-                     alert( response);
-                       location.reload(); // Refresh the page
+                             CustomAlert(response);
+                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                   location.reload();
+                               });
                  },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
@@ -378,7 +384,7 @@ window.initUnOrderedDeviceGeneral = function () {
                                                           showModal();
                                                        }
                                                        else{
-                                                         alert("No child device Found.");
+                                                         CustomAlert("No child device Found.");
                                                        }
 
                                                      });
@@ -420,9 +426,10 @@ window.initUnOrderedDeviceGeneral = function () {
                                  }),// Send category name as data
                             success: function(result) {
                                 // Remove the row from the table body
-                              //  $row.remove();
-                                 alert(result);
-                                 location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                             },
                             error: function(xhr, status, error) {
                                 console.error("Error deleting category: " + error);
@@ -837,10 +844,10 @@ window.initUnOrderedDeviceGeneral = function () {
 
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                     alert(result);
-                     location.reload();
+                              CustomAlert(result);
+                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);
@@ -1209,7 +1216,7 @@ function exportToModalOfSelectedRow() {
               const modal = new bootstrap.Modal(document.getElementById("exportModal"));
               modal.show();
           } else {
-              alert("Please select at least one row.");
+              CustomAlert("Please select at least one row.");
           }
 }
 
@@ -1257,7 +1264,7 @@ function confirmExport() {
     })
     .catch(error => {
         console.error("Error:", error);
-        alert("Error occurred during export.");
+        CustomAlert("Error occurred during export.");
     });
 }
 

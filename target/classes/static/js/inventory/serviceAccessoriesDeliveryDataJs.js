@@ -20,13 +20,14 @@ function addTableInformationOfService1() {
         contentType: "application/json",
         data: JSON.stringify(mergedFormData),
         success: function(response) {
-            // Display the server response in an alert
-            alert( response);
-             location.reload(); // Refresh the page
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
         },
         error: function(xhr, status, error) {
             // Display the error in an alert for debugging purposes
-            alert("Error: " + error);
+            CustomAlert("Error: " + error);
             console.error("Error:", error);
         }
     });
@@ -798,12 +799,14 @@ window.initServiceAccessoriesDeliveryDataTable = function () {    // Perform a s
                            },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
-                               alert("Delivery date updated successfully!");
-                               hideModal();
+                                     CustomAlert(response);
+                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                           location.reload();
+                                       });
                            },
                            error: function(error) {
                                // Handle error (e.g., show an error message)
-                               alert("Error updating delivery date!");
+                               CustomAlert("Error updating delivery date!");
                            }
                        });
                     });
@@ -884,7 +887,7 @@ window.initServiceAccessoriesDeliveryDataTable = function () {    // Perform a s
                                               // Show modal only if rows were added
                                               showModal();
                                           } else {
-                                              alert("No data found to display in the modal.");
+                                              CustomAlert("No data found to display in the modal.");
                                           }
                                       });
                                   }

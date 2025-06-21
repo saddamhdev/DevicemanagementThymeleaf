@@ -16,8 +16,10 @@ function  editRequestColumnBtn(requestId){
                },
                success: function(result) {
 
-                   alert(result);
-                  location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
 
                },
                error: function(xhr, status, error) {
@@ -52,8 +54,10 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                     success: function(result) {
-                        alert(result);
-                        location.reload();
+                          CustomAlert(result);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error deleting user:", error);
@@ -76,8 +80,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -99,8 +105,10 @@ function setRequestStatus(requestId,status){
 
                      },
                      success: function(result) {
-                         alert(result);
-                         location.reload();
+                           CustomAlert(result);
+                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                 location.reload();
+                             });
                      },
                      error: function(xhr, status, error) {
                          console.error("Error deleting user:", error);
@@ -377,7 +385,7 @@ window.initRequestDataAlternativeGeneral = function () {
                  }
                 else if(result.inventory.cooAns=="Rejected")
                 {
-                alert("Rejected Cause: \n"+result.inventory.rejectedCause);
+                CustomAlert("Rejected Cause: \n"+result.inventory.rejectedCause);
                 }
                 else{
 

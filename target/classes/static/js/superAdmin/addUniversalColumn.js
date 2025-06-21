@@ -19,11 +19,10 @@ function saveUniversalColumnBtn(Id) {
              requiredType:requiredType
              },
             success: function(response) {
-
-
-                alert(response);
-
-                location.reload(); // Refresh the page
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
 
 
             },
@@ -55,10 +54,10 @@ function  editUniversalColumnBtn($row){
                    newRequiredType:newRequiredType
                },
                success: function(result) {
-
-                  alert(result);
-                  location.reload();
-
+                         CustomAlert(result);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
                },
                error: function(xhr, status, error) {
                    console.error("Error updating category: " + error);
@@ -144,10 +143,10 @@ function  editUniversalColumnBtn($row){
                 type: 'POST',
                 data: { universalColumnName: columnName }, // Send category name as data
                 success: function(result) {
-                   // i want to remove rowIndex row remove from table body
-
-                      alert(result);
-                      location.reload();
+                            CustomAlert(result);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);

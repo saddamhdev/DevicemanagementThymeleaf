@@ -1,6 +1,6 @@
 
 function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) {
-          alert("Add")
+
           var individualColumnTableBody = $('#individualColumnTableBody');
           var totalRows = individualColumnTableBody.children('tr').length+1;
            console.log("Total Rows: " + totalRows);
@@ -17,9 +17,10 @@ function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) 
                   requiredType:requiredType
               },
               success: function(response) {
-                         alert(response);
-
-                       location.reload(); // Refresh the page
+                          CustomAlert(response);
+                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                location.reload();
+                            });
 
               },
               error: function(error) {
@@ -58,9 +59,10 @@ function editIndividualColumnBtn($row) {
                   newRequiredType:newRequiredType
               },
               success: function(response) {
-                   alert(response);
-                 location.reload(); // Refresh the page
-
+                         CustomAlert(response);
+                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                               location.reload();
+                           });
               },
               error: function(error) {
                   console.error("Error saving category:", error);
@@ -150,10 +152,10 @@ function editIndividualColumnBtn($row) {
                     oldIndividualColumnName: columnName
                 }, // Send category name as data
                 success: function(result) {
-                    // Remove the row from the table body
-                    $row.remove();
-                    alert(result);
-                    location.reload(); // Refresh the page
+                            CustomAlert(result);
+                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                  location.reload();
+                              });
                 },
                 error: function(xhr, status, error) {
                     console.error("Error deleting category: " + error);
