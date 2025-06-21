@@ -120,5 +120,21 @@ public class Fragment {
         model.addAttribute("inputTypes", inputTypes);
         return folderName+"/" + pageName + " :: " + pageName;
     }
+    @GetMapping("/clearCache")
+    public  String clearCache(){
+        categoriesService.clearCategoriesCache();
+        individualColumnsService.clearUniversalColumnCache();
+        universalColumnsService.clearUniversalColumnCache();
+        addDataService.clearCache();
+        branchUserService.clearCache();
+        designationService.clearCache();
+        dropDownListService.clearCache();
+        requestColumnService.clearCache();
+        requestDataService.clearCache();
+        serviceRequestService.clearCache();
+        userService.clearCache();
+        internalUserService.clearCache();
+        return "superAdmin/home"; // This will return the index.html Thymeleaf template
+    }
 
 }
