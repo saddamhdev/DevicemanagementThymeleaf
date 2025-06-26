@@ -518,3 +518,623 @@ function CustomAlert(message, title = "Notice") {
     }, { once: true });
 }
 
+
+window.trackDeviceRequestData = function (row, clickedElement) {
+    // Collect row data
+    const cells = Array.from(row.getElementsByTagName('td')).map(cell => cell.innerText.trim());
+    const sn = cells[0];
+    const biVagName = cells[1];
+    const categoryName = cells[2];
+
+    if (!clickedElement.classList.contains('view-device-status')) {
+        console.log("⛔ Not clicked on .view-device-status");
+        return;
+    }
+
+    const requestId = clickedElement.getAttribute('data-request-id');
+    print('requestData', function(requestData) {
+        // Create modal if it doesn't exist
+        if (!document.getElementById('dynamicTrackModal')) {
+            const modalHTML = `
+                <div class="modal fade" id="dynamicTrackModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Device Request Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Prepare modal elements
+        const modalBody = document.querySelector('#dynamicTrackModal .modal-body');
+        const modalElement = document.getElementById('dynamicTrackModal');
+
+        if (!modalBody || !modalElement) {
+            console.error('Modal body or element not found');
+            return;
+        }
+
+        // Handle no data case
+        if (!requestData) {
+            console.error('requestData is undefined or empty');
+            modalBody.innerHTML = '<p class="text-center">No data found</p>';
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+            return;
+        }
+
+        const result = requestData.find(data => data.id === requestId);
+        if (!result || !result.inventory) {
+            console.error('No valid result or inventory found for requestId:', requestId);
+            modalBody.innerHTML = '<p class="text-center">No data found</p>';
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+            return;
+        }
+
+        const { inventory } = result;
+        const isProposalOrDirect = inventory.inventoryStatus === "Alternative Proposal Accepted" || inventory.inventoryStatus === "Pending" || inventory.inventoryStatus === "Alternative Proposal";
+        const isPurchased = inventory.inventoryStatus === "Purchased";
+         if(!isPurchased){
+             if (!isProposalOrDirect ) {
+                     console.log('Invalid inventory status:', inventory.inventoryStatus);
+                     modalBody.innerHTML = '<p class="text-center">No data found</p>';
+                     const modalInstance = new bootstrap.Modal(modalElement);
+                     modalInstance.show();
+                     return;
+                 }
+         }
+
+
+        // Helper function to create a separator row
+        const separatorRow = `
+            <div class="row">
+                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
+                <div class="col-sm-8" style="height:40px;"></div>
+            </div>
+        `;
+
+        // Helper function to create a timeline entry
+       const createTimelineEntry = ({ dateTime, entity, action, entityName = '', includeSeparator = true }) => `
+           ${includeSeparator ? separatorRow : ''}
+           <div class="row bordered-row">
+               <div class="col-sm-3">
+                   <div class="text-center">
+                       ${dateTime ? `<p>${formatDateTime(dateTime)}</p><p>${formatTime(dateTime)}</p>` : ''}
+                   </div>
+               </div>
+               <div class="col-sm-2">
+                   <div class="text-center">
+                       <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
+                   </div>
+               </div>
+               <div class="col-sm-7">
+                   <div class="text-3d" style="width:100%">
+                       <span>${entity}${entityName ? `: ${entityName}` : ''}:</span>
+                       <span>${action}</span>
+                   </div>
+               </div>
+           </div>
+       `;
+
+
+        // Generate header with sn, categoryName, biVagName
+        let htmlToAdd = `
+           <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+             <h6 class="fw-semibold text-primary mb-2">📌 Serial Number: <span class="text-dark">${sn}</span></h6>
+             <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${categoryName}</span></h6>
+             <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
+           </div>
+
+        `;
+
+        // Generate HTML for initial entry without separator
+        htmlToAdd += createTimelineEntry({
+            dateTime: result.presentTime,
+            entity: 'Dept',
+            action: 'Requested',
+            entityName: result.departmentName,
+            includeSeparator: false
+        });
+
+        // Common entries
+        if (result.cooAcceptedTime) {
+            htmlToAdd += createTimelineEntry({
+                dateTime: result.cooAcceptedTime,
+                entity: 'COO',
+                action: `${result.requestMode} Dept Request`
+            });
+        }
+
+        if (inventory.requestTime) { // mone hoy dorkar nai
+            htmlToAdd += createTimelineEntry({
+                dateTime: inventory.requestTime,
+                entity: 'Inventory',
+                action: isPurchased ? 'Send Purchase Request' : 'Send Alternative List Request'
+            });
+        }
+
+        // Proposal Accepted or Direct Delivery specific entries
+        if (isProposalOrDirect) {
+        // my
+                 if (result.inventory?.inventoryToAlternativeDeviceRequestTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.inventory?.inventoryToAlternativeDeviceRequestTime,
+                            entity: 'Inventory',
+                            action: `Alternative Device Request To COO`
+                        });
+                    }
+                    else{
+                          htmlToAdd += createTimelineEntry({
+                                dateTime: null,
+                                entity: 'Inventory',
+                                action: `Pending`
+                            });
+                    }
+                    if (result.inventory?.inventoryToAlternativeDeviceRequestAcceptingTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.inventory?.inventoryToAlternativeDeviceRequestAcceptingTime,
+                            entity: 'COO',
+                            action: `${result.inventory?.inventoryToAlternativeDeviceRequestAcceptingAns} Inventory Alternative Device Request `
+                        });
+                    }
+                    else{
+                          htmlToAdd += createTimelineEntry({
+                                dateTime: null,
+                                entity: 'COO',
+                                action: `Pending`
+                            });
+                    }
+                    if (result.inventory?.inventoryToCustomerCareDeviceSendingTime) {
+                            htmlToAdd += createTimelineEntry({
+                                dateTime: result.inventory?.inventoryToCustomerCareDeviceSendingTime,
+                                entity: 'Inventory',
+                                action: `Inventory To CustomerCare Sending Device `
+                            });
+                        }
+                        else{
+                              htmlToAdd += createTimelineEntry({
+                                    dateTime: null,
+                                    entity: 'Inventory',
+                                    action: `Pending`
+                                });
+                        }
+                     if (result.customerCare?.customerCareToDepartmentDeviceSendingTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.customerCare?.customerCareToDepartmentDeviceSendingTime,
+                            entity: 'CustomerCare',
+                            action: ` CustomerCare To Dept Sending Device `
+                        });
+                    }
+                    else{
+                          htmlToAdd += createTimelineEntry({
+                                dateTime: null,
+                                entity: 'CustomerCare',
+                                action: `Pending`
+                            });
+                    }
+                   if (result.customerCare?.departmentDeviceReceiverTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.customerCare?.departmentDeviceReceiverTime,
+                            entity: 'Dept',
+                            action: ` Receive Device `
+                        });
+                    }
+                    else{
+                          htmlToAdd += createTimelineEntry({
+                                dateTime: null,
+                                entity: 'Dept',
+                                action: `Pending`
+                            });
+                    }
+        //
+
+        }
+
+        // Purchased specific entries
+        if (isPurchased) {
+            if (result.inventory?.inventoryToPurchaseRequestTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.inventory.inventoryToPurchaseRequestTime,
+                    entity: 'Inventory',
+                    action: 'Inventory To Purchase Send Purchase Request'
+                });
+            }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Inventory',
+                        action: `Pending`
+                    });
+            }
+            if (result.purchase?.requestTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.purchase.requestTime,
+                    entity: 'Purchase',
+                    action: ` Purchase To COO Purchase Proposal Send `
+                });
+            }
+           else{
+
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Purchase',
+                        action: `Pending`
+                    });
+            }
+            if (result.purchase?.cooAcceptedTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.purchase.cooAcceptedTime,
+                    entity: 'COO',
+                    action: 'Accepted Proposal'
+                });
+            }
+           else{
+
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'COO',
+                        action: `Pending`
+                    });
+            }
+         if (result.purchase?.purchaseDeviceSenderToInventoryTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.purchase.purchaseDeviceSenderToInventoryTime,
+                            entity: 'Purchase',
+                            action: 'Purchase To Inventory Send device'
+                        });
+                    }
+           else{
+
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Purchase',
+                        action: `Pending`
+                    });
+            }
+         if (result.inventory?.inventoryToCustomerCareDeviceSendingTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.inventory.inventoryToCustomerCareDeviceSendingTime,
+                            entity: 'Inventory',
+                            action: 'Inventory To CustomerCare Send Device'
+                        });
+                    }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Inventory',
+                        action: `Pending`
+                    });
+            }
+             if (result.customerCare?.customerCareToDepartmentDeviceSendingTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.customerCare?.customerCareToDepartmentDeviceSendingTime,
+                    entity: 'CustomerCare',
+                    action: ` CustomerCare To Dept Sending Device `
+                });
+            }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'CustomerCare',
+                        action: `Pending`
+                    });
+            }
+           if (result.customerCare?.departmentDeviceReceiverTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.customerCare?.departmentDeviceReceiverTime,
+                    entity: 'Dept',
+                    action: ` Receive Device `
+                });
+            }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Dept',
+                        action: `Pending`
+                    });
+            }
+
+
+
+        }
+
+        // Inject content into .modal-body
+        modalBody.innerHTML = htmlToAdd;
+
+        // Show modal using Bootstrap
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+    });
+};
+window.trackServiceRequestData = function (row, clickedElement) {
+    // Collect row data
+    const cells = Array.from(row.getElementsByTagName('td')).map(cell => cell.innerText.trim());
+    const sn = cells[0];
+    const biVagName = cells[1];
+    const categoryName = cells[2];
+
+    if (!clickedElement.classList.contains('view-device-status')) {
+        console.log("⛔ Not clicked on .view-device-status");
+        return;
+    }
+
+    const requestId = clickedElement.getAttribute('data-request-id');
+
+    print('serviceRequests', function(requestData) {
+
+        // Create modal if it doesn't exist
+        if (!document.getElementById('dynamicTrackModal')) {
+            const modalHTML = `
+                <div class="modal fade" id="dynamicTrackModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Service Request Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        // Prepare modal elements
+        const modalBody = document.querySelector('#dynamicTrackModal .modal-body');
+        const modalElement = document.getElementById('dynamicTrackModal');
+
+        if (!modalBody || !modalElement) {
+            console.error('Modal body or element not found');
+            return;
+        }
+
+        // Handle no data case
+        if (!requestData) {
+            console.error('requestData is undefined or empty');
+            modalBody.innerHTML = '<p class="text-center">No data found</p>';
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+            return;
+        }
+
+        const result = requestData.find(data => data.id === requestId);
+        if (!result) {
+            console.error('No valid result :', requestId);
+            modalBody.innerHTML = '<p class="text-center">No data found</p>';
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+            return;
+        }
+
+        const { inventory } = result;
+        const isProposalOrDirect = result.serviceAccessoriesSolutionProvidingTime===null;
+
+       // const isPurchased = inventory.inventoryStatus === "Purchased";
+
+
+        // Helper function to create a separator row
+        const separatorRow = `
+            <div class="row">
+                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
+                <div class="col-sm-8" style="height:40px;"></div>
+            </div>
+        `;
+
+        // Helper function to create a timeline entry
+       const createTimelineEntry = ({ dateTime, entity, action, entityName = '', includeSeparator = true }) => `
+           ${includeSeparator ? separatorRow : ''}
+           <div class="row bordered-row">
+               <div class="col-sm-3">
+                   <div class="text-center">
+                       ${dateTime ? `<p>${formatDateTime(dateTime)}</p><p>${formatTime(dateTime)}</p>` : ''}
+                   </div>
+               </div>
+               <div class="col-sm-2">
+                   <div class="text-center">
+                       <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
+                   </div>
+               </div>
+               <div class="col-sm-7">
+                   <div class="text-3d" style="width:100%">
+                       <span>${entity}${entityName ? `: ${entityName}` : ''}:</span>
+                       <span>${action}</span>
+                   </div>
+               </div>
+           </div>
+       `;
+
+
+        // Generate header with sn, categoryName, biVagName
+        let htmlToAdd = `
+           <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+             <h6 class="fw-semibold text-primary mb-2">📌 Serial Number: <span class="text-dark">${sn}</span></h6>
+             <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${categoryName}</span></h6>
+             <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
+           </div>
+
+        `;
+
+        // Generate HTML for initial entry without separator
+        htmlToAdd += createTimelineEntry({
+            dateTime: result.presentTime,
+            entity: 'Dept',
+            action: 'Requested',
+            entityName: result.departmentName,
+            includeSeparator: false
+        });
+
+        // Common entries
+        if (result.customerCareSendDeviceToServiceTime) {
+            htmlToAdd += createTimelineEntry({
+                dateTime: result.customerCareSendDeviceToServiceTime,
+                entity: 'CustomerCare',
+                action: `CustomerCare To ServiceCenter Send Device `
+            });
+        }
+
+         if( isProposalOrDirect){
+              console.log("Thaprathapri");
+            if (result.serviceCenterToCustomerCareTime) {
+                    htmlToAdd += createTimelineEntry({
+                        dateTime: result.serviceCenterToCustomerCareTime,
+                        entity: 'ServiceCenter',
+                        action: `ServiceCenter To CustomerCare send device(Servicing)`
+                    });
+                 }
+            else{
+                   htmlToAdd += createTimelineEntry({
+                         dateTime: null,
+                         entity: 'ServiceCenter',
+                         action: `Pending`
+                     });
+             }
+               if (result.customerCareToDepartmentTime) {
+                 htmlToAdd += createTimelineEntry({
+                     dateTime: result.customerCareToDepartmentTime,
+                     entity: 'CustomerCare',
+                     action: `CustomerCare To Dept send device(Servicing)`
+                  });
+                }
+            else{
+                   htmlToAdd += createTimelineEntry({
+                         dateTime: null,
+                         entity: 'CustomerCare',
+                         action: `Pending`
+                     });
+             }
+              if (result.departmentReceiveDeviceFromCustomerCareTime) {
+                 htmlToAdd += createTimelineEntry({
+                     dateTime: result.departmentReceiveDeviceFromCustomerCareTime,
+                     entity: 'Dept',
+                     action: `Received Servicing device`
+                  });
+                }
+                else{
+                      htmlToAdd += createTimelineEntry({
+                            dateTime: null,
+                            entity: 'Dept',
+                            action: `Pending`
+                        });
+                  }
+           }
+           else{
+           console.log("proposal");
+           if (result.serviceAccessoriesSolutionProvidingTime) {
+               htmlToAdd += createTimelineEntry({
+                   dateTime: result.serviceAccessoriesSolutionProvidingTime,
+                   entity: 'ServiceCenter',
+                   action: `ServiceCenter To COO send Accessories proposal `
+               });
+           }
+           else{
+             htmlToAdd += createTimelineEntry({
+                   dateTime: null,
+                   entity: 'ServiceCenter',
+                   action: `Pending`
+               });
+            }
+            if (result.serviceAccessoriesSolutionAcceptingByCOOTime) {
+               htmlToAdd += createTimelineEntry({
+                   dateTime: result.serviceAccessoriesSolutionAcceptingByCOOTime,
+                   entity: 'COO',
+                   action: `Accepted Service Accessories Proposal Of ServiceCenter `
+               });
+            }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'COO',
+                        action: `Pending`
+                    });
+            }
+           if (result.serviceCenterToInventorySendDeviceRequestTime) {
+               htmlToAdd += createTimelineEntry({
+                   dateTime: result.serviceCenterToInventorySendDeviceRequestTime,
+                   entity: 'ServiceCenter',
+                   action: `ServiceCenter To Inventory send device(Accessories) request`
+               });
+            }
+           else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'ServiceCenter',
+                        action: `Pending`
+                    });
+            }
+          if (result.inventoryToServiceCenterSendAccessoriesDeviceTime) {
+               htmlToAdd += createTimelineEntry({
+                   dateTime: result.inventoryToServiceCenterSendAccessoriesDeviceTime,
+                   entity: 'Inventory',
+                   action: `Inventory To ServiceCenter send device(Accessories)`
+               });
+            }
+          else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Inventory',
+                        action: `Pending`
+                    });
+            }
+            if (result.serviceCenterToCustomerCareTime) {
+                   htmlToAdd += createTimelineEntry({
+                       dateTime: result.serviceCenterToCustomerCareTime,
+                       entity: 'ServiceCenter',
+                       action: `ServiceCenter To CustomerCare send device(Servicing)`
+                   });
+                }
+           else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'ServiceCenter',
+                        action: `Pending`
+                    });
+            }
+              if (result.customerCareToDepartmentTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.customerCareToDepartmentTime,
+                    entity: 'CustomerCare',
+                    action: `CustomerCare To Dept send device(Servicing)`
+                 });
+               }
+           else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'CustomerCare',
+                        action: `Pending`
+                    });
+            }
+             if (result.departmentReceiveDeviceFromCustomerCareTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.departmentReceiveDeviceFromCustomerCareTime,
+                    entity: 'Dept',
+                    action: `Received Servicing device`
+                 });
+               }
+               else{
+                     htmlToAdd += createTimelineEntry({
+                           dateTime: null,
+                           entity: 'Dept',
+                           action: `Pending`
+                       });
+                 }
+
+           }
+
+
+
+        // Inject content into .modal-body
+        modalBody.innerHTML = htmlToAdd;
+
+        // Show modal using Bootstrap
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+    });
+};

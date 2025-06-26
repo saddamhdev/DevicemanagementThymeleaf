@@ -598,8 +598,7 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                 const sn=device.visibleServiceId;
                // Loop through each problem in the allProblem array for the device
                device.allProblem.forEach(function(problem) {
-                   console.log("Problem Name:", problem.name);
-                   console.log("Proposal Solutions:");
+
 
 
                    if(problem.proposalSolution)
@@ -609,13 +608,7 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                           if ( solution.cooManInfoOfPriceAcceptanceCommentStatus === 'Accepted') {
                               const row = document.createElement("tr");
 
-                              console.log("Name:", solution.name);
-                              console.log("Value:", solution.value);
-                              console.log("Category:", solution.category);
-                              console.log("Price:", solution.price);
-                              console.log("Action:", solution.action);
-                              console.log("Comment:", solution.comment);
-                               console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
+
 
                               // Determine availability
                               const availability = getAvailability(solution.category);

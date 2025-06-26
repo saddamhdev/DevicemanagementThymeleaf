@@ -14,6 +14,7 @@ public interface DropDownListRepository extends MongoRepository<DropDownList, St
     // Additional query methods can be defined here if needed
     List<DropDownList> findByCategoryNameAndDropDownListNameAndStatus(String categoryName,String dropDownListName, String status);
     List<DropDownList> findByStatus(String status);
+    List<DropDownList> findByCategoryName(String categoryName);
 
     DropDownList findByIdAndStatus(String Id,String status);
 

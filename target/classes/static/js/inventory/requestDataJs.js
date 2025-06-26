@@ -911,6 +911,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
                       </button>
                   </td>
                <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
+                <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
 
 
               `;

@@ -1,0 +1,494 @@
+nohup: ignoring input
+2025-06-24T17:40:59.647076450Z main ERROR FileManager (/app/logs/app.log) java.io.IOException: Could not create directory /app/logs java.io.IOException: Could not create directory /app/logs
+	at org.apache.logging.log4j.core.util.FileUtils.mkdir(FileUtils.java:129)
+	at org.apache.logging.log4j.core.util.FileUtils.makeParentDirs(FileUtils.java:143)
+	at org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory.createManager(FileManager.java:504)
+	at org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory.createManager(FileManager.java:488)
+	at org.apache.logging.log4j.core.appender.AbstractManager.getManager(AbstractManager.java:146)
+	at org.apache.logging.log4j.core.appender.OutputStreamManager.getManager(OutputStreamManager.java:112)
+	at org.apache.logging.log4j.core.appender.FileManager.getFileManager(FileManager.java:225)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:102)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:55)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:124)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:713)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:735)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:260)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:154)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:197)
+	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:611)
+	at com.device.DeviceManagement.DeviceManagementApplication.<clinit>(DeviceManagementApplication.java:14)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1160)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.ensureClassInitialized(MethodHandleAccessorFactory.java:300)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.newMethodAccessor(MethodHandleAccessorFactory.java:71)
+	at java.base/jdk.internal.reflect.ReflectionFactory.newMethodAccessor(ReflectionFactory.java:159)
+	at java.base/java.lang.reflect.Method.acquireMethodAccessor(Method.java:726)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:577)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:40:59.663335650Z main ERROR Could not create plugin of type class org.apache.logging.log4j.core.appender.FileAppender for element File: java.lang.IllegalStateException: ManagerFactory [org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory@748741cb] unable to create manager for [/app/logs/app.log] with data [org.apache.logging.log4j.core.appender.FileManager$FactoryData@3e44f2a5] java.lang.IllegalStateException: ManagerFactory [org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory@748741cb] unable to create manager for [/app/logs/app.log] with data [org.apache.logging.log4j.core.appender.FileManager$FactoryData@3e44f2a5]
+	at org.apache.logging.log4j.core.appender.AbstractManager.getManager(AbstractManager.java:148)
+	at org.apache.logging.log4j.core.appender.OutputStreamManager.getManager(OutputStreamManager.java:112)
+	at org.apache.logging.log4j.core.appender.FileManager.getFileManager(FileManager.java:225)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:102)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:55)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:124)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:713)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:735)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:260)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:154)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:197)
+	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:611)
+	at com.device.DeviceManagement.DeviceManagementApplication.<clinit>(DeviceManagementApplication.java:14)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1160)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.ensureClassInitialized(MethodHandleAccessorFactory.java:300)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.newMethodAccessor(MethodHandleAccessorFactory.java:71)
+	at java.base/jdk.internal.reflect.ReflectionFactory.newMethodAccessor(ReflectionFactory.java:159)
+	at java.base/java.lang.reflect.Method.acquireMethodAccessor(Method.java:726)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:577)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:40:59.664880250Z main ERROR Unable to invoke factory method in class org.apache.logging.log4j.core.appender.FileAppender for element File: java.lang.IllegalStateException: No factory method found for class org.apache.logging.log4j.core.appender.FileAppender java.lang.IllegalStateException: No factory method found for class org.apache.logging.log4j.core.appender.FileAppender
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.findFactoryMethod(PluginBuilder.java:268)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:140)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:713)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:735)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:260)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:154)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:197)
+	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:611)
+	at com.device.DeviceManagement.DeviceManagementApplication.<clinit>(DeviceManagementApplication.java:14)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized0(Native Method)
+	at java.base/jdk.internal.misc.Unsafe.ensureClassInitialized(Unsafe.java:1160)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.ensureClassInitialized(MethodHandleAccessorFactory.java:300)
+	at java.base/jdk.internal.reflect.MethodHandleAccessorFactory.newMethodAccessor(MethodHandleAccessorFactory.java:71)
+	at java.base/jdk.internal.reflect.ReflectionFactory.newMethodAccessor(ReflectionFactory.java:159)
+	at java.base/java.lang.reflect.Method.acquireMethodAccessor(Method.java:726)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:577)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:40:59.666542450Z main ERROR Null object returned for File in Appenders.
+2025-06-24T17:40:59.667544850Z main ERROR Unable to locate appender "JsonFileAppender" for logger config "root"
+2025-06-24T17:41:01.465066834Z main ERROR FileManager (/app/logs/app.log) java.io.IOException: Could not create directory /app/logs java.io.IOException: Could not create directory /app/logs
+	at org.apache.logging.log4j.core.util.FileUtils.mkdir(FileUtils.java:129)
+	at org.apache.logging.log4j.core.util.FileUtils.makeParentDirs(FileUtils.java:143)
+	at org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory.createManager(FileManager.java:504)
+	at org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory.createManager(FileManager.java:488)
+	at org.apache.logging.log4j.core.appender.AbstractManager.getManager(AbstractManager.java:146)
+	at org.apache.logging.log4j.core.appender.OutputStreamManager.getManager(OutputStreamManager.java:112)
+	at org.apache.logging.log4j.core.appender.FileManager.getFileManager(FileManager.java:225)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:102)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:55)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:124)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:292)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:274)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.load(Log4J2LoggingSystem.java:246)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:238)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:67)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:58)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.initialize(Log4J2LoggingSystem.java:225)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:335)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.device.DeviceManagement.DeviceManagementApplication.main(DeviceManagementApplication.java:16)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:41:01.466531386Z main ERROR Could not create plugin of type class org.apache.logging.log4j.core.appender.FileAppender for element File: java.lang.IllegalStateException: ManagerFactory [org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory@748741cb] unable to create manager for [/app/logs/app.log] with data [org.apache.logging.log4j.core.appender.FileManager$FactoryData@315df4bb] java.lang.IllegalStateException: ManagerFactory [org.apache.logging.log4j.core.appender.FileManager$FileManagerFactory@748741cb] unable to create manager for [/app/logs/app.log] with data [org.apache.logging.log4j.core.appender.FileManager$FactoryData@315df4bb]
+	at org.apache.logging.log4j.core.appender.AbstractManager.getManager(AbstractManager.java:148)
+	at org.apache.logging.log4j.core.appender.OutputStreamManager.getManager(OutputStreamManager.java:112)
+	at org.apache.logging.log4j.core.appender.FileManager.getFileManager(FileManager.java:225)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:102)
+	at org.apache.logging.log4j.core.appender.FileAppender$Builder.build(FileAppender.java:55)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:124)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:292)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:274)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.load(Log4J2LoggingSystem.java:246)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:238)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:67)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:58)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.initialize(Log4J2LoggingSystem.java:225)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:335)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.device.DeviceManagement.DeviceManagementApplication.main(DeviceManagementApplication.java:16)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:41:01.467668776Z main ERROR Unable to invoke factory method in class org.apache.logging.log4j.core.appender.FileAppender for element File: java.lang.IllegalStateException: No factory method found for class org.apache.logging.log4j.core.appender.FileAppender java.lang.IllegalStateException: No factory method found for class org.apache.logging.log4j.core.appender.FileAppender
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.findFactoryMethod(PluginBuilder.java:268)
+	at org.apache.logging.log4j.core.config.plugins.util.PluginBuilder.build(PluginBuilder.java:140)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createPluginObject(AbstractConfiguration.java:1164)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1085)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.createConfiguration(AbstractConfiguration.java:1077)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.doConfigure(AbstractConfiguration.java:681)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.initialize(AbstractConfiguration.java:264)
+	at org.apache.logging.log4j.core.config.AbstractConfiguration.start(AbstractConfiguration.java:313)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:631)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:292)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:274)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.load(Log4J2LoggingSystem.java:246)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.loadConfiguration(Log4J2LoggingSystem.java:238)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:67)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:58)
+	at org.springframework.boot.logging.log4j2.Log4J2LoggingSystem.initialize(Log4J2LoggingSystem.java:225)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:335)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:370)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.device.DeviceManagement.DeviceManagementApplication.main(DeviceManagementApplication.java:16)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+
+2025-06-24T17:41:01.468894122Z main ERROR Null object returned for File in Appenders.
+2025-06-24T17:41:01.469454250Z main ERROR Unable to locate appender "JsonFileAppender" for logger config "root"
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.0)
+
+Program Are started
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Cache cleared!
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...
+Fetching user from DB...

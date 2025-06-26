@@ -12,7 +12,7 @@
         <p>  Request List</p>
     </div>
     <div class="row">
-        <div class="col-sm-9 firstDiv" >
+        <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <div class="d-flex justify-content-center mb-2">
                     <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 10%;">Add</button>
@@ -29,6 +29,7 @@
                         <th scope="col" style="background-color: gray;color:white">Request Status in COO</th>
                         <th scope="col" style="background-color: gray;color:white">Device Received Status</th>
                         <th scope="col" style="background-color: gray;color:white">Create Time</th>
+                        <th scope="col" style="background-color: gray;color:white">Tracking</th>
                         <th scope="col" style="background-color: gray;color:white" th:text="${departmentUserName}">Action</th>
                     </tr>
                     </thead>
@@ -58,6 +59,7 @@
 
                         <td th:text="${device.customerCare?.customerCareToDepartmentDeviceSendingStatus ?: ' '}"></td>
                         <td th:text="${device.presentTime}">userPassword</td>
+                        <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" th:data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
 
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">
@@ -87,18 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3 secondDiv"   >
-            <div  class="rightDiv" >
-                <div style="text-align: right;">
-                    <button class="btn btn-sm text-black small-button hideButton" style="display:inline-block">X</button>
-                </div>
-                <div class="activityDiv">
-                    <div style="text-align:center;font-weight:bold;color:green">Activity</div>
-                    <p> <b>Note: </b> <br> Click on any row of Table and see the Activity.</p>
-                </div>
-                <br>
-            </div>
-        </div>
+
     </div>
 
 </div>

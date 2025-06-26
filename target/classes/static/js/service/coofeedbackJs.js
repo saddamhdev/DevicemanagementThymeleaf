@@ -925,8 +925,7 @@ window.initCooFeedbackTable = function () {    // Perform a single AJAX call
                  }
                // Loop through each problem in the allProblem array for the device
                device.allProblem.forEach(function(problem) {
-                   console.log("Problem Name:", problem.name);
-                   console.log("Proposal Solutions:");
+
  // Ensure proposalSolution exists before iterating
                    if (!problem.proposalSolution || !Array.isArray(problem.proposalSolution)) {
                        console.warn("Skipping problem due to missing or invalid proposalSolution array:", problem);
@@ -937,13 +936,7 @@ window.initCooFeedbackTable = function () {    // Perform a single AJAX call
                        if (solution.cooManInfoOfPriceAcceptanceCommentStatus === "Accepted" ) {
                            const row = document.createElement("tr");
 
-                           console.log("Name:", solution.name);
-                           console.log("Value:", solution.value);
-                           console.log("Category:", solution.category);
-                           console.log("Price:", solution.price);
-                           console.log("Action:", solution.action);
-                           console.log("Comment:", solution.comment);
-                           console.log(solution);
+
                            var status = solution.cooManInfoOfPriceAcceptanceCommentStatus;
 
                            if(status==null){
@@ -1155,51 +1148,53 @@ window.initCooFeedbackTable = function () {    // Perform a single AJAX call
             showModal();
         });
  // Add event listener for the availability button click
-            $(document).on('click', '.setAcceptanceCommentBtn', function() {// Get the clicked button
-                    const $button = $(this);
-                    var button = $(event.target).closest('button');
-                    var serviceId = button.data('serviceId');
-                    // Get the parent row (tr)
-                    const $row = $button.closest('tr');
+           $(document).on('click', '.setAcceptanceCommentBtn', function (event) {
+               // Get the clicked button
+               const $button = $(this);
+               var button = $(event.target).closest('button');
+               var serviceId = button.data('serviceId');
 
-                  // Extract data from specific child cells using nth-child (1-based index)
-                     // const serviceId = $row.find('td:nth-child(1)').text(); // First column
-                       const bibagName = $row.find('td:nth-child(2)').text(); // Second column
-                      const solutionCategory = $row.find('td:nth-child(3)').text(); //Third column
-                      const solutionName = $row.find('td:nth-child(4)').text(); // Fourth column
-                      const problemName = $row.find('td:nth-child(5)').text(); // Fifth column
-                      const price = $row.find('td:nth-child(6) input').val(); // six column, assuming it contains an <input>
-                      const action = $row.find('td:nth-child(7) select').val(); // six column, assuming it contains an <input>
-                      const comment = $row.find('td:nth-child(8) input').val(); // six column, assuming it contains an <input>
+               // Get the parent row (tr)
+               const $row = $button.closest('tr');
 
-                       var departmentElement = $(".departmentName"); // Target element with department data
-                       var departmentName = departmentElement.data("departmentname"); // e.g., "it"
-                       var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
-                       var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
-                      // Create a formatted object with the row data
-                     // Create a formatted object with the row and department data
-                        const rowData = {
-                            serviceId: serviceId,
-                            bibagName: bibagName,
-                            solutionCategory: solutionCategory,
-                            solutionName: solutionName,
-                            problemName: problemName,
-                            price: price,
-                            action:action,
-                            comment:comment,
-                            departmentName: departmentName,
-                            departmentUserName: departmentUserName,
-                            departmentUserId: departmentUserId
-                        };
+               // Extract data from specific child cells using nth-child (1-based index)
+               const bibagName = $row.find('td:nth-child(2)').text();
+               const solutionCategory = $row.find('td:nth-child(3)').text();
+               const solutionName = $row.find('td:nth-child(4)').text();
+               const problemName = $row.find('td:nth-child(5)').text();
+               const price = $row.find('td:nth-child(6) input').val();
+               const action = $row.find('td:nth-child(7) select').val();
+               const comment = $row.find('td:nth-child(8) input').val();
 
-                    // Print the row's data
-                    console.log("Row Data:", rowData);
+               var departmentElement = $(".departmentName");
+               var departmentName = departmentElement.data("departmentname");
+               var departmentUserName = departmentElement.data("departmentuser-name");
+               var departmentUserId = departmentElement.data("departmentuser-id");
 
-                    setServiceRequestToInventoryData(rowData);
+               const rowData = {
+                   serviceId: serviceId,
+                   bibagName: bibagName,
+                   solutionCategory: solutionCategory,
+                   solutionName: solutionName,
+                   problemName: problemName,
+                   price: price,
+                   action: action,
+                   comment: comment,
+                   departmentName: departmentName,
+                   departmentUserName: departmentUserName,
+                   departmentUserId: departmentUserId
+               };
 
+               // Confirmation dialog
+               const confirmed = confirm("Are you sure you want to submit this service accessories request to inventory?");
+               if (confirmed) {
+                   //console.log("Row Data:", rowData);
+                   setServiceRequestToInventoryData(rowData);
+               } else {
+                   console.log("Action cancelled by user.");
+               }
+           });
 
-
-            });
 
             // Add event listener for the availability button click
         $(document).on('click', '.view-button-pending', function() {

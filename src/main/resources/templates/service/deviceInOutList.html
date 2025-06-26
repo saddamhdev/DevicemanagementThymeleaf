@@ -65,7 +65,7 @@
                                         style="background-color:green;"
                                         title="Receive Device">✔</button>
 
-                                <button th:if="${device.customerCareSendDeviceToServiceStatus == 'Device In Received' && device.customerCareReceiveDeviceFromServiceStatus !='Device received' && (device.cooServiceReportAcceptStatus == 'Accepted' || device.cooServiceReportAcceptStatus == 'Rejected' )}" class="btn  btn-sm text-white" th:data-service-id="${device.id}" th:data-button-id="sendDevice" style="background-color:green;" title="Delivery Device">✔</button>
+                                <button th:if="${device.customerCareSendDeviceToServiceStatus == 'Device In Received' && device.customerCareReceiveDeviceFromServiceStatus !='Device received' && (device.cooServiceReportAcceptStatus == 'Accepted' || device.cooServiceReportAcceptStatus == 'Rejected' )}" class="btn  btn-sm text-white" th:data-service-id="${device.id}" th:data-button-id="sendDevice" style="background-color:green;" title="Delivery Device To Inventory">✔</button>
                             </div>
 
                         </td>

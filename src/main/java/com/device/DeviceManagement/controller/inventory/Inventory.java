@@ -314,6 +314,7 @@ public class Inventory {
 
         if (optionalRequestData.isPresent()) {
             ServiceRequest requestData = optionalRequestData.get();
+            requestData.setInventoryToServiceCenterSendAccessoriesDeviceTime(getCurrentLocalDateTime());
             requestData.getAllProblem().forEach(problem -> {
                 if(problem.getName().equals(problemName)){
                     problem.getProposalSolution().forEach(proposalSolutionItem -> {
@@ -652,7 +653,7 @@ public class Inventory {
 
             requestData.getInventory().setInventoryToCustomerCareDeviceSendingManInfo(departmentName+"_"+departmentUserName+"_"+departmentUserId);
             requestData.getInventory().setInventoryToCustomerCareDeviceSendingStatus("Pending");
-            requestData.getInventory().setInventoryToCustomerCareDeviceSendingTime(getCurrentDateTime());
+            requestData.getInventory().setInventoryToCustomerCareDeviceSendingTime(getCurrentLocalDateTime());
             requestData.setInventory(requestData.getInventory());
             // Save the updated RequestData document
             requestDataRepository.save(requestData);

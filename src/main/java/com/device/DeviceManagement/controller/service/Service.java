@@ -381,13 +381,16 @@ public class Service {
 
         if (optionalRequestData.isPresent()) {
             ServiceRequest requestData = optionalRequestData.get();
+
             requestData.setServiceAccessoriesSolutionProvider(departmentName+"_"+departmentUserName+"_"+departmentUserId);
+            requestData.setServiceAccessoriesSolutionProvidingTime(getCurrentLocalDateTime());
+
             // Iterate through each problem in the request
             requestData.getAllProblem().forEach(problem -> { // all problem
                 // Normalize the problem name by replacing spaces with hyphens to match form IDs
                 String normalizedProblemName = problem.getName().replace(" ", "-");
 
-                System.out.println("Processing problem: " + problem.getName());
+               // System.out.println("Processing problem: " + problem.getName());
 
                 // Iterate over the remaining entries in allParams (which are the form data)
                 for (Map.Entry<String, Object> entry : allParams.entrySet()) {
@@ -917,10 +920,9 @@ public class Service {
 
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
-
+                 requestData.setServiceCenterToInventorySendDeviceRequestTime(getCurrentLocalDateTime());
                 // Iterate through each problem in the service request
                 requestData.getAllProblem().forEach(problem -> {
-                    System.out.println("Processing problem: " + problem.getName());
                     if (problem.getName().equals(solutionName)) {
                         // Find and update the existing solution's price by name
                         problem.getProposalSolution().forEach(proposalSolutionItem -> {

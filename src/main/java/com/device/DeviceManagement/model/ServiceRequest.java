@@ -49,6 +49,11 @@ public class ServiceRequest implements Serializable {
     private String problemEditor;
     private String serviceReportGenerator;
     private String serviceAccessoriesSolutionProvider;
+    private String serviceAccessoriesSolutionProvidingTime;
+    private String serviceAccessoriesSolutionAcceptingByCOOTime;
+    private String serviceCenterToInventorySendDeviceRequestTime;
+    private String inventoryToServiceCenterSendAccessoriesDeviceTime;
+
 
     private String cooManInfoOfAccessoriesSolutionAccept;
 
@@ -107,6 +112,38 @@ public class ServiceRequest implements Serializable {
         this.status=status;
         this.proposalReceivingDateTime=proposalReceivingDateTime;
         this.serviceReportFormData=allProblem1;
+    }
+
+    public String getServiceCenterToInventorySendDeviceRequestTime() {
+        return serviceCenterToInventorySendDeviceRequestTime;
+    }
+
+    public void setServiceCenterToInventorySendDeviceRequestTime(String serviceCenterToInventorySendDeviceRequestTime) {
+        this.serviceCenterToInventorySendDeviceRequestTime = serviceCenterToInventorySendDeviceRequestTime;
+    }
+
+    public String getInventoryToServiceCenterSendAccessoriesDeviceTime() {
+        return inventoryToServiceCenterSendAccessoriesDeviceTime;
+    }
+
+    public void setInventoryToServiceCenterSendAccessoriesDeviceTime(String inventoryToServiceCenterSendAccessoriesDeviceTime) {
+        this.inventoryToServiceCenterSendAccessoriesDeviceTime = inventoryToServiceCenterSendAccessoriesDeviceTime;
+    }
+
+    public String getServiceAccessoriesSolutionAcceptingByCOOTime() {
+        return serviceAccessoriesSolutionAcceptingByCOOTime;
+    }
+
+    public void setServiceAccessoriesSolutionAcceptingByCOOTime(String serviceAccessoriesSolutionAcceptingByCOOTime) {
+        this.serviceAccessoriesSolutionAcceptingByCOOTime = serviceAccessoriesSolutionAcceptingByCOOTime;
+    }
+
+    public String getServiceAccessoriesSolutionProvidingTime() {
+        return serviceAccessoriesSolutionProvidingTime;
+    }
+
+    public void setServiceAccessoriesSolutionProvidingTime(String serviceAccessoriesSolutionProvidingTime) {
+        this.serviceAccessoriesSolutionProvidingTime = serviceAccessoriesSolutionProvidingTime;
     }
 
     public String getVisibleServiceId() {

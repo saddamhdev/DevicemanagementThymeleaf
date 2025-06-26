@@ -145,10 +145,15 @@ window.initServiceRequestGeneral = function () {
       }
 
    }
-   else if(buttonId==="receiveDevice"){
-     receiveDeviceFromCustomerCare(deviceId,serviceId,"Device received")
+   else if (buttonId === "receiveDevice") {
+       const confirmed = confirm("Are you sure you want to receive this device from Customer Care?");
+       if (confirmed) {
+           receiveDeviceFromCustomerCare(deviceId, serviceId, "Device received");
+       } else {
+           console.log("Receive action was cancelled by the user.");
+       }
+   }
 
-    }
   else  if(buttonId==="viewAlternative"){
 
                          var selectedDevices = [];

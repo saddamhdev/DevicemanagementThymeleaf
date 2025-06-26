@@ -65,23 +65,17 @@
                                 <button class="btn btn-sm  btn-info fas fa-pencil-alt text-primary  Edit ms-2" th:data-button-id="Edit" th:data-service-id="${device.id}"  title="Edit Problem"  th:if="${ device.customerCareSendDeviceToServiceStatus=='Device In Received'  && device.serviceReportStatus !='Saved'  && device.allProblem[0]?.proposalSolution == null }"></button>
 
                                 <button  th:if="${device.customerCareSendDeviceToServiceStatus != 'Device In Received'}" class="btn  btn-sm text-white" th:data-service-id="${device.id}" th:data-button-id="accepted" style="background-color:green;">✔</button>
-                                <button class="btn btn-primary btn-sm text-white fas" th:data-service-id="${device.id}" th:data-button-id="serviceReport" title="Service report" th:data-device-id="${device.deviceId}" th:if="${device.cooServiceReportAcceptStatus !='Accepted' && device.serviceReportStatus !='Saved' }" >
+                                <button class="btn btn-primary btn-sm text-white fas" th:data-service-id="${device.id}" th:data-button-id="serviceReport" title="Generate Service report" th:data-device-id="${device.deviceId}" th:if="${device.cooServiceReportAcceptStatus !='Accepted' && device.serviceReportStatus !='Saved' }" >
                                     <i class="bi bi-file-earmark-text"></i></button>
 
                                 <button class="btn btn-primary btn-sm text-white fas" th:data-service-id="${device.id}" th:data-button-id="editServiceReport" title="Edit service report" th:data-device-id="${device.deviceId}" th:if="${device.cooServiceReportAcceptStatus !='Accepted' && device.serviceReportStatus =='Saved' }" >
                                     <i class="bi bi-file-earmark-text"></i></button>
                                 <button class="btn btn-primary btn-sm text-white fas" th:data-service-id="${device.id}" th:data-button-id="exportServiceReport" title="Export service report" th:data-device-id="${device.deviceId}" th:if="${ device.serviceReportStatus =='Saved' && device.cooServiceReportAcceptStatus =='Accepted' }" >
                                     <i class="bi bi-file-earmark-text"></i></button>
-
-                                <button class="btn btn-danger btn-sm delete-button fas" th:data-service-id="${device.id}" th:data-button-id="purchase">
-                                    &#xf07a;
-                                </button>
-                                <button class="btn btn-secondary btn-sm chat-button" th:data-service-id="${device.id}" th:data-button-id="chat"  th:if="${ device.customerCareSendDeviceToServiceStatus=='Device In Received' && device.cooServiceReportAcceptStatus !='Accepted' && device.allProblem[0]?.proposalSolution == null }">
+                                <button class="btn btn-secondary btn-sm accessoriesProposal-button" th:data-service-id="${device.id}" th:data-button-id="accessoriesProposal"  th:if="${ device.customerCareSendDeviceToServiceStatus=='Device In Received' && device.cooServiceReportAcceptStatus !='Accepted' && device.allProblem[0]?.proposalSolution == null }" title="Send Accessories Proposal To COO">
                                     &#128172; <!-- Speech Bubble -->
                                 </button>
-                                <button class="btn btn-info btn-sm view-button" th:data-service-id="${device.id}" th:data-button-id="view">
-                                    &#128065;
-                                </button>
+
                             </div>
 
                         </td>

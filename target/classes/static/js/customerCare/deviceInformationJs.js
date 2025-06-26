@@ -17,6 +17,7 @@
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
                                 location.reload();
                             });
+                            },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
                  }

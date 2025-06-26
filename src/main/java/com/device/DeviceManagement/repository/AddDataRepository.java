@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface AddDataRepository extends MongoRepository<AddData, String> {
     // Custom query methods (if needed) can be defined here
+    List<AddData> findByCategoryName(String categoryName);
     List<AddData> findByStatus(String status);
     List<AddData> findByCategoryNameAndStatus(String categoryName, String status);
     AddData findByIdAndStatus(String id,String status);

@@ -1,10 +1,10 @@
 
-function setAcceptanceCommentData(rowData) {
-    console.log("Sending Row Data:", rowData);
+function setAcceptanceOfAccessoriesProposal(rowData) {
+   // console.log("Sending Row Data:", rowData);
 
     // Send the data to the controller using AJAX
     $.ajax({
-        url: '/superAdmin/setAcceptanceCommentData', // Replace with your controller's endpoint
+        url: '/superAdmin/setAcceptanceOfAccessoriesProposal', // Replace with your controller's endpoint
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSON
@@ -960,7 +960,7 @@ window.initServiceProposalTable = function () {    // Perform a single AJAX call
                            status=" ";
                            }
 
-                            console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
+                           // console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
 
                            // Determine availability
                            const availability = getAvailability(solution.category);
@@ -1004,7 +1004,7 @@ window.initServiceProposalTable = function () {    // Perform a single AJAX call
 
 
                                              ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted"  ? `
-                                                 <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Delivery Device">✔</button>
+                                                 <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on accessories (accept or reject)">✔</button>
                                              ` : ""}
 
 
@@ -1163,51 +1163,50 @@ window.initServiceProposalTable = function () {    // Perform a single AJAX call
             showModal();
         });
  // Add event listener for the availability button click
-            $(document).on('click', '.setAcceptanceCommentBtn', function() {// Get the clicked button
-                    const $button = $(this);
-                    var button = $(event.target).closest('button');
-                    var serviceId = button.data('serviceId');
-                    // Get the parent row (tr)
-                    const $row = $button.closest('tr');
+          $(document).on('click', '.setAcceptanceCommentBtn', function (event) {
+              const $button = $(this);
+              var button = $(event.target).closest('button');
+              var serviceId = button.data('serviceId');
+              const $row = $button.closest('tr');
 
-                  // Extract data from specific child cells using nth-child (1-based index)
-                     // const serviceId = $row.find('td:nth-child(1)').text(); // First column
-                       const bibagName = $row.find('td:nth-child(2)').text(); // Second column
-                      const solutionCategory = $row.find('td:nth-child(3)').text(); //Third column
-                      const solutionName = $row.find('td:nth-child(4)').text(); // Fourth column
-                      const problemName = $row.find('td:nth-child(5)').text(); // Fifth column
-                      const price = $row.find('td:nth-child(6) input').val(); // six column, assuming it contains an <input>
-                      const action = $row.find('td:nth-child(7) select').val(); // six column, assuming it contains an <input>
-                      const comment = $row.find('td:nth-child(8) input').val(); // six column, assuming it contains an <input>
+              const bibagName = $row.find('td:nth-child(2)').text();
+              const solutionCategory = $row.find('td:nth-child(3)').text();
+              const solutionName = $row.find('td:nth-child(4)').text();
+              const problemName = $row.find('td:nth-child(5)').text();
+              const price = $row.find('td:nth-child(6) input').val();
+              const action = $row.find('td:nth-child(7) select').val();
+              const comment = $row.find('td:nth-child(8) input').val();
 
-                       var departmentElement = $(".departmentName"); // Target element with department data
-                       var departmentName = departmentElement.data("departmentname"); // e.g., "it"
-                       var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
-                       var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
-                      // Create a formatted object with the row data
-                     // Create a formatted object with the row and department data
-                        const rowData = {
-                            serviceId: serviceId,
-                            bibagName: bibagName,
-                            solutionCategory: solutionCategory,
-                            solutionName: solutionName,
-                            problemName: problemName,
-                            price: price,
-                            action:action,
-                            comment:comment,
-                            departmentName: departmentName,
-                            departmentUserName: departmentUserName,
-                            departmentUserId: departmentUserId
-                        };
+              var departmentElement = $(".departmentName");
+              var departmentName = departmentElement.data("departmentname");
+              var departmentUserName = departmentElement.data("departmentuser-name");
+              var departmentUserId = departmentElement.data("departmentuser-id");
 
-                    // Print the row's data
-                    console.log("Row Data:", rowData);
+              const rowData = {
+                  serviceId: serviceId,
+                  bibagName: bibagName,
+                  solutionCategory: solutionCategory,
+                  solutionName: solutionName,
+                  problemName: problemName,
+                  price: price,
+                  action: action,
+                  comment: comment,
+                  departmentName: departmentName,
+                  departmentUserName: departmentUserName,
+                  departmentUserId: departmentUserId
+              };
 
-                    setAcceptanceCommentData(rowData);
+              // Show confirmation dialog
+              const confirmation = confirm(`Are you sure you want to submit?`);
 
+              if (confirmation) {
+                  //console.log("Row Data:", rowData);
+                  setAcceptanceOfAccessoriesProposal(rowData);
+              } else {
+                  console.log("Submission cancelled.");
+              }
+          });
 
-
-            });
 
             // Add event listener for the availability button click
         $(document).on('click', '.view-button-pending', function() {

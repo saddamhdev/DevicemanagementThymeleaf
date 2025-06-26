@@ -131,13 +131,22 @@ window.initServiceRequestGeneral = function () {
         }
 
     const buttonText = button.text().trim(); // Get button text (trimming leading/trailing spaces)
-   if(buttonId==="deliveryDevice"){
-   sendDeviceToDepartment(deviceId,serviceId,"Device delivered")
+   if (buttonId === "deliveryDevice") {
+       const confirmed = confirm("Are you sure you want to deliver the device to the department?");
+       if (confirmed) {
+           sendDeviceToDepartment(deviceId, serviceId, "Device delivered");
+       } else {
+           console.log("Delivery action was cancelled by the user.");
+       }
+   } else if (buttonId === "receiveDevice") {
+       const confirmed = confirm("Are you sure you want to receive the device from the service?");
+       if (confirmed) {
+           receiveDeviceFromService(deviceId, serviceId, "Device received");
+       } else {
+           console.log("Receiving action was cancelled by the user.");
+       }
    }
-    else if(buttonId==="receiveDevice"){
-      receiveDeviceFromService(deviceId,serviceId,"Device received")
 
-     }
      else if(buttonId==="viewAlternative"){
 
                          var selectedDevices = [];

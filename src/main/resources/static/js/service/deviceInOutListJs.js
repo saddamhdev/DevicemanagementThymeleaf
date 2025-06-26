@@ -80,9 +80,15 @@ window.initDeviceInOutListGeneral = function () {
         }
 
     const buttonText = button.text().trim(); // Get button text (trimming leading/trailing spaces)
-     if(buttonId==="sendDevice"){
-          deliveryDeviceToCustomerCare(deviceId,serviceId,"Device delivered")
+     if (buttonId === "sendDevice") {
+         const confirmed = confirm("Are you sure you want to send the device to customer care?");
+         if (confirmed) {
+             deliveryDeviceToCustomerCare(deviceId, serviceId, "Device delivered");
+         } else {
+             console.log("Send device action was cancelled by the user.");
+         }
      }
+
      else if(buttonId==="viewAlternative"){
 
                          var selectedDevices = [];

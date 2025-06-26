@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/superAdmin")
 public class SuperAdmin {
+    boolean result;
     String nameK="",actionK="",commentK="",nameMain;
     List<String> inputTypes = Arrays.asList(
             "text", "password", "email", "url", "search", "tel", "number", "range",
@@ -190,8 +191,9 @@ public class SuperAdmin {
             String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             // Find the category by old name
-            Category category = categoryRepository.findByCategoryName(oldCategoryName);
-            if (category != null) {
+            Optional<Category> categoryData = categoryRepository.findByCategoryNameAndStatus(oldCategoryName,"1");
+            if (categoryData.isPresent()) {
+                Category category=categoryData.get();
                 // Update category name
                 /// category.setCategoryName(newCategoryName);
                 category.setStatus("0");
@@ -208,8 +210,10 @@ public class SuperAdmin {
                     columnRepository.save(column);
                 }
 
-// redis update
-                categoriesService.updateCategories();
+                // update whole categoryName
+                  updateCategoryDataInAllTable(oldCategoryName,newCategoryName);
+                // redis update
+                  categoriesService.updateCategories();
                 return ResponseEntity.ok("Category updated successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -251,35 +255,50 @@ public class SuperAdmin {
     @PostMapping("/deleteCategory")
     @ResponseBody
     public ResponseEntity<String> deleteCategory(@RequestParam String categoryName) {
-        Category category = categoryRepository.findByCategoryName(categoryName);
         try {
-            if (category != null) {
-                // Update category name
-                /// category.setCategoryName(newCategoryName);
-                category.setStatus("2");
-                categoryRepository.save(category); // Save the updated category
+            // Check if category is used in other tables
+            boolean inUse =
+                    (addDataRepository.findByCategoryName(categoryName) != null &&
+                            !addDataRepository.findByCategoryName(categoryName).isEmpty()) ||
 
-                // Fetch and update columns associated with the category
+                            (columnRepository.findByCategoryName(categoryName) != null &&
+                                    !columnRepository.findByCategoryName(categoryName).isEmpty()) ||
+
+                            (dropDownListRepository.findByCategoryName(categoryName) != null &&
+                                    !dropDownListRepository.findByCategoryName(categoryName).isEmpty());
+
+            if (inUse) {
+                return ResponseEntity.ok("Cannot delete category: It is in use in other tables.");
+            }
+
+            // Fetch the category by name and status
+            Optional<Category> categoryData = categoryRepository.findByCategoryNameAndStatus(categoryName, "1");
+            if (categoryData.isPresent()) {
+                Category category = categoryData.get();
+                category.setStatus("2");
+                categoryRepository.save(category);
+
+                // Soft delete (status = 2) the columns related to this category
                 List<Column> columns = columnRepository.findByCategoryName(categoryName);
                 for (Column column : columns) {
                     column.setStatus("2");
-                    System.out.println(column.getColumnName()+" is updated");
+                    System.out.println("Column " + column.getColumnName() + " status set to 2");
                     columnRepository.save(column);
                 }
 
-
-// redis update
+                // Redis or cache update
                 categoriesService.clearCategoriesCache();
+
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found or already deleted");
             }
-
-
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error deleting category");
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error deleting category: " + e.getMessage());
         }
     }
+
     @PostMapping("/deleteDesignation")
     @ResponseBody
     public ResponseEntity<String> deleteDesignation(@RequestParam String designationName) {
@@ -357,6 +376,7 @@ public class SuperAdmin {
 
                 // Save the Category object
                 columnRepository.save(new Column(newColumnName,formattedDateTime,currentDate,"1","universal","universal",newRequiredType,newDataType));
+                updateColumnDataInAllTable(oldColumnName,newColumnName);
                 universalColumnsService.updateUniversalColumn();
                 return ResponseEntity.ok("Column updated successfully");
             } else {
@@ -370,6 +390,10 @@ public class SuperAdmin {
     @PostMapping("/deleteUniversalColumn")
     @ResponseBody
     public ResponseEntity<String> deleteColumn(@RequestParam String universalColumnName) {
+        if(checkColumnDataInAllTable(universalColumnName)){
+            return ResponseEntity.ok("Sorry the column will not delete, this was usimg in another table");
+        }
+
         try {
             // Find the category by old name
             Column column = columnRepository.findByColumnNameAndColumnTypeAndStatus(universalColumnName,"universal","1");
@@ -435,6 +459,9 @@ public class SuperAdmin {
     @PostMapping("/deleteIndividualColumn")
     @ResponseBody
     public ResponseEntity<String> deleteIndividualColumn(@RequestParam String oldIndividualCategoryName,@RequestParam String oldIndividualColumnName) {
+        if(checkColumnDataInAllTable(oldIndividualColumnName)){
+            return ResponseEntity.ok("Sorry the column will not delete, this was usimg in another table");
+        }
         try {
             // Find the category by old name
             Optional<Column> columnOptional = columnRepository.findByCategoryNameAndColumnNameAndColumnTypeAndStatus(
@@ -481,7 +508,7 @@ public class SuperAdmin {
                 Optional<Column> optionalNewColumn = columnRepository.findByCategoryNameAndColumnNameAndColumnTypeAndStatus(
                         newIndividualCategoryName, newIndividualColumnName, "individual", "1");
 
-                if (optionalNewColumn.isPresent()) {
+                if (optionalNewColumn.isEmpty()) {
                     // Save the new column object
                     Column newColumn = new Column(
                             newIndividualColumnName,
@@ -494,6 +521,7 @@ public class SuperAdmin {
                             newRequiredType
                     );
                     individualColumnsService.updateUniversalColumn();
+                    updateColumnDataInAllTable(oldIndividualColumnName,newIndividualColumnName);
                     columnRepository.save(newColumn);
                 }
 
@@ -1811,10 +1839,10 @@ public class SuperAdmin {
             }
 
             // Log or process the grouped data as needed
-            System.out.println("Grouped Data: " + groupedData);
+           // System.out.println("Grouped Data: " + groupedData);
 
             // Additional logic using serviceId
-            System.out.println("Processing data for serviceId: " + serviceId);
+           // System.out.println("Processing data for serviceId: " + serviceId);
             Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData1 = optionalRequestData.get();
@@ -1823,7 +1851,7 @@ public class SuperAdmin {
                 requestData1.setCooAcceptOfServiceRequestTime(getCurrentLocalDateTime());
                 // Iterate through each problem in the service request
                 requestData1.getAllProblem().forEach(problem -> {
-                    System.out.println("Processing problem: " + problem.getName());
+                    //System.out.println("Processing problem: " + problem.getName());
                     // Extract non-hyphenated keys
                     Map<String, List<String>> result = getNonHyphenatedKeys(groupedData);
 
@@ -1831,8 +1859,8 @@ public class SuperAdmin {
                         String formId = entry.getKey();
                         List<String> nonHyphenatedKeys = entry.getValue();
 
-                        System.out.println("Form ID: " + formId);
-                        System.out.println("Keys without hyphens:");
+                        //System.out.println("Form ID: " + formId);
+                       // System.out.println("Keys without hyphens:");
                         if(problem.getName().equals(formId)){
 
                         for (String key : nonHyphenatedKeys) {
@@ -1871,7 +1899,7 @@ public class SuperAdmin {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing data.");
         }
     }
-    @PostMapping("/setAcceptanceCommentData")
+    @PostMapping("/setAcceptanceOfAccessoriesProposal")
     @ResponseBody
     public ResponseEntity<String> setAcceptanceCommentData(@RequestBody Map<String, Object> rowData) {
         try {
@@ -1892,18 +1920,15 @@ public class SuperAdmin {
 
             // Retrieve the ServiceRequest by serviceId and status
             Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
-            System.out.println("Fetched ServiceRequest: " + optionalRequestData);
 
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
-
+                requestData.setServiceAccessoriesSolutionAcceptingByCOOTime(getCurrentLocalDateTime());
                 // Iterate through each problem in the service request
                 requestData.getAllProblem().forEach(problem -> {
-                    System.out.println("Processing problem: " + problem.getName());
                     if (problem.getName().equals(solutionName)) {
                         // Find and update the existing solution's price by name
                         problem.getProposalSolution().forEach(proposalSolutionItem -> {
-                            System.out.println(proposalSolutionItem.getName()+" "+problemName);
                             if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
                                 proposalSolutionItem.setPrice( price);
                                 proposalSolutionItem.setComment(comment);
@@ -1912,12 +1937,10 @@ public class SuperAdmin {
                                 proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentSetter(departmentName + "_" + departmentUserName + "_" + departmentUserId);
                                 proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentStatus("Accepted");
                                 proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentSettingTime(getCurrentLocalDateTime());
-                                System.out.println(price);
                             }
                         });
 
 
-                        System.out.println("Updated proposalSolution: " + problem.getProposalSolution());
                     }
 
                 });
@@ -2428,4 +2451,208 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
         return currentDate.format(formatter);
     }
+
+    public  void  updateCategoryDataInAllTable(String oldCategoryName,String newCategoryName){
+        System.out.println("Starting category update in all tables...");
+
+        // ✅ Update device list
+        List<AddData> deviceData = addDataRepository.findByCategoryName(oldCategoryName);
+        if (deviceData != null && !deviceData.isEmpty()) {
+            System.out.println("Updating device data...");
+            deviceData.forEach(e -> {
+                if (oldCategoryName.equals(e.getCategoryName())) {
+                    e.setCategoryName(newCategoryName);
+                     addDataRepository.save(e);
+                }
+            });
+             addDataService.update();
+        }
+
+        // ✅ Update column list
+        List<Column> columnData = columnRepository.findByCategoryName(oldCategoryName);
+        if (columnData != null && !columnData.isEmpty()) {
+            System.out.println("Updating column data...");
+            columnData.forEach(e -> {
+                if (oldCategoryName.equals(e.getCategoryName())) {
+                    e.setCategoryName(newCategoryName);
+                     columnRepository.save(e);
+                }
+            });
+             individualColumnsService.updateUniversalColumn();
+        }
+
+        // ✅ Update dropdown list
+        List<DropDownList> dropDownLists = dropDownListRepository.findByCategoryName(oldCategoryName);
+        if (dropDownLists != null && !dropDownLists.isEmpty()) {
+            System.out.println("Updating drop-down list...");
+            dropDownLists.forEach(e -> {
+                if (oldCategoryName.equals(e.getCategoryName())) {
+                    e.setCategoryName(newCategoryName);
+                     dropDownListRepository.save(e);
+                }
+            });
+             dropDownListService.update();
+        }
+
+        // ✅ Update requestData
+        List<RequestData> requestData = requestDataRepository.findAll();
+        if (requestData != null && !requestData.isEmpty()) {
+            System.out.println("Updating request data...");
+            requestData.forEach(e -> {
+                Map<String, String> allData = e.getAllData();
+                if (allData != null && oldCategoryName.equals(allData.get("category"))) {
+                    allData.put("category", newCategoryName);
+                    e.setAllData(allData);
+                     requestDataRepository.save(e);
+                }
+            });
+             requestDataService.update();
+        }
+
+        // ✅ Update Service Request
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findAll();
+        if (serviceRequests != null && !serviceRequests.isEmpty()) {
+            System.out.println("Updating service requests...");
+
+            for (ServiceRequest request : serviceRequests) {
+                if (request.getCategoryName() != null && request.getCategoryName().equals(oldCategoryName)) {
+                    System.out.println("Updating request category from " + oldCategoryName + " to " + newCategoryName);
+                    request.setCategoryName(newCategoryName);
+                }
+
+                // Check if getAllProblem() is not null
+                if (request.getAllProblem() != null && !request.getAllProblem().isEmpty()) {
+                    request.getAllProblem().forEach(problem -> {
+                        if (problem != null && problem.getProposalSolution() != null && !problem.getProposalSolution().isEmpty()) {
+                            problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                                if (proposalSolutionItem != null && proposalSolutionItem.getCategory() != null &&
+                                        proposalSolutionItem.getCategory().equals(oldCategoryName)) {
+                                    System.out.println("Updating proposalSolutionItem category from " + oldCategoryName + " to " + newCategoryName);
+                                    proposalSolutionItem.setCategory(newCategoryName);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                // Save changes if needed
+                 serviceRequestRepository.save(request);
+            }
+
+            // Optionally update the service
+             serviceRequestService.update();
+        }
+
+    }
+
+    public void updateColumnDataInAllTable(String oldCategoryName, String newCategoryName) {
+        System.out.println("Starting key update in all AddData entries...");
+
+        List<AddData> deviceData = addDataRepository.findAll();
+        if (deviceData != null && !deviceData.isEmpty()) {
+            System.out.println("Found " + deviceData.size() + " AddData entries");
+
+            for (AddData entry : deviceData) {
+                boolean updated = false;
+
+                Map<String, String> allData = entry.getAllData();
+                if (allData != null && !allData.isEmpty()) {
+                    Map<String, String> updatedData = new HashMap<>();
+
+                    for (Map.Entry<String, String> field : allData.entrySet()) {
+                        String key = field.getKey();
+                        String value = field.getValue();
+
+                        // ✅ Rename key if its value matches oldCategoryName
+                        if (key != null && key.equals(oldCategoryName)) {
+                            System.out.println("Renaming key '" + key + "' to '" + newCategoryName + "'");
+                            updatedData.put(newCategoryName, value); // new key
+                            updated = true;
+                        } else {
+                            updatedData.put(key, value); // unchanged
+                        }
+                    }
+
+                    entry.setAllData(updatedData);
+                }
+
+                if (updated) {
+                    addDataRepository.save(entry);
+                }
+            }
+
+            addDataService.update();
+            System.out.println("Finished updating keys in AddData entries.");
+        } else {
+            System.out.println("No AddData entries found.");
+        }
+
+
+        // ✅ Update dropdown list
+        List<DropDownList> dropDownLists = dropDownListRepository.findAll();
+        if ( !dropDownLists.isEmpty()) {
+            System.out.println("Updating drop-down list...");
+            dropDownLists.forEach(e -> {
+                if (oldCategoryName.equals(e.getDropDownListName())) {
+                    e.setDropDownListName(newCategoryName);
+                    dropDownListRepository.save(e);
+                }
+            });
+            dropDownListService.update();
+        }
+
+
+
+    }
+    public boolean checkColumnDataInAllTable(String Name) {
+        System.out.println("Starting key update in all AddData entries...");
+          result=false;
+        List<AddData> deviceData = addDataRepository.findAll();
+        if (deviceData != null && !deviceData.isEmpty()) {
+            System.out.println("Found " + deviceData.size() + " AddData entries");
+
+            for (AddData entry : deviceData) {
+                boolean updated = false;
+
+                Map<String, String> allData = entry.getAllData();
+                if (allData != null && !allData.isEmpty()) {
+                    Map<String, String> updatedData = new HashMap<>();
+
+                    for (Map.Entry<String, String> field : allData.entrySet()) {
+                        String key = field.getKey();
+
+
+                        // ✅ Rename key if its value matches oldCategoryName
+                        if (key != null && key.equals(Name)) {
+                           result=true;
+                        }
+                    }
+
+                    entry.setAllData(updatedData);
+                }
+
+                if (updated) {
+                    addDataRepository.save(entry);
+                }
+            }
+
+        }
+
+
+        // ✅ Update dropdown list
+        List<DropDownList> dropDownLists = dropDownListRepository.findAll();
+        if ( !dropDownLists.isEmpty()) {
+            System.out.println("Updating drop-down list...");
+            dropDownLists.forEach(e -> {
+                if (Name.equals(e.getDropDownListName())) {
+                   result=true;
+                }
+            });
+
+        }
+
+       return result;
+
+    }
+
 }

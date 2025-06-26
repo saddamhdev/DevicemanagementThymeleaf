@@ -272,7 +272,7 @@ function addTableInformationOfServiceForEdit(serviceId) {
     });
 }
 
-function addTableInformationOfService22(serviceId) {
+function accessoriesProposal(serviceId) {
     var mergedFormData = {}; // Object to hold all form data based on formId
 
     // Loop through each form inside the modal-body div
@@ -2268,7 +2268,7 @@ window.initServicingListGeneral = function () {
               });
               showModal();
                }
-     else if (buttonId === "chat") {
+     else if (buttonId === "accessoriesProposal") {
                          print('serviceRequests', function(serviceRequests) {
                              if (serviceRequests) {
                                  const serviceData = serviceRequests.find(item => item.id === serviceId);
@@ -2728,7 +2728,7 @@ window.initServicingListGeneral = function () {
                                      // Save button handler
                                      $('#AcceptBtn').click(function() {
 
-                                         addTableInformationOfService22(serviceId);
+                                         accessoriesProposal(serviceId);
                                      });
 
                                      $('.remove-problem').click(function () {
