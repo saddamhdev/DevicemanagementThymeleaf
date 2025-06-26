@@ -118,6 +118,7 @@ public class Fragment {
 
 
         model.addAttribute("inputTypes", inputTypes);
+        System.out.println(folderName+"/" + pageName + " :: " + pageName);
         return folderName+"/" + pageName + " :: " + pageName;
     }
     @GetMapping("/clearCache")
