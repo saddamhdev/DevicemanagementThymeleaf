@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Box</title>
+    <link rel="stylesheet" th:href="@{/css/chatbox.css}">
+</head>
+<body>
+<!-- 💬 Chat Modal -->
+<div th:fragment="chatModal">
+    <!-- 💬 Chat Modal -->
+    <div class="chat-modal">
+        <div class="chat-header">
+            <span>Chat with us</span>
+            <button onclick="closeChatModal()">×</button>
+        </div>
+
+        <div class="chat-body">
+            <div class="message bot">Hi! How can I help you?</div>
+        </div>
+
+        <!-- Quick Replies -->
+        <div class="quick-replies">
+            <button onclick="sendReply('Delivery time?')">Delivery time?</button>
+            <button onclick="sendReply('Custom order')">Custom order</button>
+            <button onclick="sendReply('Thanks!')">Thanks!</button>
+        </div>
+
+        <!-- Custom Text Input -->
+        <div class="chat-input-area">
+            <input type="text" class="customMessage" placeholder="Type your message..." onkeypress="handleKey(event)">
+            <button onclick="sendCustomMessage()">Send</button>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

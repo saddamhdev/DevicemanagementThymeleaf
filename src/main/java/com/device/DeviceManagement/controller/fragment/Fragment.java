@@ -118,7 +118,7 @@ public class Fragment {
 
 
         model.addAttribute("inputTypes", inputTypes);
-       // System.out.println(folderName+"/" + pageName + " :: " + pageName);
+        System.out.println(folderName+"/" + pageName + " :: " + pageName);
         return folderName+"/" + pageName + " :: " + pageName;
     }
     @GetMapping("/clearCache")
@@ -135,7 +135,7 @@ public class Fragment {
         serviceRequestService.clearCache();
         userService.clearCache();
         internalUserService.clearCache();
-        return "superAdmin/home"; // This will return the index.html Thymeleaf template
+        return "Login";
     }
 
 }

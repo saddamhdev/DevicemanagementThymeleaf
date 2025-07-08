@@ -1261,7 +1261,7 @@ window.initRequestDataForPaymentExportTable = function () {    // Perform a sing
 
                                   <div class="d-flex justify-content-center align-items-center action-button-container">
                                                ${ cooAnswer === 'Accepted'  ? `
-                                                    <input type="checkbox" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color: green; transform: scale(1.5); width: 12px; height: 12px;"  title="Delivery Device">
+                                                    <input type="checkbox" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color: green; transform: scale(1.5); width: 12px; height: 12px;"  title="Select For Payment">
 
                                                 ` : ""}
                                     </div>

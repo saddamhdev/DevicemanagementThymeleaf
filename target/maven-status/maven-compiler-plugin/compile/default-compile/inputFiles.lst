@@ -12,6 +12,8 @@ D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceMa
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\inventory\Inventory.java
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\login\Login.java
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\login\Start.java
+D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\openAI\ChatController.java
+D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\openAIService\OpenAIService.java
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\purchase\purchase.java
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\service\AddDataService.java
 D:\Thymeleaf\DeviceManagement\DeviceManagement\src\main\java\com\device\DeviceManagement\controller\service\BranchUserService.java

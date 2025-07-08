@@ -837,6 +837,8 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
 
            // Loop through each device in allData
           allData.forEach(function (device) {
+          if(device.requestMode  !=="Denied")
+          {
               // Extract required variables
               const bivagName = device.departmentName || "N/A"; // Handle undefined cases
               const categoryName = device.allData["category"] || "N/A";
@@ -970,6 +972,7 @@ window.initRequestDataTable = function () {    // Perform a single AJAX call
               // Assign the HTML to the row and append it to the table body
               row.innerHTML = htmlData;
               tableBody.appendChild(row);
+              }
           });
           //const myTable = document.getElementById("requestInventoryTable");  // or more specific selector if you want
           const myTable = document.querySelector("table");  // or more specific selector if you want

@@ -10,6 +10,8 @@
 
 <body>
 <nav th:include="purchase/topMenuBar:: topMenuBarDepartmentUser"></nav>
+<div id="chat-icon" onclick="openChatModal()">💬</div>
+
 <div style="padding-top:5em"  class="mainBody">
    <!-- <section class="container mb-4   ">
         <div th:include="purchase/deviceInformation :: deviceInformation" data-page="deviceInformation"></div>
@@ -28,6 +30,8 @@
 <div th:include="purchase/publicModal :: publicModal"></div>
 <div th:include="purchase/publicModal :: linkModal"></div>
 <div th:include="purchase/publicModal :: exportModal"></div>
+<div th:include="global/modal :: chatModal"></div>
+
 
 </body>
 </html>

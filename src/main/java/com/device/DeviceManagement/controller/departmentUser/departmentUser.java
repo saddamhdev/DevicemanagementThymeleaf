@@ -113,7 +113,7 @@ public class departmentUser {
                 request.setStatus("2");
                 branchUserRepository.save(request); // Save the updated category
 
-                 branchUserService.update();
+                branchUserService.update();
                 return ResponseEntity.ok("User deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -209,7 +209,7 @@ public class departmentUser {
                 data.setStatus("2");
                 requestDataRepository.save(data); // Save the updated category
 
-                 requestDataService.update();
+                requestDataService.update();
                 return ResponseEntity.ok("Requested data deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -257,7 +257,7 @@ public class departmentUser {
                 requestDataRepository.save(new RequestData(requestId,data,departmentName,formattedDateTime,currentDate,allParams,"1",clonedData.getRequestMode(),null));
 
                 requestDataService.update();
-               // requestDataRepository.save(data1);
+                // requestDataRepository.save(data1);
 
                 return ResponseEntity.ok("Request data Updated successfully");
             } else {
@@ -297,7 +297,7 @@ public class departmentUser {
         String deviceType = allParams.get("deviceType");
         allParams.remove("deviceType");
 
-      //  System.out.println(allParams);
+        //  System.out.println(allParams);
 
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -307,13 +307,13 @@ public class departmentUser {
 
         adddata.setDeviceTypeServicingOrRequestingOrOldAsInputting("Old");
         adddata.setDeviceTypePrimaryOrSecondary(deviceType);
-       if(deviceType.equals("Secondary")){
-           adddata.setDeviceTypeSecondaryInOrOut("Out");
-       }
+        if(deviceType.equals("Secondary")){
+            adddata.setDeviceTypeSecondaryInOrOut("Out");
+        }
         AddData.DeviceUser user=new AddData.DeviceUser(departmentName,userName,userId,startingDate,"1");
-         List<AddData.DeviceUser> list=new ArrayList<>();
-         list.add(user);
-       adddata.setDeviceUsers(list);
+        List<AddData.DeviceUser> list=new ArrayList<>();
+        list.add(user);
+        adddata.setDeviceUsers(list);
 
         addDataRepository.save(adddata);
         addDataService.update();
@@ -358,14 +358,14 @@ public class departmentUser {
                 allParams.remove("departmentName");
 
                 // Clone the object with the custom ID
-                 AddData clonedData = new AddData(device,deviceId+"_child_"+formattedDateTime);
-                 addDataRepository.save(clonedData);
-                 // delete old
-                 addDataRepository.delete(device);
+                AddData clonedData = new AddData(device,deviceId+"_child_"+formattedDateTime);
+                addDataRepository.save(clonedData);
+                // delete old
+                addDataRepository.delete(device);
 
-                 // generate new
-                 addDataRepository.save(new AddData(deviceId,device,departmentName,categoryName,formattedDateTime,currentDate,allParams,"1"));
-                 addDataService.update();
+                // generate new
+                addDataRepository.save(new AddData(deviceId,device,departmentName,categoryName,formattedDateTime,currentDate,allParams,"1"));
+                addDataService.update();
 
                 return ResponseEntity.ok("Device Data Updated successfully");
             } else {
@@ -386,8 +386,8 @@ public class departmentUser {
         if (allParams.isEmpty()) {
             return ResponseEntity.badRequest().body("No data provided");
         }
-       // create a java method who will return current month as integer text with 2 length  getCurrentMonthAsTwoCharacterInteger()
-       // create a java method who will return last value . example 24 will return from current year. getLastTwoDigitsOfYear
+        // create a java method who will return current month as integer text with 2 length  getCurrentMonthAsTwoCharacterInteger()
+        // create a java method who will return last value . example 24 will return from current year. getLastTwoDigitsOfYear
         String prefix=getLastTwoDigitsOfYear().concat(getCurrentMonthAsTwoCharacterInteger());
         System.out.println(prefix);
         String deviceId = allParams.get("deviceId");
@@ -543,16 +543,16 @@ public class departmentUser {
             String userName = requestData1.get("userName");
 
             BranchUser  internalUser=branchUserRepository.findByBranchNameAndUserNameAndStatus(departmentUserName,userName,"1");
-           String userId="";
+            String userId="";
             if(internalUser !=null){
-               userId=internalUser.getUserId();
+                userId=internalUser.getUserId();
             }
 
             Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
-               requestData.setDistributeDeviceToUserStatus("Distributed");
-               requestData.setDistributeDeviceToUserManInfo(departmentName + "_" + departmentUserName + "_" + departmentUserId);
+                requestData.setDistributeDeviceToUserStatus("Distributed");
+                requestData.setDistributeDeviceToUserManInfo(departmentName + "_" + departmentUserName + "_" + departmentUserId);
                 requestData.setDistributeDeviceToUserTime(getCurrentLocalDateTime());
 
 

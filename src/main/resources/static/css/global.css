@@ -125,3 +125,111 @@ input[type="text"], input[type="date"], select {
       margin: 0;
     }
 
+
+/* chat bot start */
+#chat-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.chat-modal {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.chat-header {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+.chat-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    background: #fff;
+}
+
+/* Common message style */
+.message {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    word-wrap: break-word;
+}
+
+/* Bot message on left */
+.message.bot {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+}
+
+/* User message on right */
+.message.user {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+}
+
+
+.quick-replies {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.quick-replies button {
+    flex: 1 1 30%;
+    padding: 5px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    background: #fafafa;
+}
+.chat-input-area input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+.chat-input-area button {
+    margin-left: 8px;
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/*chatbot end*/
+

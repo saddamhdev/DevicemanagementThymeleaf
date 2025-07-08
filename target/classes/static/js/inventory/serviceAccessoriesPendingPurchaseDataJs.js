@@ -744,7 +744,7 @@ window.initServiceAccessoriesPendingPurchaseDataTable = function () {
 
                                   <div class="d-flex justify-content-center align-items-center action-button-container">
                                              ${ solution.purchaseDeviceSenderToInventoryStatus ==='Pending' ? `
-                                            <button class="btn btn-primary btn-sm text-white fas deliver"   data-purchasedevice-id="${solution.purchaseDeviceSenderToInventoryDeviceId}" data-category="${solution.category}" data-solutionname-id="${solution.name}" data-problemname-id="${problem.name}" data-service-id="${device.id}"  th:data-button-id="deliver">
+                                            <button class="btn btn-primary btn-sm text-white fas deliver"   data-purchasedevice-id="${solution.purchaseDeviceSenderToInventoryDeviceId}" data-category="${solution.category}" data-solutionname-id="${solution.name}" data-problemname-id="${problem.name}" data-service-id="${device.id}"  th:data-button-id="deliver" title="Received Device from Purchase">
                                                 ✔</button>
                                             </div>
                                              ` : ""}

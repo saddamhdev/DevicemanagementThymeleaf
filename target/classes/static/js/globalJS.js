@@ -1138,3 +1138,82 @@ window.trackServiceRequestData = function (row, clickedElement) {
         modalInstance.show();
     });
 };
+
+// chat bot
+function openChatModal() {
+    document.querySelector('.chat-modal').style.display = 'block';
+}
+
+function closeChatModal() {
+    document.querySelector('.chat-modal').style.display = 'none';
+}
+
+function sendReply(msg) {
+    const chatBody = document.querySelector('.chat-body');
+    const collectionName = "deviceManagement";
+
+    // Show user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.innerText = msg;
+    chatBody.appendChild(userMsg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Send to backend with message + collectionName
+    fetch('/api/chat/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            message: msg,
+            collectionName: collectionName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+
+        // 🔗 Replace URLs with anchor tags
+        const safeText = escapeHTML(data.reply); // Prevent XSS
+        const replyWithLinks = safeText.replace(
+            /(https?:\/\/[^\s]+)/g,
+            '<a href="$1" target="_blank">$1</a>'
+        );
+
+        botMsg.innerHTML = replyWithLinks;
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        console.log(data);
+    })
+    .catch(error => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+        botMsg.innerText = "Sorry, something went wrong.";
+        chatBody.appendChild(botMsg);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        console.error(error);
+    });
+}
+
+
+function escapeHTML(text) {
+    const div = document.createElement('div');
+    div.innerText = text;
+    return div.innerHTML;
+}
+
+function sendCustomMessage() {
+    const input = document.querySelector('.customMessage');
+    const message = input.value.trim();
+    if (message === "") return;
+
+    sendReply(message);
+    input.value = "";
+}
+
+function handleKey(event) {
+    if (event.key === "Enter") {
+        sendCustomMessage();
+    }
+}
+

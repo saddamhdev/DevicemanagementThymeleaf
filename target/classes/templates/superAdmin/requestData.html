@@ -13,7 +13,7 @@
         <p>  Request Data List</p>
     </div>
     <div class="row">
-        <div class="col-sm-9 firstDiv" >
+        <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <div style="text-align: right;">
                     <button class="btn btn-sm text-black small-button showButton"  style="display:none;"> < </button>
@@ -80,15 +80,12 @@
                         <td>
 
                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button class="btn  btn-sm text-white" th:data-request-id="${device.id}" style="background-color:green;" th:if="${device.requestMode !='Accepted'}">✔</button>
+                                <button class="btn  btn-sm text-white" th:data-request-id="${device.id}" style="background-color:green;" th:if="${device.requestMode !='Accepted'}"  title="Accept Device Request">✔</button>
 
-                                <button class="btn btn-danger btn-sm delete-button" th:data-request-id="${device.id}" th:if="${device.requestMode !='Accepted'}">
+                                <button class="btn btn-danger btn-sm delete-button" th:data-request-id="${device.id}" th:if="${device.requestMode !='Accepted'}" title="Cancel Device Request">
                                     &#10007;
                                 </button>
 
-                                <button class="btn btn-secondary btn-sm chat-button" th:data-request-id="${device.id}">
-                                    &#128172; <!-- Speech Bubble -->
-                                </button>
                             </div>
                         </td>
 
@@ -97,19 +94,6 @@
 
                 </table>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-3 secondDiv"   >
-            <div  class="rightDiv" >
-                <div style="text-align: right;">
-                    <button class="btn btn-sm text-black small-button hideButton" style="display:inline-block">X</button>
-                </div>
-                <br>
-                <div class="activityDiv">
-                    <div style="text-align:center;font-weight:bold;color:green">Activity</div>
-                    <p> <b>Note: </b> <br> Click on any row of Table and see the Activity.</p>
-                </div>
-
             </div>
         </div>
     </div>

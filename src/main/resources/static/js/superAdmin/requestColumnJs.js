@@ -139,7 +139,8 @@ function EditTableInformationOfRequest(requestId){
                            });
 
                      showModal();
-        } else if (buttonPressed.hasClass('Delete')) {
+        }
+         else if (buttonPressed.hasClass('Delete')) {
             const requestId = button.data('requestId');
             if (!requestId) {
                 console.error("Missing data-request-id attribute on delete button!");

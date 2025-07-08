@@ -273,7 +273,7 @@ public class Service {
         if (optionalRequestData.isPresent()) {
             ServiceRequest requestData = optionalRequestData.get();
             requestData.setServiceCenterRequestToInventoryForAccessoriesStatus(status);
-           // requestData.setServiceCenterManInfoToInventoryAccessoriesRequest(departmentName+"_"+departmentUserName+"_"+departmentUserId);
+            // requestData.setServiceCenterManInfoToInventoryAccessoriesRequest(departmentName+"_"+departmentUserName+"_"+departmentUserId);
 
             requestData.setServiceCenterRequestToInventoryForAccessoriesTime(getCurrentLocalDateTime());
             requestData.getAllProblem().forEach(problem -> {
@@ -283,7 +283,7 @@ public class Service {
 
                     }
                 });
-                    });
+            });
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
             serviceRequestService.update();
@@ -304,7 +304,7 @@ public class Service {
             @RequestParam String departmentUserName,
             @RequestParam String departmentUserId,
             @RequestParam String deviceId
-            ) {
+    ) {
         // have to change service device owner info
 
 
@@ -390,7 +390,7 @@ public class Service {
                 // Normalize the problem name by replacing spaces with hyphens to match form IDs
                 String normalizedProblemName = problem.getName().replace(" ", "-");
 
-               // System.out.println("Processing problem: " + problem.getName());
+                // System.out.println("Processing problem: " + problem.getName());
 
                 // Iterate over the remaining entries in allParams (which are the form data)
                 for (Map.Entry<String, Object> entry : allParams.entrySet()) {
@@ -410,7 +410,7 @@ public class Service {
                         } else {
                             problem.setProposalSolution(new ArrayList<>());
                         }
-                     List<ServiceRequest.problems.ProposalSolutionItem> list=new ArrayList<>();
+                        List<ServiceRequest.problems.ProposalSolutionItem> list=new ArrayList<>();
                         // Add new form data to proposalSolution
                         formData.forEach(solutionData -> {
                             ServiceRequest.problems.ProposalSolutionItem data=new ServiceRequest.problems.ProposalSolutionItem();
@@ -444,8 +444,8 @@ public class Service {
             });
 
             // Save the updated requestData object to the database
-           serviceRequestRepository.save(requestData);
-           serviceRequestService.update();
+            serviceRequestRepository.save(requestData);
+            serviceRequestService.update();
 
             return ResponseEntity.ok("Data saved successfully");
 
@@ -507,8 +507,8 @@ public class Service {
                             departmentName, departmentUserName, departmentUserId, startingDate, "0"
                     )));
                     addDataRepository.save(newDevice);
-                  //  allListedData.remove(newDevice.getId());
-                   // allAccessoriesData.remove(newDevice.getId());
+                    //  allListedData.remove(newDevice.getId());
+                    // allAccessoriesData.remove(newDevice.getId());
                 });
 
 // Add selected accessories
@@ -652,8 +652,8 @@ public class Service {
                             departmentName, departmentUserName, departmentUserId, startingDate, "0"
                     )));
                     addDataRepository.save(newDevice);
-                   // allListedData.remove(newDevice.getId());
-                   // allAccessoriesData.remove(newDevice.getId());
+                    // allListedData.remove(newDevice.getId());
+                    // allAccessoriesData.remove(newDevice.getId());
                 });
 
 // Add selected accessories
@@ -780,10 +780,10 @@ public class Service {
         adddata.setDeviceTypePrimaryOrSecondary("Secondary");
         adddata.setDeviceTypeSecondaryInOrOut("In");
 
-       // AddData.DeviceUser user = new AddData.DeviceUser(departmentName, departmentUserName, departmentUserId, startingDate, "0");
-       // List<AddData.DeviceUser> list = new ArrayList<>();
-       // list.add(user);
-       // adddata.setDeviceUsers(list);
+        // AddData.DeviceUser user = new AddData.DeviceUser(departmentName, departmentUserName, departmentUserId, startingDate, "0");
+        // List<AddData.DeviceUser> list = new ArrayList<>();
+        // list.add(user);
+        // adddata.setDeviceUsers(list);
 
         addDataRepository.save(adddata);
 
@@ -920,7 +920,7 @@ public class Service {
 
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
-                 requestData.setServiceCenterToInventorySendDeviceRequestTime(getCurrentLocalDateTime());
+                requestData.setServiceCenterToInventorySendDeviceRequestTime(getCurrentLocalDateTime());
                 // Iterate through each problem in the service request
                 requestData.getAllProblem().forEach(problem -> {
                     if (problem.getName().equals(solutionName)) {
@@ -1077,7 +1077,7 @@ public class Service {
         if (data != null && !data.isEmpty()) {
             // First row is plain text
             List<String> firstRow = data.get(0);
-           // document.add(new Paragraph("Text Content: " + String.join(", ", firstRow)).setFontSize(12).setMarginBottom(10));
+            // document.add(new Paragraph("Text Content: " + String.join(", ", firstRow)).setFontSize(12).setMarginBottom(10));
 
             // Check if there are more rows to process as the table
             if (data.size() > 1) {
@@ -1149,7 +1149,7 @@ public class Service {
                 if (headerColumnIndex == 0 || headerColumnIndex == 2) {  // First and third columns
                     headerCell.setBackgroundColor(new com.itextpdf.kernel.colors.DeviceRgb(169, 169, 169));  // Light gray
                 } else {
-                   // headerCell.setBackgroundColor(new com.itextpdf.kernel.colors.DeviceRgb(211, 211, 211));  // Default gray
+                    // headerCell.setBackgroundColor(new com.itextpdf.kernel.colors.DeviceRgb(211, 211, 211));  // Default gray
                 }
                 headerCell.setTextAlignment(TextAlignment.CENTER);
                 // Add the header cell to the table

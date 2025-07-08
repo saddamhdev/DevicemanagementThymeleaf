@@ -96,7 +96,7 @@ public class Inventory {
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
 
-           requestDataService.update();
+            requestDataService.update();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -223,7 +223,7 @@ public class Inventory {
                 ServiceRequest requestData1 = optionalRequestData.get();
                 requestData1.getAllProblem().forEach(problem -> {
                     if(problemName.equals(problem.getName())){
-                       System.out.println(problemName+" "+problem.getName());
+                        System.out.println(problemName+" "+problem.getName());
                         // Iterate through each key-value pair in formData
                         for (Map<String, String> field : formData) {
 
@@ -472,7 +472,7 @@ public class Inventory {
             RequestData requestData = optionalRequestData.get();
 
             // Update the inventory with the new deviceIds
-           // RequestData.Inventory inventory = new RequestData.Inventory("Proposal", presentDateTime, deviceIds);
+            // RequestData.Inventory inventory = new RequestData.Inventory("Proposal", presentDateTime, deviceIds);
             requestData.getInventory().setInventoryToAlternativeDeviceRequestStatus("Pending");
             requestData.getInventory().setInventoryToAlternativeDeviceRequestTime(getCurrentLocalDateTime());
             requestData.getInventory().setInventoryToAlternativeDeviceRequestProviderManInfo(departmentName+"_"+departmentUserName+"_"+departmentUserId);
@@ -623,7 +623,7 @@ public class Inventory {
             addDataRepository.save(deviceRequestData);
         }
 
-         serviceRequestService.update();
+        serviceRequestService.update();
         addDataService.update();
         return ResponseEntity.ok("Selected rows processed successfully");
     }

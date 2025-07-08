@@ -68,7 +68,7 @@ public class purchase {
     private UserRepository userRepository;
     @Autowired
     private InternalUserRepository internalUserRepository;
-   // private static final Logger logger = LoggerFactory.getLogger(purchase.class);
+    // private static final Logger logger = LoggerFactory.getLogger(purchase.class);
 
 
     @Autowired
@@ -230,7 +230,7 @@ public class purchase {
                 serviceRequestRepository.save(requestData);
             }
 
-             serviceRequestService.update();
+            serviceRequestService.update();
             return ResponseEntity.ok("Purchase proposal saved successfully!");
         } catch (Exception e) {
 
@@ -273,7 +273,7 @@ public class purchase {
         allParams.remove("requestId");
 
         //String categoryName = allParams.get("categoryName");
-       // allParams.remove("categoryName");
+        // allParams.remove("categoryName");
 
         Optional<RequestData> optionalRequestData = requestDataRepository.findDevicesIDS(requestId, "1");
 
@@ -379,7 +379,7 @@ public class purchase {
 
         if (optionalRequestData.isPresent()) {
             ServiceRequest requestData = optionalRequestData.get();
-          //  requestData.setPurchaseManInfoOfPriceSetter(departmentName+"_"+departmentUserName+"_"+departmentUserId);
+            //  requestData.setPurchaseManInfoOfPriceSetter(departmentName+"_"+departmentUserName+"_"+departmentUserId);
 
             // Iterate through each problem in the service request
             requestData.getAllProblem().forEach(problem -> {
@@ -401,10 +401,10 @@ public class purchase {
 
                             // Find and update the existing solution's price by name
                             problem.getProposalSolution().forEach(proposalSolutionItem -> {
-                               if (proposalSolutionItem.getName().equals(name)) {
+                                if (proposalSolutionItem.getName().equals(name)) {
                                     proposalSolutionItem.setPrice( price);
                                     System.out.println("Updated price for solution with name: " + name + " to " + price);
-                               }
+                                }
                             });
                         });
 
@@ -451,17 +451,17 @@ public class purchase {
                 requestData.getAllProblem().forEach(problem -> {
                     System.out.println("Processing problem: " + problem.getName());
                     if (problem.getName().equals(solutionName)) {
-                            // Find and update the existing solution's price by name
-                            problem.getProposalSolution().forEach(proposalSolutionItem -> {
-                                System.out.println(proposalSolutionItem.getName()+" "+problemName);
-                                if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
-                                    proposalSolutionItem.setPrice( price);
-                                    proposalSolutionItem.setPurchaseManInfoOfPriceSetter(departmentName + "_" + departmentUserName + "_" + departmentUserId);
-                                    proposalSolutionItem.setPurchaseManInfoOfPriceStatus("Updated");
-                                    proposalSolutionItem.setPurchaseManInfoOfPriceSettingTime(getCurrentLocalDateTime());
-                                    System.out.println(price);
-                                }
-                            });
+                        // Find and update the existing solution's price by name
+                        problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                            System.out.println(proposalSolutionItem.getName()+" "+problemName);
+                            if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
+                                proposalSolutionItem.setPrice( price);
+                                proposalSolutionItem.setPurchaseManInfoOfPriceSetter(departmentName + "_" + departmentUserName + "_" + departmentUserId);
+                                proposalSolutionItem.setPurchaseManInfoOfPriceStatus("Updated");
+                                proposalSolutionItem.setPurchaseManInfoOfPriceSettingTime(getCurrentLocalDateTime());
+                                System.out.println(price);
+                            }
+                        });
 
 
                         System.out.println("Updated proposalSolution: " + problem.getProposalSolution());
@@ -504,24 +504,24 @@ public class purchase {
 
             List<String> requests=purchaseRequest.getRequests();
             if(!requests.isEmpty()){
-             requests.forEach(e->{
-                 // Find the RequestData document by requestId and status
-                 Optional<RequestData> optionalRequestData = requestDataRepository.findDevicesIDS(e, "1");
+                requests.forEach(e->{
+                    // Find the RequestData document by requestId and status
+                    Optional<RequestData> optionalRequestData = requestDataRepository.findDevicesIDS(e, "1");
 
-                 if (optionalRequestData.isPresent()) {
-                     RequestData requestData = optionalRequestData.get();
+                    if (optionalRequestData.isPresent()) {
+                        RequestData requestData = optionalRequestData.get();
 
-                     requestData.getPurchase().setPurchasePaymentToCooRequestManInfo(purchaseRequest.getDepartmentName() + "_" + purchaseRequest.getDepartmentUserName() + "_" + purchaseRequest.getDepartmentUserId());
-                     requestData.getPurchase().setPurchasePaymentToCooRequestTime(getCurrentLocalDateTime());
-                     requestData.getPurchase().setPurchasePaymentToCooRequestStatus("Pending");
-                     // Update the inventory with the new deviceIds
+                        requestData.getPurchase().setPurchasePaymentToCooRequestManInfo(purchaseRequest.getDepartmentName() + "_" + purchaseRequest.getDepartmentUserName() + "_" + purchaseRequest.getDepartmentUserId());
+                        requestData.getPurchase().setPurchasePaymentToCooRequestTime(getCurrentLocalDateTime());
+                        requestData.getPurchase().setPurchasePaymentToCooRequestStatus("Pending");
+                        // Update the inventory with the new deviceIds
 
-                     requestData.setPurchase(requestData.getPurchase());
+                        requestData.setPurchase(requestData.getPurchase());
 
-                     // Save the updated RequestData document
-                     requestDataRepository.save(requestData);
-                 }
-             });
+                        // Save the updated RequestData document
+                        requestDataRepository.save(requestData);
+                    }
+                });
             }
             // Extract and process services
             List<ServiceDTO> services = purchaseRequest.getServices();
@@ -542,7 +542,7 @@ public class purchase {
                                 // Find and update the existing solution's price by name
                                 problem.getProposalSolution().forEach(proposalSolutionItem -> {
                                     if (proposalSolutionItem.getName().equals( service.getSolutionName())) {
-                                       proposalSolutionItem.setPurchasePaymentToCooRequestManInfo(purchaseRequest.getDepartmentName() + "_" + purchaseRequest.getDepartmentUserName() + "_" + purchaseRequest.getDepartmentUserId());
+                                        proposalSolutionItem.setPurchasePaymentToCooRequestManInfo(purchaseRequest.getDepartmentName() + "_" + purchaseRequest.getDepartmentUserName() + "_" + purchaseRequest.getDepartmentUserId());
                                         proposalSolutionItem.setPurchasePaymentToCooRequestTime(getCurrentLocalDateTime());
                                         proposalSolutionItem.setPurchasePaymentToCooRequestStatus("Pending");
 
@@ -556,7 +556,7 @@ public class purchase {
 
                         });
                         // Persist changes
-                       serviceRequestRepository.save(requestData);
+                        serviceRequestRepository.save(requestData);
                     }
                 });
             }
@@ -677,7 +677,7 @@ public class purchase {
         adddata.setVisibleId(generateNewVisibleIdForNewDevice());
         AddData.UnOrderedDevice unOrderedDevice=new AddData.UnOrderedDevice();
         unOrderedDevice.setCOOUnOrderedDeviceAcceptedStatus("UnOrdered");
-       // adddata.setOrderedDeviceStatus("unOrdered");
+        // adddata.setOrderedDeviceStatus("unOrdered");
         adddata.setUnOrderedDevice(unOrderedDevice);
         adddata.setDeviceTypeServicingOrRequestingOrOldAsInputting("New");
         adddata.setDeviceTypePrimaryOrSecondary(deviceType);
@@ -712,8 +712,8 @@ public class purchase {
 
         try {
 
-          addDataService.update();
-          requestDataService.update();
+            addDataService.update();
+            requestDataService.update();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -800,7 +800,7 @@ public class purchase {
 
         String requestId = allParams.get("requestId");
         allParams.remove("requestId");
-       // System.out.println(allParams);
+        // System.out.println(allParams);
 
         LocalDateTime now = LocalDateTime.now();
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -819,16 +819,16 @@ public class purchase {
 
         addDataRepository.save(adddata);
 
-     RequestData data=requestDataRepository.findByIdAndStatus(requestId,"1");
-     List<AddData>  dataList=addDataRepository.findByStatus("1");
-     RequestData.Purchase mm=data.getPurchase();
-     mm.setBuyingDeviceId(dataList.get(dataList.size()-1).getId());
-     mm.setDeviceBuyingStatus("Bought");
-     requestDataRepository.save(data);
+        RequestData data=requestDataRepository.findByIdAndStatus(requestId,"1");
+        List<AddData>  dataList=addDataRepository.findByStatus("1");
+        RequestData.Purchase mm=data.getPurchase();
+        mm.setBuyingDeviceId(dataList.get(dataList.size()-1).getId());
+        mm.setDeviceBuyingStatus("Bought");
+        requestDataRepository.save(data);
         try {
 
-             addDataService.update();
-             requestDataService.update();
+            addDataService.update();
+            requestDataService.update();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -918,8 +918,8 @@ public class purchase {
 
         try {
 
-          addDataService.update();
-          serviceRequestService.update();
+            addDataService.update();
+            serviceRequestService.update();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -957,7 +957,7 @@ public class purchase {
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
 
-             requestDataService.update();
+            requestDataService.update();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -1024,7 +1024,7 @@ public class purchase {
 
     @PostMapping("/exportDataForOrderedDevice")
     public ResponseEntity<byte[]> exportDataForOrderedDevice(@RequestBody List<Map<String, String>> data) {
-       // System.out.println(data);
+        // System.out.println(data);
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 

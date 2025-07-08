@@ -10,6 +10,8 @@
 
 <body style="background-color:#fff5ec;">
 <nav th:include="customerCare/topMenuBar:: topMenuBarDepartmentUser"></nav>
+<div id="chat-icon" onclick="openChatModal()">💬</div>
+
 <div style="padding-top:5em"  class="mainBody">
    <!-- <section class="container mb-4   ">
 &lt;!&ndash;
@@ -24,6 +26,8 @@
 </div>
 <div th:include="customerCare/leftOffCanvas :: leftOffCanvas"></div>
 <div th:include="customerCare/publicModal :: publicModal"></div>
+<div th:include="global/modal :: chatModal"></div>
+
 
 </body>
 </html>

@@ -10,6 +10,8 @@
 
 <body style="background-color:#fff5ec;">
 <nav th:include="superAdmin/topMenuBarSuperAdmin:: topMenuBarSuperAdmin"></nav>
+<!-- 🔘 Floating Chat Icon -->
+<div id="chat-icon" onclick="openChatModal()">💬</div>
 <div style="padding-top:5em" class="mainBody">
    <!-- <section class="container mb-4">
 &lt;!&ndash;
@@ -43,6 +45,7 @@
 <div th:include="superAdmin/leftOffCanvas :: leftOffCanvas"></div>
 <div th:include="superAdmin/publicModal :: publicModal"></div>
 <div th:include="superAdmin/publicModal :: publicModalView"></div>
+<div th:include="global/modal :: chatModal"></div>
 
 </body>
 </html>

@@ -33,52 +33,27 @@ function setRequestStatusData(requestId,status){
              var departmentUserName = departmentElement.data("departmentuser-name");//saho
              var departmentUserId = departmentElement.data("departmentuser-id");//s
 
-            if(status=="Accepted"){
-
-             $.ajax({
-                     url: '/superAdmin/updateRequestStatus',
-                     type: 'POST',
-                     data: {
+            $.ajax({
+                    url: '/superAdmin/updateRequestStatus',
+                    type: 'POST',
+                    data: {
                      requestId: requestId,
                      status:status,
-                      departmentName:departmentName,
-                      departmentUserName:departmentUserName,
-                      departmentUserId:departmentUserId,
-                      cause:null
-                     },
-                     success: function(result) {
-                                          CustomAlert(result);
-                                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                                location.reload();
-                                            });
-                     },
-                     error: function(xhr, status, error) {
-                         console.error("Error deleting user:", error);
-                     }
-                 });
-
-            }
-            else if(status=="Denied"){
-
-              $.ajax({
-                     url: '/superAdmin/updateRequestStatus',
-                     type: 'POST',
-                     data: {
-                     requestId: requestId,
-                     status:status,
-                     cause:$('#rejectCause').val()
-                     },
-                     success: function(result) {
-                                        CustomAlert(result);
-                                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                              location.reload();
-                                          });
-                     },
-                     error: function(xhr, status, error) {
-                         console.error("Error deleting user:", error);
-                     }
-                 });
-            }
+                     departmentName:departmentName,
+                     departmentUserName:departmentUserName,
+                     departmentUserId:departmentUserId,
+                     cause:$('#rejectCause').length ? $('#rejectCause').val() : null
+                    },
+                    success: function(result) {
+                                         CustomAlert(result);
+                                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                               location.reload();
+                                           });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error deleting user:", error);
+                    }
+                });
 
 }
 window.initRequestDataGeneral = function () {
@@ -116,7 +91,8 @@ window.initRequestDataGeneral = function () {
 
                  showModal();
 
-        } else if (buttonPressed === "✗") { // Denied button
+        }
+         else if (buttonPressed === "✗") { // Denied button
             var htmlToAdd = `
                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
                     <label for="rejectCause" class="form-label">Reject Cause</label>
@@ -135,7 +111,7 @@ window.initRequestDataGeneral = function () {
 
                  $('#DeniedBtn').click(function() {
 
-                         setRequestStatus(requestId,"Denied");
+                         setRequestStatusData(requestId,"Denied");
                   });
 
                 showModal();

@@ -116,7 +116,7 @@ public class Login {
         //System.out.println(session.getMaxInactiveInterval());
         if (session.getAttribute("loggedInUser") != null) {
             System.out.println(session.getAttribute("loggedInUser"));
-           // return "login";
+            // return "login";
         }
 
         if (authenticate(username,password)) {
@@ -315,113 +315,113 @@ public class Login {
 
             }
             else{
-               if(username.equals("coo")&& password.equals("coo")){
-
-
-                   model.addAttribute("departmentUserName",username);
-                   model.addAttribute("departmentPassword",password);
-
-
-                   model.addAttribute("inputTypes", inputTypes);
-                   model.addAttribute("data",categories);
-                   model.addAttribute("universalColumns",universalColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("allDeviceData",allDeviceData);
-                   model.addAttribute("allUsers",allUser);
-                   model.addAttribute("indoorUsers",internalUsers);
-                   model.addAttribute("requestColumns",requestColumns);
-                   model.addAttribute("serviceRequests", serviceRequests);
-                   model.addAttribute("requestData",requestData);
-                   model.addAttribute("designations",designations);
-
-
-                   return "coo/home";
-               }
-               else if(username.equals("inventory")&& password.equals("inventory")){
+                if(username.equals("coo")&& password.equals("coo")){
 
 
                     model.addAttribute("departmentUserName",username);
                     model.addAttribute("departmentPassword",password);
 
 
-                   model.addAttribute("inputTypes", inputTypes);
-                   model.addAttribute("data",categories);
-                   model.addAttribute("universalColumns",universalColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("allDeviceData",allDeviceData);
-                   model.addAttribute("allUsers",allUser);
-                   model.addAttribute("indoorUsers",internalUsers);
-                   model.addAttribute("requestColumns",requestColumns);
-                   model.addAttribute("serviceRequests", serviceRequests);
-                   model.addAttribute("requestData",requestData);
-                   model.addAttribute("designations",designations);
+                    model.addAttribute("inputTypes", inputTypes);
+                    model.addAttribute("data",categories);
+                    model.addAttribute("universalColumns",universalColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("allDeviceData",allDeviceData);
+                    model.addAttribute("allUsers",allUser);
+                    model.addAttribute("indoorUsers",internalUsers);
+                    model.addAttribute("requestColumns",requestColumns);
+                    model.addAttribute("serviceRequests", serviceRequests);
+                    model.addAttribute("requestData",requestData);
+                    model.addAttribute("designations",designations);
+
+
+                    return "coo/home";
+                }
+                else if(username.equals("inventory")&& password.equals("inventory")){
+
+
+                    model.addAttribute("departmentUserName",username);
+                    model.addAttribute("departmentPassword",password);
+
+
+                    model.addAttribute("inputTypes", inputTypes);
+                    model.addAttribute("data",categories);
+                    model.addAttribute("universalColumns",universalColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("allDeviceData",allDeviceData);
+                    model.addAttribute("allUsers",allUser);
+                    model.addAttribute("indoorUsers",internalUsers);
+                    model.addAttribute("requestColumns",requestColumns);
+                    model.addAttribute("serviceRequests", serviceRequests);
+                    model.addAttribute("requestData",requestData);
+                    model.addAttribute("designations",designations);
 
 
                     return "inventory/home";
                 }
-               else if(username.equals("customerCare")&& password.equals("customerCare")){
+                else if(username.equals("customerCare")&& password.equals("customerCare")){
 
 
-                   model.addAttribute("departmentUserName",username);
-                   model.addAttribute("departmentPassword",password);
-                   //add needed data
+                    model.addAttribute("departmentUserName",username);
+                    model.addAttribute("departmentPassword",password);
+                    //add needed data
 
-                   model.addAttribute("inputTypes", inputTypes);
-                   model.addAttribute("data",categories);
-                   model.addAttribute("universalColumns",universalColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("allDeviceData",allDeviceData);
-                   model.addAttribute("allUsers",allUser);
-                   model.addAttribute("indoorUsers",internalUsers);
-                   model.addAttribute("requestColumns",requestColumns);
-                   model.addAttribute("serviceRequests", serviceRequests);
-                   model.addAttribute("requestData",requestData);
-                   model.addAttribute("designations",designations);
-                   return "customerCare/home";
-               }
-               else if(username.equals("purchase")&& password.equals("purchase")){
+                    model.addAttribute("inputTypes", inputTypes);
+                    model.addAttribute("data",categories);
+                    model.addAttribute("universalColumns",universalColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("allDeviceData",allDeviceData);
+                    model.addAttribute("allUsers",allUser);
+                    model.addAttribute("indoorUsers",internalUsers);
+                    model.addAttribute("requestColumns",requestColumns);
+                    model.addAttribute("serviceRequests", serviceRequests);
+                    model.addAttribute("requestData",requestData);
+                    model.addAttribute("designations",designations);
+                    return "customerCare/home";
+                }
+                else if(username.equals("purchase")&& password.equals("purchase")){
 
-                   model.addAttribute("departmentUserName",username);
-                   model.addAttribute("departmentPassword",password);
-                   //add needed data
+                    model.addAttribute("departmentUserName",username);
+                    model.addAttribute("departmentPassword",password);
+                    //add needed data
 
 
-                   model.addAttribute("inputTypes", inputTypes);
-                   model.addAttribute("data",categories);
-                   model.addAttribute("universalColumns",universalColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("allDeviceData",allDeviceData);
-                   model.addAttribute("allUsers",allUser);
-                   model.addAttribute("indoorUsers",internalUsers);
-                   model.addAttribute("requestColumns",requestColumns);
-                   model.addAttribute("serviceRequests", serviceRequests);
-                   model.addAttribute("requestData",requestData);
-                   model.addAttribute("designations",designations);
-                   return "purchase/home";
-               }
-               else if(username.equals("service")&& password.equals("service")){
+                    model.addAttribute("inputTypes", inputTypes);
+                    model.addAttribute("data",categories);
+                    model.addAttribute("universalColumns",universalColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("allDeviceData",allDeviceData);
+                    model.addAttribute("allUsers",allUser);
+                    model.addAttribute("indoorUsers",internalUsers);
+                    model.addAttribute("requestColumns",requestColumns);
+                    model.addAttribute("serviceRequests", serviceRequests);
+                    model.addAttribute("requestData",requestData);
+                    model.addAttribute("designations",designations);
+                    return "purchase/home";
+                }
+                else if(username.equals("service")&& password.equals("service")){
 
-                   model.addAttribute("departmentUserName",username);
-                   model.addAttribute("departmentPassword",password);
+                    model.addAttribute("departmentUserName",username);
+                    model.addAttribute("departmentPassword",password);
 
-                   model.addAttribute("inputTypes", inputTypes);
-                   model.addAttribute("data",categories);
-                   model.addAttribute("universalColumns",universalColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("individualColumns",individualColumns);
-                   model.addAttribute("allDeviceData",allDeviceData);
-                   model.addAttribute("allUsers",allUser);
-                   model.addAttribute("indoorUsers",internalUsers);
-                   model.addAttribute("requestColumns",requestColumns);
-                   model.addAttribute("serviceRequests", serviceRequests);
-                   model.addAttribute("requestData",requestData);
-                   model.addAttribute("designations",designations);
-                   return "service/home";
-               }
+                    model.addAttribute("inputTypes", inputTypes);
+                    model.addAttribute("data",categories);
+                    model.addAttribute("universalColumns",universalColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("individualColumns",individualColumns);
+                    model.addAttribute("allDeviceData",allDeviceData);
+                    model.addAttribute("allUsers",allUser);
+                    model.addAttribute("indoorUsers",internalUsers);
+                    model.addAttribute("requestColumns",requestColumns);
+                    model.addAttribute("serviceRequests", serviceRequests);
+                    model.addAttribute("requestData",requestData);
+                    model.addAttribute("designations",designations);
+                    return "service/home";
+                }
             }
             return "redirect:/success";
         } else {
@@ -457,7 +457,7 @@ public class Login {
 
         String result=null;
         if(internalUserRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
-           InternalUser user=internalUserRepository.findByUserNameAndUserPasswordAndStatus(userName,userPassword,"1");
+            InternalUser user=internalUserRepository.findByUserNameAndUserPasswordAndStatus(userName,userPassword,"1");
             result=user.getBranchName()+"_"+user.getUserId();// exist
         }
         else if(userRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){

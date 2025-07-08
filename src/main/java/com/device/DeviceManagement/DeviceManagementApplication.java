@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class DeviceManagementApplication {
 	private static final Logger logger = LogManager.getLogger(DeviceManagementApplication.class);
 	public static void main(String[] args) {
+		//System.out.println("=== Application Starting ===");
 		SpringApplication.run(DeviceManagementApplication.class, args);
 		logger.info("DeviceManagementApp started successfully");
 		System.out.println("Program Are started");

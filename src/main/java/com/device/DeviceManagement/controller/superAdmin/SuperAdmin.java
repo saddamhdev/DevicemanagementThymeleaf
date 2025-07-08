@@ -1,5 +1,6 @@
 package com.device.DeviceManagement.controller.superAdmin;
 import com.device.DeviceManagement.controller.service.*;
+import com.device.DeviceManagement.exception.ResourceNotFoundException;
 import com.device.DeviceManagement.model.Designation;
 
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,7 +32,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/superAdmin")
 public class SuperAdmin {
-    boolean result;
+    boolean result=false;
+    boolean updated = false;
     String nameK="",actionK="",commentK="",nameMain;
     List<String> inputTypes = Arrays.asList(
             "text", "password", "email", "url", "search", "tel", "number", "range",
@@ -93,10 +97,9 @@ public class SuperAdmin {
 
     @GetMapping("/home")
     public String home(Model model) {
-//
-
+       //
         List<Category> categories = categoriesService.Category();
-       List<Column> universalColumns = universalColumnsService.Universal();
+        List<Column> universalColumns = universalColumnsService.Universal();
         List<Column> individualColumns = individualColumnsService.Individual();
         List<AddData> allDeviceData=addDataService.add();
         List<User> allUser=userService.add();
@@ -107,8 +110,8 @@ public class SuperAdmin {
         List<DropDownList> dropDownLists=dropDownListService.add();
         List<Designation> designations=designationService.add();
 
-       model.addAttribute("data",categories);
-       model.addAttribute("universalColumns",universalColumns);
+        model.addAttribute("data",categories);
+        model.addAttribute("universalColumns",universalColumns);
         model.addAttribute("individualColumns",individualColumns);
         model.addAttribute("individualColumns",individualColumns);
         model.addAttribute("allDeviceData",allDeviceData);
@@ -135,7 +138,7 @@ public class SuperAdmin {
             String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-             // permanent field
+            // permanent field
             Column data=columnRepository.findByColumnNameAndStatus("Price","1");
             if(data==null){
                 columnRepository.save(new Column("Price",formattedDateTime,currentDate,"1","universal","universal","yes","number"));
@@ -182,7 +185,7 @@ public class SuperAdmin {
     // Update category method
     @PostMapping("/updateCategory")
     @ResponseBody
-    public ResponseEntity<String> updateCategory(@RequestParam String oldCategoryName, @RequestParam String newCategoryName) {
+    public ResponseEntity<String> updateCategory(@RequestParam String oldCategoryName, @RequestParam String newCategoryName) throws Exception {
         try {
             // Get the current localDate time and date
             LocalDateTime now = LocalDateTime.now();
@@ -211,15 +214,17 @@ public class SuperAdmin {
                 }
 
                 // update whole categoryName
-                  updateCategoryDataInAllTable(oldCategoryName,newCategoryName);
+                updateCategoryDataInAllTable(oldCategoryName,newCategoryName);
                 // redis update
-                  categoriesService.updateCategories();
+                categoriesService.updateCategories();
                 return ResponseEntity.ok("Category updated successfully");
             } else {
-                return ResponseEntity.notFound().build();
+               // return ResponseEntity.notFound().build();
+                throw new ResourceNotFoundException("Category Not Found");
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error updating category");
+           // return ResponseEntity.badRequest().body("Error updating category");
+             throw new Exception("Internal server error");
         }
     }
     // Update category method
@@ -365,7 +370,7 @@ public class SuperAdmin {
 
                 column.setStatus("0");
                 // Update category name
-               // column.setColumnName(newColumnName);
+                // column.setColumnName(newColumnName);
                 columnRepository.save(column); // Save the updated category
 
                 LocalDateTime now = LocalDateTime.now();
@@ -439,7 +444,7 @@ public class SuperAdmin {
                 );
                 individualColumnsService.updateUniversalColumn();
                 columnRepository.save(newColumn);
-               // System.out.println("Inserted");
+                // System.out.println("Inserted");
             }
 
             else{
@@ -585,7 +590,6 @@ public class SuperAdmin {
     @ResponseBody
     public ResponseEntity<String> editUser(@RequestParam String oldUserName,@RequestParam String oldUserId,@RequestParam String oldUserPassword,@RequestParam String newUserName,@RequestParam String newUserId,@RequestParam String newUserPassword) {
 
-        try {
             // Find the category by old name
             User user = userRepository.findByUserNameAndUserIdAndUserPasswordAndStatus(oldUserName,oldUserId,oldUserPassword,"1");
             if (user != null) {
@@ -603,7 +607,7 @@ public class SuperAdmin {
                     userRepository.save(user); // Save the updated category
                     List<InternalUser> data=internalUserRepository.findByBranchNameAndStatus(oldUserName,"1");
                     data.forEach(e->{
-                       // System.out.println(oldUserId+" gg "+ e.getBranchName());
+                        // System.out.println(oldUserId+" gg "+ e.getBranchName());
                         if(oldUserName.equals(e.getBranchName())){
                             e.setBranchName(newUserName);
                             internalUserRepository.save(e);
@@ -612,6 +616,7 @@ public class SuperAdmin {
                     });
 
                     userService.update();
+
                     return ResponseEntity.ok("User edited successfully");
                 }
                 else{
@@ -621,11 +626,9 @@ public class SuperAdmin {
 
 
             } else {
-                return ResponseEntity.notFound().build();
+                throw new ResourceNotFoundException("User Not exist "+oldUserName);
             }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error updating category");
-        }
+
     }
     @PostMapping("/addInternalUser")
     @ResponseBody
@@ -641,7 +644,7 @@ public class SuperAdmin {
 
             // Save the Category object
             internalUserRepository.save(new InternalUser(branchName,userName,userId,userPassword,currentDate,formattedDateTime,"1"));
-             internalUserService.update();
+            internalUserService.update();
             // move to return "user/Home";
             return ResponseEntity.ok("Successfully added user");
         }else{
@@ -653,8 +656,8 @@ public class SuperAdmin {
     @PostMapping("/editInternalUser")
     @ResponseBody
     public ResponseEntity<String> editInternalUser(@RequestParam String oldBranchName,@RequestParam String oldUserName,@RequestParam String oldUserId,@RequestParam String oldUserPassword,@RequestParam String newBranchName,@RequestParam String newUserName,@RequestParam String newUserId,@RequestParam String newUserPassword) {
-
-        System.out.println(oldUserName+" "+newUserName);
+       // System.out.println("Received request for /editInternalUser with method: " + RequestMethod.POST);
+       // System.out.println("Parameters: " + newBranchName + ", " + oldBranchName + ", ...");
         try {
             // Find the category by old name
             InternalUser user = internalUserRepository.findByBranchNameAndUserNameAndUserIdAndUserPasswordAndStatus(oldBranchName,oldUserName,oldUserId,oldUserPassword,"1");
@@ -676,15 +679,16 @@ public class SuperAdmin {
                     List<RequestData> data=requestDataRepository.findByDepartmentNameAndStatus(oldUserName,"1");
                     data.forEach(e->{
                         System.out.println(oldUserName+" gg" + e.getDepartmentName());
-                    if(oldUserName.equals(e.getDepartmentName())){
-                        e.setDepartmentName(newUserName);
-                        requestDataRepository.save(e);
-                        requestDataService.update();
-                    }
+                        if(oldUserName.equals(e.getDepartmentName())){
+                            e.setDepartmentName(newUserName);
+                            requestDataRepository.save(e);
+                            requestDataService.update();
+                        }
 
                     });
                     requestDataService.update();
-                    return ResponseEntity.ok("User gfhg edited successfully");
+                    updateAllInternalUser(oldBranchName,oldUserName,oldUserId,newUserName,newUserId);
+                    return ResponseEntity.ok("User updated successfully");
                 }
                 else {
                     return ResponseEntity.ok("Sorry, Already this user exist");
@@ -703,6 +707,12 @@ public class SuperAdmin {
     @PostMapping("/deleteInternalUser")
     @ResponseBody
     public ResponseEntity<String> deleteInternalUser(@RequestParam String branchName,@RequestParam String userName,@RequestParam String userId,@RequestParam String userPassword) {
+
+       AtomicBoolean ff= checkAllInternalUser(branchName,userName,userId);
+        if(ff.get()){
+            return ResponseEntity.ok("Sorry delete not possible, user is using in another table.");
+        }
+      
         try {
             // Find the category by old name
             InternalUser user = internalUserRepository.findByBranchNameAndUserNameAndUserIdAndUserPasswordAndStatus(branchName,userName,userId,userPassword,"1");
@@ -779,7 +789,7 @@ public class SuperAdmin {
 
 
         try {
-         dropDownListService.update();
+            dropDownListService.update();
 
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
@@ -814,7 +824,7 @@ public class SuperAdmin {
 
                 addDataRepository.save(new AddData("SaddamNvn",categoryName,formattedDateTime,currentDate,allParams,"1"));
 
-                 addDataService.update();
+                addDataService.update();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -863,7 +873,7 @@ public class SuperAdmin {
 
                 dropDownListRepository.save(new DropDownList(categoryName,dropDownListName,data,formattedDateTime,currentDate,"1"));
 
-                 dropDownListService.update();
+                dropDownListService.update();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -930,14 +940,19 @@ public class SuperAdmin {
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         requestColumnRepository.save(new RequestColumn(requestName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
-         requestColumnService.update();
+        requestColumnService.update();
         return ResponseEntity.ok("Request column saved successfully");
     }
 
     @PostMapping("/deleteRequestColumn")
     @ResponseBody
     public ResponseEntity<String> deleteRequestColumn(@RequestParam String requestId) {
+
+
         RequestColumn request = requestColumnRepository.findByIdAndStatus(requestId,"1");
+        if(checkAllDeviceRequestColumn(request.getColumnName())){
+            return ResponseEntity.ok("Sorry This column is not deletable. It was using in different table.");
+        }
         try {
             if (request != null) {
                 // Update category name
@@ -1294,7 +1309,7 @@ public class SuperAdmin {
                             // Initialize and populate the usage list
                             List<AddData.ParentDevices.UsingTimeOfParentDevice> usageList = new ArrayList<>();
                             AddData.ParentDevices.UsingTimeOfParentDevice usageEntry = new AddData.ParentDevices.UsingTimeOfParentDevice(getCurrentLocalDateTime(), "1");
-                           // usageEntry.setEndingDate(getCurrentLocalDateTime());
+                            // usageEntry.setEndingDate(getCurrentLocalDateTime());
                             usageList.add(usageEntry);
 
                             // Set the usage list to the new child device
@@ -1318,46 +1333,46 @@ public class SuperAdmin {
                     System.out.println("Added accessories: " + accessories);
                     accessories.forEach(e->{
                         AddData device2 = addDataRepository.findByIdAndStatus(e, "1");
-                                if (device2 != null) {
-                                    device2.setDeviceTypeSecondaryInOrOut("In");
-                                    addDataRepository.save(device2);
+                        if (device2 != null) {
+                            device2.setDeviceTypeSecondaryInOrOut("In");
+                            addDataRepository.save(device2);
 
-                                    List<AddData.ChildDevices> childDevices=device.getChildDevices();
-                                    if ( childDevices == null) {
-                                        childDevices = new ArrayList<>();
-                                    }
-                                    resultAccessories=false;
-                                    sizeAccessories=0;
-                                     childDevices.forEach(k->{
-                                        if(k.getDeviceId().equals(e)){
-                                            resultAccessories=true;
-                                            sizeAccessories=k.getUsingTimeOfChildDevices().size();
-                                        }
-                                    });
-                                     if(resultAccessories){
-                                         childDevices.forEach(k->{
-                                             if(k.getDeviceId().equals(e)){
-                                                 List<AddData.ChildDevices.UsingTimeOfChildDevice> listData=k.getUsingTimeOfChildDevices();
-                                                 listData.add(new AddData.ChildDevices.UsingTimeOfChildDevice(getCurrentLocalDateTime(),"1"));
-                                                 k.setUsingTimeOfChildDevices(listData);
-                                                 addDataRepository.save(device);
-                                             }
-                                         });
-
-
-                                     }
-                                     else{
-                                        AddData.ChildDevices data=new AddData.ChildDevices(e) ;
-                                        List<AddData.ChildDevices.UsingTimeOfChildDevice> internalListData=new ArrayList<>();
-                                        internalListData.add(new AddData.ChildDevices.UsingTimeOfChildDevice(getCurrentLocalDateTime(),"1"));
-                                        data.setUsingTimeOfChildDevices(internalListData);
-                                        childDevices.add(data);
-                                        device.setChildDevices(childDevices);
-                                        addDataRepository.save(device);
-                                     }
-
-
+                            List<AddData.ChildDevices> childDevices=device.getChildDevices();
+                            if ( childDevices == null) {
+                                childDevices = new ArrayList<>();
+                            }
+                            resultAccessories=false;
+                            sizeAccessories=0;
+                            childDevices.forEach(k->{
+                                if(k.getDeviceId().equals(e)){
+                                    resultAccessories=true;
+                                    sizeAccessories=k.getUsingTimeOfChildDevices().size();
                                 }
+                            });
+                            if(resultAccessories){
+                                childDevices.forEach(k->{
+                                    if(k.getDeviceId().equals(e)){
+                                        List<AddData.ChildDevices.UsingTimeOfChildDevice> listData=k.getUsingTimeOfChildDevices();
+                                        listData.add(new AddData.ChildDevices.UsingTimeOfChildDevice(getCurrentLocalDateTime(),"1"));
+                                        k.setUsingTimeOfChildDevices(listData);
+                                        addDataRepository.save(device);
+                                    }
+                                });
+
+
+                            }
+                            else{
+                                AddData.ChildDevices data=new AddData.ChildDevices(e) ;
+                                List<AddData.ChildDevices.UsingTimeOfChildDevice> internalListData=new ArrayList<>();
+                                internalListData.add(new AddData.ChildDevices.UsingTimeOfChildDevice(getCurrentLocalDateTime(),"1"));
+                                data.setUsingTimeOfChildDevices(internalListData);
+                                childDevices.add(data);
+                                device.setChildDevices(childDevices);
+                                addDataRepository.save(device);
+                            }
+
+
+                        }
 
                     });
                 }
@@ -1398,7 +1413,7 @@ public class SuperAdmin {
             if (service != null) {
                 // Update category name
                 /// category.setCategoryName(newCategoryName);
-               // service.setStatus("2");
+                // service.setStatus("2");
                 serviceRequestRepository.save(service); // Save the updated category
                 serviceRequestService.update();
 
@@ -1429,6 +1444,7 @@ public class SuperAdmin {
                 String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 requestColumnRepository.save(new RequestColumn(columnName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
                 requestColumnService.update();
+                updateAllDeviceRequestColumn(request.getColumnName(),columnName);
 
                 return ResponseEntity.ok("Request Column updated successfully");
             } else {
@@ -1448,15 +1464,15 @@ public class SuperAdmin {
             if (service != null) {
                 // Update category name
                 /// category.setCategoryName(newCategoryName);
-               // service.setStatus("0");
+                // service.setStatus("0");
                 serviceRequestRepository.save(service); // Save the updated category
 
                 LocalDateTime now = LocalDateTime.now();
                 String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-               // serviceRequestRepository.save(new ServiceRequest(columnName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
+                // serviceRequestRepository.save(new ServiceRequest(columnName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
 
-               serviceRequestService.update();
+                serviceRequestService.update();
                 return ResponseEntity.ok("Service Column updated successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -1839,10 +1855,10 @@ public class SuperAdmin {
             }
 
             // Log or process the grouped data as needed
-           // System.out.println("Grouped Data: " + groupedData);
+            // System.out.println("Grouped Data: " + groupedData);
 
             // Additional logic using serviceId
-           // System.out.println("Processing data for serviceId: " + serviceId);
+            // System.out.println("Processing data for serviceId: " + serviceId);
             Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData1 = optionalRequestData.get();
@@ -1860,35 +1876,35 @@ public class SuperAdmin {
                         List<String> nonHyphenatedKeys = entry.getValue();
 
                         //System.out.println("Form ID: " + formId);
-                       // System.out.println("Keys without hyphens:");
+                        // System.out.println("Keys without hyphens:");
                         if(problem.getName().equals(formId)){
 
-                        for (String key : nonHyphenatedKeys) {
-                            System.out.println("- " + key + " " +
-                                    getValueForFormAndName(groupedData, formId, "action_" + key) + " " +
-                                    getValueForFormAndName(groupedData, formId, "comment_" + key) + " " +
-                                    getValueForFormAndName(groupedData, formId, key));
-                            // Find and update the existing solution's price by name
-                            problem.getProposalSolution().forEach(proposalSolutionItem -> {
-                                if (proposalSolutionItem.getName().equals(key)) {
-                                    proposalSolutionItem.setPrice( getValueForFormAndName(groupedData, formId, key));
-                                    proposalSolutionItem.setAction( getValueForFormAndName(groupedData, formId, "action_" + key));
-                                    proposalSolutionItem.setComment(getValueForFormAndName(groupedData, formId, "comment_" + key));
-                                   // System.out.println("Updated price for solution with name: " + name + " to " + price);
-                                }
-                            });
-                        }
+                            for (String key : nonHyphenatedKeys) {
+                                System.out.println("- " + key + " " +
+                                        getValueForFormAndName(groupedData, formId, "action_" + key) + " " +
+                                        getValueForFormAndName(groupedData, formId, "comment_" + key) + " " +
+                                        getValueForFormAndName(groupedData, formId, key));
+                                // Find and update the existing solution's price by name
+                                problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                                    if (proposalSolutionItem.getName().equals(key)) {
+                                        proposalSolutionItem.setPrice( getValueForFormAndName(groupedData, formId, key));
+                                        proposalSolutionItem.setAction( getValueForFormAndName(groupedData, formId, "action_" + key));
+                                        proposalSolutionItem.setComment(getValueForFormAndName(groupedData, formId, "comment_" + key));
+                                        // System.out.println("Updated price for solution with name: " + name + " to " + price);
+                                    }
+                                });
+                            }
 
                         }
 
                     }
 
-                            });
-                  // Persist changes
-                 serviceRequestRepository.save(requestData1);
+                });
+                // Persist changes
+                serviceRequestRepository.save(requestData1);
                 serviceRequestService.update();
 
-                        }
+            }
 
 
 
@@ -2191,9 +2207,9 @@ public class SuperAdmin {
         return nonHyphenatedKeysMap;
     }
     // Add category method here
-@PostMapping("/allData")
-@ResponseBody
-public ResponseEntity<AllData> AllData(){
+    @PostMapping("/allData")
+    @ResponseBody
+    public ResponseEntity<AllData> AllData(){
         List<Category> categories = categoriesService.Category();
         List<Column> universalColumns = universalColumnsService.Universal();
         List<Column> individualColumns = individualColumnsService.Individual();
@@ -2222,12 +2238,12 @@ public ResponseEntity<AllData> AllData(){
         homeData.setInternalUsers(internalUsers);
 
         return ResponseEntity.ok(homeData);
-}
+    }
     // Add category method here
     @PostMapping("/allData1")
     @ResponseBody
     public ResponseEntity<AllData> AllData1(@RequestParam String dataType){
-       // System.out.println(dataType);
+        // System.out.println(dataType);
         AllData homeData = new  AllData();
         if(dataType.equals("categories")){
             List<Category> categories = categoriesService.Category();
@@ -2293,7 +2309,7 @@ public ResponseEntity<AllData> AllData(){
                 unOrderedDevice.setCOOUnOrderedDeviceAcceptedStatus("Ordered");
                 device.setUnOrderedDevice(unOrderedDevice);
                 addDataRepository.save(device); // Save the updated category
-               addDataService.update();
+                addDataService.update();
 
                 return ResponseEntity.ok("Device Accepted successfully");
             } else {
@@ -2305,11 +2321,11 @@ public ResponseEntity<AllData> AllData(){
             return ResponseEntity.badRequest().body("Error deleting category");
         }
     }
-@PostMapping("/individualColumnData")
-@ResponseBody
-public List<Column> individualColumnData(@RequestParam String categoryName) {
-    return columnRepository.findByCategoryNameAndStatus(categoryName,"1");
-}
+    @PostMapping("/individualColumnData")
+    @ResponseBody
+    public List<Column> individualColumnData(@RequestParam String categoryName) {
+        return columnRepository.findByCategoryNameAndStatus(categoryName,"1");
+    }
     @PostMapping("/branchWiseInternalUserData")
     @ResponseBody
     public List<InternalUser> branchWiseInternalUserData(@RequestParam String branchName) {
@@ -2344,7 +2360,7 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
     }
     public boolean authenticate(String userName,String userPassword){
 
-       boolean result=false;
+        boolean result=false;
         if(internalUserRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
             result= true;// exist
         }
@@ -2462,10 +2478,10 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
             deviceData.forEach(e -> {
                 if (oldCategoryName.equals(e.getCategoryName())) {
                     e.setCategoryName(newCategoryName);
-                     addDataRepository.save(e);
+                    addDataRepository.save(e);
                 }
             });
-             addDataService.update();
+            addDataService.update();
         }
 
         // ✅ Update column list
@@ -2475,10 +2491,10 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
             columnData.forEach(e -> {
                 if (oldCategoryName.equals(e.getCategoryName())) {
                     e.setCategoryName(newCategoryName);
-                     columnRepository.save(e);
+                    columnRepository.save(e);
                 }
             });
-             individualColumnsService.updateUniversalColumn();
+            individualColumnsService.updateUniversalColumn();
         }
 
         // ✅ Update dropdown list
@@ -2488,10 +2504,10 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
             dropDownLists.forEach(e -> {
                 if (oldCategoryName.equals(e.getCategoryName())) {
                     e.setCategoryName(newCategoryName);
-                     dropDownListRepository.save(e);
+                    dropDownListRepository.save(e);
                 }
             });
-             dropDownListService.update();
+            dropDownListService.update();
         }
 
         // ✅ Update requestData
@@ -2503,10 +2519,10 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
                 if (allData != null && oldCategoryName.equals(allData.get("category"))) {
                     allData.put("category", newCategoryName);
                     e.setAllData(allData);
-                     requestDataRepository.save(e);
+                    requestDataRepository.save(e);
                 }
             });
-             requestDataService.update();
+            requestDataService.update();
         }
 
         // ✅ Update Service Request
@@ -2536,11 +2552,11 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
                 }
 
                 // Save changes if needed
-                 serviceRequestRepository.save(request);
+                serviceRequestRepository.save(request);
             }
 
             // Optionally update the service
-             serviceRequestService.update();
+            serviceRequestService.update();
         }
 
     }
@@ -2606,7 +2622,7 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
     }
     public boolean checkColumnDataInAllTable(String Name) {
         System.out.println("Starting key update in all AddData entries...");
-          result=false;
+        result=false;
         List<AddData> deviceData = addDataRepository.findAll();
         if (deviceData != null && !deviceData.isEmpty()) {
             System.out.println("Found " + deviceData.size() + " AddData entries");
@@ -2624,7 +2640,7 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
 
                         // ✅ Rename key if its value matches oldCategoryName
                         if (key != null && key.equals(Name)) {
-                           result=true;
+                            result=true;
                         }
                     }
 
@@ -2645,13 +2661,687 @@ public List<Column> individualColumnData(@RequestParam String categoryName) {
             System.out.println("Updating drop-down list...");
             dropDownLists.forEach(e -> {
                 if (Name.equals(e.getDropDownListName())) {
-                   result=true;
+                    result=true;
                 }
             });
 
         }
 
+        return result;
+
+    }
+
+    public void updateAllInternalUser(String branchName, String oldUserName, String oldUserId, String newUserName, String newUserId) {
+        //System.out.println("Updating users for branch: " + branchName);
+        //System.out.println("Starting key update in all AddData entries...");
+        String matcher = branchName + "_" + oldUserName + "_" + oldUserId;
+        String newMatcher = branchName + "_" + newUserName + "_" + newUserId;
+        boolean result = false; // Local variable instead of global
+        List<AddData> deviceData = addDataRepository.findAll();
+
+        if (deviceData == null) {
+            System.out.println("No AddData entries found (null list)");
+            return;
+        }
+
+        if (deviceData.isEmpty()) {
+            System.out.println("No AddData entries found (empty list)");
+            return;
+        }
+
+        //System.out.println("Found " + deviceData.size() + " AddData entries");
+
+        List<AddData> entriesToUpdate = new ArrayList<>(); // Collect modified entries for batch save
+
+        for (AddData entry : deviceData) {
+            boolean updated = false; // Initialize for each entry
+            List<AddData.DeviceUser> deviceUsers = entry.getDeviceUsers();
+
+            if (deviceUsers != null) { // Null check for getDeviceUsers
+                for (AddData.DeviceUser user : deviceUsers) {
+                    if (user.getUserName().equals(oldUserName) &&
+                            user.getUserId().equals(oldUserId) &&
+                            branchName.equals(user.getDepartmentName())) {
+                        user.setUserName(newUserName);
+                        user.setUserId(newUserId);
+                        updated = true;
+                        result = true;
+                    }
+                }
+            } else {
+                System.out.println("DeviceUsers is null for AddData entry: " + entry);
+            }
+
+            if (updated) {
+                entriesToUpdate.add(entry); // Collect modified entries
+            }
+        }
+
+        // Batch save modified entries
+        if (!entriesToUpdate.isEmpty()) {
+            try {
+                addDataRepository.saveAll(entriesToUpdate);
+                if (result) {
+                    addDataService.update();
+                }
+                System.out.println("Successfully updated " + entriesToUpdate.size() + " AddData entries");
+            } catch (Exception e) {
+                System.err.println("Error saving AddData entries: " + e.getMessage());
+                throw new RuntimeException("Failed to update AddData entries", e); // Propagate to controller
+            }
+        } else {
+            System.out.println("No AddData entries were updated");
+        }
+
+
+        // ✅ Update requestData
+        List<RequestData> requestData = requestDataRepository.findAll();
+        if (requestData != null && !requestData.isEmpty()) {
+            System.out.println("Updating request data...");
+            // Create matcher for old user info
+
+            Field[] fieldsX = RequestData.class.getDeclaredFields();
+            requestData.forEach(e -> {
+                // update all main class field
+                if (fieldsX != null) {
+                    for (int i = 0; i < fieldsX.length; i++) {
+                        Field field = fieldsX[i];
+                        if (field != null) {
+                            field.setAccessible(true); // Allow access to private fields
+                            try {
+                                Object value = field.get(e);
+                                String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                // Check if field matches the old matcher
+                                if (fieldValue.equals(matcher)) {
+                                    // Update the field to newMatcher
+                                    field.set(e, newMatcher);
+                                    System.out.println("Field " + i + ": " + field.getName() + " = " + fieldValue);
+                                }
+
+                            } catch (IllegalAccessException f) {
+                                System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                            } catch (Exception f) {
+                                System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println("No fields found for Inventory class");
+                }
+                RequestData.Inventory inventory = e.getInventory();
+                if(inventory !=null ){
+
+                     // can print all inernal data by index?
+                    Field[] fields = RequestData.Inventory.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(inventory);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        // Update the field to newMatcher
+                                        field.set(inventory, newMatcher);
+                                        System.out.println("Field " + i + ": " + field.getName() + " = " + fieldValue);
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+                RequestData.Purchase purchase = e.getPurchase();
+                if(purchase !=null ){
+
+                    // can print all inernal data by index?
+                    Field[] fields = RequestData.Purchase.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(purchase);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        // Update the field to newMatcher
+                                        field.set(purchase, newMatcher);
+                                        System.out.println("Field " + i + ": " + field.getName() + " = " + fieldValue);
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+                RequestData.CustomerCare customerCare = e.getCustomerCare();
+                if(customerCare !=null ){
+
+                    // can print all inernal data by index?
+                    Field[] fields = RequestData.CustomerCare.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(customerCare);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        // Update the field to newMatcher
+                                        field.set(customerCare, newMatcher);
+                                        System.out.println("Field " + i + ": " + field.getName() + " = " + fieldValue);
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+
+
+                requestDataRepository.save(e);
+
+            });
+            requestDataService.update();
+        }
+
+            List<ServiceRequest> serviceRequests = serviceRequestRepository.findAll();
+            if (serviceRequests == null || serviceRequests.isEmpty()) {
+                System.out.println("No service requests found in the repository.");
+                return;
+            }
+
+            System.out.println("Updating service requests... [matcher: " + matcher + ", newMatcher: " + newMatcher + "]");
+
+            for (ServiceRequest request : serviceRequests) {
+                // Update top-level fields in ServiceRequest
+                Field[] serviceRequestFields = ServiceRequest.class.getDeclaredFields();
+                if (serviceRequestFields != null) {
+                    for (Field field : serviceRequestFields) {
+                        field.setAccessible(true);
+                        try {
+                            Object value = field.get(request);
+                            String fieldValue = (value != null) ? value.toString() : "null";
+                            if (fieldValue.equals(matcher)) {
+                                // Handle type conversion for the field
+                                if (field.getType() == String.class) {
+                                    field.set(request, newMatcher);
+                                   // System.out.println("Updated ServiceRequest field: " + field.getName() + " = " + newMatcher);
+                                } else {
+                                   // System.out.println("Skipped ServiceRequest field: " + field.getName() + " (non-String type: " + field.getType() + ")");
+                                }
+                            } else {
+                                System.out.println("ServiceRequest field: " + field.getName() + " = " + fieldValue + " (no match)");
+                            }
+                        } catch (IllegalAccessException e) {
+                            System.err.println("Error accessing ServiceRequest field " + field.getName() + ": " + e.getMessage());
+                        } catch (Exception e) {
+                            System.err.println("Unexpected error accessing ServiceRequest field " + field.getName() + ": " + e.getMessage());
+                        }
+                    }
+                } else {
+                    System.out.println("No fields found for ServiceRequest class");
+                }
+
+                // Update nested proposalSolution fields
+                if (request.getAllProblem() != null && !request.getAllProblem().isEmpty()) {
+                    request.getAllProblem().forEach(problem -> {
+                        if (problem != null && problem.getProposalSolution() != null && !problem.getProposalSolution().isEmpty()) {
+                            Field[] proposalFields = ServiceRequest.problems.ProposalSolutionItem.class.getDeclaredFields();
+                            if (proposalFields != null) {
+                                problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                                    for (Field field : proposalFields) {
+                                        field.setAccessible(true);
+                                        try {
+                                            Object value = field.get(proposalSolutionItem);
+                                            String fieldValue = (value != null) ? value.toString() : "null";
+                                            if (fieldValue.equals(matcher)) {
+                                                // Handle type conversion for the field
+                                                if (field.getType() == String.class) {
+                                                    field.set(proposalSolutionItem, newMatcher);
+                                                   // System.out.println("Updated ProposalSolution field: " + field.getName() + " = " + newMatcher);
+                                                } else if (field.getType() == List.class) {
+                                                    List<String> newList = new ArrayList<>();
+                                                    newList.add(newMatcher);
+                                                    field.set(proposalSolutionItem, newList);
+                                                   // System.out.println("Updated ProposalSolution List field: " + field.getName() + " = [" + newMatcher + "]");
+                                                } else {
+                                                    System.out.println("Skipped ProposalSolution field: " + field.getName() + " (non-String/List type: " + field.getType() + ")");
+                                                }
+                                            } else {
+                                                System.out.println("ProposalSolution field: " + field.getName() + " = " + fieldValue + " (no match)");
+                                            }
+                                        } catch (IllegalAccessException e) {
+                                            System.err.println("Error accessing ProposalSolution field " + field.getName() + ": " + e.getMessage());
+                                        } catch (Exception e) {
+                                            System.err.println("Unexpected error accessing ProposalSolution field " + field.getName() + ": " + e.getMessage());
+                                        }
+                                    }
+                                });
+                            } else {
+                                System.out.println("No fields found for ProposalSolutionItem class");
+                            }
+                        } else {
+                            System.out.println("No proposalSolution data found for problem");
+                        }
+                    });
+                } else {
+                    System.out.println("No problems found in ServiceRequest");
+                }
+
+                // Save the updated ServiceRequest
+                try {
+                    serviceRequestRepository.save(request);
+                    System.out.println("Saved ServiceRequest with ID: " + request.getId());
+                } catch (Exception e) {
+                    System.err.println("Error saving ServiceRequest with ID: " + request.getId() + ": " + e.getMessage());
+                }
+            }
+
+            // Update the service
+            try {
+                serviceRequestService.update();
+                System.out.println("ServiceRequestService updated successfully");
+            } catch (Exception e) {
+                System.err.println("Error updating ServiceRequestService: " + e.getMessage());
+            }
+    }
+
+    public AtomicBoolean checkAllInternalUser(String branchName, String oldUserName, String oldUserId) {
+        //System.out.println("Updating users for branch: " + branchName);
+        //System.out.println("Starting key update in all AddData entries...");
+        result=false;
+        String matcher = branchName + "_" + oldUserName + "_" + oldUserId;
+        AtomicBoolean result = new AtomicBoolean(false); // Local variable instead of global
+        List<AddData> deviceData = addDataRepository.findAll();
+
+       
+
+        //System.out.println("Found " + deviceData.size() + " AddData entries");
+
+        List<AddData> entriesToUpdate = new ArrayList<>(); // Collect modified entries for batch save
+
+        for (AddData entry : deviceData) {
+            boolean updated = false; // Initialize for each entry
+            List<AddData.DeviceUser> deviceUsers = entry.getDeviceUsers();
+
+            if (deviceUsers != null) { // Null check for getDeviceUsers
+                for (AddData.DeviceUser user : deviceUsers) {
+                    if (user.getUserName().equals(oldUserName) &&
+                            user.getUserId().equals(oldUserId) &&
+                            branchName.equals(user.getDepartmentName())) {
+                        updated = true;
+                        result.set(true);
+                    }
+                }
+            } else {
+                System.out.println("DeviceUsers is null for AddData entry: " + entry);
+            }
+        }
+
+      
+
+
+        // ✅ Update requestData
+        List<RequestData> requestData = requestDataRepository.findAll();
+        if (requestData != null && !requestData.isEmpty()) {
+            System.out.println("Updating request data...");
+            // Create matcher for old user info
+
+            Field[] fieldsX = RequestData.class.getDeclaredFields();
+            requestData.forEach(e -> {
+                // update all main class field
+                if (fieldsX != null) {
+                    for (int i = 0; i < fieldsX.length; i++) {
+                        Field field = fieldsX[i];
+                        if (field != null) {
+                            field.setAccessible(true); // Allow access to private fields
+                            try {
+                                Object value = field.get(e);
+                                String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                // Check if field matches the old matcher
+                                if (fieldValue.equals(matcher)) {
+                                    // Update the field to newMatcher
+                                    result.set(true);
+                                }
+
+                            } catch (IllegalAccessException f) {
+                                System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                            } catch (Exception f) {
+                                System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                            }
+                        }
+                    }
+                } else {
+                    System.out.println("No fields found for Inventory class");
+                }
+                RequestData.Inventory inventory = e.getInventory();
+                if(inventory !=null ){
+
+                    // can print all inernal data by index?
+                    Field[] fields = RequestData.Inventory.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(inventory);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        result.set(true);
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+                RequestData.Purchase purchase = e.getPurchase();
+                if(purchase !=null ){
+
+                    // can print all inernal data by index?
+                    Field[] fields = RequestData.Purchase.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(purchase);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        // Update the field to newMatcher
+                                       result.set(true); 
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+                RequestData.CustomerCare customerCare = e.getCustomerCare();
+                if(customerCare !=null ){
+
+                    // can print all inernal data by index?
+                    Field[] fields = RequestData.CustomerCare.class.getDeclaredFields();
+                    if (fields != null) {
+                        for (int i = 0; i < fields.length; i++) {
+                            Field field = fields[i];
+                            if (field != null) {
+                                field.setAccessible(true); // Allow access to private fields
+                                try {
+                                    Object value = field.get(customerCare);
+                                    String fieldValue = (value != null) ? value.toString() : "null";
+
+
+                                    // Check if field matches the old matcher
+                                    if (fieldValue.equals(matcher)) {
+                                        result.set(true);
+                                    }
+
+                                } catch (IllegalAccessException f) {
+                                    System.err.println("Error accessing field " + field.getName() + ": " + f.getMessage());
+                                } catch (Exception f) {
+                                    System.err.println("Unexpected error accessing field " + field.getName() + ": " + f.getMessage());
+                                }
+                            }
+                        }
+                    } else {
+                        System.out.println("No fields found for Inventory class");
+                    }
+
+                }
+
+
+            });
+          
+        }
+
+        List<ServiceRequest> serviceRequests = serviceRequestRepository.findAll();
+        
+
+        for (ServiceRequest request : serviceRequests) {
+            // Update top-level fields in ServiceRequest
+            Field[] serviceRequestFields = ServiceRequest.class.getDeclaredFields();
+            if (serviceRequestFields != null) {
+                for (Field field : serviceRequestFields) {
+                    field.setAccessible(true);
+                    try {
+                        Object value = field.get(request);
+                        String fieldValue = (value != null) ? value.toString() : "null";
+                        if (fieldValue.equals(matcher)) {
+                            // Handle type conversion for the field
+                            if (field.getType() == String.class) {
+                                result.set(true);
+                            } else {
+                                // System.out.println("Skipped ServiceRequest field: " + field.getName() + " (non-String type: " + field.getType() + ")");
+                            }
+                        } else {
+                            System.out.println("ServiceRequest field: " + field.getName() + " = " + fieldValue + " (no match)");
+                        }
+                    } catch (IllegalAccessException e) {
+                        System.err.println("Error accessing ServiceRequest field " + field.getName() + ": " + e.getMessage());
+                    } catch (Exception e) {
+                        System.err.println("Unexpected error accessing ServiceRequest field " + field.getName() + ": " + e.getMessage());
+                    }
+                }
+            } else {
+                System.out.println("No fields found for ServiceRequest class");
+            }
+
+            // Update nested proposalSolution fields
+            if (request.getAllProblem() != null && !request.getAllProblem().isEmpty()) {
+                request.getAllProblem().forEach(problem -> {
+                    if (problem != null && problem.getProposalSolution() != null && !problem.getProposalSolution().isEmpty()) {
+                        Field[] proposalFields = ServiceRequest.problems.ProposalSolutionItem.class.getDeclaredFields();
+                        if (proposalFields != null) {
+                            problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                                for (Field field : proposalFields) {
+                                    field.setAccessible(true);
+                                    try {
+                                        Object value = field.get(proposalSolutionItem);
+                                        String fieldValue = (value != null) ? value.toString() : "null";
+                                        if (fieldValue.equals(matcher)) {
+                                            // Handle type conversion for the field
+                                            if (field.getType() == String.class) {
+                                                
+                                                result.set(true);
+                                                // System.out.println("Updated ProposalSolution field: " + field.getName() + " = " + newMatcher);
+                                            } else if (field.getType() == List.class) {
+                                               /* List<String> newList = new ArrayList<>();
+                                                newList.add(newMatcher);
+                                                field.set(proposalSolutionItem, newList);
+                                                // System.out.println("Updated ProposalSolution List field: " + field.getName() + " = [" + newMatcher + "]");*/
+                                                result.set(true);
+
+                                            } else {
+                                                System.out.println("Skipped ProposalSolution field: " + field.getName() + " (non-String/List type: " + field.getType() + ")");
+                                            }
+                                        } else {
+                                            System.out.println("ProposalSolution field: " + field.getName() + " = " + fieldValue + " (no match)");
+                                        }
+                                    } catch (IllegalAccessException e) {
+                                        System.err.println("Error accessing ProposalSolution field " + field.getName() + ": " + e.getMessage());
+                                    } catch (Exception e) {
+                                        System.err.println("Unexpected error accessing ProposalSolution field " + field.getName() + ": " + e.getMessage());
+                                    }
+                                }
+                            });
+                        } else {
+                            System.out.println("No fields found for ProposalSolutionItem class");
+                        }
+                    } else {
+                        System.out.println("No proposalSolution data found for problem");
+                    }
+                });
+            } else {
+                System.out.println("No problems found in ServiceRequest");
+            }
+
+            
+        }
+
        return result;
+    }
+
+    public void updateAllDeviceRequestColumn(String oldName,String newName){
+
+        List<RequestData> requestData = requestDataRepository.findAll();
+        if (requestData == null || requestData.isEmpty()) {
+            System.out.println("No request data found in the repository.");
+            return;
+        }
+
+        System.out.println("Updating request data: Renaming key '" + oldName + "' to '" + newName + "'");
+
+        for (RequestData request : requestData) {
+            // Check if allData is not null and not empty
+            if (request.getAllData() != null && !request.getAllData().isEmpty()) {
+                System.out.println("Processing allData for RequestData ID: " + request.getId());
+
+                // Convert map entries to a list for consistent indexing
+                List<Map.Entry<String, String>> entryList = new ArrayList<>(request.getAllData().entrySet());
+
+                // Print all internal data with index before update
+                System.out.println("AllData contents before update:");
+                for (int i = 0; i < entryList.size(); i++) {
+                    Map.Entry<String, String> entry = entryList.get(i);
+                    System.out.println("  Index " + i + ": Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                }
+
+                // Check if the oldName key exists
+                if (request.getAllData().containsKey(oldName)) {
+                    // Get the value of the old key
+                    String value = request.getAllData().get(oldName);
+
+                    // Create a new map to update the key
+                    Map<String, String> updatedMap = new HashMap<>(request.getAllData());
+                    updatedMap.remove(oldName); // Remove the old key
+                    updatedMap.put(newName, value); // Add the new key with the same value
+
+                    // Update the allData map
+                    request.setAllData(updatedMap);
+                    System.out.println("Renamed key '" + oldName + "' to '" + newName + "' with value: " + value);
+
+                    // Print allData contents after update
+                    System.out.println("AllData contents after update:");
+                    entryList = new ArrayList<>(request.getAllData().entrySet());
+                    for (int i = 0; i < entryList.size(); i++) {
+                        Map.Entry<String, String> entry = entryList.get(i);
+                        System.out.println("  Index " + i + ": Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                    }
+                } else {
+                    System.out.println("Key '" + oldName + "' not found in allData for RequestData ID: " + request.getId());
+                }
+
+                // Save the updated RequestData
+                try {
+                    requestDataRepository.save(request);
+                    System.out.println("Saved RequestData with ID: " + request.getId());
+                } catch (Exception e) {
+                    System.err.println("Error saving RequestData with ID: " + request.getId() + ": " + e.getMessage());
+                }
+            } else {
+                System.out.println("No allData found for RequestData ID: " + request.getId());
+            }
+        }
+
+        // Update the service
+        try {
+            requestDataService.update();
+            System.out.println("RequestDataService updated successfully");
+        } catch (Exception e) {
+            System.err.println("Error updating RequestDataService: " + e.getMessage());
+        }
+    }
+
+    public boolean checkAllDeviceRequestColumn(String oldName){
+          result=false;
+        List<RequestData> requestData = requestDataRepository.findAll();
+
+
+        for (RequestData request : requestData) {
+            // Check if allData is not null and not empty
+            if (request.getAllData() != null && !request.getAllData().isEmpty()) {
+
+                // Convert map entries to a list for consistent indexing
+                List<Map.Entry<String, String>> entryList = new ArrayList<>(request.getAllData().entrySet());
+
+                for (int i = 0; i < entryList.size(); i++) {
+                    Map.Entry<String, String> entry = entryList.get(i);
+                }
+
+                // Check if the oldName key exists
+                if (request.getAllData().containsKey(oldName)) {
+                    result=true;
+                } else {
+                    System.out.println("Key '" + oldName + "' not found in allData for RequestData ID: " + request.getId());
+                }
+
+            } else {
+                System.out.println("No allData found for RequestData ID: " + request.getId());
+            }
+        }
+
+        return result;
 
     }
 
