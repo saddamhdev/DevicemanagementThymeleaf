@@ -523,8 +523,8 @@ window.trackDeviceRequestData = function (row, clickedElement) {
     // Collect row data
     const cells = Array.from(row.getElementsByTagName('td')).map(cell => cell.innerText.trim());
     const sn = cells[0];
-    const biVagName = cells[1];
-    const categoryName = cells[2];
+     const categoryName = cells[2];
+     const biVagName = cells[1];
 
     if (!clickedElement.classList.contains('view-device-status')) {
         console.log("⛔ Not clicked on .view-device-status");
@@ -627,9 +627,10 @@ window.trackDeviceRequestData = function (row, clickedElement) {
         // Generate header with sn, categoryName, biVagName
         let htmlToAdd = `
            <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+            <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
              <h6 class="fw-semibold text-primary mb-2">📌 Serial Number: <span class="text-dark">${sn}</span></h6>
-             <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${categoryName}</span></h6>
-             <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
+             <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${ categoryName}</span></h6>
+
            </div>
 
         `;
@@ -705,6 +706,22 @@ window.trackDeviceRequestData = function (row, clickedElement) {
                                     action: `Pending`
                                 });
                         }
+                        // CustomerCare received Device
+                     if (result.inventory?.inventoryToCustomerCareDeviceReceivingTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.inventory?.inventoryToCustomerCareDeviceReceivingTime,
+                            entity: 'CustomerCare',
+                            action: ` CustomerCare received Device `
+                        });
+                    }
+                    else{
+                          htmlToAdd += createTimelineEntry({
+                                dateTime: null,
+                                entity: 'CustomerCare',
+                                action: `Pending`
+                            });
+                    }
+                    //CustomerCare To Dept Sending Device
                      if (result.customerCare?.customerCareToDepartmentDeviceSendingTime) {
                         htmlToAdd += createTimelineEntry({
                             dateTime: result.customerCare?.customerCareToDepartmentDeviceSendingTime,
@@ -798,6 +815,21 @@ window.trackDeviceRequestData = function (row, clickedElement) {
                         action: `Pending`
                     });
             }
+            // inventory received device
+             if (result.purchase?.purchaseDeviceReceiverToInventoryTime) {
+                        htmlToAdd += createTimelineEntry({
+                            dateTime: result.purchase?.purchaseDeviceReceiverToInventoryTime,
+                            entity: 'Inventory',
+                            action: 'Inventory Received Device'
+                        });
+                    }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Inventory',
+                        action: `Pending`
+                    });
+            }
          if (result.inventory?.inventoryToCustomerCareDeviceSendingTime) {
                         htmlToAdd += createTimelineEntry({
                             dateTime: result.inventory.inventoryToCustomerCareDeviceSendingTime,
@@ -809,6 +841,21 @@ window.trackDeviceRequestData = function (row, clickedElement) {
                   htmlToAdd += createTimelineEntry({
                         dateTime: null,
                         entity: 'Inventory',
+                        action: `Pending`
+                    });
+            }
+             // CustomerCare received Device
+             if (result.inventory?.inventoryToCustomerCareDeviceReceivingTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.inventory?.inventoryToCustomerCareDeviceReceivingTime,
+                    entity: 'CustomerCare',
+                    action: ` CustomerCare received Device `
+                });
+            }
+            else{
+                  htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'CustomerCare',
                         action: `Pending`
                     });
             }
@@ -955,9 +1002,9 @@ window.trackServiceRequestData = function (row, clickedElement) {
         // Generate header with sn, categoryName, biVagName
         let htmlToAdd = `
            <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+             <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
              <h6 class="fw-semibold text-primary mb-2">📌 Serial Number: <span class="text-dark">${sn}</span></h6>
              <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${categoryName}</span></h6>
-             <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
            </div>
 
         `;
@@ -971,7 +1018,23 @@ window.trackServiceRequestData = function (row, clickedElement) {
             includeSeparator: false
         });
 
-        // Common entries
+        // CustomerCare receive device
+                if (result.customerCareServiceRequestAcceptedTime) {
+                    htmlToAdd += createTimelineEntry({
+                        dateTime: result.customerCareServiceRequestAcceptedTime,
+                        entity: 'CustomerCare',
+                        action: `CustomerCare Receive Device `
+                    });
+                }
+                else{
+                   htmlToAdd += createTimelineEntry({
+                         dateTime: null,
+                         entity: 'CustomerCare',
+                         action: `Pending`
+                     });
+                }
+
+        // CustomerCare send Device to service
         if (result.customerCareSendDeviceToServiceTime) {
             htmlToAdd += createTimelineEntry({
                 dateTime: result.customerCareSendDeviceToServiceTime,
@@ -979,6 +1042,29 @@ window.trackServiceRequestData = function (row, clickedElement) {
                 action: `CustomerCare To ServiceCenter Send Device `
             });
         }
+        else{
+           htmlToAdd += createTimelineEntry({
+                 dateTime: null,
+                 entity: 'CustomerCare',
+                 action: `Pending`
+             });
+        }
+
+         // serviceCenter received device
+            if (result.serviceCenterServiceRequestAcceptedTime) {
+                htmlToAdd += createTimelineEntry({
+                    dateTime: result.serviceCenterServiceRequestAcceptedTime,
+                    entity: 'ServiceCenter',
+                    action: ` ServiceCenter Received Device `
+                });
+            }
+            else{
+               htmlToAdd += createTimelineEntry({
+                     dateTime: null,
+                     entity: 'ServiceCenter',
+                     action: `Pending`
+                 });
+            }
 
          if( isProposalOrDirect){
               console.log("Thaprathapri");
@@ -996,6 +1082,7 @@ window.trackServiceRequestData = function (row, clickedElement) {
                          action: `Pending`
                      });
              }
+
                if (result.customerCareToDepartmentTime) {
                  htmlToAdd += createTimelineEntry({
                      dateTime: result.customerCareToDepartmentTime,

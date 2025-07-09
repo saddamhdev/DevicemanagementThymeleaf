@@ -22,9 +22,7 @@
                         <li th:each="category : ${data}"><a class="dropdown-item individualTopSelection" href="#" th:text="${category.categoryName}"></a></li>
                     </ul>
                 </div>
-                <div class="d-flex justify-content-center mb-2">
-                    <button class="btn btn-success btn-sm" onclick="addUerToggle111()" >Add</button>
-                </div>
+
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
                 <div class="responsive-table-wrapper">
@@ -40,7 +38,7 @@
 
                         <th scope="col" style="background-color: gray; color:white"> Status In Purchase</th>
                         <th scope="col" style="background-color: gray; color:white"> Proposal Status In COO</th>
-                        <th scope="col" style="background-color: gray; color:white"> Purchase Device Status In COO</th>
+                        <th scope="col" style="background-color: gray; color:white"> Purchase Device Delivery Status</th>
                         <th scope="col" style="background-color: gray;">Create Time</th>
                         <th scope="col" style="background-color: gray; color:white">Action</th>
                     </tr>
@@ -78,8 +76,7 @@
                         <td th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus == 'Purchased'}"
                             th:text="${device.purchase != null && device.purchase.cooAns != null ? device.purchase.cooAns : ' '}">
                         </td>
-                        <td th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus == 'Purchased'}"
-                            th:text="${device.purchase != null && device.purchase.cooPurchaseAcceptedAns != null ? device.purchase.cooPurchaseAcceptedAns : ' '}">
+                        <td th:text="${device.purchase != null && device.purchase.purchaseDeviceSenderToInventoryStatus != null ? device.purchase.purchaseDeviceSenderToInventoryStatus : ' '}">
                         </td>
                         <td th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus == 'Purchased'}"
                             th:text="${device.purchase?.RequestTime != null ? device.purchase?.RequestTime : ' '}">

@@ -515,7 +515,7 @@ window.initRequestDataGeneral = function () {
                                   <tbody id="listDeviceInformationBody"></tbody>
                               </table>
                               <div class="d-flex justify-content-center mb-2">
-                              <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Send</button>
+                              <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Accept</button>
                               </div>
                           </div>
                       `;

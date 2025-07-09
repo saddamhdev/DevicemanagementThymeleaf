@@ -341,9 +341,7 @@ public class SuperAdmin {
             String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             Column data=columnRepository.findByColumnNameAndStatus(universalColumnName,"1");
-            if(data!=null){
-                columnRepository.save(new Column(universalColumnName,formattedDateTime,currentDate,"1","universal","universal",requiredType,dataType));
-            }
+            columnRepository.save(new Column(universalColumnName,formattedDateTime,currentDate,"1","universal","universal",requiredType,dataType));
             // Save the Category object
 
             // move to return "user/Home";
@@ -431,29 +429,22 @@ public class SuperAdmin {
             Optional<Column> existingColumn = columnRepository.findByCategoryNameAndColumnNameAndColumnTypeAndStatus(
                     individualCategoryName, individualColumnName, "individual", "1");
 
-            if (existingColumn.isEmpty()) {
-                Column newColumn = new Column(
-                        individualColumnName,
-                        formattedDateTime,
-                        currentDate,
-                        "1",
-                        "individual",
-                        individualCategoryName,
-                        dataType,
-                        requiredType
-                );
-                individualColumnsService.updateUniversalColumn();
-                columnRepository.save(newColumn);
-                // System.out.println("Inserted");
-            }
-
-            else{
-                System.out.println("Not Inserted");
-            }
+            Column newColumn = new Column(
+                    individualColumnName,
+                    formattedDateTime,
+                    currentDate,
+                    "1",
+                    "individual",
+                    individualCategoryName,
+                    dataType,
+                    requiredType
+            );
+            individualColumnsService.updateUniversalColumn();
+            columnRepository.save(newColumn);
             // Save the Category object
 
             // move to return "user/Home";
-            return ResponseEntity.ok("Successfully added data");
+            return ResponseEntity.ok("Successfully added column");
         }else {
             return ResponseEntity.ok("Sorry, Already this column added to "+individualCategoryName+" category");
         }

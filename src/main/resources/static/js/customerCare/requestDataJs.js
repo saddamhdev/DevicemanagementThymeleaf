@@ -338,11 +338,12 @@ window.initRequestDataTable = function () {
 
           // Add new cells for `cooDeliveryAns` and `checkAvailability`
               htmlData += `
+               <td>${device.inventory?.cooDeliveryAns || "Pending"}</td>
                  <td>${device.customerCare?.customerCareToDepartmentDeviceSendingStatus || " "}</td>
 
               `;
                htmlData += `
-                     <td>${device.inventory?.cooDeliveryAns || "Pending"}</td>
+
                      <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
                      <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
 
@@ -413,7 +414,7 @@ window.initRequestDataTable = function () {
                                                          <tbody id="listDeviceInformationBody"></tbody>
                                                      </table>
                                                      <div class="d-flex justify-content-center mb-2">
-                                                     <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Send</button>
+                                                     <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Accept</button>
                                                      </div>
                                                  </div>
                                              `;

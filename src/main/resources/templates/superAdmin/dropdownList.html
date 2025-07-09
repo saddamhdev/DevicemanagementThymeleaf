@@ -38,7 +38,7 @@
                         <td th:text="${device.categoryName}">categoryName</td>
                         <td th:text="${device.dropDownListName}">listName</td>
                         <td>
-                            <ol style=" padding-left: 0;text-align: left;"  >
+                            <ol style=" padding-left: 10;text-align: left;"  >
                                 <li th:each="name : ${device.allData}" th:text="${name}">List Value</li>
                             </ol>
                         </td>

@@ -38,7 +38,7 @@
                         <td title="View Device User">
                             <span th:each="du, iter : ${device.deviceUsers}"
                                   th:if="${iter.last}"
-                                  th:text="${du.userName}">
+                                  th:text="${du.departmentName}">
                             </span>
                             <button class="btn btn-info btn-sm deviceUserHistory" th:data-device-id="${device.id}" th:data-button-id="componentsView" style="margin-left:5px;">
                                 &#128065;

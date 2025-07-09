@@ -416,8 +416,8 @@ window.initListRequestInventoryTable = function () {
                               htmlData += `
                                   <td>
                                       <div class="d-flex justify-content-center align-items-center action-button-container">
-                                           <button class="btn  btn-sm text-white viewAlternativeDevice" data-request-id="${device.id}" data-category-id="${device.allData['category']}" style="background-color:green;" data-button-id="chat">✔</button>
-                                          <button class="btn btn-danger btn-sm delete-button" data-request-id="${device.id}">
+                                           <button class="btn  btn-sm text-white viewAlternativeDevice" data-request-id="${device.id}" data-category-id="${device.allData['category']}" style="background-color:green;" data-button-id="chat" title="Accept Request">✔</button>
+                                          <button class="btn btn-danger btn-sm delete-button" data-request-id="${device.id}" title="Cancel Request">
                                               &#10007;
                                           </button>
                                       </div>
@@ -461,7 +461,7 @@ window.initListRequestInventoryTable = function () {
                                                     <tbody id="listDeviceInformationBody"></tbody>
                                                 </table>
                                                 <div class="d-flex justify-content-center mb-2">
-                                                <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Send</button>
+                                                <button class="btn btn-success btn-sm  btnSave" data-request-id="${requestId}"  style="width: 10%; margin-top: 20px;">Accept</button>
                                                 </div>
                                             </div>
                                         `;

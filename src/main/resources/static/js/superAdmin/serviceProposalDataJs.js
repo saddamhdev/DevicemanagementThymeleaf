@@ -944,7 +944,7 @@ window.initServiceProposalTable = function () {    // Perform a single AJAX call
                       }
                    // Loop through each proposalSolution in the problem
                    problem.proposalSolution.forEach(function(solution) {
-                     //  if (solution.action === "accept" && device.cooAcceptOfServiceRequest === 'Accepted') {
+                       if (solution.name !== null ) {
                            const row = document.createElement("tr");
 
                            console.log("Name:", solution.name);
@@ -1017,7 +1017,7 @@ window.initServiceProposalTable = function () {    // Perform a single AJAX call
 
                            // Append the row to the table body
                            tableBody.appendChild(row);
-                      // }
+                       }
                    });
                });
            });
