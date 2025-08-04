@@ -1,6 +1,8 @@
 package com.device.DeviceManagement.repository;
 
 import com.device.DeviceManagement.model.BranchUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +11,7 @@ import java.util.List;
 @Repository
 public interface BranchUserRepository extends MongoRepository<BranchUser, String> {
       List<BranchUser> findByStatus(String status);
+      Page<BranchUser> findByStatus(String status, Pageable pageable);
       BranchUser findByIdAndStatus(String id,String status);
     BranchUser findByBranchNameAndUserNameAndStatus(String dept, String userName, String status);
 

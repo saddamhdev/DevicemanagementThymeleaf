@@ -1,6 +1,8 @@
 package com.device.DeviceManagement.repository;
 
 import com.device.DeviceManagement.model.RequestData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
     // Additional query methods can be defined here if needed
     List<RequestData> findByDepartmentNameAndStatus(String departmentName, String status);
     List<RequestData> findByStatus(String status);
+    Page<RequestData> findByStatus(String status, Pageable pageable);
 
     RequestData findByIdAndStatus(String Id,String status);
 

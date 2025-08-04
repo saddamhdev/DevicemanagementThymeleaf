@@ -166,17 +166,17 @@ window.initServiceRequestPendingGeneral = function () {
        else  if (buttonId === "accepted"){
 
                var htmlToAdd = `
-                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
-                      <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
+                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
+                      <button type="button" class="btn btn-primary" id="AcceptBtnCustomerCare">Yes</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
-              $('.modal-body').html(htmlToAdd);
-              $('#publicModalLabel').text("Do you want to accept this service request ?");
-              $('#AcceptBtn').click(function() {
+              $('.ModalMedium').html(htmlToAdd);
+              $('#publicModalMediumLabel').text("Do you want to accept this service request ?");
+              $('#AcceptBtnCustomerCare').click(function() {
                   setServiceRequestAcceptPending(serviceId, "Accepted");
               });
-              showModal();
+              showModalMedium();
                } else if (button.hasClass("Delete")) {
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 

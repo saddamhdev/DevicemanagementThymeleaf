@@ -103,7 +103,7 @@ function  editUniversalColumnBtn($row){
                     `;
 
                     // Add the HTML code to the modal body using jQuery
-                    $('.modal-body').html(htmlToAdd);
+                    $('.ModalMedium').html(htmlToAdd);
                     $('#requiredTypeUniversalEdit').val(requiredType);
                      $.ajax({
                             type: "POST",
@@ -127,7 +127,7 @@ function  editUniversalColumnBtn($row){
                      $('#publicModalLabel').text("Edit Individual Column")
 
                     // Show the modal
-                    $('#publicModal').modal('show');
+                    $('#publicModalMedium').modal('show');
                  // Bind the click event to the Save button inside the modal
                         $('#saveEditBtn').click(function() {
                             editUniversalColumnBtn($row);

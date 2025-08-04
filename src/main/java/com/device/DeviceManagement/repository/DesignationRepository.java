@@ -2,6 +2,8 @@ package com.device.DeviceManagement.repository;
 
 
 import com.device.DeviceManagement.model.Designation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -13,6 +15,7 @@ public interface DesignationRepository extends MongoRepository<Designation, Stri
     Designation findByDesignationName(String designationName);
     // update DesignationName according to DesignationName
     List<Designation> findByStatus(String status);
+    Page<Designation> findByStatus(String status, Pageable pageable);
     boolean existsByDesignationName(String DesignationName);
     boolean existsByDesignationNameAndStatus(String DesignationName, String status);
 

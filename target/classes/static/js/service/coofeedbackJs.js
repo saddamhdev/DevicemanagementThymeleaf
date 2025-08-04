@@ -1,7 +1,5 @@
 function setServiceRequestToInventoryData(rowData) {
 
-    console.log("Sending Row Data:", rowData);
-
     // Send the data to the controller using AJAX
     $.ajax({
         url: '/service/setServiceRequestToInventoryData', // Replace with your controller's endpoint
@@ -202,17 +200,17 @@ window.initCooFeedbackGeneral = function () {
        else  if (buttonId === "accepted"){
 
                var htmlToAdd = `
-                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
                       <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
-              $('.modal-body').html(htmlToAdd);
-              $('#publicModalLabel').text("Do you want to send request for accessories  ?");
+              $('.ModalMedium').html(htmlToAdd);
+              $('#publicModalMediumLabel').text("Do you want to send request for accessories  ?");
               $('#AcceptBtn').click(function() {
                   setServiceRequestAcceptToInventory(serviceId, "Pending");
               });
-              showModal();
+              showModalMedium();
                }
                 else if (buttonId === "chat") {
                          print('serviceRequests', function(serviceRequests) {
@@ -887,125 +885,156 @@ function print(dataType, callback) {
         }
     });
 }
-window.initCooFeedbackTable = function () {    // Perform a single AJAX call
-    // Perform a single AJAX call
+window.initCooFeedbackTable = function () {
+    const tableBody = document.getElementById("cooFeedbackTableBody");
+    if (!tableBody) {
+        console.error("Table body not found.");
+        return;
+    }
+
+    // Generate unique row key from <tr>
+    function generateRowKeyFromRow(row) {
+        return Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+    }
+
+    // Generate key from data for tracking
+    function generateRowKeyFromData(sn, bivagName, categoryName, problemName, solution, presentTime) {
+        const value = (solution.value || '').trim().replace(/\n/g, '');
+        const price = solution.price || '';
+        const comment = solution.comment || '';
+        const action = solution.action || '';
+        const status = solution.cooManInfoOfPriceAcceptanceCommentStatus || '';
+        const deliveryDate = solution.deliveryDate || '';
+        const deviceId = solution.inventoryToServiceCenterDeviceId || '';
+
+        return [
+            sn, bivagName, categoryName, problemName,
+            solution.category, value, price, action,
+            comment, status, presentTime, deliveryDate, deviceId
+        ].join('|');
+    }
+
+    // Build current row map
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = generateRowKeyFromRow(row);
+        currentRowMap.set(key, row);
+    });
+
+    // Fetch updated data
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            console.log(data); // Log the entire data for debugging
+        data: {
+                page: pageNumber,
+                size: localStorage.getItem("pageSize") || 0
+            },
+        success: function (data) {
+            const allData = data['serviceRequests'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
 
-            var allData = data['serviceRequests'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("cooFeedbackTableBody");
-
-            // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-                    if (device.categoryName === categoryName) {
-                        count++;
-                    }
+                allAddData.forEach(device => {
+                    if (device.categoryName === categoryName) count++;
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const bivagName = device.departmentName;
+                const categoryName = device.categoryName;
+                const sn = device.visibleServiceId;
+                const presentTime = device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A";
 
-           // Loop through each device in allData
-           allData.forEach(function(device) {
-               const bivagName = device.departmentName;
-               const categoryName = device.categoryName;
-               const sn=device.visibleServiceId;
-// Ensure allProblem exists before iterating
-                 if (!device.allProblem || !Array.isArray(device.allProblem)) {
-                     console.warn("Skipping device due to missing or invalid allProblem array:", device);
-                     return; // Skip this device if allProblem is missing or not an array
-                 }
-               // Loop through each problem in the allProblem array for the device
-               device.allProblem.forEach(function(problem) {
+                if (!Array.isArray(device.allProblem)) return;
 
- // Ensure proposalSolution exists before iterating
-                   if (!problem.proposalSolution || !Array.isArray(problem.proposalSolution)) {
-                       console.warn("Skipping problem due to missing or invalid proposalSolution array:", problem);
-                       return; // Skip this problem if proposalSolution is missing or not an array
-                   }
-                   // Loop through each proposalSolution in the problem
-                   problem.proposalSolution.forEach(function(solution) {
-                       if (solution.cooManInfoOfPriceAcceptanceCommentStatus === "Accepted" ) {
-                           const row = document.createElement("tr");
+                device.allProblem.forEach(problem => {
+                    if (!Array.isArray(problem.proposalSolution)) return;
 
+                    problem.proposalSolution.forEach(solution => {
+                        if (solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted") return;
 
-                           var status = solution.cooManInfoOfPriceAcceptanceCommentStatus;
+                        const availability = getAvailability(solution.category);
+                        const displayAction = solution.action === "accept" ? "Accepted"
+                                            : solution.action === "reject" ? "Rejected"
+                                            : "";
 
-                           if(status==null){
-                           status=" ";
-                           }
+                        const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, presentTime);
+                        newRowKeys.add(rowKey);
 
-                            console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
-
-                           // Determine availability
-                           const availability = getAvailability(solution.category);
-
-                           // Create and append cells to the row
-                           row.innerHTML = `
-                               <td >${sn}</td>  <!-- Dynamic Counter -->
-                               <td>${bivagName}</td>
-                               <td>${categoryName}</td>
-                               <td>${problem.name}</td>
-                               <td>${solution.category}(${solution.name}-${solution.value})</td>
+                        if (!currentRowMap.has(rowKey)) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${sn}</td>
+                                <td>${bivagName}</td>
+                                <td>${categoryName}</td>
+                                <td>${problem.name}</td>
+                                <td class="text-start">
+                                    <div class="compact-cell bg-light">
+                                        <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                        <div>${solution.value.trim().replace(/\n/g, "<br>")}</div>
+                                    </div>
+                                </td>
+                                <td>${solution.price || ''}</td>
+                                <td>${displayAction}</td>
+                                <td>${solution.comment || ''}</td>
+                                <td>${presentTime}</td>
                                 <td>
-                                    <input type="text" name="inputField" id="inputField" placeholder="Enter Price" class="form-control" value="${solution.price}">
+                                    <div class="d-flex justify-content-center align-items-center action-button-container">
+                                        ${solution.cooManInfoOfPriceAcceptanceCommentStatus === 'Accepted'
+                                          && solution.serviceCenterToInventoryAccessoriesRequestStatus !== 'Accepted'
+                                          && solution.action !== 'reject'
+                                          && solution.serviceCenterToInventoryAccessoriesRequestStatus !== 'Pending'
+                                          ? `
+                                            <button class="btn btn-sm text-white setAcceptanceCommentBtn"
+                                                    data-category="${solution.category}"
+                                                    data-solution-name="${solution.name}"
+                                                    data-problem-name="${problem.name}"
+                                                    data-service-id="${device.id}"
+                                                    style="background-color:green;"
+                                                    title="Request to Inventory For Accessories">
+                                                ✔
+                                            </button>` : ''}
+
+                                        ${availability === "Unavailable" ? `
+                                            <button class="btn btn-sm text-white clock-button"
+                                                    data-date="${solution.deliveryDate}"
+                                                    data-solution-name="${solution.name}"
+                                                    data-problem-name="${problem.name}"
+                                                    data-service-id="${device.id}"
+                                                    style="background-color:#f44336;" title="Edit delivery date">
+                                                <i class="fas fa-clock"></i>
+                                            </button>` : ''}
+
+                                        ${availability !== "Unavailable" ? `
+                                            <button class="btn btn-info btn-sm view-button-selected-device"
+                                                    data-category="${solution.category}"
+                                                    data-service-id="${device.id}"
+                                                    data-button-id="view"
+                                                    data-device-id="${solution.inventoryToServiceCenterDeviceId}">
+                                                &#128065;
+                                            </button>` : ''}
+                                    </div>
                                 </td>
-                                 <td>
-                                     <div class="d-flex justify-content-center align-items-center action-button-container">
-                                         <select class="form-select form-select-sm">
-                                             <option value="" disabled ${solution.action == null ? 'selected' : ''}>Select</option>
-                                             <option value="accept" ${solution.action == 'accept' ? 'selected' : ''}>Accept</option>
-                                             <option value="reject" ${solution.action == 'reject' ? 'selected' : ''}>Reject</option>
-                                         </select>
-                                     </div>
-                                 </td>
+                            `;
+                            tableBody.appendChild(row);
+                        }
+                    });
+                });
+            });
 
-                                  <td>
-                                    <input type="text" name="inputComment" id="inputComment" placeholder="Enter Comment" class="form-control" value="${solution.comment}">
-                                </td>
-
-                               <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
-                               <td>
-
-                                  <div class="d-flex justify-content-center align-items-center action-button-container">
-                                             ${solution.cooManInfoOfPriceAcceptanceCommentStatus == 'Accepted'  && solution.serviceCenterToInventoryAccessoriesRequestStatus !='Accepted' && solution.action !=='reject'  && solution.serviceCenterToInventoryAccessoriesRequestStatus !=='Pending'   ? `
-                                                 <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Request to Inventory For Accessories" if="${solution.cooManInfoOfPriceAcceptanceCommentStatus == 'Accepted'  && solution.serviceCenterToInventoryAccessoriesRequestStatus !='Accepted' && solution.action =='rejec' }">✔</button>
-
-                                             ` : ""}
-
-                                              ${availability === "Unavailable" ? `
-                                                  <button class="btn btn-sm text-white clock-button" data-date="${solution.deliveryDate}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="clock" style="background-color:#f44336;" title="Edit delivery Date">
-                                                      <i class="fas fa-clock"></i>
-                                                  </button>
-                                              ` : ""}
+            // Remove rows no longer present in new data
+            currentRowMap.forEach((row, key) => {
+                if (!newRowKeys.has(key)) {
+                    row.remove();
+                }
+            });
 
 
-                                               ${availability !== "Unavailable" ? `
-                                               <button class="btn btn-info btn-sm view-button-selected-device"  data-category="${solution.category}" data-service-id="${device.id}" data-button-id="view" data-device-id="${solution.inventoryToServiceCenterDeviceId}" >
-                                                    &#128065;
-                                                </button>
-                                            ` : ""}
-                                          </div>
-                               </td>
-                           `;
-
-                           // Increment the counter for the next row
-                           counter++;
-
-                           // Append the row to the table body
-                           tableBody.appendChild(row);
-                       }
-                   });
-               });
-           });
            sortAndFormatAllTables();
  // Add event listener for the availability button click
             $(document).on('click', '.view-button-selected-device', function() {
@@ -1108,15 +1137,15 @@ window.initCooFeedbackTable = function () {    // Perform a single AJAX call
                     <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
                     <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
                 </div>
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                <div class="mb-3" style="margin-left: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to update delivery date?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to update delivery date?");
 
             // Add event listener for save button
             $('#saveEditBtn').click(function() {
@@ -1145,7 +1174,7 @@ window.initCooFeedbackTable = function () {    // Perform a single AJAX call
                        });
                     });
 
-            showModal();
+            showModalMedium();
         });
  // Add event listener for the availability button click
            $(document).on('click', '.setAcceptanceCommentBtn', function (event) {

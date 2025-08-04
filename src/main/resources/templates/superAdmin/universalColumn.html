@@ -46,20 +46,52 @@
                     </div>
 
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
 
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="universalColumnTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
                 <!-- Category Table -->
-                <table id="universalColumnTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Universal Column Name</th>
-                        <th scope="col" style="background-color: gray;">Data Type</th>
-                        <th scope="col" style="background-color: gray;">Required Type</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="universalColumnTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('universalColumnTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('universalColumnTable', 1, this)">
+                                Universal Column Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('universalColumnTable', 2, this)">
+                                Data Type <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('universalColumnTable', 3, this)">
+                                Required Type <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('universalColumnTable', 4, this)">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="universalColumnTableBody">
                     <tr th:each="column, iterStat : ${universalColumns}">
                         <td  th:text="${iterStat.count}">1</td>

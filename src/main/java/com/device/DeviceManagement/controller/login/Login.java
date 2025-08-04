@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -126,12 +127,25 @@ public class Login {
             List<Category> categories = categoriesService.Category();
             List<Column> universalColumns = universalColumnsService.Universal();
             List<Column> individualColumns = individualColumnsService.Individual();
-            List<AddData> allDeviceData=addDataService.add();
+
+
+            Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 2); // ✅ page 0, size 10
+            List<AddData> allDeviceData = pagedAddData.getContent();
+            boolean lastPage = pagedAddData.getTotalPages() <= 1;
+           // System.out.println(lastPage);
+
             List<User> allUser=userService.add();
             List<InternalUser> internalUsers=internalUserService.add();
             List<RequestColumn> requestColumns=requestColumnService.add();
-            List<ServiceRequest> serviceRequests =serviceRequestService.add();
-            List<RequestData> requestData=requestDataService.add();
+
+            Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(0, 1); // ✅ page 0, size 10
+            List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
+
+
+            Page<RequestData> requestDataData=requestDataService.getPagedAddData(0, 1); // ✅ page 0, size 10
+            List<RequestData> requestData=requestDataData.getContent();
+
+
             List<Designation> designations=designationService.add();
             List<DropDownList> dropDownLists=dropDownListService.add();
             List<BranchUser> userAccountData=branchUserService.add();
@@ -171,6 +185,7 @@ public class Login {
 
 
             if(userType.equals("Department")){
+               // model.addAttribute("lastPage", lastPage);
 
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);

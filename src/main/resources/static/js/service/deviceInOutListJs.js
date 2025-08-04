@@ -182,17 +182,17 @@ window.initDeviceInOutListGeneral = function () {
        else  if (buttonId === "accepted"){
 
                var htmlToAdd = `
-                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
                       <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
-              $('.modal-body').html(htmlToAdd);
-              $('#publicModalLabel').text("Do you want to accept this service request ?");
+              $('.ModalMedium').html(htmlToAdd);
+              $('#publicModalMediumLabel').text("Do you want to accept this service request ?");
               $('#AcceptBtn').click(function() {
                   setServiceRequestAccept1(serviceId, "Device In Received");
               });
-              showModal();
+              showModalMedium();
                }
                 else if (buttonId === "chat") {
                          print('serviceRequests', function(serviceRequests) {

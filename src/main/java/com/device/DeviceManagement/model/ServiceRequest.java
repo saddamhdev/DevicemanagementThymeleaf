@@ -118,6 +118,7 @@ public class ServiceRequest implements Serializable {
         return serviceCenterToInventorySendDeviceRequestTime;
     }
 
+
     public void setServiceCenterToInventorySendDeviceRequestTime(String serviceCenterToInventorySendDeviceRequestTime) {
         this.serviceCenterToInventorySendDeviceRequestTime = serviceCenterToInventorySendDeviceRequestTime;
     }
@@ -575,16 +576,66 @@ public class ServiceRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "AddData{" +
+        return "ServiceRequest{" +
                 "id='" + id + '\'' +
                 ", departmentName='" + departmentName + '\'' +
+                ", categoryName='" + categoryName + '\'' +
                 ", date='" + date + '\'' +
+                ", status='" + status + '\'' +
                 ", presentTime='" + presentTime + '\'' +
-                ", allData=" + allProblem +
+                ", visibleServiceId='" + visibleServiceId + '\'' +
+                ", customerCareServiceRequestAcceptedTime='" + customerCareServiceRequestAcceptedTime + '\'' +
+                ", customerCareServiceRequestStatus='" + customerCareServiceRequestStatus + '\'' +
+                ", serviceCenterServiceRequestAcceptedTime='" + serviceCenterServiceRequestAcceptedTime + '\'' +
+                ", serviceCenterServiceRequestStatus='" + serviceCenterServiceRequestStatus + '\'' +
+                ", cooAcceptOfServiceRequest='" + cooAcceptOfServiceRequest + '\'' +
+                ", cooAcceptOfServiceRequestTime='" + cooAcceptOfServiceRequestTime + '\'' +
+                ", proposalReceivingDateTime='" + proposalReceivingDateTime + '\'' +
+                ", userComment='" + userComment + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", customerCareSendDeviceToServiceStatus='" + customerCareSendDeviceToServiceStatus + '\'' +
+                ", customerCareSendDeviceToServiceTime='" + customerCareSendDeviceToServiceTime + '\'' +
+                ", serviceCenterRequestToInventoryForAccessoriesStatus='" + serviceCenterRequestToInventoryForAccessoriesStatus + '\'' +
+                ", serviceCenterRequestToInventoryForAccessoriesTime='" + serviceCenterRequestToInventoryForAccessoriesTime + '\'' +
+                ", customerCareReceiverInfoFromDepartment='" + customerCareReceiverInfoFromDepartment + '\'' +
+                ", customerCareSenderInfoToService='" + customerCareSenderInfoToService + '\'' +
+                ", serviceCenterReceiverInfoFromCustomerCare='" + serviceCenterReceiverInfoFromCustomerCare + '\'' +
+                ", problemEditor='" + problemEditor + '\'' +
+                ", serviceReportGenerator='" + serviceReportGenerator + '\'' +
+                ", serviceAccessoriesSolutionProvider='" + serviceAccessoriesSolutionProvider + '\'' +
+                ", serviceAccessoriesSolutionProvidingTime='" + serviceAccessoriesSolutionProvidingTime + '\'' +
+                ", serviceAccessoriesSolutionAcceptingByCOOTime='" + serviceAccessoriesSolutionAcceptingByCOOTime + '\'' +
+                ", serviceCenterToInventorySendDeviceRequestTime='" + serviceCenterToInventorySendDeviceRequestTime + '\'' +
+                ", inventoryToServiceCenterSendAccessoriesDeviceTime='" + inventoryToServiceCenterSendAccessoriesDeviceTime + '\'' +
+                ", cooManInfoOfAccessoriesSolutionAccept='" + cooManInfoOfAccessoriesSolutionAccept + '\'' +
+                ", serviceReportStatus='" + serviceReportStatus + '\'' +
+                ", serviceReportTime='" + serviceReportTime + '\'' +
+                ", serviceReportFormData=" + serviceReportFormData +
+                ", addAccessories=" + addAccessories +
+                ", extractsNewComponents=" + extractsNewComponents +
+                ", extractsOldComponents=" + extractsOldComponents +
+                ", listedComponents=" + listedComponents +
+                ", cooServiceReportAcceptStatus='" + cooServiceReportAcceptStatus + '\'' +
+                ", cooServiceReportAcceptTime='" + cooServiceReportAcceptTime + '\'' +
+                ", cooServiceReportComment='" + cooServiceReportComment + '\'' +
+                ", serviceCenterManInfoForDeliveryToCustomerCare='" + serviceCenterManInfoForDeliveryToCustomerCare + '\'' +
+                ", serviceCenterToCustomerCareStatus='" + serviceCenterToCustomerCareStatus + '\'' +
+                ", serviceCenterToCustomerCareTime='" + serviceCenterToCustomerCareTime + '\'' +
+                ", customerCareReceiveDeviceFromServiceStatus='" + customerCareReceiveDeviceFromServiceStatus + '\'' +
+                ", customerCareReceiveDeviceFromServiceTime='" + customerCareReceiveDeviceFromServiceTime + '\'' +
+                ", customerCareManInfoOfReceivingDeviceFromService='" + customerCareManInfoOfReceivingDeviceFromService + '\'' +
+                ", customerCareManInfoForDeliveryToDepartment='" + customerCareManInfoForDeliveryToDepartment + '\'' +
+                ", customerCareToDepartmentStatus='" + customerCareToDepartmentStatus + '\'' +
+                ", customerCareToDepartmentTime='" + customerCareToDepartmentTime + '\'' +
+                ", departmentReceiveDeviceFromCustomerCareStatus='" + departmentReceiveDeviceFromCustomerCareStatus + '\'' +
+                ", departmentReceiveDeviceFromCustomerCareTime='" + departmentReceiveDeviceFromCustomerCareTime + '\'' +
+                ", departmentManInfoOfReceivingDeviceFromCustomerCare='" + departmentManInfoOfReceivingDeviceFromCustomerCare + '\'' +
+                ", distributeDeviceToUserStatus='" + distributeDeviceToUserStatus + '\'' +
+                ", distributeDeviceToUserTime='" + distributeDeviceToUserTime + '\'' +
+                ", distributeDeviceToUserManInfo='" + distributeDeviceToUserManInfo + '\'' +
+                ", allProblem=" + allProblem +
                 '}';
     }
-
-
 
     @Setter
     @Getter
@@ -639,6 +690,18 @@ public class ServiceRequest implements Serializable {
         public void setStatus(String status) {
             this.status = status;
         }
+
+        @Override
+        public String toString() {
+            return "problems{" +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", status='" + status + '\'' +
+                    ", time='" + time + '\'' +
+                    ", proposalSolution=" + proposalSolution +
+                    '}';
+        }
+
         @Setter
         @Getter
         public static class ProposalSolutionItem implements Serializable {
@@ -1188,6 +1251,7 @@ public class ServiceRequest implements Serializable {
         }
 
     }
+
     @Setter
     @Getter
     public static class Solution implements Serializable {

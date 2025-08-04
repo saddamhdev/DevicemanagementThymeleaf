@@ -8,99 +8,109 @@
 <body>
 <div th:fragment="serviceRequest">
     <div class="highlight-box">
-        <p>  Service Column Name List</p>
+        <p> All Service Request</p>
     </div>
     <div class="row">
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
-                <div class="dropdown">
-                    <input type="text" style="width:20%" class="form-control dropdown-toggle custom-width" id="internalUser" data-bs-toggle="dropdown" placeholder="User" aria-expanded="false">
-                    <ul  class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextField" id="internalUserUlList">
-                        <li th:each="user : ${allUsers}"><a class="dropdown-item internalUserItemTop" href="#" th:text="${user.userName}"></a></li>
-                    </ul>
-                </div>
 
-                <!-- Toggle Content Button -->
-                <div class="d-flex justify-content-center mb-2">
-                    <!--        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>-->
-                    <button class="btn btn-success btn-sm" onclick="addServiceDataToggle()" >Add</button>
-                </div>
-                <div id="serviceForm" style="display: none; " class="  mb-2">
-                    <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                        <label for="serviceColumnName" class="form-label"> Field Name</label>
-                        <input type="text" class="form-control" id="serviceColumnName" placeholder="Enter field name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="inputTypeService" class="form-label">Choose an input type:</label>
-                        <select id="inputTypeService" class="form-select">
-                            <option value="">Select an input type</option>
-                            <th:block th:each="type : ${inputTypes}">
-                                <option th:value="${type}" th:text="${type}">Type</option>
-                            </th:block>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="requiredTypeService" class="form-label">Required Type</label>
-                        <select id="requiredTypeService" class="form-select" required>
-                            <option value="" disabled selected>Select an option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="visibleTypeService" class="form-label">Visible</label>
-                        <select id="visibleTypeService" class="form-select" required>
-                            <option value="" disabled selected>Select an option</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
 
-
-                    <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                        <button type="button" class="btn btn-primary"  onclick="saveRequestBtn()">Save</button>
-                        <button type="button" class="btn btn-secondary" onclick="closeToggle('serviceForm')">Close</button>
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="serviceInformationTable" placeholder="Search ...">
                     </div>
-
                 </div>
                 <div class="responsive-table-wrapper">
-                <table id="deviceInformationTable" >
-                    <thead id="tableHeaderAddData" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">User</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${universalColumns}" th:text="${column.columnName}" style="background-color: gray;"></th>
-                        <th scope="col" style="background-color: gray;">Description</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody id="deviceInformationBody">
-                    <tr th:each="device, iterStat : ${allDeviceData}" >
-                        <td scope="row" th:text="${iterStat.count}">1</td>
-                        <td th:text="${device.userName}">categoryName</td>
-                        <td th:text="${device.categoryName}">categoryName</td>
-                        <td th:each="universalColumn : ${universalColumns}" th:text="${device.allData[universalColumn.columnName]}"></td>
-                        <td>
-                            <ul style="list-style: none; padding-left: 0;text-align: center;" >
-                                <li th:each="individualColumn : ${individualColumns}"
-                                    th:if="${device.categoryName == individualColumn.categoryName}"
-                                    th:text="${individualColumn.columnName+' :'+device.allData[individualColumn.columnName]}">1</li>
-                            </ul>
+                    <table id="serviceInformationTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
 
-                        </td>
-                        <td th:text="${device.presentTime}">categoryName</td>
-                        <td>
-                            <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}"></button>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 1, this)|">
+                                Department Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 2, this)|">
+                                Category <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 3, this)|">
+                                Problems <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 4, this)|">
+                                Device Information <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 5, this)|">
+                                Request Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 6, this)|">
+                                Device Receiving Date <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 7, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+
+
+                        </tr>
+                        </thead>
+
+                        <tbody id="serviceInformationBody">
+                        <tr th:each="device, iterStat : ${serviceRequests}" >
+                            <td scope="row" th:text="${device.visibleServiceId}">1</td>
+                            <td th:text="${device.departmentName}">departmentName</td>
+                            <td th:text="${device.categoryName}">categoryName</td>
+
+                            <td>
+                                <ol style=" padding-left: 0;text-align: left;"  >
+                                    <li th:each="problem : ${device.allProblem}" th:text="${problem.name}" style="margin-left:10px">Problem Name</li>
+                                </ol>
+                            </td>
+
+                            <td >
+
+                                <button class="btn btn-info btn-sm view-button" th:data-device-id="${device.deviceId}" th:data-button-id="viewAlternative">
+                                    View   &#128065;
+                                </button>
+
+                            </td>
+
+                            <td th:text="${device != null && device.customerCareServiceRequestStatus != null ? device.customerCareServiceRequestStatus : 'Pending'}">
+                            </td>
+                            <td>
+                                <span th:if="${device.customerCareServiceRequestStatus == 'Accepted'}" th:text="${device.proposalReceivingDateTime}" >10/11/2024</span>
+                                <span th:unless="${device.customerCareServiceRequestStatus == 'Accepted'}"></span>
+                            </td>
+                            <td th:text="${device.presentTime}">departmentName</td>
+
+                            <td onclick="window.trackServiceRequestData(this.closest('tr'), this)" class="view-device-status" th:data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Service Request data tracking information">View</td>
+
+
+                        </tr>
+                        <tr class="last-page-flag"  th:data-lastpagedeviceInformation="${lastPagedeviceInformation}" th:data-totalpagedeviceInformation="${totalPagedeviceInformation}"  style="display:none;"></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -24,28 +24,82 @@
                         <li th:each="category : ${data}"><a class="dropdown-item individualTopSelection" href="#" th:text="${category.categoryName}"></a></li>
                     </ul>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="serviceAccessoriesPendingPurchaseDataTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="serviceAccessoriesPendingPurchaseDataTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray; width: 5%;">SN</th>
-                        <th scope="col" style="background-color: gray; width: 10%;">Bivag Name</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Category</th>
+                    <table id="serviceAccessoriesPendingPurchaseDataTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 10%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 2, this)|">
+                                Category <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 10%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 3, this)|">
+                                Problem <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 4, this)|">
+                                Accessories <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 5, this)|">
+                                Check <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 6, this)|">
+                                Delivery Date <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 7, this)|">
+                                Status In Purchase <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 8, this)|">
+                                Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 9, this)|">
+                                Purchase Device Delivery Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;"
+                                th:onclick="|window.sortTable('serviceAccessoriesPendingPurchaseDataTable', 10, this)|">
+                                Request Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white; width: 5%;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
 
 
-                        <th scope="col" style="background-color: gray; width: 10%;">Problem</th>
-
-                        <th scope="col" style="background-color: gray; width: 5%;">Accessories</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Check</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Delivery Date</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Status In Purchase</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Status In COO</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Purchase Device Delivery Status</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Request Time</th>
-                        <th scope="col" style="background-color: gray; width: 5%;">Action</th>
-
-                    </tr>
-                    </thead>
                     <tbody id="serviceAccessoriesPendingPurchaseDataTableBody">
 
                     </tbody>

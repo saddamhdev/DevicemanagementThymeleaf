@@ -74,22 +74,22 @@ window.initRequestDataGeneral = function () {
             }
         if (buttonPressed === "✔") { // Accept button
                  var htmlToAdd = `
-                    <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                    <div class="mb-3" style="margin-right: 0%; text-align: center;">
                         <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </div>
                 `;
 
                 // Add the HTML code to the modal body using jQuery
-                 $('.modal-body').html(htmlToAdd);
+                 $('.ModalMedium').html(htmlToAdd);
                 // edit individual column header
-                 $('#publicModalLabel').text("Do you want to Accept this request ?");
+                 $('#publicModalMediumLabel').text("Do you want to Accept this request ?");
 
                   $('#AcceptBtn').click(function() {
                           setRequestStatusData(requestId,"Accepted");
                    });
 
-                 showModal();
+                 showModalMedium();
 
         }
          else if (buttonPressed === "✗") { // Denied button
@@ -98,23 +98,23 @@ window.initRequestDataGeneral = function () {
                     <label for="rejectCause" class="form-label">Reject Cause</label>
                     <input type="text" class="form-control" id="rejectCause" placeholder="Cause"  required>
                 </div>
-                   <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                   <div class="mb-3" style="margin-right: 0%; text-align: center;">
                        <button type="button" class="btn btn-primary" id="DeniedBtn">Yes</button>
                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                    </div>
                `;
 
                // Add the HTML code to the modal body using jQuery
-                $('.modal-body').html(htmlToAdd);
+                $('.ModalMedium').html(htmlToAdd);
                // edit individual column header
-                $('#publicModalLabel').text("Do you want to Denny this request ?");
+                $('#publicModalMediumLabel').text("Do you want to Denny this request ?");
 
                  $('#DeniedBtn').click(function() {
 
                          setRequestStatusData(requestId,"Denied");
                   });
 
-                showModal();
+                showModalMedium();
 
         } else if (buttonPressed === "👁") { // View button
          const requestIdData=requestId;

@@ -148,8 +148,8 @@ function addDeviceInformationOfExtraDevice(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Unordered Device Information")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Unordered Device Information")
 
              print('categories', function(categories) {
                    if (categories) {
@@ -266,7 +266,7 @@ function addDeviceInformationOfExtraDevice(){
                   saveExtraDevice(categoryName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
 
@@ -428,8 +428,8 @@ window.initUnOrderedDeviceGeneral = function () {
         `;
 
         // Add the HTML code to the modal body using jQuery
-        $('.modal-body').html(htmlToAdd);
-          $('#publicModalLabel').text("Edit Device Information")
+        $('.ModalMedium').html(htmlToAdd);
+          $('#publicModalMediumLabel').text("Edit Device Information")
          print('categories', function(categories) {
                if (categories) {
                    // Generate HTML for categories
@@ -638,7 +638,7 @@ window.initUnOrderedDeviceGeneral = function () {
               editTableInformationOfDevice(deviceId,categoryName);
             });
 
-          showModal();
+          showModalMedium();
 
       // Adding a delay of 500ms before populating a section
       setTimeout(() => {

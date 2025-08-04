@@ -1,7 +1,10 @@
 package com.device.DeviceManagement.repository;
 
 
+import com.device.DeviceManagement.model.AddData;
 import com.device.DeviceManagement.model.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -12,6 +15,7 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
     void deleteByCategoryName(String categoryName);
     // Method to find a category by its name
     Category findByCategoryName(String categoryName);
+    Page<Category> findByStatus(String status, Pageable pageable);
     Optional<Category> findByCategoryNameAndStatus(String categoryName, String status);
     // update categoryName according to categoryName
     List<Category> findByStatus(String status);

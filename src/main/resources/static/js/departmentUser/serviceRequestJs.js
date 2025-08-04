@@ -115,8 +115,8 @@ window.initServiceRequestGeneral = function () {
                   `;
 
                   // Add the HTML code to the modal body using jQuery
-                  $('.modal-body').html(htmlToAdd);
-                  $('#publicModalLabel').text("Add Old Device Information")
+                  $('.ModalMedium').html(htmlToAdd);
+                  $('#publicModalMediumLabel').text("Add Old Device Information")
 
                    print('userAccountData', function(userAccountData) {
                              if (userAccountData) {
@@ -140,7 +140,7 @@ window.initServiceRequestGeneral = function () {
                         distributeDevice(serviceId);
                       });
 
-                showModal();
+                showModalMedium();
 
       }
 
@@ -306,9 +306,6 @@ function columnValue1(deviceId, columnName, callback) {
     });
 }
 
-function showModal(){
-$('#publicModal').modal('show');
-}
 
 function selectionAndInputDeviceEdit(deviceId){
 // Event delegation for dynamically added items

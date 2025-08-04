@@ -108,11 +108,11 @@ function EditTableInformationOfRequest(requestId){
                        `;
 
                        // Add the HTML code to the modal body using jQuery
-                       $('.modal-body').html(htmlToAdd);
+                       $('.ModalMedium').html(htmlToAdd);
                         // Set the values for the select elements
                        $('#requiredTypeEdit').val(requiredType);
                        $('#visibleTypeEdit').val(visibleType);
-                       $('#publicModalLabel').text("Edit column Information");
+                       $('#publicModalMediumLabel').text("Edit column Information");
 
                        $.ajax({
                                type: "POST",
@@ -138,7 +138,7 @@ function EditTableInformationOfRequest(requestId){
                            EditTableInformationOfRequest(requestIdData );
                            });
 
-                     showModal();
+                     showModalMedium();
         }
          else if (buttonPressed.hasClass('Delete')) {
             const requestId = button.data('requestId');

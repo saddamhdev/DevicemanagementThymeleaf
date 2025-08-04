@@ -148,8 +148,8 @@ function addDeviceInformationOfExtraDevice(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Unordered Device Information")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Unordered Device Information")
 
              print('categories', function(categories) {
                    if (categories) {
@@ -266,7 +266,7 @@ function addDeviceInformationOfExtraDevice(){
                   saveExtraDevice(categoryName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
 
@@ -469,8 +469,8 @@ window.initUnOrderedDeviceGeneral = function () {
         `;
 
         // Add the HTML code to the modal body using jQuery
-        $('.modal-body').html(htmlToAdd);
-          $('#publicModalLabel').text("Edit Device Information")
+        $('.ModalMedium').html(htmlToAdd);
+          $('#publicModalMediumLabel').text("Edit Device Information")
          print('categories', function(categories) {
                if (categories) {
                    // Generate HTML for categories
@@ -679,7 +679,7 @@ window.initUnOrderedDeviceGeneral = function () {
               editTableInformationOfDevice(deviceId,categoryName);
             });
 
-          showModal();
+          showModalMedium();
 
       // Adding a delay of 500ms before populating a section
       setTimeout(() => {
@@ -765,8 +765,8 @@ window.initUnOrderedDeviceGeneral = function () {
                         </div>
                     `;
 
-                    $('.modal-body').html(htmlToAdd);
-                    $('#publicModalLabel').text("Service Request");
+                    $('.ModalMedium').html(htmlToAdd);
+                    $('#publicModalMediumLabel').text("Service Request");
 
                     // Function to add a new problem input
                     function addNewProblem() {
@@ -1112,46 +1112,6 @@ function myFunctionThatHandlesCase(column, text,formId) {
                 console.error("An error occurred: ", error);
                 reject(error); // Reject in case of error
             });
-    });
-}
-function print(dataType, callback) {
-    // Ensure callback is a function
-    if (typeof callback !== 'function') {
-        console.error('Callback is not a function');
-        return;
-    }
-
-    $.ajax({
-        url: '/superAdmin/allData',
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            // Execute the callback with the requested dataType
-            callback(data[dataType]);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-}
-
-function print1(dataType) {
-    return new Promise(function(resolve, reject) {
-        $.ajax({
-            url: '/superAdmin/allData',
-            type: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                // Resolve the Promise with the requested dataType
-                resolve(data[dataType]);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-                reject(error); // Reject the Promise if there's an error
-            }
-        });
     });
 }
 

@@ -64,412 +64,128 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 
  window.initRequestPurchaseDataGeneral = function () {
-    $('#requestPurchaseDataTable tbody tr').click(function(event) {
-        var $row = $(this); // Store the clicked row element
-        var button = $(event.target).closest('button');
-         var buttonPTag = $(event.target).closest('td');
-        var buttonPressed = button.text().trim(); // Get the HTML inside the button
-        var requestId = button.data('requestId');
-        var buttonId = button.data('buttonId');
-        var categoryName = $row.find('th:nth-child(3)').text();
 
-
-        console.log(`Button Pressed: ${buttonPressed}`);
-        console.log(`Button ID: ${buttonId}`);
-        console.log(`Request ID: ${requestId}`);
-
-if (buttonPTag.hasClass('viewInfo')) {
-
-                           print('requestColumns', function(requestColumns) {
-                          var categoriesHtml = '';
-                          if (requestColumns) {
-                              requestColumns.forEach(function(category) {
-                                  categoriesHtml += `<th scope="col" style="background-color: gray;color:white">${category.columnName}</th>`;
-                              });
-                          }
-
-                          var htmlToAdd = `
-                              <div class="mb-9" style="margin-left: 0%; text-align: left;">
-                                  <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
-                                      <thead>
-                                          <tr>
-                                              <th scope="col" style="background-color: gray; color:white">SN</th>
-                                               <th scope="col" style="background-color: gray;display: none;color:white">Device Id</th>
-                                              <th scope="col" style="background-color: gray;color:white">Category Name</th>
-                                              ${categoriesHtml}
-
-                                          </tr>
-                                      </thead>
-                                      <tbody id="listDeviceInformationBody">
-
-                                      </tbody>
-                                  </table>
-                              </div>
-
-                          `;
-                          $('.modal-body').html(htmlToAdd);
-
-                          $('#publicModalLabel').text("Request Information");
-
-
-
-                                var rowsHtml = '';
-
-                                print('requestData', function(requestData) {
-                                  if (requestData) {
-                                    // Replace requestId with a valid id to search for
-                                    const requestId = buttonPTag.data('requestId');
-                                    const Data = requestData.find(item => item.id === requestId);
-
-                                    if (Data) {
-                                      // Generate the HTML for the found item
-                                      rowsHtml += `
-                                        <tr>
-                                          <td>${Data.visibleRequestId}</td>
-                                          <td>${Data.allData['category']}</td>
-                                           `;
-                                           requestColumns.forEach(function(column) {
-                                               rowsHtml += `<td >${Data.allData[column.columnName]}</td>`;
-                                           });
-
-
-                                        rowsHtml += `  </tr>
-                                      `;
-
-                                      // Insert the generated HTML into the table body
-                                      $('#listDeviceInformationBody').html(rowsHtml);
-                                    } else {
-                                      console.error('No data found with the specified requestId.');
-                                    }
-                                  } else {
-                                    console.error('requestData is null or undefined.');
-                                  }
-                                });
-
-
-
-                          showModal();
-                      });
-
-
-             }
-
-else  if (buttonId === "chat") {
-        var htmlToAdd = `
-          <div class="mb-3" style="margin-left: 0%; text-align: left;">
-          <h6 id="detailsId"></h6>
-          <h6 id="budgetId"></h6>
-          </div>
-             <div class="mb-9" style="margin-left: 0%; text-align: left;">
-                 <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
-                     <thead>
-                         <tr>
-                             <th scope="col" style="background-color: gray;">SN</th>
-                              <th scope="col" style="background-color: gray;display: none;">Link</th>
-                               <th scope="col" style="background-color: gray;">Links</th>
-                              <th scope="col" style="background-color: gray;">Action</th>
-
-                         </tr>
-                     </thead>
-                     <tbody id="purchaseRequestInformationBody">
-
-                     </tbody>
-                 </table>
-             </div>
-             <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                <label for="comments" class="form-label">Comments</label>
-                <textarea class="form-control" id="comments" name="comments" placeholder="Comments"></textarea>
-            </div>
-              <div class="mb-3" style="margin-left: 0%; text-align: center;">
-                 <button type="button" class="btn btn-primary" id="saveEditBtn">Send</button>
-                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-             </div>
-
-         `;
-         $('.modal-body').html(htmlToAdd);
-
-         $('#publicModalLabel').text("Purchase Request Form");
-
-       print('requestData', function(requestData) {
-           if (requestData) {
-               const result = requestData.find(function(data1) {
-                   return data1.id === requestId;
-               });
-               $("#detailsId").text("Details: " + result.purchase.details);
-               $("#budgetId").text("Budget: " + result.purchase.budget);
-
-               var rowsHtml = '';
-               for (let i = 0; i < result.purchase.links.length; i++) {
-                   // Ensure the link includes the protocol (http:// or https://)
-                   const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
-                       ? result.purchase.links[i]
-                       : 'https://' + result.purchase.links[i];
-
-                   rowsHtml += `<tr>
-                       <td>${i + 1}</td>
-                       <td style="display: none;">${link}</td>
-                       <td>
-                           <a href="${link}" target="_blank" style="text-decoration: none;">
-                               ${link}
-                           </a>
-                       </td>
-                       <td><input type="checkbox" style="transform: scale(1.5); margin: 10px;" name="selectDevice" class="action-checkbox"></td>
-                   </tr>`;
-               }
-
-               $('#purchaseRequestInformationBody').html(rowsHtml);
-           }
-       });
-
-
-
- $('#saveEditBtn').click(function(event) {
-             event.preventDefault(); // Prevent the default action (form submission)
-
-             const checkboxes = document.querySelectorAll('input[name="selectDevice"]:checked');
-             const selectedRows = Array.from(checkboxes).map(checkbox => {
-                 const row = checkbox.closest('tr'); // Get the parent row of the checkbox
-                 const secondColumn = row.querySelector('td:nth-child(2)'); // Get the second column (assuming columns are indexed from 1)
-
-                 if (secondColumn) {
-                     const secondColumnValue = secondColumn.textContent.trim(); // Get the text content of the second column
-                     return secondColumnValue;
-                 } else {
-                     return null;
-                 }
-             });
-
-             if(selectedRows.length==0){
-               CustomAlert("Please select a device.");
-             }
-             else{
-               // Show a confirmation alert
-                const userConfirmed = confirm("Do you want to proceed with the selected device?");
-                if (userConfirmed) {
-                     hideModal();
-                    purchaseRequest1(requestId,selectedRows);
-                } else {
-                    console.log("User canceled.");
-                    // Handle the cancel action here
-                }
-             }
-
-         });
-
-           showModal();
-       }
-
-else if (buttonId === "view") {
-          var htmlToAdd = `
-                   <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                   <h6 id="detailsId"></h6>
-                   <h6 id="budgetId"></h6>
-                   </div>
-                      <div class="mb-9" style="margin-left: 0%; text-align: left;">
-                          <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
-                              <thead>
-                                  <tr>
-                                      <th scope="col" style="background-color: gray;">SN</th>
-                                       <th scope="col" style="background-color: gray;display: none;">Link</th>
-                                        <th scope="col" style="background-color: gray;">Links</th>
-                                       <th scope="col" style="background-color: gray;">Action</th>
-
-                                  </tr>
-                              </thead>
-                              <tbody id="purchaseRequestInformationBody">
-
-                              </tbody>
-                          </table>
-                      </div>
-                      <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                         <label for="comments" class="form-label">Comments</label>
-                         <textarea class="form-control" id="comments" name="comments" placeholder="Comments"></textarea>
-                     </div>
-                       <div class="mb-3" style="margin-left: 0%; text-align: center;">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      </div>
-
-                  `;
-                  $('.modal-body').html(htmlToAdd);
-
-                  $('#publicModalLabel').text("Accepted Request Form");
-
-                print('requestData', function(requestData) {
-                    if (requestData) {
-                        const result = requestData.find(function(data1) {
-                            return data1.id === requestId;
-                        });
-                        $("#detailsId").text("Details: " + result.purchase.details);
-                        $("#budgetId").text("Budget: " + result.purchase.budget);
-                        $("#comments").text( result.purchase.cooComment);
-
-                        var rowsHtml = '';
-                            for (let j = 0; j < result.purchase.acceptedLinks.length; j++) {
-                             for (let i = 0; i < result.purchase.links.length; i++) {
-                              const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
-                                     ? result.purchase.links[i]
-                                     : 'https://' + result.purchase.links[i];
-                             if(result.purchase.acceptedLinks[j]===link){
-                              // Ensure the link includes the protocol (http:// or https://)
-                                 const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
-                                     ? result.purchase.links[i]
-                                     : 'https://' + result.purchase.links[i];
-
-                                 rowsHtml += `<tr>
-                                     <td>${i + 1}</td>
-                                     <td style="display: none;">${link}</td>
-                                     <td>
-                                         <a href="${link}" target="_blank" style="text-decoration: none;">
-                                             ${link}
-                                         </a>
-                                     </td>
-                                     <td><input type="checkbox" style="transform: scale(1.5); margin: 10px;" name="selectDevice"  class="action-checkbox" checked></td>
-                                 </tr>`;
-
-                             }
-                            }
-                            }
-
-
-                        $('#purchaseRequestInformationBody').html(rowsHtml);
-                    }
-                });
-
-
-                    showModal();
-        }
-    });
 };
 
-    window.initRequestPurchaseDataTable = function () {
-         // Perform a single AJAX call
-         $.ajax({
-             url: '/superAdmin/allData',
-             type: 'POST',
-             dataType: 'json',
-             success: function(data) {
-                 console.log(data); // Log the entire data for debugging
+   window.initRequestPurchaseDataTable = function () {
+       const tableBody = document.getElementById("requestPurchaseDataTableBody");
+       if (!tableBody) {
+           console.error("Table body element with id 'requestPurchaseDataTableBody' not found.");
+           return;
+       }
 
-                 var allData = data['serviceRequests'];
-                 var allAddData = data['allAddData'];
-                 const tableBody = document.getElementById("requestPurchaseDataTableBody");
-                    if (!tableBody) {
-                        console.error("Table body element with id 'requestForPaymentTableBody' not found.");
-                        return;
-                    }
-                 // Function to check availability count
-                 function getAvailability(categoryName) {
-                     let count = 0;
-                     allAddData.forEach(function(device) {
+       // Step 1: Capture current rows for duplicate prevention
+       const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+       const currentRowMap = new Map();
+       currentRows.forEach(row => {
+           const key = Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+           currentRowMap.set(key, row);
+       });
 
-                         if (device.categoryName === categoryName) {
-                             count++;
-                         }
-                     });
-                     return count === 0 ? "Unavailable" : `Available(${count})`;
-                 }
+       $.ajax({
+           url: '/superAdmin/allDataRange',
+           type: 'POST',
+           dataType: 'json',
+            data: {
+                       page: pageNumber,
+                       size: localStorage.getItem("pageSize") || 0
+                   },
+           success: function (data) {
+               const allData = data['serviceRequests'];
+               const allAddData = data['allAddData'];
+               const newRowKeys = new Set();
 
-                let counter = 1; // Initialize a counter variable
-
-                // Loop through each device in allData
-                allData.forEach(function(device) {
-                    const bivagName = device.departmentName;
-                    const categoryName = device.categoryName;
-                    const sn=device.visibleServiceId;
-                   // Ensure allProblem exists before iterating
-                       if (!device.allProblem || !Array.isArray(device.allProblem)) {
-                           console.warn("Skipping device due to missing or invalid allProblem array:", device);
-                           return; // Skip this device if allProblem is missing or not an array
+               function getAvailability(categoryName) {
+                   let count = 0;
+                   allAddData.forEach(device => {
+                       if (device.categoryName === categoryName) {
+                           count++;
                        }
-                    // Loop through each problem in the allProblem array for the device
-                    device.allProblem.forEach(function(problem) {
-                        console.log("Problem Name:", problem.name);
-                        console.log("Proposal Solutions:");
-                        // Ensure proposalSolution exists before iterating
-                                if (!problem.proposalSolution || !Array.isArray(problem.proposalSolution)) {
-                                    console.warn("Skipping problem due to missing or invalid proposalSolution array:", problem);
-                                    return; // Skip this problem if proposalSolution is missing or not an array
-                                }
-                        // Loop through each proposalSolution in the problem
-                        problem.proposalSolution.forEach(function(solution) {
-                              var text;
-                              // Check if solution.solution exists
-                                if (solution.purchaseProposalToCooAns ) {
-                                   text = solution.purchaseProposalToCooAns;
+                   });
+                   return count === 0 ? "Unavailable" : `Available(${count})`;
+               }
 
-                                } else {
-                                text=" ";
+               allData.forEach(device => {
+                   const bivagName = device.departmentName;
+                   const categoryName = device.categoryName;
+                   const sn = device.visibleServiceId;
 
-                                  // Optionally, set a default or handle the missing property case
-                                }
+                   if (!Array.isArray(device.allProblem)) return;
 
-                            if (text === "Pending" || text === "Accepted") {
-                                const row = document.createElement("tr");
+                   device.allProblem.forEach(problem => {
+                       if (!Array.isArray(problem.proposalSolution)) return;
 
-                                console.log("Name:", solution.name);
-                                console.log("Value:", solution.value);
-                                console.log("Category:", solution.category);
-                                console.log("Price:", solution.price);
-                                console.log("Action:", solution.action);
-                                console.log("Comment:", solution.comment);
-                                var status=solution.purchaseManInfoOfPriceStatus;
-                                if(status==null){
-                                status=" ";
-                                }
+                       problem.proposalSolution.forEach(solution => {
+                           const text = solution.purchaseProposalToCooAns || " ";
+                           if (text !== "Pending" && text !== "Accepted") return;
 
-                               //  console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
+                           const rowKey = [
+                               sn || "N/A",
+                               bivagName || "N/A",
+                               solution.category || "N/A",
+                               text,
+                               solution.purchaseProposalToCooTime || "N/A",
+                               (solution.value || "").trim().replace(/\s+/g, ' ')
+                           ].join('|');
 
-                                // Determine availability
-                                const availability = getAvailability(solution.category);
+                           newRowKeys.add(rowKey);
+                           if (currentRowMap.has(rowKey)) return;
 
-                                // Create and append cells to the row
-                                row.innerHTML = `
-                                    <td >${sn}</td>  <!-- Dynamic Counter -->
-                                    <td>${bivagName}</td>
-                                    <td>${solution.category}</td>
-                                    <td style="text-align:left">
-                                    <span>${solution.name}:${solution.value} </span> <br>
-                                    <span>Price:${solution.price} </span>
-                                    </td>
-                                     <td>
-                                     ${solution.purchaseProposalToCooAns}
-                                     </td>
-                                     <td>${solution.purchaseProposalToCooTime ? formatDateTimeToAmPm(solution.purchaseProposalToCooTime) : " "}</td>
-                                     <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
+                           const row = document.createElement("tr");
 
-                                    <td>
+                           row.innerHTML = `
+                               <td>${sn}</td>
+                               <td>${bivagName}</td>
+                               <td>${solution.category}</td>
+                               <td class="text-start">
+                                   <div class="compact-cell bg-light">
+                                       <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                       <div>${(solution.value || "").trim().replace(/\n/g, "<br>")}</div>
+                                   </div>
+                               </td>
+                               <td>${text}</td>
+                               <td onclick="window.trackServiceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #fff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Service Request data tracking information">View</td>
+                               <td>${solution.purchaseProposalToCooTime ? formatDateTimeToAmPm(solution.purchaseProposalToCooTime) : " "}</td>
+                               <td>
+                                   <div class="d-flex justify-content-center align-items-center action-button-container">
+                                       ${text !== "Accepted" ? `
+                                           <button class="btn btn-secondary btn-sm chat-buttonForService"
+                                               data-problemname-id="${problem.name}"
+                                               data-solutionname-id="${solution.name}"
+                                               data-service-id="${device.id}"
+                                               title="Accept Purchase Proposal">&#128172;</button>` : ""}
 
-                                       <div class="d-flex justify-content-center align-items-center action-button-container">
+                                       ${text === "Accepted" ? `
+                                           <button class="btn btn-info btn-sm view-selectedLinkPurchase"
+                                               data-details-id="${solution.purchaseProposalToCooDetails}"
+                                               data-budget-id="${solution.purchaseProposalToCooBudget}"
+                                               data-coocomment-id="${solution.purchaseProposalToCooComment}"
+                                               data-link-id="${solution.purchaseProposalToCooLinks}"
+                                               data-acceptedlink-id="${solution.purchaseProposalToCooAcceptedLinks}"
+                                               data-problemname-id="${problem.name}"
+                                               data-solutionname-id="${solution.name}"
+                                               data-service-id="${device.id}"
+                                               title="View Accepted Data">&#128065;</button>` : ""}
+                                   </div>
+                               </td>
+                           `;
+                           tableBody.appendChild(row);
+                       });
+                   });
+               });
 
-
-                                                         ${solution.purchaseProposalToCooAns !== "Accepted"  ? `
-                                                           <button class="btn btn-secondary btn-sm chat-buttonForService" data-problemname-id="${problem.name}" data-solutionname-id="${solution.name}" data-service-id="${device.id}" th:data-button-id="chat">
-                                                              &#128172; <!-- Speech Bubble -->
-                                                          </button>
-                                                       ` : ""}
-
-                                                        ${solution.purchaseProposalToCooAns === "Accepted"  ? `
-                                                          <button class="btn btn-info btn-sm view-selectedLinkPurchase" data-details-id="${solution.purchaseProposalToCooDetails}" data-budget-id="${solution.purchaseProposalToCooBudget}" data-coocomment-id="${solution.purchaseProposalToCooComment}" data-link-id="${solution.purchaseProposalToCooLinks}" data-acceptedlink-id="${solution.purchaseProposalToCooAcceptedLinks}" data-problemname-id="${problem.name}" data-solutionname-id="${solution.name}" data-service-id="${device.id}" >
-                                                               &#128065;
-                                                           </button>
-                                                       ` : ""}
-                                               </div>
-                                    </td>
-                                `;
-
-                                // Increment the counter for the next row
-                                counter++;
-
-                                // Append the row to the table body
-                                tableBody.appendChild(row);
-                            }
+               // Step 3: Remove outdated rows
+               currentRowMap.forEach((row, key) => {
+                    const firstCellText = row.cells[0]?.textContent.trim();
+                    if (!newRowKeys.has(key) || (firstCellText && firstCellText.startsWith("R"))) {
+                        row.remove();
+                    }
+               });
 
 
-                        });
-                    });
-                });
-                //const myTable = document.querySelector("table");  // or more specific selector if you want
-                //sortAndFormatTable(myTable);
+
+                const myTable = document.querySelector("table");  // or more specific selector if you want
+                sortAndFormatTable(myTable);
                 $(document).on('click', '.view-selectedLinkPurchase', function() {
                             var details = $(this).data('details-id');
                             var budget = $(this).data('budget-id');
@@ -787,15 +503,15 @@ else if (buttonId === "view") {
                          <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
                          <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
                      </div>
-                     <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                     <div class="mb-3" style="margin-left: 0%; text-align: center;">
                          <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                      </div>
                  `;
 
                  // Add the HTML code to the modal body using jQuery
-                 $('.modal-body').html(htmlToAdd);
-                 $('#publicModalLabel').text("Do you want to update delivery date?");
+                 $('.ModalMedium').html(htmlToAdd);
+                 $('#publicModalMediumLabel').text("Do you want to update delivery date?");
 
                  // Add event listener for save button
                  $('#saveEditBtn').click(function() {
@@ -824,7 +540,7 @@ else if (buttonId === "view") {
                             });
                          });
 
-                 showModal();
+                 showModalMedium();
              });
              // Add event listener for the availability button click
                  $(document).on('click', '.setPriceBtn', function() {// Get the clicked button
@@ -956,5 +672,421 @@ else if (buttonId === "view") {
              }
          });
      };
+     window.initRequestDataDirectTable = function () {
+         const tableBody = document.getElementById("requestPurchaseDataTableBody");
+         if (!tableBody) return;
+
+         // Step 1: Capture current rows
+         const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+         const currentRowMap = new Map();
+         currentRows.forEach(row => {
+             const key = Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+             currentRowMap.set(key, row);
+         });
+
+         $.ajax({
+             url: '/superAdmin/allDataRange',
+             type: 'POST',
+             dataType: 'json',
+              data: {
+                             page: pageNumber,
+                             size: localStorage.getItem("pageSize") || 0
+                         },
+             success: function (data) {
+                 const allData = data['requestData'];
+                 const requestColumns = data['requestColumns'];
+                 const allAddData = data['allAddData'];
+                 const newRowKeys = new Set();
+
+                 function getAvailability(categoryName) {
+                     let count = 0;
+                     allAddData.forEach(device => {
+                         if (device.categoryName === categoryName && device.userName === 'inventory') {
+                             count++;
+                         }
+                     });
+                     return count === 0 ? "Unavailable" : `Available(${count})`;
+                 }
+
+                 allData.forEach(device => {
+                    if (device.requestMode === "Denied") return;
+
+                     const bivagName = device.departmentName || "N/A";
+                     const categoryName = device.allData["category"] || "N/A";
+                     const sn = device.visibleRequestId || "N/A";
+                     const availability = getAvailability(categoryName);
+
+                     // Generate row key for comparison
+                     let rowKeyParts = [
+                         sn, bivagName, categoryName,
+                         device.inventory?.deliveryMode || "Not Delivered",
+                         device.inventory?.inventoryStatus || "N/A",
+                         device.inventory?.cooDeliveryAns || 'Pending',
+                         device.inventory?.inventoryToCustomerCareDeviceSendingStatus || 'Pending',
+                         device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"
+                     ];
+                     const rowKey = rowKeyParts.join('|');
+                     newRowKeys.add(rowKey);
+
+                     if (!currentRowMap.has(rowKey)) {
+                         const row = document.createElement("tr");
+                         row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
+
+                         let htmlData = `
+                             <td>${sn}</td>
+                             <td>${bivagName}</td>
+                             <td>${categoryName}</td>
+                             <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
+                                 <div>
+                         `;
+
+                         requestColumns.forEach(column => {
+                             if (column.visibleType === "yes") {
+                                 const columnName = column.columnName || "N/A";
+                                 const value = device.allData[columnName] || "N/A";
+                                 htmlData += column.dataType === "textarea" ? `
+                                     <div><textarea class="plain-textarea">${value}</textarea></div>` : `
+                                     <div><span>${columnName}</span>: <span>${value}</span></div>`;
+                             }
+                         });
+
+                         htmlData += `
+                                 </div>
+                                 <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
+                             </td>
+                             <td>${device.purchase?.cooAns || "Pending"}</td>
+                            <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
+
+                             <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
+                         `;
+                          htmlData += `
+                                 <td>
+                                     <div class="d-flex justify-content-center align-items-center action-button-container">
+                                         ${device.purchase?.cooAns !== 'Accepted'
+                                             ? `<button class="btn btn-secondary btn-sm chat-button"
+                                                   data-request-id="${device.id}"
+                                                   data-button-id="chat"
+                                                   title="Send Proposal to Coo">&#128172;</button>`
+                                             : ''
+                                         }
+                                         ${device.purchase?.cooAns === 'Accepted'
+                                             ? `<button class="btn btn-info btn-sm view-button"
+                                                   data-request-id="${device.id}"
+                                                   data-button-id="view"
+                                                   title="View Accepted Link">&#128065;</button>`
+                                             : ''
+                                         }
+                                     </div>
+                                 </td>
+                             `;
+
+
+
+
+
+                         row.innerHTML = htmlData;
+                         tableBody.appendChild(row);
+                     }
+
+                 });
+
+                 // Step 3: Remove outdated rows (also those starting with "R")
+                 currentRowMap.forEach((row, key) => {
+                     const firstCellText = row.cells[0]?.textContent.trim();
+                     if (!newRowKeys.has(key) || (firstCellText && firstCellText.startsWith("R"))) {
+                         row.remove();
+                     }
+                 });
+
+
+               //const myTable = document.getElementById("requestInventoryTable");  // or more specific selector if you want
+               const myTable = document.querySelector("table");  // or more specific selector if you want
+               sortAndFormatTable(myTable);
+
+
+              $('#requestPurchaseDataTable tbody tr').click(function(event) {
+                      var $row = $(this); // Store the clicked row element
+                      var button = $(event.target).closest('button');
+                       var buttonPTag = $(event.target).closest('td');
+                      var buttonPressed = button.text().trim(); // Get the HTML inside the button
+                      var requestId = button.data('requestId');
+                      var buttonId = button.data('buttonId');
+                      var categoryName = $row.find('th:nth-child(3)').text();
+
+
+                      console.log(`Button Pressed: ${buttonPressed}`);
+                      console.log(`Button ID: ${buttonId}`);
+                      console.log(`Request ID: ${requestId}`);
+
+              if (buttonPTag.hasClass('viewInfo')) {
+
+                                         print('requestColumns', function(requestColumns) {
+                                        var categoriesHtml = '';
+                                        if (requestColumns) {
+                                            requestColumns.forEach(function(category) {
+                                                categoriesHtml += `<th scope="col" style="background-color: gray;color:white">${category.columnName}</th>`;
+                                            });
+                                        }
+
+                                        var htmlToAdd = `
+                                            <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                                <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" style="background-color: gray; color:white">SN</th>
+                                                             <th scope="col" style="background-color: gray;display: none;color:white">Device Id</th>
+                                                            <th scope="col" style="background-color: gray;color:white">Category Name</th>
+                                                            ${categoriesHtml}
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="listDeviceInformationBody">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        `;
+                                        $('.modal-body').html(htmlToAdd);
+
+                                        $('#publicModalLabel').text("Request Information");
+
+
+
+                                              var rowsHtml = '';
+
+                                              print('requestData', function(requestData) {
+                                                if (requestData) {
+                                                  // Replace requestId with a valid id to search for
+                                                  const requestId = buttonPTag.data('requestId');
+                                                  const Data = requestData.find(item => item.id === requestId);
+
+                                                  if (Data) {
+                                                    // Generate the HTML for the found item
+                                                    rowsHtml += `
+                                                      <tr>
+                                                        <td>${Data.visibleRequestId}</td>
+                                                        <td>${Data.allData['category']}</td>
+                                                         `;
+                                                         requestColumns.forEach(function(column) {
+                                                             rowsHtml += `<td >${Data.allData[column.columnName]}</td>`;
+                                                         });
+
+
+                                                      rowsHtml += `  </tr>
+                                                    `;
+
+                                                    // Insert the generated HTML into the table body
+                                                    $('#listDeviceInformationBody').html(rowsHtml);
+                                                  } else {
+                                                    console.error('No data found with the specified requestId.');
+                                                  }
+                                                } else {
+                                                  console.error('requestData is null or undefined.');
+                                                }
+                                              });
+
+
+
+                                        showModal();
+                                    });
+
+
+                           }
+
+              else  if (buttonId === "chat") {
+                      var htmlToAdd = `
+                        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                        <h6 id="detailsId"></h6>
+                        <h6 id="budgetId"></h6>
+                        </div>
+                           <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                               <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
+                                   <thead>
+                                       <tr>
+                                           <th scope="col" style="background-color: gray;">SN</th>
+                                            <th scope="col" style="background-color: gray;display: none;">Link</th>
+                                             <th scope="col" style="background-color: gray;">Links</th>
+                                            <th scope="col" style="background-color: gray;">Action</th>
+
+                                       </tr>
+                                   </thead>
+                                   <tbody id="purchaseRequestInformationBody">
+
+                                   </tbody>
+                               </table>
+                           </div>
+                           <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                              <label for="comments" class="form-label">Comments</label>
+                              <textarea class="form-control" id="comments" name="comments" placeholder="Comments"></textarea>
+                          </div>
+                            <div class="mb-3" style="margin-left: 0%; text-align: center;">
+                               <button type="button" class="btn btn-primary" id="saveEditBtn">Send</button>
+                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                           </div>
+
+                       `;
+                       $('.modal-body').html(htmlToAdd);
+
+                       $('#publicModalLabel').text("Purchase Request Form");
+
+                     print('requestData', function(requestData) {
+                         if (requestData) {
+                             const result = requestData.find(function(data1) {
+                                 return data1.id === requestId;
+                             });
+                             $("#detailsId").text("Details: " + result.purchase.details);
+                             $("#budgetId").text("Budget: " + result.purchase.budget);
+
+                             var rowsHtml = '';
+                             for (let i = 0; i < result.purchase.links.length; i++) {
+                                 // Ensure the link includes the protocol (http:// or https://)
+                                 const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
+                                     ? result.purchase.links[i]
+                                     : 'https://' + result.purchase.links[i];
+
+                                 rowsHtml += `<tr>
+                                     <td>${i + 1}</td>
+                                     <td style="display: none;">${link}</td>
+                                     <td>
+                                         <a href="${link}" target="_blank" style="text-decoration: none;">
+                                             ${link}
+                                         </a>
+                                     </td>
+                                     <td><input type="checkbox" style="transform: scale(1.5); margin: 10px;" name="selectDevice" class="action-checkbox"></td>
+                                 </tr>`;
+                             }
+
+                             $('#purchaseRequestInformationBody').html(rowsHtml);
+                         }
+                     });
+
+
+
+               $('#saveEditBtn').click(function(event) {
+                           event.preventDefault(); // Prevent the default action (form submission)
+
+                           const checkboxes = document.querySelectorAll('input[name="selectDevice"]:checked');
+                           const selectedRows = Array.from(checkboxes).map(checkbox => {
+                               const row = checkbox.closest('tr'); // Get the parent row of the checkbox
+                               const secondColumn = row.querySelector('td:nth-child(2)'); // Get the second column (assuming columns are indexed from 1)
+
+                               if (secondColumn) {
+                                   const secondColumnValue = secondColumn.textContent.trim(); // Get the text content of the second column
+                                   return secondColumnValue;
+                               } else {
+                                   return null;
+                               }
+                           });
+
+                           if(selectedRows.length==0){
+                             CustomAlert("Please select a device.");
+                           }
+                           else{
+                             // Show a confirmation alert
+                              const userConfirmed = confirm("Do you want to proceed with the selected device?");
+                              if (userConfirmed) {
+                                   hideModal();
+                                  purchaseRequest1(requestId,selectedRows);
+                              } else {
+                                  console.log("User canceled.");
+                                  // Handle the cancel action here
+                              }
+                           }
+
+                       });
+
+                         showModal();
+                     }
+
+              else if (buttonId === "view") {
+                        var htmlToAdd = `
+                                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                                 <h6 id="detailsId"></h6>
+                                 <h6 id="budgetId"></h6>
+                                 </div>
+                                    <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                        <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="background-color: gray;">SN</th>
+                                                     <th scope="col" style="background-color: gray;display: none;">Link</th>
+                                                      <th scope="col" style="background-color: gray;">Links</th>
+                                                     <th scope="col" style="background-color: gray;">Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="purchaseRequestInformationBody">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                                       <label for="comments" class="form-label">Comments</label>
+                                       <textarea class="form-control" id="comments" name="comments" placeholder="Comments"></textarea>
+                                   </div>
+                                     <div class="mb-3" style="margin-left: 0%; text-align: center;">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+
+                                `;
+                                $('.modal-body').html(htmlToAdd);
+
+                                $('#publicModalLabel').text("Accepted Request Form");
+
+                              print('requestData', function(requestData) {
+                                  if (requestData) {
+                                      const result = requestData.find(function(data1) {
+                                          return data1.id === requestId;
+                                      });
+                                      $("#detailsId").text("Details: " + result.purchase.details);
+                                      $("#budgetId").text("Budget: " + result.purchase.budget);
+                                      $("#comments").text( result.purchase.cooComment);
+
+                                      var rowsHtml = '';
+                                          for (let j = 0; j < result.purchase.acceptedLinks.length; j++) {
+                                           for (let i = 0; i < result.purchase.links.length; i++) {
+                                            const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
+                                                   ? result.purchase.links[i]
+                                                   : 'https://' + result.purchase.links[i];
+                                           if(result.purchase.acceptedLinks[j]===link){
+                                            // Ensure the link includes the protocol (http:// or https://)
+                                               const link = result.purchase.links[i].startsWith('http://') || result.purchase.links[i].startsWith('https://')
+                                                   ? result.purchase.links[i]
+                                                   : 'https://' + result.purchase.links[i];
+
+                                               rowsHtml += `<tr>
+                                                   <td>${i + 1}</td>
+                                                   <td style="display: none;">${link}</td>
+                                                   <td>
+                                                       <a href="${link}" target="_blank" style="text-decoration: none;">
+                                                           ${link}
+                                                       </a>
+                                                   </td>
+                                                   <td><input type="checkbox" style="transform: scale(1.5); margin: 10px;" name="selectDevice"  class="action-checkbox" checked></td>
+                                               </tr>`;
+
+                                           }
+                                          }
+                                          }
+
+
+                                      $('#purchaseRequestInformationBody').html(rowsHtml);
+                                  }
+                              });
+
+
+                                  showModal();
+                      }
+                  });
+
+
+             },
+             error: function(xhr, status, error) {
+                 console.error('Error fetching data:', error);
+             }
+         });
+     };
+
 
 

@@ -80,7 +80,6 @@ function editInternalUserBtn($row) {
            var userPassword = $row.find('td:nth-child(5)').text();
 
        var buttonPressed = $(event.target).closest('button');
-        console.log("Button Pressed: " + buttonPressed);
 
         var rowIndex = $(this).index();
 
@@ -113,12 +112,11 @@ function editInternalUserBtn($row) {
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
+            $('.ModalMedium').html(htmlToAdd);
             // edit individual column header
-             $('#publicModalLabel').text("Edit Individual Column")
+             $('#publicModalMediumLabel').text("Edit Individual Column")
 
-            // Show the modal
-            $('#publicModal').modal('show');
+              showModalMedium();
          // Bind the click event to the Save button inside the modal
                 $('#EditBtn').click(function() {
                     editInternalUserBtn($row);
@@ -188,8 +186,8 @@ function addInternalUser(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Internal User")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Internal User")
              addListItem();
             // selection and input handler.
             selectionAndInputHandler();

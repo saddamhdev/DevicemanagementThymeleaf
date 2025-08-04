@@ -33,7 +33,139 @@
     </div>
 </div>
 
+<div th:fragment="loadingSpinner">
+    <div id="scrollLoader" style="
+    display: none;
+    position: fixed;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
 
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div th:fragment="CloseConfirmationModal">
+
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="logoutConfirmModalLabel">
+                    <i class="fas fa-sign-out-alt me-2"></i> Confirm Logout
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body logoutConfirmModal">
+                Are you sure you want to log out?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="/" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- fragments/pagination.html -->
+<div th:fragment="pageSizeSelector(pageSize)">
+    <div class="d-flex align-items-center gap-2 mb-3">
+        <label for="pageSize" class="me-2 fw-bold">Show:</label>
+        <select id="pageSize" class="form-select form-select-sm w-auto"
+                onchange="onPageSizeChange(this.value)">
+            <option th:value="2" th:text="2" th:selected="${pageSize == 2}"></option>
+            <option th:value="3" th:text="3" th:selected="${pageSize == 3}"></option>
+            <option th:value="4" th:text="4" th:selected="${pageSize == 4}"></option>
+            <option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option>
+            <option th:value="9999999" th:text="'All'" th:selected="${pageSize == 'all'}"></option>
+        </select>
+    </div>
+</div>
+
+<div th:fragment="publicModalSmall">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalSmall" tabindex="-1" aria-labelledby="publicModalSmallLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm"> <!-- Changed from modal-xl to modal-sm -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalSmallLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ModalSmall">
+                    This is a Bootstrap 5.3 modal.
+                </div>
+                <div class="modal-footer">
+                    <!-- Optional footer content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="publicModalMedium">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalMedium" tabindex="-1" aria-labelledby="publicModalMediumLabel" aria-hidden="true">
+        <div class="modal-dialog"> <!-- Default = medium size -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalMediumLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ModalMedium">
+                    This is a medium Bootstrap 5.3 modal.
+                </div>
+                <div class="modal-footer">
+                    <!-- Optional footer content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="publicModalLarge">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalLarge" tabindex="-1" aria-labelledby="publicModalLargeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalLargeLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ModalLarge">
+                    This is a Bootstrap 5.3 modal.
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="publicModalExtraLarge">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalExtraLarge" tabindex="-1" aria-labelledby="publicModalLargeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalExtraLargeLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body ModalExtraLarge">
+                    This is a Bootstrap 5.3 modal.
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

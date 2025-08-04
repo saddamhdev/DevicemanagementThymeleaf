@@ -1,9 +1,7 @@
-
 function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) {
 
           var individualColumnTableBody = $('#individualColumnTableBody');
           var totalRows = individualColumnTableBody.children('tr').length+1;
-           console.log("Total Rows: " + totalRows);
 
 
           // Send AJAX request to add category
@@ -36,7 +34,6 @@ function editIndividualColumnBtn($row) {
          var requiredType = $row.find('td:nth-child(5)').text();
           var individualColumnTableBody = $('#individualColumnTableBody');
           var totalRows = individualColumnTableBody.children('tr').length+1;
-           console.log("Total Rows: " + totalRows);
 
 
            var newIndividualCategoryName = $("#individualCategoryNameEdit").val();
@@ -78,7 +75,6 @@ function editIndividualColumnBtn($row) {
         var dataType = $row.find('td:nth-child(4)').text();
          var requiredType = $row.find('td:nth-child(5)').text();
        var buttonPressed = $(event.target).closest('button');
-        console.log("Button Pressed: " + buttonPressed);
 
         var rowIndex = $(this).index();
 
@@ -112,12 +108,12 @@ function editIndividualColumnBtn($row) {
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
+            $('.ModalMedium').html(htmlToAdd);
             // edit individual column header
-             $('#publicModalLabel').text("Edit Individual Column")
+             $('#publicModalMediumLabel').text("Edit Individual Column")
 
             // Show the modal
-            $('#publicModal').modal('show');
+            $('#publicModalMedium').modal('show');
          // Bind the click event to the Save button inside the modal
                 $('#saveEditBtn').click(function() {
                     editIndividualColumnBtn($row);
@@ -207,7 +203,7 @@ function addIndividualColumn(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
+            $('.ModalMedium').html(htmlToAdd);
              print('categories', function(categories) {
                    if (categories) {
                        // Generate HTML for categories
@@ -246,7 +242,7 @@ function addIndividualColumn(){
                     saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType);
                 });
 
-                showModal();
+                showModalMedium();
 
 }
 function selectionAndInputHandler(){

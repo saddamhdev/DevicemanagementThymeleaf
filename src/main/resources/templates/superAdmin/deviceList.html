@@ -15,20 +15,61 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <!-- Toggle Content Button -->
-                <div class="responsive-table-wrapper">
-                <table id="deviceListTable" >
-                    <thead id="tableHeaderAddDataList" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${universalColumns}" th:text="${column.columnName}" style="background-color: gray;"></th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Device User</th>
-                        <th scope="col" style="background-color: gray;">Description</th>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
 
-                    </tr>
-                    </thead>
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="deviceListTable" placeholder="Search ...">
+                    </div>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table id="deviceListTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddDataList">
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('deviceListTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('deviceListTable', 1, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic Columns -->
+                            <th th:each="column, iter : ${universalColumns}"
+                                th:onclick="|window.sortTable('deviceListTable', ${2 + iter.index}, this)|"
+                                style="background-color: gray; color:white;">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Create Time -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceListTable', ${2 + universalColumns.size()}, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Device User -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceListTable', ${3 + universalColumns.size()}, this)|">
+                                Device User <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Description -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceListTable', ${4 + universalColumns.size()}, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="deviceListBody">
                     <tr th:each="device, iterStat : ${allDeviceData}">
                         <td scope="row" th:text="${device.visibleId}">1</td>
@@ -54,6 +95,7 @@
                         </td>
 
                     </tr>
+                    <tr class="last-page-flag"  th:data-lastpagedeviceList="${lastPagedeviceList}" th:data-totalpagedeviceList="${totalPagedeviceList}"  style="display:none;"></tr>
                     </tbody>
                 </table>
                 </div>

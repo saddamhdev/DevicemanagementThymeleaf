@@ -27,20 +27,53 @@
                 </div>
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
-                <div class="responsive-table-wrapper">
-                <table id="requestForPaymentTable" class="table table-gray table-bordered table-hover">
-                    <thead>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
 
-                    <tr>
-                        <th scope="col" style="background-color: gray; color:white">SN</th>
-                        <th scope="col" style="background-color: gray; color:white">Bivag Name</th>
-                        <th scope="col" style="background-color: gray; color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th scope="col" style="background-color: gray; color:white">Description</th>
-                        <th scope="col" style="background-color: gray; color:white">Payment Status In COO</th>
-                        <th scope="col" style="background-color: gray; color:white">Action</th>
-                    </tr>
-                    </thead>
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestForPaymentTable" placeholder="Search ...">
+                    </div>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table id="requestForPaymentTable" class="table table-gray table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestForPaymentTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestForPaymentTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestForPaymentTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestForPaymentTable', 3, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestForPaymentTable', 4, this)|">
+                                Payment Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action column (not sortable) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="requestForPaymentTableBody">
                     <tr th:each="device, iterStat : ${requestData}"
                         onclick="printRowDataForCustomerCare(this)"

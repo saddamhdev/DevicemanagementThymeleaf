@@ -57,612 +57,144 @@ function addTableInformationOfService() {
             });
         });
 
- function printRowDataForCustomerCare(row) {
-                                     // Get all the cells of the clicked row
-                                     var cells = row.getElementsByTagName('td');
-                                     var rowData = [];
+window.initServiceAccessoriesListDataTable = function () {
+    const tableBody = document.getElementById("serviceAccessoriesListDataTableBody");
+    if (!tableBody) {
+        console.error("Table body not found.");
+        return;
+    }
 
-                                     // Loop through cells to collect data
-                                     for (var i = 0; i < cells.length; i++) {
-                                         rowData.push(cells[i].innerText.trim());
-                                     }
-                                     var biVagName = cells[1].innerText.trim();
-                                     var button = row.querySelector('.btn');
+    // Helper: generate row signature from <tr>
+    function generateRowKeyFromRow(row) {
+        return Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+    }
 
-                                     if (button) {
-                                         // Get the data-request-id attribute value
-                                         var requestId = button.getAttribute('data-request-id');
+    // Helper: generate row signature from data
+    function generateRowKeyFromData(sn, bivagName, categoryName, problemName, solution, presentTime) {
+        const value = (solution.value || '').trim().replace(/\n/g, '');
+        const deliveryDate = solution.deliveryDate || '';
+        const status = solution.inventoryToServiceCenterDeviceStatus || '';
+        return [
+            sn, bivagName, categoryName, problemName,
+            solution.category, value, deliveryDate, status, presentTime
+        ].join('|');
+    }
 
-                                         // Print the data-request-id (you can replace this with any action you want)
-                                         console.log("data-request-id: " + requestId);
-                                            print('requestData', function(requestData) {
-                                                if (requestData) {
-                                                    // Search for the specific ID using the find method
-                                                    const result = requestData.find(function(data1) {
-                                                        return data1.id === requestId;
-                                                    });
+    // Step 1: Build current row map
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = generateRowKeyFromRow(row);
+        currentRowMap.set(key, row);
+    });
 
-                                   if(result && (result.inventory.inventoryStatus === "Proposal Accepted" || result.inventory.inventoryStatus === "Direct Delivery") ) {
-                                                        // Dynamically generate the HTML with standard 'src' attribute
-                                                        var htmlToAdd = `
-                                                        <div class="row bordered-row">
-                                                            <div class="col-sm-3">
-                                                                <div class="text-center">
-                                                                    <p>${formatDateTime(result.presentTime)}</p>
-                                                                    <p>${formatTime(result.presentTime)}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-2">
-                                                                <div class="text-center">
-                                                                    <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7">
-                                                                <div class="text-3d" style="width:100%">
-                                                                    <span>Dept: ${result.departmentName}</span>
-                                                                    <span>Requested</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        `;
-                                                         if ( result.cooAcceptedTime) {
-                                                                htmlToAdd += `
-                                                             <div class="row">
-                                                                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                <div class="col-sm-8" style="height:40px;"></div>
-                                                            </div>
-                                                            <div class="row bordered-row">
-                                                                <div class="col-sm-3">
-                                                                    <div class="text-center">
-                                                                        <p>${formatDateTime(result.cooAcceptedTime)}</p>
-                                                                        <p>${formatTime(result.cooAcceptedTime)}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-2">
-                                                                    <div class="text-center">
-                                                                        <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7">
-                                                                    <div class="text-3d" style="width:100%">
-                                                                        <span>COO:</span>
-                                                                        <span>${result.requestMode} Dept Request</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                                `;
-
-                                                             }
-
-                                                         if (result.inventory && result.inventory.requestTime) {
-                                                            htmlToAdd += `
-
-                                                        <div class="row">
-                                                            <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                            <div class="col-sm-8" style="height:40px;"></div>
-                                                        </div>
-                                                        <div class="row bordered-row">
-                                                            <div class="col-sm-3">
-                                                                <div class="text-center">
-                                                                    <p>${formatDateTime(result.inventory.requestTime)}</p>
-                                                                    <p>${formatTime(result.inventory.requestTime)}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-2">
-                                                                <div class="text-center">
-                                                                    <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7">
-                                                                <div class="text-3d" style="width:100%">
-                                                                    <span>Inventory:</span>
-                                                                    <span>Send Alternative List Request</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                            `;
-
-                                                         }
-                                                         if (result.inventory && result.inventory.cooAcceptedTime) {
-                                                            htmlToAdd += `
-
-                                                        <div class="row">
-                                                            <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                            <div class="col-sm-8" style="height:40px;"></div>
-                                                        </div>
-                                                        <div class="row bordered-row">
-                                                            <div class="col-sm-3">
-                                                                <div class="text-center">
-                                                                    <p>${formatDateTime(result.inventory.cooAcceptedTime)}</p>
-                                                                    <p>${formatTime(result.inventory.cooAcceptedTime)}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-2">
-                                                                <div class="text-center">
-                                                                    <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-7">
-                                                                <div class="text-3d" style="width:100%">
-                                                                    <span>COO:</span>
-                                                                    <span>${result.inventory.cooAns} Inventory Request</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                            `;
-
-                                                         }
-
-                                                        // Add additional HTML conditionally
-                                                        if (result.inventory && result.inventory.deliveryTime) {
-                                                            htmlToAdd += `
-                                                            <div class="row">
-                                                                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                <div class="col-sm-8" style="height:40px;"></div>
-                                                            </div>
-                                                            <div class="row bordered-row">
-                                                                <div class="col-sm-3">
-                                                                    <div class="text-center">
-                                                                        <p>${formatDateTime(result.inventory.deliveryTime)}</p>
-                                                                        <p>${formatTime(result.inventory.deliveryTime)}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-2">
-                                                                    <div class="text-center">
-                                                                        <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7">
-                                                                    <div class="text-3d" style="width:100%">
-                                                                        <span>Inventory:</span>
-                                                                        <span>Delivered Device To CustomerCare</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>`;
-                                                        }
-
-                                                        if (result.customerCare && result.customerCare.deliveryTime) {
-                                                            htmlToAdd += `
-                                                            <div class="row">
-                                                                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                <div class="col-sm-8" style="height:40px;"></div>
-                                                            </div>
-                                                            <div class="row bordered-row">
-                                                                <div class="col-sm-3">
-                                                                    <div class="text-center">
-                                                                        <p>${formatDateTime(result.customerCare.deliveryTime)}</p>
-                                                                        <p>${formatTime(result.customerCare.deliveryTime)}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-2">
-                                                                    <div class="text-center">
-                                                                        <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7">
-                                                                    <div class="text-3d" style="width:100%">
-                                                                        <span>CustomerCare:</span>
-                                                                        <span>Delivered Device To User</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>`;
-                                                        }
-                                               if (result.deviceReceivedStatus) {
-                                                      htmlToAdd += `
-                                                      <div class="row">
-                                                          <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                          <div class="col-sm-8" style="height:40px;"></div>
-                                                      </div>
-                                                      <div class="row bordered-row">
-                                                          <div class="col-sm-3">
-                                                              <div class="text-center">
-                                                                  <p>${formatDateTime(result.deviceReceivedTime)}</p>
-                                                                  <p>${formatTime(result.deviceReceivedTime)}</p>
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-sm-2">
-                                                              <div class="text-center">
-                                                                  <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-sm-7">
-                                                              <div class="text-3d" style="width:100%">
-                                                                  <span>Dept: ${result.departmentName}</span>
-                                                                  <span>Received Device From CustomerCare</span>
-                                                              </div>
-                                                          </div>
-                                                      </div>`;
-                                                  }
-                                                        // Add the HTML code to the modal body using jQuery
-                                                        $('.activityDiv').html(htmlToAdd);
-                                                    }
-                                                    else if(result && result.inventory.inventoryStatus === "Purchased") {
-                                                         // Dynamically generate the HTML with standard 'src' attribute
-                                                         var htmlToAdd = `
-                                                         <div class="row bordered-row">
-                                                             <div class="col-sm-3">
-                                                                 <div class="text-center">
-                                                                     <p>${formatDateTime(result.presentTime)}</p>
-                                                                     <p>${formatTime(result.presentTime)}</p>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-2">
-                                                                 <div class="text-center">
-                                                                     <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-7">
-                                                                 <div class="text-3d" style="width:100%">
-                                                                     <span>Dept: ${result.departmentName}</span>
-                                                                     <span>Requested</span>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                         `;
-                                                          if ( result.cooAcceptedTime) {
-                                                                 htmlToAdd += `
-                                                              <div class="row">
-                                                                 <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                 <div class="col-sm-8" style="height:40px;"></div>
-                                                             </div>
-                                                             <div class="row bordered-row">
-                                                                 <div class="col-sm-3">
-                                                                     <div class="text-center">
-                                                                         <p>${formatDateTime(result.cooAcceptedTime)}</p>
-                                                                         <p>${formatTime(result.cooAcceptedTime)}</p>
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-2">
-                                                                     <div class="text-center">
-                                                                         <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-7">
-                                                                     <div class="text-3d" style="width:100%">
-                                                                         <span>COO:</span>
-                                                                         <span>${result.requestMode} Dept Request</span>
-                                                                     </div>
-                                                                 </div>
-                                                             </div>
-                                                                 `;
-
-                                                              }
-
-                                                          if (result.inventory && result.inventory.requestTime) {
-                                                             htmlToAdd += `
-
-                                                         <div class="row">
-                                                             <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                             <div class="col-sm-8" style="height:40px;"></div>
-                                                         </div>
-                                                         <div class="row bordered-row">
-                                                             <div class="col-sm-3">
-                                                                 <div class="text-center">
-                                                                     <p>${formatDateTime(result.inventory.requestTime)}</p>
-                                                                     <p>${formatTime(result.inventory.requestTime)}</p>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-2">
-                                                                 <div class="text-center">
-                                                                     <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-7">
-                                                                 <div class="text-3d" style="width:100%">
-                                                                     <span>Inventory:</span>
-                                                                     <span>Send Purchase Request</span>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                             `;
-
-                                                          }
-                                                          if (result.purchase && result.purchase.requestTime) {
-                                                             htmlToAdd += `
-
-                                                         <div class="row">
-                                                             <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                             <div class="col-sm-8" style="height:40px;"></div>
-                                                         </div>
-                                                         <div class="row bordered-row">
-                                                             <div class="col-sm-3">
-                                                                 <div class="text-center">
-                                                                     <p>${formatDateTime(result.purchase.requestTime)}</p>
-                                                                     <p>${formatTime(result.purchase.requestTime)}</p>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-2">
-                                                                 <div class="text-center">
-                                                                     <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-7">
-                                                                 <div class="text-3d" style="width:100%">
-                                                                     <span>Purchase:</span>
-                                                                     <span>Send Purchase Request To COO</span>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                             `;
-
-                                                          }
-                                                   if (result.purchase && result.purchase.cooAcceptedTime) {
-                                                             htmlToAdd += `
-
-                                                         <div class="row">
-                                                             <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                             <div class="col-sm-8" style="height:40px;"></div>
-                                                         </div>
-                                                         <div class="row bordered-row">
-                                                             <div class="col-sm-3">
-                                                                 <div class="text-center">
-                                                                     <p>${formatDateTime(result.purchase.cooAcceptedTime)}</p>
-                                                                     <p>${formatTime(result.purchase.cooAcceptedTime)}</p>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-2">
-                                                                 <div class="text-center">
-                                                                     <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-7">
-                                                                 <div class="text-3d" style="width:100%">
-                                                                     <span>COO:</span>
-                                                                     <span>${result.purchase.cooAns} Purchase Request</span>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                             `;
-
-                                                          }
-                                                         // Add additional HTML conditionally
-                                                         if (result.purchase && result.purchase.deliveryTime) {
-                                                             htmlToAdd += `
-                                                             <div class="row">
-                                                                 <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                 <div class="col-sm-8" style="height:40px;"></div>
-                                                             </div>
-                                                             <div class="row bordered-row">
-                                                                 <div class="col-sm-3">
-                                                                     <div class="text-center">
-                                                                         <p>${formatDateTime(result.purchase.deliveryTime)}</p>
-                                                                         <p>${formatTime(result.purchase.deliveryTime)}</p>
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-2">
-                                                                     <div class="text-center">
-                                                                         <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-7">
-                                                                     <div class="text-3d" style="width:100%">
-                                                                         <span>Purchase:</span>
-                                                                         <span>Delivered Device To Inventory</span>
-                                                                     </div>
-                                                                 </div>
-                                                             </div>`;
-                                                         }
-
-                                                if (result.inventory && result.inventory.cooAcceptedDeliveryTime) {
-                                                             htmlToAdd += `
-
-                                                         <div class="row">
-                                                             <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                             <div class="col-sm-8" style="height:40px;"></div>
-                                                         </div>
-                                                         <div class="row bordered-row">
-                                                             <div class="col-sm-3">
-                                                                 <div class="text-center">
-                                                                     <p>${formatDateTime(result.inventory.cooAcceptedDeliveryTime)}</p>
-                                                                     <p>${formatTime(result.inventory.cooAcceptedDeliveryTime)}</p>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-2">
-                                                                 <div class="text-center">
-                                                                     <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-sm-7">
-                                                                 <div class="text-3d" style="width:100%">
-                                                                     <span>COO:</span>
-                                                                     <span>Given Permission To Delivery</span>
-                                                                 </div>
-                                                             </div>
-                                                         </div>
-                                                             `;
-
-                                                          }
-
-                                                         // Add additional HTML conditionally
-                                                        if (result.inventory && result.inventory.deliveryTime) {
-                                                            htmlToAdd += `
-                                                            <div class="row">
-                                                                <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                <div class="col-sm-8" style="height:40px;"></div>
-                                                            </div>
-                                                            <div class="row bordered-row">
-                                                                <div class="col-sm-3">
-                                                                    <div class="text-center">
-                                                                        <p>${formatDateTime(result.inventory.deliveryTime)}</p>
-                                                                        <p>${formatTime(result.inventory.deliveryTime)}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-2">
-                                                                    <div class="text-center">
-                                                                        <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-7">
-                                                                    <div class="text-3d" style="width:100%">
-                                                                        <span>Inventory:</span>
-                                                                        <span>Delivered Device To CustomerCare</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>`;
-                                                        }
-                                                         if (result.customerCare && result.customerCare.deliveryTime) {
-                                                             htmlToAdd += `
-                                                             <div class="row">
-                                                                 <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                 <div class="col-sm-8" style="height:40px;"></div>
-                                                             </div>
-                                                             <div class="row bordered-row">
-                                                                 <div class="col-sm-3">
-                                                                     <div class="text-center">
-                                                                         <p>${formatDateTime(result.customerCare.deliveryTime)}</p>
-                                                                         <p>${formatTime(result.customerCare.deliveryTime)}</p>
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-2">
-                                                                     <div class="text-center">
-                                                                         <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                     </div>
-                                                                 </div>
-                                                                 <div class="col-sm-7">
-                                                                     <div class="text-3d" style="width:100%">
-                                                                         <span>CustomerCare:</span>
-                                                                         <span>Delivered Device To User</span>
-                                                                     </div>
-                                                                 </div>
-                                                             </div>`;
-                                                         }
-                                                    if (result.deviceReceivedStatus) {
-                                                              htmlToAdd += `
-                                                              <div class="row">
-                                                                  <div class="col-sm-4" style="height:40px; border-right:1px solid gray"></div>
-                                                                  <div class="col-sm-8" style="height:40px;"></div>
-                                                              </div>
-                                                              <div class="row bordered-row">
-                                                                  <div class="col-sm-3">
-                                                                      <div class="text-center">
-                                                                          <p>${formatDateTime(result.deviceReceivedTime)}</p>
-                                                                          <p>${formatTime(result.deviceReceivedTime)}</p>
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-sm-2">
-                                                                      <div class="text-center">
-                                                                          <img src="/img/manLogo.png" class="profileActivity" alt="Uploaded Image">
-                                                                      </div>
-                                                                  </div>
-                                                                  <div class="col-sm-7">
-                                                                      <div class="text-3d" style="width:100%">
-                                                                          <span>Dept: ${result.departmentName}</span>
-                                                                          <span>Received Device From CustomerCare</span>
-                                                                      </div>
-                                                                  </div>
-                                                              </div>`;
-                                                          }
-                                                         // Add the HTML code to the modal body using jQuery
-                                                         $('.activityDiv').html(htmlToAdd);
-                                                     }
-
-                                                }
-                                            });
-
-
-
-
-
-                                     }
-                                 }
-
-window.initServiceAccessoriesListDataTable = function () {    // Perform a single AJAX call
+    // Step 2: Fetch data
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            console.log(data); // Log the entire data for debugging
+         data: {
+                    page: pageNumber,
+                    size: localStorage.getItem("pageSize") || 0
+                },
+        success: function (data) {
+            const allData = data['serviceRequests'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
 
-            var allData = data['serviceRequests'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("serviceAccessoriesListDataTableBody");
-
-            // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-                    if (device.categoryName === categoryName && device.userName==='inventory') {
+                allAddData.forEach(device => {
+                    if (device.categoryName === categoryName && device.userName === 'inventory') {
                         count++;
                     }
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const bivagName = device.departmentName;
+                const categoryName = device.categoryName;
+                const sn = device.visibleServiceId;
+                const presentTime = device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A";
 
-           // Loop through each device in allData
-           allData.forEach(function(device) {
-               const bivagName = device.departmentName;
-               const categoryName = device.categoryName;
-                const sn=device.visibleServiceId;
-               // Loop through each problem in the allProblem array for the device
-               device.allProblem.forEach(function(problem) {
+                if (!Array.isArray(device.allProblem)) return;
 
+                device.allProblem.forEach(problem => {
+                    if (!Array.isArray(problem.proposalSolution)) return;
 
+                    problem.proposalSolution.forEach(solution => {
+                        if (solution.cooManInfoOfPriceAcceptanceCommentStatus !== 'Accepted') return;
 
-                   if(problem.proposalSolution)
-                   {
-                    // Loop through each proposalSolution in the problem
-                   problem.proposalSolution.forEach(function(solution) {
-                          if ( solution.cooManInfoOfPriceAcceptanceCommentStatus === 'Accepted') {
-                              const row = document.createElement("tr");
+                        const availability = getAvailability(solution.category);
+                        const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, presentTime);
+                        newRowKeys.add(rowKey);
 
+                        if (!currentRowMap.has(rowKey)) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${sn}</td>
+                                <td>${bivagName}</td>
+                                <td>${categoryName}</td>
+                                <td>${problem.name}</td>
+                                <td class="text-start">
+                                    <div class="compact-cell bg-light">
+                                        <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                        <div>${solution.value.trim().replace(/\n/g, "<br>")}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm view-button-availability"
+                                            data-category="${solution.category}"
+                                            data-device-id="${device.deviceId}"
+                                            data-button-id="viewAlternative"
+                                            title="View Available Same Accessories Category Devices">
+                                        ${availability}
+                                    </button>
+                                </td>
+                                <td>${solution.deliveryDate || ''}</td>
+                                <td>${solution.inventoryToServiceCenterDeviceStatus || ' '}</td>
+                                <td>${presentTime}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center action-button-container">
+                                        ${availability !== "Unavailable" && solution.inventoryToServiceCenterDeviceStatus === 'Pending' ? `
+                                            <button class="btn btn-sm text-white delivery-button"
+                                                    data-category="${solution.category}"
+                                                    data-solution-name="${solution.name}"
+                                                    data-problem-name="${problem.name}"
+                                                    data-service-id="${device.id}"
+                                                    data-device-id="${solution.inventoryToServiceCenterDeviceId}"
+                                                    data-button-id="accepted"
+                                                    style="background-color:green;"
+                                                    title="Receive Device">✔</button>
+                                        ` : ""}
 
+                                        ${availability !== "Unavailable" ? `
+                                            <button class="btn btn-info btn-sm view-button-selected-device"
+                                                    data-category="${solution.category}"
+                                                    data-service-id="${device.id}"
+                                                    data-button-id="view"
+                                                    title="View Accessories Device"
+                                                    data-device-id="${solution.inventoryToServiceCenterDeviceId}">
+                                                &#128065;
+                                            </button>
+                                        ` : ""}
+                                    </div>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        }
+                    });
+                });
+            });
 
-                              // Determine availability
-                              const availability = getAvailability(solution.category);
+            // Step 3: Remove outdated rows
+            currentRowMap.forEach((row, key) => {
+                if (!newRowKeys.has(key)) {
+                    row.remove();
+                }
+            });
 
-                              // Create and append cells to the row
-                              row.innerHTML = `
-                                  <td>${sn}</td>  <!-- Dynamic Counter -->
-                                  <td>${bivagName}</td>
-                                  <td>${categoryName}</td>
-                                  <td>${problem.name}</td>
-                                  <td>${solution.category} (${solution.name}-${solution.value})</td>
-
-                                  <td>
-                                      <button class="btn btn-info btn-sm view-button-availability" data-category="${solution.category}" data-device-id="${device.deviceId}" data-button-id="viewAlternative" title="View Available Same Accessories Category Devices">
-                                          ${availability}
-                                      </button>
-                                  </td>
-                                  <td>
-                                      ${solution.deliveryDate !== null ? solution.deliveryDate : ""}
-                                   </td>
-
-                                  <td>
-                                          ${solution.inventoryToServiceCenterDeviceStatus != null ? solution.inventoryToServiceCenterDeviceStatus : ' '}
-                                   </td>  <!-- Corrected text binding for this column -->
-                                 <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
-                                  <td>
-
-                                     <div class="d-flex justify-content-center align-items-center action-button-container">
-                                                ${availability !== "Unavailable" && solution.inventoryToServiceCenterDeviceStatus !=='Accepted' && solution.inventoryToServiceCenterDeviceStatus ==='Pending' ? `
-                                                    <button class="btn btn-sm text-white delivery-button" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-device-id="${solution.inventoryToServiceCenterDeviceId}" data-button-id="accepted" style="background-color:green;" title="Receive Device">✔</button>
-                                                ` : ""}
-
-                                                  ${availability !== "Unavailable" ? `
-                                                     <button class="btn btn-info btn-sm view-button-selected-device" data-category="${solution.category}" data-service-id="${device.id}" data-button-id="view" title="View Accessories Device" data-device-id="${solution.inventoryToServiceCenterDeviceId}">
-                                                     &#128065;
-                                                 </button>
-                                                ` : ""}
-
-                                             </div>
-                                  </td>
-                              `;
-
-                              // Increment the counter for the next row
-                              counter++;
-
-                              // Append the row to the table body
-                              tableBody.appendChild(row);
-                          }
-                      });
-                   }
-
-
-               });
-           });
          sortAndFormatAllTables();
  // Add event listener for the availability button click
             $(document).on('click', '.delivery-button', function() {
@@ -672,13 +204,13 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                                 var solutionName = $(this).data('solutionName');
                                 var deviceId=$(this).data('deviceId');
                                  var htmlToAdd = `
-                                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
                                       <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                                   </div>
                               `;
-                              $('.modal-body').html(htmlToAdd);
-                              $('#publicModalLabel').text("Have you received the device ?");
+                              $('.ModalMedium').html(htmlToAdd);
+                              $('#publicModalMediumLabel').text("Have you received the device ?");
                               $('#AcceptBtn').click(function() {
 
                                var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
@@ -712,7 +244,7 @@ window.initServiceAccessoriesListDataTable = function () {    // Perform a singl
                                     });
 
                               });
-                              showModal();
+                              showModalMedium();
 
             });
             $(document).on('click', '.view-button-availability', function() {

@@ -1,11 +1,16 @@
 package com.device.DeviceManagement.controller.service;
 
+import com.device.DeviceManagement.model.AddData;
 import com.device.DeviceManagement.model.Category;
 import com.device.DeviceManagement.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +20,12 @@ public class CategoriesService {
     @Autowired
     private CategoryRepository categoryRepository;
     // Check cache first, if not found, load from DB and cache it
+    @Cacheable(value = "CategoriesService", key = "#page + '-' + #size")
+    public Page<Category> getPagedAddData(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return categoryRepository.findByStatus("1", pageable);
+    }
+
     @Cacheable(value = "CategoriesService")
     public List<Category> Category() {
         System.out.println("Fetching user from DB...");

@@ -148,7 +148,7 @@ public class purchase {
                 requestData.setInventory(requestData.getInventory());
                 // Save the updated RequestData document
                 requestDataRepository.save(requestData);
-                requestDataService.update();
+                requestDataService.clearCache();
                 // Return success message
                 return ResponseEntity.ok("Purchase proposal saved successfully!");
             } else {
@@ -230,7 +230,7 @@ public class purchase {
                 serviceRequestRepository.save(requestData);
             }
 
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
             return ResponseEntity.ok("Purchase proposal saved successfully!");
         } catch (Exception e) {
 
@@ -254,7 +254,7 @@ public class purchase {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -289,7 +289,7 @@ public class purchase {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -336,7 +336,7 @@ public class purchase {
 
                 // generate new
                 addDataRepository.save(new AddData(deviceId,device,device.getUserName(),categoryName,formattedDateTime,currentDate,allParams,"1"));
-                addDataService.update();
+                addDataService.clearCache();
 
                 return ResponseEntity.ok("Device Data Updated successfully");
             } else {
@@ -415,7 +415,7 @@ public class purchase {
 
             // Persist changes
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Data saved successfully");
 
@@ -481,7 +481,7 @@ public class purchase {
             // servicePriceService.savePrice(serviceId, solutionCategory, solutionName, problemName, price);
 
             // Return success response
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
             return ResponseEntity.ok("Data saved successfully!");
 
         } catch (Exception ex) {
@@ -563,8 +563,8 @@ public class purchase {
 
             // Perform necessary logic (e.g., saving to a database)
 
-            requestDataService.update();
-            serviceRequestService.update();
+            requestDataService.clearCache();
+            serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Purchase list added successfully!");
         } catch (Exception e) {
@@ -635,8 +635,8 @@ public class purchase {
             }
 
             // Perform necessary logic (e.g., saving to a database)
-            requestDataService.update();
-            serviceRequestService.update();
+            requestDataService.clearCache();
+            serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Purchase list added successfully!");
         } catch (Exception e) {
@@ -712,8 +712,8 @@ public class purchase {
 
         try {
 
-            addDataService.update();
-            requestDataService.update();
+            addDataService.clearCache();
+            requestDataService.clearCache();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -762,7 +762,7 @@ public class purchase {
         adddata.setDeviceUsers(list);
 
         addDataRepository.save(adddata);
-        addDataService.update();
+        addDataService.clearCache();
 
         try {
 
@@ -827,8 +827,8 @@ public class purchase {
         requestDataRepository.save(data);
         try {
 
-            addDataService.update();
-            requestDataService.update();
+            addDataService.clearCache();
+            requestDataService.clearCache();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -918,8 +918,8 @@ public class purchase {
 
         try {
 
-            addDataService.update();
-            serviceRequestService.update();
+            addDataService.clearCache();
+            serviceRequestService.clearCache();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -957,7 +957,7 @@ public class purchase {
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
 
-            requestDataService.update();
+            requestDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -1015,7 +1015,7 @@ public class purchase {
             });
             // Persist changes
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         }
 
 
@@ -1209,7 +1209,7 @@ public class purchase {
 
             }
         });
-        addDataService.update();
+        addDataService.clearCache();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
             PdfWriter writer = new PdfWriter(baos);

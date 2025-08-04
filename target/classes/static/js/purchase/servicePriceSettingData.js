@@ -67,21 +67,21 @@ window.initServicePriceDataGeneral = function () {
 
          if (buttonId === "accepted"){
           var htmlToAdd = `
-                     <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                     <div class="mb-3" style="margin-left: 0%; text-align: center;">
                          <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                      </div>
                  `;
 
                  // Add the HTML code to the modal body using jQuery
-                 $('.modal-body').html(htmlToAdd);
-                   $('#publicModalLabel').text("Do you want to save price information ?")
+                 $('.ModalMedium').html(htmlToAdd);
+                   $('#publicModalMediumLabel').text("Do you want to save price information ?")
 
                    $('#saveEditBtn').click(function() {
                      addTableInformationOfService(serviceId);
                      });
 
-               showModal();
+               showModalMedium();
          }
          else if (buttonId === "chat") {
 
@@ -778,23 +778,49 @@ function setPriceData1(rowData) {
     });
 }
 
-window.initServicePriceDataTable = function () {     // Perform a single AJAX call
+window.initServicePriceDataTable = function () {
+    const tableBody = document.getElementById("servicePriceTableBody1");
+    if (!tableBody) {
+        console.error("Table body with ID 'servicePriceTableBody1' not found.");
+        return;
+    }
+
+    function generateRowKeyFromRow(row) {
+        return Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+    }
+
+    function generateRowKeyFromData(sn, bivagName, categoryName, problemName, solution, presentTime) {
+        const value = (solution.value || '').trim().replace(/\n/g, '');
+        return [
+            sn, bivagName, categoryName, problemName,
+            solution.category, solution.name, value,
+            solution.price || '', solution.purchaseManInfoOfPriceStatus || '', presentTime || ''
+        ].join('|');
+    }
+
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = generateRowKeyFromRow(row);
+        currentRowMap.set(key, row);
+    });
+
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            console.log(data); // Log the entire data for debugging
+          data: {
+                                page: pageNumber,
+                                size: localStorage.getItem("pageSize") || 0
+                            },
+        success: function (data) {
+            const allData = data['serviceRequests'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
 
-            var allData = data['serviceRequests'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("servicePriceTableBody1");
-
-            // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-
+                allAddData.forEach(device => {
                     if (device.categoryName === categoryName) {
                         count++;
                     }
@@ -802,79 +828,82 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const bivagName = device.departmentName;
+                const categoryName = device.categoryName;
+                const sn = device.visibleServiceId;
+                const presentTime = device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A";
 
-           // Loop through each device in allData
-           allData.forEach(function(device) {
-               const bivagName = device.departmentName;
-               const categoryName = device.categoryName;
-               const sn=device.visibleServiceId;
+                if (!Array.isArray(device.allProblem)) return;
 
-               // Loop through each problem in the allProblem array for the device
-               device.allProblem.forEach(function(problem) {
-                   console.log("Problem Name:", problem.name);
-                   console.log("Proposal Solutions:");
+                device.allProblem.forEach(problem => {
+                    if (!Array.isArray(problem.proposalSolution)) return;
 
-                   // Loop through each proposalSolution in the problem
-                   problem.proposalSolution.forEach(function(solution) {
-                      // if (solution.action === "accept" && device.cooAcceptOfServiceRequest === 'Accepted') {
-                           const row = document.createElement("tr");
+                    problem.proposalSolution.forEach((solution, index) => {
+                        if (!solution.name) return;
 
-                           console.log("Name:", solution.name);
-                           console.log("Value:", solution.value);
-                           console.log("Category:", solution.category);
-                           console.log("Price:", solution.price);
-                           console.log("Action:", solution.action);
-                           console.log("Comment:", solution.comment);
-                           var status=solution.purchaseManInfoOfPriceStatus;
-                           if(status==null){
-                           status=" ";
-                           }
+                        const availability = getAvailability(solution.category);
+                        const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, presentTime);
+                        newRowKeys.add(rowKey);
 
-                            console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
+                        if (!currentRowMap.has(rowKey)) {
+                            const row = document.createElement("tr");
 
-                           // Determine availability
-                           const availability = getAvailability(solution.category);
+                            const inputId = `priceInput_${sn}_${index}_${Math.floor(Math.random() * 1000)}`;
 
-                           // Create and append cells to the row
-                           row.innerHTML = `
-                               <td >${sn}</td>  <!-- Dynamic Counter -->
-                               <td>${bivagName}</td>
-                               <td>${categoryName}</td>
-                               <td>${problem.name}</td>
-                               <td>${solution.category}(${solution.name}-${solution.value})</td>
-                                <td>
-                                    <input type="text" name="inputField" id="inputField" placeholder="Enter Price" class="form-control" value="${solution.price}">
+                            row.innerHTML = `
+                                <td>${sn}</td>
+                                <td>${bivagName}</td>
+                                <td>${categoryName}</td>
+                                <td>${problem.name}</td>
+                                <td class="text-start">
+                                    <div class="compact-cell bg-light">
+                                        <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                        <div>${(solution.value || '').trim().replace(/\n/g, "<br>")}</div>
+                                    </div>
                                 </td>
-
-                               <td>
-                               ${status}
-                               </td>
-                               <td>${solution.purchaseProposalToCooTime ? formatDateTimeToAmPm(solution.purchaseProposalToCooTime) : "N/A"}</td>
-                               <td>
-
-                                  <div class="d-flex justify-content-center align-items-center action-button-container">
-                                               ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted" ? `
-                                                <button class="btn btn-sm text-white setPriceBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Set Price">✔</button>
-                                            ` : ""}
-                                            <button class="btn btn-info btn-sm view-button-selected-device"  data-category="${solution.category}" data-service-id="${device.id}" data-button-id="view" data-device-id="${solution.inventoryToServiceCenterDeviceId}" >
+                                <td>
+                                    <input type="text" class="form-control price-input" id="${inputId}" name="inputField" placeholder="Enter Price" value="${solution.price || ''}">
+                                </td>
+                                <td>${solution.purchaseManInfoOfPriceStatus || ' '}</td>
+                                <td>${presentTime}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center action-button-container">
+                                        ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted" ? `
+                                            <button class="btn btn-sm text-white setPriceBtn"
+                                                data-category="${solution.category}"
+                                                data-solution-name="${solution.name}"
+                                                data-problem-name="${problem.name}"
+                                                data-service-id="${device.id}"
+                                                data-button-id="accepted"
+                                                style="background-color:green;" title="Set Price">✔</button>
+                                        ` : ''}
+                                        <button class="btn btn-info btn-sm view-button-selected-device"
+                                            data-category="${solution.category}"
+                                            data-service-id="${device.id}"
+                                            data-button-id="view"
+                                            data-device-id="${solution.inventoryToServiceCenterDeviceId}">
                                             &#128065;
                                         </button>
-                                          </div>
-                               </td>
-                           `;
+                                    </div>
+                                </td>
+                            `;
 
-                           // Increment the counter for the next row
-                           counter++;
+                            tableBody.appendChild(row);
+                        }
+                    });
+                });
+            });
 
-                           // Append the row to the table body
-                           tableBody.appendChild(row);
-                      // }
+            // Remove old rows not in current data
+            currentRowMap.forEach((row, key) => {
+                const firstCellText = row.cells[0]?.textContent.trim();
+               if (!newRowKeys.has(key) || (firstCellText && firstCellText.startsWith("R"))) {
+                   row.remove();
+               }
+            });
 
 
-                   });
-               });
-           });
            sortAndFormatAllTables();
  // Add event listener for the availability button click
             $(document).on('click', '.view-button-selected-device', function() {
@@ -977,7 +1006,7 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
                     <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
                     <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
                 </div>
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                <div class="mb-3" style="margin-left: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
@@ -985,7 +1014,7 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
 
             // Add the HTML code to the modal body using jQuery
             $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to update delivery date?");
+            $('#publicModalMediumLabel').text("Do you want to update delivery date?");
 
             // Add event listener for save button
             $('#saveEditBtn').click(function() {
@@ -1015,7 +1044,7 @@ window.initServicePriceDataTable = function () {     // Perform a single AJAX ca
                        });
                     });
 
-            showModal();
+            showModalMedium();
         });
  // Add event listener for the availability button click
             $(document).on('click', '.setPriceBtn', function() {// Get the clicked button

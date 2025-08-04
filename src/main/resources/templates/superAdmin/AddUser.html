@@ -36,20 +36,53 @@
                     </div>
 
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
 
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="userTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
                 <!-- Category Table -->
-                <table id="userTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">User Name</th>
-                        <th scope="col" style="background-color: gray;">User Id</th>
-                        <th scope="col" style="background-color: gray;">User Password</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray; display:none;" >Action</th>
-                    </tr>
-                    </thead>
+                    <table id="userTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('userTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('userTable', 1, this)|">
+                                User Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('userTable', 2, this)|">
+                                User Id <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('userTable', 3, this)|">
+                                User Password <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('userTable', 4, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Hidden Action Column (Not sortable) -->
+                            <th scope="col" style="background-color: gray; display:none;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="userTableBody">
                     <tr th:each="user, iterStat : ${allUsers}">
                         <td  th:text="${iterStat.count}">1</td>

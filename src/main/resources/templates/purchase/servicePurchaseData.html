@@ -27,6 +27,16 @@
                 <div class="d-flex justify-content-center mb-2">
                     <button class="btn btn-success btn-sm" onclick="addTableInformationOfService()" >Add</button>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="serviceAccessoriesDataTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
                 <table id="serviceAccessoriesDataTable" >
                     <thead>

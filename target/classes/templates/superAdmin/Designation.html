@@ -28,18 +28,43 @@
                     </div>
 
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
 
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="designationTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
                 <!-- Category Table -->
-                <table id="designationTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="designationTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('designationTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('designationTable', 1, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('designationTable', 2, this)">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action column (non-sortable) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="designationTableBody">
                     <tr th:each="category, iterStat : ${designations}">
                         <td  th:text="${iterStat.count}">1</td>

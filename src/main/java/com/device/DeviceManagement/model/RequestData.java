@@ -227,15 +227,26 @@ public class RequestData implements Serializable {
 
     @Override
     public String toString() {
-        return "AddData{" +
+        return "RequestData{" +
                 "id='" + id + '\'' +
                 ", departmentName='" + departmentName + '\'' +
                 ", date='" + date + '\'' +
+                ", requestMode='" + requestMode + '\'' +
                 ", presentTime='" + presentTime + '\'' +
+                ", visibleRequestId='" + visibleRequestId + '\'' +
+                ", cooAcceptedTime='" + cooAcceptedTime + '\'' +
+                ", cooDeviceRequestAcceptedManInfo='" + cooDeviceRequestAcceptedManInfo + '\'' +
                 ", allData=" + allData +
                 ", status='" + status + '\'' +
+                ", deviceReceivedStatus='" + deviceReceivedStatus + '\'' +
+                ", deviceReceivedTime='" + deviceReceivedTime + '\'' +
+                ", rejectCause='" + rejectCause + '\'' +
+                ", inventory=" + inventory +
+                ", purchase=" + purchase +
+                ", customerCare=" + customerCare +
                 '}';
     }
+
     @Setter
     @Getter
     public static class Inventory implements Serializable{

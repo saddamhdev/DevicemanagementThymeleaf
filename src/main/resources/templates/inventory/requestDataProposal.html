@@ -27,26 +27,76 @@
                 </div>
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestInventoryProposalTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="requestInventoryProposalTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;color:white">SN</th>
-                        <th scope="col" style="background-color: gray;color:white">Bivag Name</th>
-                        <th scope="col" style="background-color: gray;color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${requestColumns}"
-                            th:if="${column.visibleType} == 'yes'"
-                            th:text="${column.columnName}"
-                            style="background-color: gray;color:white">
-                        </th>
-                        <th scope="col" style="background-color: gray;color:white"> Status In Purchase</th>
-                        <th scope="col" style="background-color: gray;color:white">  Status In COO</th>
-                        <th scope="col" style="background-color: gray;color:white"> Purchase Device Delivery Status </th>
-                        <th scope="col" style="background-color: gray;color:white">Request Time</th>
-                        <th scope="col" style="background-color: gray;color:white">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="requestInventoryProposalTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Bivag Name -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic Columns -->
+                            <th th:each="column, iter : ${requestColumns}"
+                                th:if="${column.visibleType} == 'yes'"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', ${3 + iter.index}, this)|"
+                                style="background-color: gray; color:white">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Static Columns After Dynamic -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', ${3 + requestColumns.size()}, this)|">
+                                Status In Purchase <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', ${4 + requestColumns.size()}, this)|">
+                                Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', ${5 + requestColumns.size()}, this)|">
+                                Purchase Device Delivery Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryProposalTable', ${6 + requestColumns.size()}, this)|">
+                                Request Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action column (no sort) -->
+                            <th scope="col" style="background-color: gray; color:white">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="requestInventoryProposalTableBody">
                     <tr th:each="device, iterStat : ${requestData}" th:if="${device.requestMode == 'Accepted' && device.inventory?.inventoryStatus=='Purchased' }" onclick="printRowDataForCustomerCare(this)">
                         <td  th:text="${device.visibleRequestId}" >1</td>

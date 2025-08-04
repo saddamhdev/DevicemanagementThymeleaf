@@ -1,4 +1,42 @@
+function distributeDeviceDirect(deviceId) {
+alert(deviceId);
+    // Retrieve additional data from elements
+    var departmentElement = $(".departmentName"); // Ensure this selector targets the correct element
+    var departmentName = departmentElement.data("departmentname"); // e.g., "IT"
+    var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "Saho"
+    var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "SahoId"
 
+    // Get the selected starting date and username
+    var startingDate = $('#calendar').val(); // Fetch value from the date input
+    var userName = $('#userInputFieldAdd').val(); // Fetch value from the user input field
+
+    // Create the data object to send
+    var dataToSend = {
+        deviceId: deviceId,
+        departmentName: departmentName,
+        departmentUserName: departmentUserName,
+        departmentUserId: departmentUserId,
+        startingDate: startingDate,
+        userName: userName
+    };
+
+    // AJAX call to save data
+    $.ajax({
+        url: '/departmentUser/distributeDeviceDirect', // URL to your endpoint for saving data
+        type: 'POST',
+        contentType: 'application/json', // Set content type to JSON
+        data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
+        success: function(response) {
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
+        },
+        error: function(xhr, status, error) {
+            console.error("Error saving data: " + error);
+        }
+    });
+}
 function addTableInformationOfService(deviceId,comment,categoryName){
          var formData=$("#problemForm").serialize();
           var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
@@ -97,6 +135,7 @@ function editTableInformationOfDevice(deviceId,categoryName){
 
 
 function addDeviceInformation(){
+
   var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
   var departmentName = departmentElement.data("departmentuser-name");
 
@@ -149,8 +188,8 @@ function addDeviceInformation(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Old Device Information")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Old Device Information1")
 
              print('userAccountData', function(userAccountData) {
                        if (userAccountData) {
@@ -280,7 +319,7 @@ function addDeviceInformation(){
                 saveTableInformationOfDevice(categoryName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
 
@@ -298,7 +337,67 @@ window.initDeviceInformationGeneral = function () {
     }
 
     const buttonText = button.text().trim(); // Get button text (trimming leading/trailing spaces)
-    if(button.hasClass("componentsView")){
+  if(button.hasClass("distributeDevice")){
+         addDeviceInformation22();
+        function addDeviceInformation22(){
+          var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
+          var departmentName = departmentElement.data("departmentuser-name");
+
+         var htmlToAdd = `
+                       <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                            <div class="dropdown">
+                                <label for="userInputFieldAdd" class="form-label">User Name</label>
+                                <input type="text" class="form-control dropdown-toggle custom-width" id="userInputFieldAdd" data-bs-toggle="dropdown" placeholder="Search User" aria-expanded="false">
+                                <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownUserFieldPopupBox" id="userInputAddUlList">
+                                    <div id="listItemAddUser"></div>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                           <label for="calendar"  class="form-label dropdown-toggle custom-width">Using starting Date:</label>
+                           <input type="datetime-local" id="calendar" name="calendar" class="form-control" style="width: 100%;"  th:data-user-id=" ">
+                       </div>
+
+
+                        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                            <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+
+                    `;
+
+                    // Add the HTML code to the modal body using jQuery
+                    $('.ModalMedium').html(htmlToAdd);
+                    $('#publicModalMediumLabel').text("Add Old Device Information")
+
+                     print('userAccountData', function(userAccountData) {
+                               if (userAccountData) {
+                                   // Generate HTML for categories
+                                   var categoriesHtml = '';
+                                   userAccountData.forEach(function(category) {
+                                    if(departmentName===category.branchName)
+                                       categoriesHtml += `<li><a class="dropdown-item userInputEachItem" href="#" th:text="${category.userName}" data-user-id="${category.userId}">${category.userName}</a></li>`;
+                                   });
+
+                                   // Insert evaluated Thymeleaf expression
+                                   $('#listItemAddUser').html(categoriesHtml);
+                               }
+                           });
+
+                  selectionAndInputUserInfo();
+
+
+                     $('#saveEditBtn').click(function() {
+                         var categoryName=$('#deviceInputFieldAdd').val();
+                         distributeDeviceDirect(deviceId);
+                        });
+
+                  showModalMedium();
+
+        }
+
+     }
+   else if(button.hasClass("componentsView")){
 
 
                          var selectedDevices = [];
@@ -420,7 +519,7 @@ window.initDeviceInformationGeneral = function () {
              }
      else if (button.hasClass("Edit")) {
       // Handle edit button click (add your logic here)
-      console.log("Edit button clicked!");
+     // console.log("Edit button clicked!");
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
        if (!deviceId) {
@@ -447,8 +546,8 @@ window.initDeviceInformationGeneral = function () {
         `;
 
         // Add the HTML code to the modal body using jQuery
-        $('.modal-body').html(htmlToAdd);
-          $('#publicModalLabel').text("Edit Device Information")
+        $('.ModalMedium').html(htmlToAdd);
+          $('#publicModalMediumLabel').text("Edit Device Information")
          print('categories', function(categories) {
                if (categories) {
                    // Generate HTML for categories
@@ -657,7 +756,7 @@ window.initDeviceInformationGeneral = function () {
               editTableInformationOfDevice(deviceId,categoryName);
             });
 
-          showModal();
+          showModalMedium();
 
       // Adding a delay of 500ms before populating a section
       setTimeout(() => {
@@ -714,7 +813,7 @@ window.initDeviceInformationGeneral = function () {
     }
     else  if (button.hasClass("Service")) {
                // Handle edit button click (add your logic here)
-               console.log("Edit button clicked!");
+             //  console.log("Edit button clicked!");
                const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
                 if (!deviceId) {
@@ -743,8 +842,8 @@ window.initDeviceInformationGeneral = function () {
                         </div>
                     `;
 
-                    $('.modal-body').html(htmlToAdd);
-                    $('#publicModalLabel').text("Service Request");
+                    $('.ModalMedium').html(htmlToAdd);
+                    $('#publicModalMediumLabel').text("Service Request");
 
                     // Function to add a new problem input
                     function addNewProblem() {
@@ -793,7 +892,7 @@ window.initDeviceInformationGeneral = function () {
                     });
 
                     // Show the modal
-                    showModal();
+                    showModalMedium();
 
                   /*if (confirm(`Are you sure you want to edit device ${deviceId}?`)) {
                       console.log("edited done.");

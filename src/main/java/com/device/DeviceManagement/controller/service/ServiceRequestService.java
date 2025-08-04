@@ -1,5 +1,6 @@
 package com.device.DeviceManagement.controller.service;
 
+import com.device.DeviceManagement.model.RequestData;
 import com.device.DeviceManagement.model.ServiceRequest;
 import com.device.DeviceManagement.model.User;
 import com.device.DeviceManagement.repository.ServiceRequestRepository;
@@ -8,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +22,11 @@ public class ServiceRequestService {
     @Autowired
     private ServiceRequestRepository serviceRequestRepository;
     // Check cache first, if not found, load from DB and cache it
+    @Cacheable(value = "ServiceRequestService", key = "#page + '-' + #size")
+    public Page<ServiceRequest> getPagedAddData(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return serviceRequestRepository.findByStatus("1", pageable);
+    }
     @Cacheable(value = "ServiceRequestService")
     public List<ServiceRequest> add() {
         System.out.println("Fetching user from DB...");

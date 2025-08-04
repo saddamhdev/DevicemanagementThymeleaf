@@ -96,7 +96,7 @@ public class Inventory {
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
 
-            requestDataService.update();
+            requestDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -128,7 +128,7 @@ public class Inventory {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -157,7 +157,7 @@ public class Inventory {
                 requestDataRepository.save(data); // Save the updated category
 
 
-                requestDataService.update();
+                requestDataService.clearCache();
                 return ResponseEntity.ok("Request data Updated successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -189,7 +189,7 @@ public class Inventory {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -248,7 +248,7 @@ public class Inventory {
                 });
                 // Persist changes if needed
                 serviceRequestRepository.save(requestData1);
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
             }
 
             // Here, you can handle each form data based on formId and proposalId
@@ -284,7 +284,7 @@ public class Inventory {
             });
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -330,7 +330,7 @@ public class Inventory {
             });
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -384,7 +384,7 @@ public class Inventory {
         adddata.setDeviceUsers(list);
 
         addDataRepository.save(adddata);
-        addDataService.update();
+        addDataService.clearCache();
 
         try {
 
@@ -399,18 +399,11 @@ public class Inventory {
     @ResponseBody
     public ResponseEntity<String> addPurchaseList(@RequestBody PurchaseRequestDTO purchaseRequest) {
         try {
-            // Extract department information
-            System.out.println("Department Name: " + purchaseRequest.getDepartmentName());
-            System.out.println("Department User Name: " + purchaseRequest.getDepartmentUserName());
-            System.out.println("Department User ID: " + purchaseRequest.getDepartmentUserId());
-
             // Extract and process services
             List<ServiceDTO> services = purchaseRequest.getServices();
             if (services != null) {
                 services.forEach(service -> {
-                    System.out.println("Service ID: " + service.getServiceId());
-                    System.out.println("Problem Name: " + service.getProblemName());
-                    System.out.println("Solution Name: " + service.getSolutionName());
+
                     Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(service.getServiceId(), "1");
 
                     if (optionalRequestData.isPresent()) {
@@ -418,7 +411,6 @@ public class Inventory {
 
                         // Iterate through each problem in the service request
                         requestData.getAllProblem().forEach(problem -> {
-                            System.out.println("Processing problem: " + problem.getName());
                             if (problem.getName().equals(service.getProblemName())) {
                                 // Find and update the existing solution's price by name
                                 problem.getProposalSolution().forEach(proposalSolutionItem -> {
@@ -438,7 +430,7 @@ public class Inventory {
                         });
                         // Persist changes
                         serviceRequestRepository.save(requestData);
-                        serviceRequestService.update();
+                        serviceRequestService.clearCache();
                     }
                 });
             }
@@ -483,7 +475,7 @@ public class Inventory {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
 
 
@@ -545,8 +537,8 @@ public class Inventory {
 
             addDataRepository.save(deviceRequestData);
 
-            requestDataService.update();
-            addDataService.update();
+            requestDataService.clearCache();
+            addDataService.clearCache();
 
 
         } else {
@@ -623,8 +615,8 @@ public class Inventory {
             addDataRepository.save(deviceRequestData);
         }
 
-        serviceRequestService.update();
-        addDataService.update();
+        serviceRequestService.clearCache();
+        addDataService.clearCache();
         return ResponseEntity.ok("Selected rows processed successfully");
     }
     @PostMapping("/sendDeliveryDeviceInventoryToCustomerCare")
@@ -664,7 +656,7 @@ public class Inventory {
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
-        requestDataService.update();
+        requestDataService.clearCache();
         return ResponseEntity.ok("Selected rows processed successfully");
     }
 
@@ -706,7 +698,7 @@ public class Inventory {
 
             addDataRepository.save(deviceRequestData);
 
-            addDataService.update();
+            addDataService.clearCache();
 
 
         } else {

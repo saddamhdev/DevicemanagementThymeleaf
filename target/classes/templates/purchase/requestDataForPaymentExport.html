@@ -27,29 +27,72 @@
                 </div>
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestForPaymentExportTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="requestForPaymentExportTable" >
-                    <thead>
+                    <table id="requestForPaymentExportTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
 
-                    <tr>
-                        <th scope="col" style="background-color: gray; color:white">SN</th>
-                        <th scope="col" style="background-color: gray; color:white">Bivag Name</th>
-                        <th scope="col" style="background-color: gray; color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th scope="col" style="background-color: gray; color:white">Description</th>
-                        <th scope="col" style="background-color: gray; color:white">Price</th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
 
-                        <th scope="col" style="background-color: gray; color:white">Proposal Status In COO</th>
-                        <th scope="col" style="background-color: gray; color:white">Export Status</th>
-                        <th scope="col" style="background-color: gray; color:white">Create Time</th>
-                        <th scope="col" style="background-color: gray; color:white">Action</th>
-                    </tr>
-                    </thead>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 3, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 4, this)|">
+                                Price <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 5, this)|">
+                                Proposal Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 6, this)|">
+                                Export Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestForPaymentExportTable', 7, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="requestForPaymentExportTableBody">
                     <tr th:each="device, iterStat : ${requestData}"
                         onclick="printRowDataForCustomerCare(this)"
                         th:if="${device.purchase != null and device.purchase.cooAns == 'Accepted'  }">
-                    <td  th:text="${device.visibleRequestId}" >1</td>
+                        <td  th:text="${device.visibleRequestId}" >1</td>
                         <td  th:text="${device.departmentName}" >1</td>
                         <td  th:text="${device.allData[category]}" >1</td>
                         <td style="text-align: left;" th:data-request-id="${device.id}" class="viewInfo"  >

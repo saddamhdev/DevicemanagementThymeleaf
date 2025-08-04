@@ -106,14 +106,15 @@ function editUserBtn($row) {
                        `;
 
                        // Add the HTML code to the modal body using jQuery
-                       $('.modal-body').html(htmlToAdd);
+                       $('.ModalMedium').html(htmlToAdd);
                        // edit individual column header
-                        $('#publicModalLabel').text("Edit User Information")
+                        $('#publicModalMediumLabel').text("Edit User Information")
                          $('#userNameEdit').val(userName);
                         $('#userIdEdit').val(userId);
                          $('#userPasswordEdit').val(userPassword);
                        // Show the modal
-                       $('#publicModal').modal('show');
+
+                         showModalMedium();
                     // Bind the click event to the Save button inside the modal
                            $('#saveEditBtn').click(function() {
                               editUserBtn($row);
@@ -123,7 +124,6 @@ function editUserBtn($row) {
 
 
         }  else if (buttonPressed.hasClass('Delete')) {
-         console.log("Row Index: " + rowIndex);
             // Perform actions for Delete button
 
             $.ajax({

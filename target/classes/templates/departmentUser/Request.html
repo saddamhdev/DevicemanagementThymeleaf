@@ -17,26 +17,70 @@
                 <div class="d-flex justify-content-center mb-2">
                     <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 10%;">Add</button>
                 </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
                 <!-- Category Table -->
-                <table id="requestTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;color:white">SN</th>
-                        <th scope="col" style="background-color: gray;color:white">Category</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${requestColumns}" th:text="${column.columnName}" style="background-color: gray;color:white"></th>
-                        <th scope="col" style="background-color: gray;color:white">Request Status in COO</th>
-                        <th scope="col" style="background-color: gray;color:white">Device Received Status</th>
-                        <th scope="col" style="background-color: gray;color:white">Create Time</th>
-                        <th scope="col" style="background-color: gray;color:white">Tracking</th>
-                        <th scope="col" style="background-color: gray;color:white" th:text="${departmentUserName}">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="requestTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', 1, this)|">
+                                Category <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic columns -->
+                            <th th:each="column, iter : ${requestColumns}"
+                                th:onclick="|window.sortTable('requestTable', ${iter.index + 2}, this)|"
+                                style="background-color: gray; color:white">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Static columns after dynamic ones -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 2}, this)|">
+                                Request Status in COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 3}, this)|">
+                                Device Received Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 4}, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 5}, this)|">
+                                Tracking <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white">
+                                <span th:text="${departmentUserName}">Action</span>
+                            </th>
+                        </tr>
+                        </thead>
+
                     <tbody id="requestTableBody">
                     <tr th:each="device, iterStat : ${requestData}"
-                        th:if="${device.departmentName == departmentUserName}"
-                        onclick="printRowDataForCustomerCare(this)">
+                        th:if="${device.departmentName == departmentUserName}">
 
                         <td th:text="${device.visibleRequestId}">1</td>
                         <td th:text="${device.allData[category]}">1</td>
@@ -83,6 +127,9 @@
                         </td>
 
                     </tr>
+                    <tr class="last-page-flag"  th:data-lastpage="${lastPage}" th:data-totalpage="${totalPage}"  style="display:none;"></tr>
+                    <tr class="last-page-flag"  th:data-lastpagedeviceInformation="${lastPagedeviceInformation}" th:data-totalpagedeviceInformation="${totalPagedeviceInformation}"  style="display:none;"></tr>
+
                     </tbody>
 
                 </table>

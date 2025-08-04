@@ -109,11 +109,11 @@ window.initServiceColumnGeneral = function () {
                        `;
 
                        // Add the HTML code to the modal body using jQuery
-                       $('.modal-body').html(htmlToAdd);
+                       $('.ModalMedium').html(htmlToAdd);
                         // Set the values for the select elements
                        $('#requiredTypeEditService').val(requiredType);
                        $('#visibleTypeEditService').val(visibleType);
-                       $('#publicModalLabel').text("Edit column Information");
+                       $('#publicModalMediumLabel').text("Edit column Information");
 
                        $.ajax({
                                type: "POST",
@@ -139,7 +139,7 @@ window.initServiceColumnGeneral = function () {
                            EditTableInformationOfService(serviceIdData );
                            });
 
-                     showModal();
+                     showModalMedium();
         } else if (buttonPressed.hasClass('Delete')) {
             const serviceId = button.data('serviceId');
             if (!serviceId) {

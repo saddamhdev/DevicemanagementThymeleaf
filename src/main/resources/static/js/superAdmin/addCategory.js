@@ -33,7 +33,6 @@
 
         if (buttonPressed.hasClass('Edit')) { // i want to check accept,denied, view and chat button
             // Perform actions for Edit button
-            console.log("Edit action here");
 
             // Display category name in a text field
             var newCategoryName = prompt("Edit Category Name:", categoryName);
@@ -66,7 +65,6 @@
         }  else if (buttonPressed.hasClass('Delete')) {
          console.log("Row Index: " + rowIndex);
             // Perform actions for Delete button
-            console.log("Category Name: " + categoryName);
             $.ajax({
                 url: '/superAdmin/deleteCategory', // URL to your delete endpoint
                 type: 'POST',

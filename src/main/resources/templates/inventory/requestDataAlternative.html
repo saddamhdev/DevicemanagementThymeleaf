@@ -27,29 +27,65 @@
                 </div>
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestInventoryAlternativeTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="requestInventoryAlternativeTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;color:white">SN</th>
-                        <th scope="col" style="background-color: gray;color:white">Bivag Name</th>
-                        <th scope="col" style="background-color: gray;color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${requestColumns}"
-                            th:if="${column.visibleType} == 'yes'"
-                            th:text="${column.columnName}"
-                            style="background-color: gray;color:white">
-                        </th>
+                    <table id="requestInventoryAlternativeTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
 
-                        <th scope="col" style="background-color: gray;color:white">  Status In COO</th>
-                        <th scope="col" style="background-color: gray;color:white"> Request Time</th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
 
-                        <th scope="col" style="background-color: gray;color:white">Action</th>
-                    </tr>
-                    </thead>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic columns from requestColumns -->
+                            <th th:each="column, iter : ${requestColumns}"
+                                th:if="${column.visibleType} == 'yes'"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', ${3 + iter.index}, this)|"
+                                style="background-color: gray; color:white">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Columns after dynamic -->
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', ${3 + requestColumns.size()}, this)|">
+                                Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestInventoryAlternativeTable', ${4 + requestColumns.size()}, this)|">
+                                Request Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="requestInventoryAlternativeTableBody">
                     <tr th:each="device, iterStat : ${requestData}" th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus=='Alternative Proposal Accepted' }" onclick="printRowDataForCustomerCare(this)">
-                        <td  th:text="${iterStat.count}" >1</td>
+                        <td  th:text="${device.visibleRequestId}" >1</td>
                         <td  th:text="${device.departmentName}" >1</td>
                         <td  th:text="${device.allData[category]}" >1</td>
                         <td th:each="individualColumn : ${requestColumns}"

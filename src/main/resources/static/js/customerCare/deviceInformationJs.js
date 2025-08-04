@@ -77,8 +77,8 @@ function addDeviceInformation(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Old Device Information")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Old Device Information")
              print('categories', function(categories) {
                    if (categories) {
                        // Generate HTML for categories
@@ -181,7 +181,7 @@ function addDeviceInformation(){
                 saveTableInformationOfDevice(categoryName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
 
@@ -228,8 +228,8 @@ window.initDeviceInformationGeneral = function () {
         `;
 
         // Add the HTML code to the modal body using jQuery
-        $('.modal-body').html(htmlToAdd);
-          $('#publicModalLabel').text("Edit Device Information")
+        $('.ModalMedium').html(htmlToAdd);
+          $('#publicModalMediumLabel').text("Edit Device Information")
          print('categories', function(categories) {
                if (categories) {
                    // Generate HTML for categories
@@ -425,7 +425,7 @@ window.initDeviceInformationGeneral = function () {
               editTableInformationOfDevice(deviceId,categoryName);
             });
 
-      showModal();
+      showModalMedium();
 
          /*if (confirm(`Are you sure you want to edit device ${deviceId}?`)) {
              console.log("edited done.");

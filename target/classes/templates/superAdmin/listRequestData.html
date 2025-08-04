@@ -17,21 +17,70 @@
                 <div style="text-align: right;">
                     <button class="btn btn-sm text-black small-button showButton"  style="display:none;"> < </button>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="listRequestInventoryTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="listRequestInventoryTable" >
-                    <thead>
-                    <tr>
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Bivag Name</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th scope="col" style="background-color: gray;">Description</th>
-                        <th scope="col" style="background-color: gray;"> Available Product</th>
-                        <th scope="col" style="background-color: gray;"> Status in Coo</th>
-                        <th scope="col" style="background-color: gray;color:white">Tracking</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="listRequestInventoryTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Bivag Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 1, this)">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 2, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Description -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 3, this)">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Available Product -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 4, this)">
+                                Available Product <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Status in COO -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 5, this)">
+                                Status in COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Tracking (can be sortable if applicable) -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('listRequestInventoryTable', 6, this)">
+                                Tracking <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action (no sorting) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="listRequestInventoryTableBody">
 
                     </tbody>

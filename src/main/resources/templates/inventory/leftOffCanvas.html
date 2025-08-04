@@ -22,40 +22,72 @@
     </div>-->
     <div class="offcanvas offcanvas-start show sideoffcanvus" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" style="background-color:#1d4961" >
         <div class="offcanvas-body ">
-            <div class=" d-flex flex-column align-items-center justify-content-center " style="margin-left:50px">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left:50px">
                 <img th:src="@{/img/sn.jpg}" alt="User Image"
                      class="rounded-circle"
                      style="width: 80px; height: 80px; object-fit: cover; border: 3px solid white;">
-                <div class="text-white mt-2 fw-bold" th:text="${departmentName}">COO</div>
-                <div class="text-white mt-2 mb-2 fw-bold" th:text="${userId}">User ID</div>
+
+                <div class="text-white mt-2 fw-bold">
+                    <i class="fas fa-user-tie me-1"></i>
+                    <span th:text="${departmentName}">COO</span>
+                </div>
+
+                <div class="text-white mt-2 mb-2 fw-bold">
+                    <i class="fas fa-id-badge me-1"></i>
+                    <span th:text="${userId}">User ID</span>
+                </div>
             </div>
+
             <ul class="list-group">
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'requestData')">Device Request</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'requestDataProposal')">Request Purchase</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'requestDataAlternative')">Request Alternative</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceAccessoriesPendingData')">Service Request</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceAccessoriesPendingPurchaseData')">Service Purchase</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceAccessoriesPendingAlternativeData')">Service Alternative</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceAccessoriesDeliveryData')">Service Accessories Delivery List</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">Device Information</li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'unOrderedDevice')">Un-Ordered Device</li>
+                <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
+                    <i class="fas fa-laptop me-2"></i> Device Request
+                    <i class="fas fa-chevron-down float-end"></i>
+                    <ul class="list-group nested-list">
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestData')">
+                            <i class="fas fa-file-alt me-2"></i> Request
+                        </li>
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestDataProposal')">
+                            <i class="fas fa-shopping-cart me-2"></i> Purchase
+                        </li>
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestDataAlternative')">
+                            <i class="fas fa-random me-2"></i> Alternative
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
+                    <i class="fas fa-tools me-2"></i> Service Request
+                    <i class="fas fa-chevron-down float-end"></i>
+                    <ul class="list-group nested-list">
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingData')">
+                            <i class="fas fa-file-alt me-2"></i> Request
+                        </li>
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingPurchaseData')">
+                            <i class="fas fa-shopping-cart me-2"></i> Purchase
+                        </li>
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingAlternativeData')">
+                            <i class="fas fa-random me-2"></i> Alternative
+                        </li>
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesDeliveryData')">
+                            <i class="fas fa-truck me-2"></i> Accessories Delivery List
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">
+                    <i class="fas fa-info-circle me-2"></i> Device Information
+                </li>
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'unOrderedDevice')">
+                    <i class="fas fa-ban me-2"></i> Un-Ordered Device
+                </li>
                 <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
                 </li>
-                <li class="list-group-item leftListBgColor" onclick="location.href='/'">
+                <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </li>
-                <!-- <li class="list-group-item leftListBgColor" onclick="toggleList(this)">User
-                     <i class="fas fa-chevron-down float-end"></i> &lt;!&ndash; Dropdown icon &ndash;&gt;
-                     &lt;!&ndash; First nested ul list &ndash;&gt;
-                     <ul class="list-group nested-list">
-                         <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'addUser')">Add User</li>
-
-                     </ul>
-                 </li>-->
-
-
             </ul>
+
 
         </div>
     </div>

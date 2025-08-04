@@ -109,7 +109,7 @@ public class Service {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -137,7 +137,7 @@ public class Service {
             requestData.setCustomerCare(customerCare);
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -183,8 +183,8 @@ public class Service {
             addDataRepository.save(deviceRequestData);
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -249,8 +249,8 @@ public class Service {
 
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -286,7 +286,7 @@ public class Service {
             });
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -351,8 +351,8 @@ public class Service {
         // Update delivery date in the database or perform other necessary actions
 
         // Return a success message
-        serviceRequestService.update();
-        addDataService.update();
+        serviceRequestService.clearCache();
+        addDataService.clearCache();
         return ResponseEntity.ok("Device was received successfully.");
     }
     @PostMapping("/addProblemSolutionOfService")
@@ -375,7 +375,7 @@ public class Service {
         allParams.remove("departmentName");
         allParams.remove("departmentUserName");
         allParams.remove("departmentUserId");
-
+       // System.out.println("Saddam");
         // Find the ServiceRequest document by requestId and status
         Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
 
@@ -390,7 +390,7 @@ public class Service {
                 // Normalize the problem name by replacing spaces with hyphens to match form IDs
                 String normalizedProblemName = problem.getName().replace(" ", "-");
 
-                // System.out.println("Processing problem: " + problem.getName());
+              //   System.out.println("Processing problem: " + problem.getName());
 
                 // Iterate over the remaining entries in allParams (which are the form data)
                 for (Map.Entry<String, Object> entry : allParams.entrySet()) {
@@ -400,13 +400,13 @@ public class Service {
                     if (normalizedProblemName.equals(formId)) {
                         List<Map<String, Object>> formData = (List<Map<String, Object>>) entry.getValue(); // Form data (list of key-value pairs)
 
-                        System.out.println("Matched form ID: " + formId);
-                        System.out.println("Form data: " + formData);
+                       // System.out.println("Matched form ID: " + formId);
+                       //System.out.println("Form data: " + formData);
 
                         // Clear existing proposalSolution if it exists
                         if (problem.getProposalSolution() != null) {
                             problem.getProposalSolution().clear();
-                            System.out.println("Cleared existing proposalSolution for problem: " + problem.getName());
+                           // System.out.println("Cleared existing proposalSolution for problem: " + problem.getName());
                         } else {
                             problem.setProposalSolution(new ArrayList<>());
                         }
@@ -415,6 +415,7 @@ public class Service {
                         formData.forEach(solutionData -> {
                             ServiceRequest.problems.ProposalSolutionItem data=new ServiceRequest.problems.ProposalSolutionItem();
                             String input = (String) solutionData.get("name");
+                            System.out.println(input);
                             String[] parts = input.split("\\(");  // Split by "("
                             // Print the first and second parts, trimming extra spaces
                             if (parts.length > 1) {
@@ -422,14 +423,14 @@ public class Service {
                                 data.setCategory(firstPart);
                                 String secondPart = parts[1].replace(")", "").trim();  // Get the second part after "(" and remove ")"
                                 data.setName(secondPart);
-                                System.out.println("First Part: " + firstPart);   // Output: "Laptop"
-                                System.out.println("Second Part: " + secondPart); // Output: "FITNESS - L"
+                                //System.out.println("First Part: " + firstPart);   // Output: "Laptop"
+                               // System.out.println("Second Part: " + secondPart); // Output: "FITNESS - L"
                                 data.setValue((String) solutionData.get("value"));
                                 data.setPrice(solutionData.containsKey("price") ? (String) solutionData.get("price") : "0");
                                 data.setAction(solutionData.containsKey("action") ? (String) solutionData.get("action") : " ");
                                 data.setComment(solutionData.containsKey("comment") ? (String) solutionData.get("comment") : " ");
                                 list.add(data);
-                                System.out.println("Added new solution item: " + data);
+                               // System.out.println("Added new solution item: " + data);
                             } else {
                                 System.out.println("Input does not contain a second part.");
                             }
@@ -445,7 +446,7 @@ public class Service {
 
             // Save the updated requestData object to the database
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+           serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Data saved successfully");
 
@@ -591,8 +592,8 @@ public class Service {
 
 
             serviceRequestRepository.save(requestData);
-            addDataService.update();
-            serviceRequestService.update();
+            addDataService.clearCache();
+            serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Data saved successfully");
 
@@ -734,8 +735,8 @@ public class Service {
 
 
             serviceRequestRepository.save(requestData);
-            addDataService.update();
-            serviceRequestService.update();
+            addDataService.clearCache();
+            serviceRequestService.clearCache();
 
             return ResponseEntity.ok("Data saved successfully");
 
@@ -829,7 +830,7 @@ public class Service {
         } else {
             System.out.println("No devices found with status '1'.");
         }
-        addDataService.update();
+        addDataService.clearCache();
         try {
             // Return last device ID if available
             if (lastDeviceId != null) {
@@ -886,7 +887,7 @@ public class Service {
 
 
         try {
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -899,7 +900,6 @@ public class Service {
     @ResponseBody
     public ResponseEntity<String> setServiceRequestToInventoryData(@RequestBody Map<String, Object> rowData) {
         try {
-            System.out.println("Received data: " + rowData);
             // Extract data
             String serviceId = rowData.getOrDefault("serviceId", "N/A").toString();
             String bibagName = rowData.getOrDefault("bibagName", "N/A").toString();
@@ -943,7 +943,7 @@ public class Service {
                 });
                 // Persist changes
                 serviceRequestRepository.save(requestData);
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
             }
 
 
@@ -1057,8 +1057,8 @@ public class Service {
 
             // Return the PDF file as a response
             byte[] pdfBytes = outputStream.toByteArray();
-            addDataService.update();
-            serviceRequestService.update();
+            addDataService.clearCache();
+            serviceRequestService.clearCache();
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=service_report.pdf")
                     .contentType(org.springframework.http.MediaType.APPLICATION_PDF)

@@ -25,24 +25,67 @@
 
                 <!-- Toggle Content Button -->
                 <!-- Category Table -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestPurchaseTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="requestPurchaseTable" >
-                    <thead>
+                    <table id="requestPurchaseTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
 
-                    <tr>
-                        <th scope="col" style="background-color: gray; color:white">SN</th>
-                        <th scope="col" style="background-color: gray; color:white">Bivag Name</th>
-                        <th scope="col" style="background-color: gray; color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th scope="col" style="background-color: gray; color:white">Description</th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
 
-                        <th scope="col" style="background-color: gray; color:white"> Status In Purchase</th>
-                        <th scope="col" style="background-color: gray; color:white"> Proposal Status In COO</th>
-                        <th scope="col" style="background-color: gray; color:white"> Purchase Device Delivery Status</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray; color:white">Action</th>
-                    </tr>
-                    </thead>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 3, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 4, this)|">
+                                Status In Purchase <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 5, this)|">
+                                Proposal Status <br> In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 6, this)|">
+                                Purchase Device <br> Delivery Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('requestPurchaseTable', 7, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="requestPurchaseTableBody">
                     <tr th:each="device, iterStat : ${requestData}"  onclick="printRowDataForCustomerCare(this)">
                         <td  th:text="${device.visibleRequestId}" th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus=='Purchased'}">1</td>

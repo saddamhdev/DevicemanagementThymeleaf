@@ -18,21 +18,59 @@
                     <button class="btn btn-success btn-sm" onclick="addDeviceInformation()" style=" white-space: nowrap;">Add Old Device</button>
 
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="deviceInformationTable" placeholder="Search ...">
+                    </div>
+                </div>
+
                 <div class="responsive-table-wrapper">
-                <table id="deviceInformationTable" >
-                    <thead id="tableHeaderAddData" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;color:white">SN</th>
-                        <th scope="col" style="background-color: gray;color:white">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${universalColumns}" th:text="${column.columnName}" style="background-color: gray;color:white"></th>
-                        <th scope="col" style="background-color: gray;color:white">Description</th>
-                        <th scope="col" style="background-color: gray;color:white">Components</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Device User</th>
-                        <th scope="col" style="background-color: gray;color:white">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="deviceInformationTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', 1, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic columns -->
+                            <th th:each="column, iter : ${universalColumns}"
+                                th:onclick="|window.sortTable('deviceInformationTable', ${iter.index+2}, this)|"
+                                 style="background-color: gray; color:white">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', ${universalColumns.size()+2}, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', ${universalColumns.size()+3}, this)|">
+                                Components <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', ${universalColumns.size()+4}, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationTable', ${universalColumns.size()+5}, this)|">
+                                Device User <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white">Action</th>
+                        </tr>
+                        </thead>
+
                     <tbody id="deviceInformationBody">
                     <tr th:each="device, iterStat : ${allDeviceData}"  th:if="${device.userName==departmentUserName}">
                         <td scope="row" th:text="${device.visibleId}">1</td>
@@ -65,14 +103,22 @@
 
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-tools text-primary small-button Service ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}"></button>
+                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}" title="Edit Device Information"></button>
+                                <button class="btn btn-sm  fas fa-tools text-primary small-button Service ms-2" th:data-device-id="${device.id}" title="Create Device Service Request"></button>
+                                <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}" title="Delete Device information"></button>
+                                <button  class="btn  btn-sm text-white distributeDevice" th:data-device-id="${device.id}" th:data-button-id="distributeDevice" style="background-color:green;" title="Distribute Device to Specific User">✔</button>
+
                             </div>
                         </td>
                     </tr>
+                    <tr class="last-page-flag"  th:data-lastpagedeviceInformation="${lastPagedeviceInformation}" th:data-totalpagedeviceInformation="${totalPagedeviceInformation}"  style="display:none;"></tr>
+
+
                     </tbody>
                 </table>
+
+
+
                 </div>
             </div>
         </div>
@@ -120,6 +166,7 @@
                         </td>
 
                     </tr>
+                    <tr class="last-page-flag"  th:data-lastpage="${lastPage}" th:data-totalpage="${totalPage}"  style="display:none;"></tr>
                     </tbody>
                 </table>
             </div>

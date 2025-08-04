@@ -25,19 +25,63 @@
                     <!--        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>-->
                     <button class="btn btn-success btn-sm" onclick="addInternalUser()" >Add</button>
                 </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="internalUserTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="internalUserTable" >
-                    <thead >
-                    <tr>
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Branch Name</th>
-                        <th scope="col" style="background-color: gray;">User Name</th>
-                        <th scope="col" style="background-color: gray;">User Id</th>
-                        <th scope="col" style="background-color: gray;">User Password</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="internalUserTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Branch Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 1, this)">
+                                Branch Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- User Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 2, this)">
+                                User Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- User Id -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 3, this)">
+                                User Id <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- User Password -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 4, this)">
+                                User Password <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Create Time -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 5, this)">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action (no sorting) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="internalUserTableBody">
                     <tr th:each="indoorUser, iterStat : ${indoorUsers}">
                         <td  th:text="${iterStat.count}">1</td>

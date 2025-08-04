@@ -144,31 +144,31 @@ window.initRequestDataAlternativeGeneral = function () {
 
         if (buttonId === "deliver") {
             var htmlToAdd = `
-                <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                <div class="mb-3" style="margin-right: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             `;
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to deliver this Product ?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to deliver this Product ?");
             $('#AcceptBtn').click(function() {
                 setRequestStatus(requestId, "Direct Delivery");
             });
-            showModal();
+            showModalMedium();
         }
         else if (buttonId === "purchase") {
             var htmlToAdd = `
-                <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                <div class="mb-3" style="margin-right: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             `;
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to Purchase this Product ?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to Purchase this Product ?");
             $('#AcceptBtn').click(function() {
                 setRequestStatus(requestId, "Purchased");
             });
-            showModal();
+            showModalMedium();
         }
         else if (buttonId === "chat") {
          var selectedDevices = [];
@@ -401,15 +401,15 @@ window.initRequestDataAlternativeGeneral = function () {
                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                  </div>
              `;
-             $('.modal-body').html(htmlToAdd);
-             $('#publicModalLabel').text(" Available  this Product ?");
+             $('.ModalMedium').html(htmlToAdd);
+             $('#publicModalMediumLabel').text(" Available  this Product ?");
              $('#AcceptBtn').click(function() {
                  setRequestStatusCheckAvailability(requestId, "Yes");
              });
               $('#AcceptBtnNot').click(function() {
                   setRequestStatusCheckAvailability(requestId, "No");
               });
-             showModal();
+             showModalMedium();
         }
     });
 };

@@ -15,9 +15,6 @@
     document.addEventListener("DOMContentLoaded", () => {
         updateSerialNumbers();
     });
-
-
-
 function  editRequestColumnBtn(requestId){
 
            var columnName=$('#requestNameEdit').val();
@@ -285,151 +282,155 @@ function setListRequestStatus(requestId){
                    <label for="listRejectCause" class="form-label">Reject Cause</label>
                    <input type="text" class="form-control" id="listRejectCause" placeholder="Cause"  required>
                </div>
-                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
                       <button type="button" class="btn btn-primary" id="DeniedBtn">Yes</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
 
               // Add the HTML code to the modal body using jQuery
-               $('.modal-body').html(htmlToAdd);
+               $('.ModalMedium').html(htmlToAdd);
               // edit individual column header
-               $('#publicModalLabel').text("Do you want to Denny this request ?");
+               $('#publicModalMediumLabel').text("Do you want to Denny this request ?");
 
                 $('#DeniedBtn').click(function() {
 
                         setListRequestStatus(requestId);
                  });
 
-               showModal();
+               showModalMedium();
         }
     });
 };
 
-
 window.initListRequestInventoryTable = function () {
-    // Perform a single AJAX call
+    const tableBody = document.getElementById("listRequestInventoryTableBody");
+    if (!tableBody) {
+        console.error("Table body element with id 'listRequestInventoryTableBody' not found.");
+        return;
+    }
+
+    // Step 1: Store current rows for comparison
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+        currentRowMap.set(key, row);
+    });
+
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            var allData = data['requestData'];
-            var requestColumns = data['requestColumns'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("listRequestInventoryTableBody");
-            if (!tableBody) {
-                console.error("Table body element with id 'requestForPaymentTableBody' not found.");
-                return;
-            }
-            // Function to check availability count
+         data: {
+                    page: pageNumber,
+                    size: localStorage.getItem("pageSize") || 0
+                },
+        success: function (data) {
+            const allData = data['requestData'];
+            const requestColumns = data['requestColumns'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
+
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-
-                    if (device.categoryName === categoryName && device.userName==='inventory') {
+                allAddData.forEach(device => {
+                    if (device.categoryName === categoryName && device.userName === 'inventory') {
                         count++;
                     }
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const inventoryStatus = device.inventory?.inventoryStatus;
+                if (inventoryStatus === 'Alternative Proposal' || inventoryStatus === 'Alternative Proposal Accepted') {
+                    const bivagName = device.departmentName || "N/A";
+                    const categoryName = device.allData["category"] || "N/A";
+                    const sn = device.visibleRequestId || "N/A";
+                    const availability = getAvailability(categoryName);
 
-           // Loop through each device in allData
-          allData.forEach(function (device) {
-              // Extract required variables
-              if(device.inventory.inventoryStatus==='Alternative Proposal' || device.inventory.inventoryStatus==='Alternative Proposal Accepted' )
-              {
-               const bivagName = device.departmentName || "N/A"; // Handle undefined cases
-                            const categoryName = device.allData["category"] || "N/A";
-                            const sn = device.visibleRequestId || "N/A";
-                            console.log(bivagName);
-                           const availability = getAvailability(categoryName);
-                            // Create a new row
-                            const row = document.createElement("tr");
-                              // Add the onclick attribute dynamically
-                              row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
-                            // Base table row HTML
-                            let htmlData = `
-                                <td>${sn}</td>  <!-- Serial Number -->
-                                <td>${bivagName}</td>
-                                <td>${device.allData["category"] || "N/A"}</td>
-                            `;
+                    const rowKeyParts = [
+                        sn, bivagName, categoryName,
+                        device.inventory?.inventoryToAlternativeDeviceRequestStatus || " ",
+                        availability
+                    ];
+                    const rowKey = rowKeyParts.join('|');
+                    newRowKeys.add(rowKey);
+                    if (currentRowMap.has(rowKey)) return;
 
-                            // Conditional cell for request information
-                            htmlData += `
-                                <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
-                                    <div th:if="${device.requestMode === 'Accepted' && device.inventory?.inventoryStatus === 'Purchased'}">
-                            `;
+                    const row = document.createElement("tr");
+                    row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
 
-                            // Loop through request columns to add additional data
-                            requestColumns.forEach(function (column) {
-                                if (column.visibleType === "yes") {
-                                    const columnName = column.columnName || "N/A";
-                                    const columnType = column.dataType || "text";
-                                    const value = device.allData[columnName] || "N/A";
+                    let htmlData = `
+                        <td>${sn}</td>
+                        <td>${bivagName}</td>
+                        <td>${categoryName}</td>
+                        <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
+                            <div>
+                    `;
 
-                                    if (columnType === "textarea") {
-                                        // Add textarea for columns with 'textarea' data type
-                                        htmlData += `
-                                            <div>
-                                                <textarea class="plain-textarea">${value}</textarea>
-                                            </div>
-                                        `;
-                                    } else {
-                                        // Add spans for other data types
-                                        htmlData += `
-                                            <div>
-                                                <span>${columnName}</span>: <span>${value}</span>
-                                            </div>
-                                        `;
-                                    }
-                                }
-                            });
+                    requestColumns.forEach(column => {
+                        if (column.visibleType === "yes") {
+                            const columnName = column.columnName || "N/A";
+                            const columnType = column.dataType || "text";
+                            const value = device.allData[columnName] || "N/A";
 
-                            // Close the div in the dynamic cell
-                            htmlData += `
-                                    </div>
-                                    <p  data-request-id="${device.id}" data-button-id="viewInfo">
-                                        &#128065;
-                                    </p>
-                                </td>
-                            `;
+                            htmlData += columnType === "textarea"
+                                ? `<div><textarea class="plain-textarea">${value}</textarea></div>`
+                                : `<div><span>${columnName}</span>: <span>${value}</span></div>`;
+                        }
+                    });
 
+                    htmlData += `
+                            </div>
+                            <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm viewAvailability"
+                                data-category-id="${categoryName}"
+                                data-request-id="${device.id}"
+                                data-button-id="viewAlternative"
+                                title="View Available Same Accessories Category Devices">
+                                ${availability}
+                            </button>
+                        </td>
+                        <td>${device.inventory?.inventoryToAlternativeDeviceRequestStatus || ' '}</td>
+                        <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status"
+                            data-request-id="${device.id}"
+                            style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; font-size: 14px;"
+                            onmouseover="this.style.backgroundColor='#0056b3'"
+                            onmouseout="this.style.backgroundColor='#007bff'"
+                            title="View Request data tracking information">View</td>
+                        <td>
+                            <div class="d-flex justify-content-center align-items-center action-button-container">
+                                <button class="btn btn-sm text-white viewAlternativeDevice"
+                                    data-request-id="${device.id}"
+                                    data-category-id="${categoryName}"
+                                    style="background-color:green;"
+                                    data-button-id="chat"
+                                    title="Accept Request">✔</button>
+                                <button class="btn btn-danger btn-sm delete-button"
+                                    data-request-id="${device.id}"
+                                    title="Cancel Request">&#10007;</button>
+                            </div>
+                        </td>
+                    `;
 
+                    row.innerHTML = htmlData;
+                    tableBody.appendChild(row);
+                }
+            });
 
-                        // Add new cells for `cooDeliveryAns` and `checkAvailability`
-                            htmlData += `
+            // Step 3: Remove outdated rows
+            currentRowMap.forEach((row, key) => {
+                if (!newRowKeys.has(key)) {
+                    row.remove();
+                }
+            });
 
-                                <td>
-                                    <button class="btn btn-info btn-sm viewAvailability" data-category-id="${categoryName}" data-request-id="${device.id}" data-button-id="viewAlternative" title="View Available Same Accessories Category Devices" >
-                                        ${availability}
-                                    </button>
-                                </td>
-                                <td>${device.inventory?.inventoryToAlternativeDeviceRequestStatus || ' '}</td>
-                                <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
-
-                            `;
-
-                          // Action buttons column
-                              htmlData += `
-                                  <td>
-                                      <div class="d-flex justify-content-center align-items-center action-button-container">
-                                           <button class="btn  btn-sm text-white viewAlternativeDevice" data-request-id="${device.id}" data-category-id="${device.allData['category']}" style="background-color:green;" data-button-id="chat" title="Accept Request">✔</button>
-                                          <button class="btn btn-danger btn-sm delete-button" data-request-id="${device.id}" title="Cancel Request">
-                                              &#10007;
-                                          </button>
-                                      </div>
-                                  </td>
-                              `;
-
-                            // Assign the HTML to the row and append it to the table body
-                            row.innerHTML = htmlData;
-                            tableBody.appendChild(row);
-              }
-
-          });
+          const myTable = document.querySelector("table");  // or more specific selector if you want
+          sortAndFormatTable(myTable);
 
             $(document).on('click', '.viewAlternativeDevice', function() {
                                    var category = $(this).data('category-id');
@@ -588,16 +589,16 @@ window.initListRequestInventoryTable = function () {
                             `;
 
                             // Add the HTML code to the modal body using jQuery
-                             $('.modal-body').html(htmlToAdd);
+                             $('.ModalMedium').html(htmlToAdd);
                             // edit individual column header
-                             $('#publicModalLabel').text("Do you want to Denny this request ?");
+                             $('#publicModalMediumLabel').text("Do you want to Denny this request ?");
 
                               $('#DeniedBtn').click(function() {
 
                                       //setRequestStatus(requestId,"Denied");
                                });
 
-                             showModal();
+                             showModalMedium();
            });
 
 

@@ -26,5 +26,86 @@
         </div>
     </div>
 </div>
+
+
+<div th:fragment="publicModalSmall">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalSmall" tabindex="-1" aria-labelledby="publicModalSmallLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm"> <!-- Changed from modal-xl to modal-sm -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalSmallLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    This is a Bootstrap 5.3 modal.
+                </div>
+                <div class="modal-footer">
+                    <!-- Optional footer content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="publicModalMedium">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalMedium" tabindex="-1" aria-labelledby="publicModalMediumLabel" aria-hidden="true">
+        <div class="modal-dialog"> <!-- Default = medium size -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalMediumLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body customerSareModal">
+                    This is a medium Bootstrap 5.3 modal.
+                </div>
+                <div class="modal-footer">
+                    <!-- Optional footer content -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="publicModalLarge">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalLarge" tabindex="-1" aria-labelledby="publicModalLargeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalLargeLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    This is a Bootstrap 5.3 modal.
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:fragment="publicModalExtraLarge">
+    <!-- Modal structure -->
+    <div class="modal fade" id="publicModalExtraLarge" tabindex="-1" aria-labelledby="publicModalLargeLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="publicModalExtraLargeLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    This is a Bootstrap 5.3 modal.
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

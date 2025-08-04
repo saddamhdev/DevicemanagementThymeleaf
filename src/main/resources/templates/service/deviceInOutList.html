@@ -7,27 +7,72 @@
 <body>
 <div th:fragment="deviceInOutList">
     <div class="highlight-box">
-        <p>  Service Request List</p>
+        <p>  Service Device In-Out List</p>
     </div>
     <div class="row">
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
-                <div class="responsive-table-wrapper">
-                <table id="serviceInformationDeviceInOutListTable" >
-                    <thead id="tableHeaderAddData" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Department Name</th>
-                        <th scope="col" style="background-color: gray;">Category</th>
-                        <!-- Dynamically generated headers from universalColumns -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
 
-                        <th scope="col" style="background-color: gray;">Problems</th>
-                        <th scope="col" style="background-color: gray;">Device Information</th>
-                        <th scope="col" style="background-color: gray;">Request Status</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="serviceInformationDeviceInOutListTable" placeholder="Search ...">
+                    </div>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table id="serviceInformationDeviceInOutListTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 1, this)|">
+                                Department Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 2, this)|">
+                                Category <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 3, this)|">
+                                Problems <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 4, this)|">
+                                Device Information <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 5, this)|">
+                               Device Receive Status <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 6, this)|">
+                                Device Send Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationDeviceInOutListTable', 7, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action (not sortable) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="serviceInformationDeviceInOutListBody">
                     <tr th:each="device, iterStat : ${serviceRequests}"
                         th:if="${device.customerCareServiceRequestStatus == 'Accepted' &&
@@ -52,8 +97,9 @@
 
                         </td>
 
-                        <td th:text="${device != null && device.customerCareSendDeviceToServiceStatus != null ? device.customerCareSendDeviceToServiceStatus : 'Pending'}">
-                        </td>
+                        <td th:text="${device?.customerCareSendDeviceToServiceStatus != null ? device?.customerCareSendDeviceToServiceStatus : 'Pending'}"></td>
+                        <td th:text="${device?.serviceCenterToCustomerCareStatus != null ? device?.serviceCenterToCustomerCareStatus : ' '}"></td>
+
                         <td th:text="${device.presentTime}">userPassword</td>
                         <td>
 
@@ -65,7 +111,7 @@
                                         style="background-color:green;"
                                         title="Receive Device">✔</button>
 
-                                <button th:if="${device.customerCareSendDeviceToServiceStatus == 'Device In Received' && device.customerCareReceiveDeviceFromServiceStatus !='Device received' && (device.cooServiceReportAcceptStatus == 'Accepted' || device.cooServiceReportAcceptStatus == 'Rejected' )}" class="btn  btn-sm text-white" th:data-service-id="${device.id}" th:data-button-id="sendDevice" style="background-color:green;" title="Delivery Device To Inventory">✔</button>
+                                <button th:if="${device.customerCareSendDeviceToServiceStatus == 'Device In Received' && device.customerCareReceiveDeviceFromServiceStatus !='Device received' && (device.cooServiceReportAcceptStatus == 'Accepted' || device.cooServiceReportAcceptStatus == 'Rejected' )}" class="btn  btn-sm text-white" th:data-service-id="${device.id}" th:data-button-id="sendDevice" style="background-color:green;" title="Delivery Device To CustomerCare">✔</button>
                             </div>
 
                         </td>

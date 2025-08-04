@@ -1,3 +1,6 @@
+window.sortState = {};  // Make global if needed elsewhere  // For multiple tables, use keys like "userTable-0"
+
+
 $(document).ready(function () {
     function applyMobileStyles() {
         if ($(window).width() <= 768) { // Mobile screen
@@ -186,6 +189,22 @@ function formatDateTimeToAmPm(datetimeStr) {
   function showModal(){
   $('#publicModal').modal('show');
   }
+  function showModalAccessories(){
+    $('#publicModalAccessories').modal('show');
+    }
+
+function showModalSmall(){
+  $('#publicModalSmall').modal('show');
+  }
+function showModalMedium(){
+$('#publicModalMedium').modal('show');
+}
+function showModalLarge(){
+  $('#publicModalLarge').modal('show');
+  }
+function showModalExtraLarge(){
+$('#publicModalExtraLarge').modal('show');
+}
   function hideModal(){
        $('#publicModal').modal('hide');
        $('#publicModal').on('hidden.bs.modal', function () {
@@ -534,26 +553,28 @@ window.trackDeviceRequestData = function (row, clickedElement) {
     const requestId = clickedElement.getAttribute('data-request-id');
     print('requestData', function(requestData) {
         // Create modal if it doesn't exist
-        if (!document.getElementById('dynamicTrackModal')) {
-            const modalHTML = `
-                <div class="modal fade" id="dynamicTrackModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Device Request Information</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-        }
+       // Always remove any stale modals before appending a fresh one
+       $('#dynamicTrackModal').remove();
+
+       document.body.insertAdjacentHTML('beforeend', `
+           <div class="modal fade" id="dynamicTrackModal" tabindex="-1" aria-hidden="true">
+               <div class="modal-dialog modal-dialog-centered"> <!-- make it larger if needed -->
+                   <div class="modal-content">
+                       <div class="modal-header">
+                           <h5 class="modal-title">Device Request Information</h5>
+                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                       </div>
+                       <div class="modal-body trackDevice">Loading...</div>
+                   </div>
+               </div>
+           </div>
+       `);
+
 
         // Prepare modal elements
-        const modalBody = document.querySelector('#dynamicTrackModal .modal-body');
+        const modalBody = document.querySelector('#dynamicTrackModal .trackDevice');
         const modalElement = document.getElementById('dynamicTrackModal');
+
 
         if (!modalBody || !modalElement) {
             console.error('Modal body or element not found');
@@ -1128,6 +1149,7 @@ window.trackServiceRequestData = function (row, clickedElement) {
                    action: `Pending`
                });
             }
+           // console.log(result.serviceAccessoriesSolutionAcceptingByCOOTime)
             if (result.serviceAccessoriesSolutionAcceptingByCOOTime) {
                htmlToAdd += createTimelineEntry({
                    dateTime: result.serviceAccessoriesSolutionAcceptingByCOOTime,
@@ -1170,6 +1192,7 @@ window.trackServiceRequestData = function (row, clickedElement) {
                         action: `Pending`
                     });
             }
+
             if (result.serviceCenterToCustomerCareTime) {
                    htmlToAdd += createTimelineEntry({
                        dateTime: result.serviceCenterToCustomerCareTime,
@@ -1304,3 +1327,95 @@ function handleKey(event) {
     }
 }
 
+
+// Attach scroll handler for infinity pagination
+     $(window).on('scroll', function () {
+       const st = $(this).scrollTop();
+       const scrollBottom = $(window).scrollTop() + $(window).height();
+       const docHeight = $(document).height();
+        const pageName = localStorage.getItem("lastActivePage");
+       const totalPage = $('.last-page-flag').last().data('totalpage'+pageName);
+      //  console.log("PageNumber: "+pageNumber+" Total Page "+totalPage);
+       if (st > lastScrollTop && scrollBottom >= docHeight - 100) {
+         // Scroll Down
+        // loadMoreDevices("down");
+
+       } else if (st < lastScrollTop && st < 100) {
+         // Scroll Up
+         //loadMoreDevices("up");
+       }
+
+       lastScrollTop = st;
+     });
+
+     function onPageSizeChange(value) {
+         console.log("📥 Page size selected:", value);
+
+         window.pageSize = value === "all" ? 999999 : parseInt(value);
+         localStorage.setItem("pageSize",value);
+         pageNumber = 0;
+         loadByRange(0,value);
+     }
+     // globally table sorting
+  window.sortTable = function(tableId, columnIndex, thElement) {
+      const table = document.getElementById(tableId);
+      const rows = Array.from(table.rows).slice(1); // skip header
+      const key = `${tableId}-${columnIndex}`;
+      const isAsc = !(window.sortState[key] === 'asc');
+      window.sortState[key] = isAsc ? 'asc' : 'desc';
+
+      rows.sort((a, b) => {
+          const cellA = a.cells[columnIndex];
+          const cellB = b.cells[columnIndex];
+
+          // Guard against undefined cells
+          const textA = cellA ? cellA.innerText.trim() : '';
+          const textB = cellB ? cellB.innerText.trim() : '';
+
+          const isNum = !isNaN(textA) && !isNaN(textB);
+          return isNum
+              ? (isAsc ? textA - textB : textB - textA)
+              : (isAsc ? textA.localeCompare(textB) : textB.localeCompare(textA));
+      });
+
+      for (const row of rows) {
+          table.tBodies[0].appendChild(row);
+      }
+
+      // Reset icons
+      table.querySelectorAll(".sort-icon").forEach(icon => {
+          icon.textContent = "⇅";
+      });
+
+      const icon = thElement.querySelector(".sort-icon");
+      icon.textContent = isAsc ? "▲" : "▼";
+  };
+
+  // global search
+   window.setupGlobalFilter = function () {
+       const searchInputs = document.querySelectorAll(".global-user-search");
+
+       searchInputs.forEach(function (input) {
+           input.removeEventListener("input", input._listenerRef); // Remove old if exists
+
+           const listener = function () {
+               const tableId = input.getAttribute("data-table");
+               const query = input.value.toLowerCase();
+               window.filterTable(tableId, query);
+           };
+
+           input.addEventListener("input", listener);
+           input._listenerRef = listener; // Save reference
+       });
+   };
+
+   window.filterTable = function (tableId, query) {
+       const table = document.getElementById(tableId);
+       if (!table) return;
+
+       const rows = table.querySelectorAll("tbody tr");
+       rows.forEach(row => {
+           const text = row.textContent.toLowerCase();
+           row.style.display = text.includes(query) ? "" : "none";
+       });
+   };

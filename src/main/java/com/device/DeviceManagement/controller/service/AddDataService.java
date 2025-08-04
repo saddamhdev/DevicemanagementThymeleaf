@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +21,12 @@ public class AddDataService {
     @Autowired
     private AddDataRepository addDataRepository;
     // Check cache first, if not found, load from DB and cache it
+    @Cacheable(value = "AddDataService", key = "#page + '-' + #size")
+    public Page<AddData> getPagedAddData(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return addDataRepository.findByStatus("1", pageable);
+    }
+
     @Cacheable(value = "AddDataService")
     public List<AddData> add() {
         System.out.println("Fetching user from DB...");

@@ -237,20 +237,23 @@ window.initServiceRequestGeneral = function () {
 
 
         }
-       else  if (buttonId === "sendDevice"){
+       else  if (buttonId === "sendDeviceService"){
 
                var htmlToAdd = `
-                  <div class="mb-3" style="margin-right: 0%; text-align: right;">
-                      <button type="button" class="btn btn-primary" id="AcceptBtn">Yes</button>
+                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
+                      <button type="button" class="btn btn-primary" id="AcceptBtnService">Yes</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
-              $('.modal-body').html(htmlToAdd);
-              $('#publicModalLabel').text("Do you want to send this device to Servicing ?");
-              $('#AcceptBtn').click(function() {
-                  setServiceRequestAccept(serviceId, "Device In Pending");
+              $('.ModalMedium').html(htmlToAdd);
+              $('#publicModalMediumLabel').text("Do you want to send this device to Servicing ?");
+
+              $('#AcceptBtnService').click(function() {
+                 // alert("Sent")
+                 setServiceRequestAccept(serviceId, "Device In Pending");
               });
-              showModal();
+               showModalMedium();
+
                } else if (button.hasClass("Delete")) {
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 

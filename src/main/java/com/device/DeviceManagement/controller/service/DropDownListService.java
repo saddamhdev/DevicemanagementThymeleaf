@@ -1,5 +1,6 @@
 package com.device.DeviceManagement.controller.service;
 
+import com.device.DeviceManagement.model.Designation;
 import com.device.DeviceManagement.model.DropDownList;
 import com.device.DeviceManagement.model.User;
 import com.device.DeviceManagement.repository.DropDownListRepository;
@@ -8,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +22,11 @@ public class DropDownListService {
     @Autowired
     private DropDownListRepository dropDownListRepository;
     // Check cache first, if not found, load from DB and cache it
+    @Cacheable(value = "DropDownListService", key = "#page + '-' + #size")
+    public Page<DropDownList> getPagedAddData(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return dropDownListRepository.findByStatus("1", pageable);
+    }
     @Cacheable(value = "DropDownListService")
     public List<DropDownList> add() {
         System.out.println("Fetching user from DB...");

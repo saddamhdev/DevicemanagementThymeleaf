@@ -924,12 +924,12 @@ window.initServiceReportDataGeneral = function () {
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                   </div>
               `;
-              $('.modal-body').html(htmlToAdd);
-              $('#publicModalLabel').text("Do you want to accept this service request ?");
+              $('.ModalMedium').html(htmlToAdd);
+              $('#publicModalMediumLabel').text("Do you want to accept this service request ?");
               $('#AcceptBtn').click(function() {
                   setServiceRequestAccept(serviceId, "Device In Received");
               });
-              showModal();
+              showModalMedium();
                }
                 else if (buttonId === "chat") {
                          print('serviceRequests', function(serviceRequests) {

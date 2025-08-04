@@ -641,107 +641,123 @@ function sendDeliveryDeviceAcceptForService(serviceId,deviceId,problemName,solut
 
                                      }
                                  }
-
 window.initServiceAccessoriesPendingAlternativeDataTable = function () {
-            var departmentElement = $(".departmentName"); // Target element with department data
-            var departmentName = departmentElement.data("departmentname"); // e.g., "it"
-            var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
-            var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
-    // Perform a single AJAX call
+    const tableBody = document.getElementById("serviceAccessoriesPendingAlternativeDataTableBody");
+    if (!tableBody) {
+        console.error("Table body not found.");
+        return;
+    }
+
+    const departmentElement = $(".departmentName");
+    const departmentName = departmentElement.data("departmentname");
+    const departmentUserName = departmentElement.data("departmentuser-name");
+    const departmentUserId = departmentElement.data("departmentuser-id");
+
+    function generateRowKeyFromRow(row) {
+        return Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+    }
+
+    function generateRowKeyFromData(sn, bivagName, categoryName, problemName, solution, time) {
+        const value = (solution.value || '').trim().replace(/\n/g, '');
+        return [
+            sn, bivagName, categoryName, problemName,
+            solution.category, value,
+            solution.inventoryToServiceCenterDeviceStatus || '', time || '', solution.deliveryDate || ''
+        ].join('|');
+    }
+
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = generateRowKeyFromRow(row);
+        currentRowMap.set(key, row);
+    });
+
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            console.log(data); // Log the entire data for debugging
+         data: {
+                        page: pageNumber,
+                        size: localStorage.getItem("pageSize") || 0
+                    },
+        success: function (data) {
+            const allData = data['serviceRequests'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
 
-            var allData = data['serviceRequests'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("serviceAccessoriesPendingAlternativeDataTableBody");
-
-            // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-                    if (device.categoryName === categoryName && device.userName===departmentName) {
+                allAddData.forEach(device => {
+                    if (device.categoryName === categoryName && device.userName === departmentName) {
                         count++;
                     }
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const bivagName = device.departmentName;
+                const categoryName = device.categoryName;
+                const sn = device.visibleServiceId;
+                const time = device.inventoryToServiceCenterDeviceTime
+                    ? formatDateTimeToAmPm(device.inventoryToServiceCenterDeviceTime)
+                    : "";
 
-           // Loop through each device in allData
-           allData.forEach(function(device) {
-               const bivagName = device.departmentName;
-               const categoryName = device.categoryName;
-               const sn=device.visibleServiceId;
-// Ensure allProblem exists before iterating
-                 if (!device.allProblem || !Array.isArray(device.allProblem)) {
-                     console.warn("Skipping device due to missing or invalid allProblem array:", device);
-                     return; // Skip this device if allProblem is missing or not an array
-                 }
-               // Loop through each problem in the allProblem array for the device
-               device.allProblem.forEach(function(problem) {
-                   console.log("Problem Name:", problem.name);
-                   console.log("Proposal Solutions:");
-// Ensure proposalSolution exists before iterating
-                   if (!problem.proposalSolution || !Array.isArray(problem.proposalSolution)) {
-                       console.warn("Skipping problem due to missing or invalid proposalSolution array:", problem);
-                       return; // Skip this problem if proposalSolution is missing or not an array
-                   }
-                   // Loop through each proposalSolution in the problem
-                   problem.proposalSolution.forEach(function(solution) {
-                       if (solution.serviceCenterToInventoryAccessoriesRequestStatus === 'Pending' && solution.deviceManageType !=='Purchased' &&  (solution.inventoryToServiceCenterDeviceStatus==='Accepted' || solution.inventoryToServiceCenterDeviceStatus==='Pending' )) {
-                           const row = document.createElement("tr");
+                if (!Array.isArray(device.allProblem)) return;
 
-                           console.log("Name:", solution.name);
-                           console.log("Value:", solution.value);
-                           console.log("Category:", solution.category);
-                           console.log("Price:", solution.price);
-                           console.log("Action:", solution.action);
-                           console.log("Comment:", solution.comment);
-                            console.log("inventoryToServiceCenterDeviceStatus:", solution.inventoryToServiceCenterDeviceStatus);
+                device.allProblem.forEach(problem => {
+                    if (!Array.isArray(problem.proposalSolution)) return;
 
-                           // Determine availability
-                           const availability = getAvailability(solution.category);
+                    problem.proposalSolution.forEach(solution => {
+                        const isPending = solution.serviceCenterToInventoryAccessoriesRequestStatus === 'Pending';
+                        const isNotPurchased = solution.deviceManageType !== 'Purchased';
+                        const isStatusValid = ['Accepted', 'Pending'].includes(solution.inventoryToServiceCenterDeviceStatus);
 
-                           // Create and append cells to the row
-                           row.innerHTML = `
-                               <td>${sn}</td>  <!-- Dynamic Counter -->
-                               <td>${bivagName}</td>
-                               <td>${categoryName}</td>
-                               <td>${problem.name}</td>
-                               <td>${solution.category} (${solution.name}-${solution.value})</td>
+                        if (!(isPending && isNotPurchased && isStatusValid)) return;
 
-                               <td>
-                                   <button class="btn btn-info btn-sm view-button-pending" data-category="${solution.category}" data-device-id="${device.deviceId}" data-button-id="viewAlternative" title="View Available Same Accessories Category Devices" >
-                                       ${availability}
-                                   </button>
-                               </td>
-                               <td>
-                                    ${solution.inventoryToServiceCenterDeviceTime !== null ?  formatDateTimeToAmPm(solution.inventoryToServiceCenterDeviceTime ): ""}
+                        const availability = getAvailability(solution.category);
+                        const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, time);
+                        newRowKeys.add(rowKey);
 
-                                 </td>
+                        if (!currentRowMap.has(rowKey)) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${sn}</td>
+                                <td>${bivagName}</td>
+                                <td>${categoryName}</td>
+                                <td>${problem.name}</td>
+                                <td class="text-start">
+                                    <div class="compact-cell bg-light">
+                                        <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                        <div>${solution.value.trim().replace(/\n/g, "<br>")}</div>
+                                    </div>
+                                </td>
                                 <td>
-                                 ${solution.deliveryDate !== null ? solution.deliveryDate : ""}
+                                    <button class="btn btn-info btn-sm view-button-pending"
+                                        data-category="${solution.category}"
+                                        data-device-id="${device.deviceId}"
+                                        data-button-id="viewAlternative"
+                                        title="View Available Same Accessories Category Devices">
+                                        ${availability}
+                                    </button>
+                                </td>
+                                <td>${time}</td>
+                                <td>${solution.deliveryDate || ''}</td>
+                            `;
+                            tableBody.appendChild(row);
+                        }
+                    });
+                });
+            });
 
-                              </td>
+            currentRowMap.forEach((row, key) => {
+                if (!newRowKeys.has(key)) {
+                    row.remove();
+                }
+            });
 
 
-
-                           `;
-
-                           // Increment the counter for the next row
-                           counter++;
-
-                           // Append the row to the table body
-                           tableBody.appendChild(row);
-                       }
-                   });
-               });
-           });
             sortAndFormatAllTables() ;
     $(document).on('click', '.deliver', function(){
             var serviceId = $(this).data('service-id');
@@ -984,15 +1000,15 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                     <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
                     <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
                 </div>
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                <div class="mb-3" style="margin-left: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to update delivery date?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to update delivery date?");
 
             // Add event listener for save button
             $('#saveEditBtn').click(function() {
@@ -1021,7 +1037,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                        });
                     });
 
-            showModal();
+            showModalMedium();
         });
  // Add event listener for the availability button click
             $(document).on('click', '.delivery-button', function() {

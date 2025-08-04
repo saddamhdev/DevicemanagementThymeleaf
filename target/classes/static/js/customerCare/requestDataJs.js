@@ -235,12 +235,12 @@ window.initRequestDataGeneral = function () {
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
             </div>
         `;
-        $('.modal-body').html(htmlToAdd);
-        $('#publicModalLabel').text("Do you want to delivery It             ?");
+        $('.ModalSmall').html(htmlToAdd);
+        $('#publicModalSmallLabel').text("Do you want to delivery It             ?");
         $('#AcceptBtn').click(function() {
             setDeliveryMode(requestId, "Delivered");
         });
-        showModal();
+        showModalSmall();
          }
     });
 };
@@ -816,18 +816,18 @@ window.initRequestDataTable = function () {
           $(document).on('click', '.purchase', function() {
            var requestId=$(this).data('request-id');
               var htmlToAdd = `
-                <div class="mb-3" style="margin-right: 0%; text-align: right;">
+                <div class="mb-3" style="margin-right: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" data-request-id="${requestId}" id="AcceptBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             `;
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to Purchase this Product ?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to Purchase this Product ?");
             $('#AcceptBtn').click(function() {
 
                 setRequestStatus(requestId, "Purchased");
             });
-            showModal();
+            showModalMedium();
            });
            $(document).on('click', '.viewAlternativeDevice', function() {
                                    var category = $(this).data('category-id');

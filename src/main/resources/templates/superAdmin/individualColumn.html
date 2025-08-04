@@ -27,20 +27,63 @@
                     <button class="btn btn-success btn-sm" onclick="addIndividualColumn()" >Add</button>
                 </div>
 
+                <div class="d-flex justify-content-between align-items-center mb-2">
 
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="individualColumnTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-                <table id="individualColumnTable" >
-                    <thead >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <th scope="col" style="background-color: gray;">Column Name</th>
-                        <th scope="col" style="background-color: gray;">Data Type</th>
-                        <th scope="col" style="background-color: gray;">Required Type</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="individualColumnTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 1, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Column Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 2, this)">
+                                Column Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Data Type -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 3, this)">
+                                Data Type <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Required Type -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 4, this)">
+                                Required Type <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Create Time -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('individualColumnTable', 5, this)">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action (no sorting) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="individualColumnTableBody">
                     <tr th:each="column, iterStat : ${individualColumns}">
                         <td  th:text="${iterStat.count}">1</td>

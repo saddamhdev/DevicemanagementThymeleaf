@@ -7,6 +7,7 @@ import com.device.DeviceManagement.model.Designation;
 import com.device.DeviceManagement.model.*;
 import com.device.DeviceManagement.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -247,7 +248,7 @@ public class SuperAdmin {
                 designationRepository.save(designation); // Save the updated category
                 // new save
                 designationRepository.save(new Designation                                                    (newDesignationName,formattedDateTime,currentDate,"1"));
-                designationService.update();
+                designationService.clearCache();
                 return ResponseEntity.ok("Designation updated successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -547,7 +548,7 @@ public class SuperAdmin {
 
             // Save the Category object
             userRepository.save(new User(userName,userId,userPassword,currentDate,formattedDateTime,"1"));
-            userService.update();
+            userService.clearCache();
             // move to return "user/Home";
             return ResponseEntity.ok("Successfully added user");
         }else{
@@ -606,7 +607,7 @@ public class SuperAdmin {
                         }
                     });
 
-                    userService.update();
+                    userService.clearCache();
 
                     return ResponseEntity.ok("User edited successfully");
                 }
@@ -635,7 +636,7 @@ public class SuperAdmin {
 
             // Save the Category object
             internalUserRepository.save(new InternalUser(branchName,userName,userId,userPassword,currentDate,formattedDateTime,"1"));
-            internalUserService.update();
+            internalUserService.clearCache();
             // move to return "user/Home";
             return ResponseEntity.ok("Successfully added user");
         }else{
@@ -665,7 +666,7 @@ public class SuperAdmin {
                     user.setStatus("0");
 
                     internalUserRepository.save(user); // Save the updated category
-                    internalUserService.update();
+                    internalUserService.clearCache();
                     // update requestData
                     List<RequestData> data=requestDataRepository.findByDepartmentNameAndStatus(oldUserName,"1");
                     data.forEach(e->{
@@ -673,11 +674,11 @@ public class SuperAdmin {
                         if(oldUserName.equals(e.getDepartmentName())){
                             e.setDepartmentName(newUserName);
                             requestDataRepository.save(e);
-                            requestDataService.update();
+                            requestDataService.clearCache();
                         }
 
                     });
-                    requestDataService.update();
+                    requestDataService.clearCache();
                     updateAllInternalUser(oldBranchName,oldUserName,oldUserId,newUserName,newUserId);
                     return ResponseEntity.ok("User updated successfully");
                 }
@@ -712,7 +713,7 @@ public class SuperAdmin {
                 user.setStatus("2");
 
                 internalUserRepository.save(user); // Save the updated category
-                internalUserService.update();
+                internalUserService.clearCache();
 
                 return ResponseEntity.ok("User deleted successfully");
             } else {
@@ -743,7 +744,7 @@ public class SuperAdmin {
 
         try {
 
-            addDataService.update();
+            addDataService.clearCache();
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error saving data: " + e.getMessage());
@@ -780,7 +781,7 @@ public class SuperAdmin {
 
 
         try {
-            dropDownListService.update();
+            dropDownListService.clearCache();
 
             return ResponseEntity.ok("Data saved successfully");
         } catch (Exception e) {
@@ -815,7 +816,7 @@ public class SuperAdmin {
 
                 addDataRepository.save(new AddData("SaddamNvn",categoryName,formattedDateTime,currentDate,allParams,"1"));
 
-                addDataService.update();
+                addDataService.clearCache();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -864,7 +865,7 @@ public class SuperAdmin {
 
                 dropDownListRepository.save(new DropDownList(categoryName,dropDownListName,data,formattedDateTime,currentDate,"1"));
 
-                dropDownListService.update();
+                dropDownListService.clearCache();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -889,7 +890,7 @@ public class SuperAdmin {
                 device.setStatus("2");
                 addDataRepository.save(device); // Save the updated category
 
-                addDataService.update();
+                addDataService.clearCache();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -911,7 +912,7 @@ public class SuperAdmin {
                 list.setStatus("2");
                 dropDownListRepository.save(list); // Save the updated category
 
-                dropDownListService.update();
+                dropDownListService.clearCache();
                 return ResponseEntity.ok("Category deleted successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -931,7 +932,7 @@ public class SuperAdmin {
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         requestColumnRepository.save(new RequestColumn(requestName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
-        requestColumnService.update();
+        requestColumnService.clearCache();
         return ResponseEntity.ok("Request column saved successfully");
     }
 
@@ -950,7 +951,7 @@ public class SuperAdmin {
                 /// category.setCategoryName(newCategoryName);
                 request.setStatus("2");
                 requestColumnRepository.save(request); // Save the updated category
-                requestColumnService.update();
+                requestColumnService.clearCache();
 
                 return ResponseEntity.ok("Request Column deleted successfully");
             } else {
@@ -1383,8 +1384,8 @@ public class SuperAdmin {
 
             // Save the updated service request
             serviceRequestRepository.save(request);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
 
             return ResponseEntity.ok("Service Report accepted successfully");
         } catch (Exception e) {
@@ -1406,7 +1407,7 @@ public class SuperAdmin {
                 /// category.setCategoryName(newCategoryName);
                 // service.setStatus("2");
                 serviceRequestRepository.save(service); // Save the updated category
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
 
                 return ResponseEntity.ok("Service Column deleted successfully");
             } else {
@@ -1434,7 +1435,7 @@ public class SuperAdmin {
                 String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 requestColumnRepository.save(new RequestColumn(columnName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
-                requestColumnService.update();
+                requestColumnService.clearCache();
                 updateAllDeviceRequestColumn(request.getColumnName(),columnName);
 
                 return ResponseEntity.ok("Request Column updated successfully");
@@ -1463,7 +1464,7 @@ public class SuperAdmin {
                 String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 // serviceRequestRepository.save(new ServiceRequest(columnName,dataType,requiredType,visibleType,formattedDateTime,currentDate,"1"));
 
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
                 return ResponseEntity.ok("Service Column updated successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -1498,7 +1499,7 @@ public class SuperAdmin {
 
 
                 requestDataRepository.save(data); // Save the updated category
-                requestDataService.update();
+                requestDataService.clearCache();
 
                 return ResponseEntity.ok("Request data Updated successfully");
             } else {
@@ -1527,7 +1528,7 @@ public class SuperAdmin {
                 data.setInventory(db);
                 requestDataRepository.save(data); // Save the updated category
 
-                requestDataService.update();
+                requestDataService.clearCache();
 
                 return ResponseEntity.ok("Request data Updated successfully");
             } else {
@@ -1563,7 +1564,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1589,7 +1590,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1618,7 +1619,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1643,7 +1644,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
             Map<String,String> deviceData= requestData.getPurchase().getDeviceData();
             deviceData.remove("categoryName");
@@ -1653,7 +1654,7 @@ public class SuperAdmin {
             String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             addDataRepository.save(new AddData("SaddamNvn",categoryName,formattedDateTime,currentDate,deviceData,"1"));
-            addDataService.update();
+            addDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
@@ -1680,7 +1681,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1707,7 +1708,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1745,7 +1746,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -1799,7 +1800,7 @@ public class SuperAdmin {
             });
             // Persist changes
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         }
 
 
@@ -1893,7 +1894,7 @@ public class SuperAdmin {
                 });
                 // Persist changes
                 serviceRequestRepository.save(requestData1);
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
 
             }
 
@@ -1910,7 +1911,7 @@ public class SuperAdmin {
     @ResponseBody
     public ResponseEntity<String> setAcceptanceCommentData(@RequestBody Map<String, Object> rowData) {
         try {
-            System.out.println("Received data: " + rowData);
+           // System.out.println("Received data: " + rowData);
             // Extract data
             String serviceId = rowData.getOrDefault("serviceId", "N/A").toString();
             String bibagName = rowData.getOrDefault("bibagName", "N/A").toString();
@@ -1936,7 +1937,9 @@ public class SuperAdmin {
                     if (problem.getName().equals(solutionName)) {
                         // Find and update the existing solution's price by name
                         problem.getProposalSolution().forEach(proposalSolutionItem -> {
+
                             if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
+                               // System.out.println(proposalSolutionItem.getName()+" "+extractSolution(problemName));
                                 proposalSolutionItem.setPrice( price);
                                 proposalSolutionItem.setComment(comment);
                                 proposalSolutionItem.setAction(action);
@@ -1953,7 +1956,7 @@ public class SuperAdmin {
                 });
                 // Persist changes
                 serviceRequestRepository.save(requestData);
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
             }
 
 
@@ -2045,8 +2048,8 @@ public class SuperAdmin {
                     }
                 });
             }
-            serviceRequestService.update();
-            requestDataService.update();
+            serviceRequestService.clearCache();
+            requestDataService.clearCache();
             // Perform necessary logic (e.g., saving to a database)
 
             return ResponseEntity.ok("Payment Approved successfully!");
@@ -2097,7 +2100,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
 
         } else {
@@ -2108,17 +2111,30 @@ public class SuperAdmin {
     }
     // Method to extract the part before the hyphen inside parentheses
     public static String extractSolution(String input) {
-        // Regular expression to capture the part before the hyphen inside parentheses
-        Pattern pattern = Pattern.compile("\\(([^-\\)]+)-.*\\)");
-        Matcher matcher = pattern.matcher(input);
+      //  System.out.println(input);
+        // Trim to remove leading/trailing white space
+        input = input.trim();
 
-        // If the pattern is found, return the captured group (before the hyphen)
-        if (matcher.find()) {
-            return matcher.group(1); // Capture the part before the hyphen
-        } else {
-            return "No match found"; // Return a default message if no match is found
+        // Split by newline
+        String[] lines = input.split("\\r?\\n");
+
+        if (lines.length == 0) {
+            return "No data";
         }
+
+        String part1 = lines[0].trim(); // First line (Category)
+
+        // Join the remaining lines as the second part
+        StringBuilder part2Builder = new StringBuilder();
+        for (int i = 1; i < lines.length; i++) {
+            part2Builder.append(lines[i].trim()).append("\n");
+        }
+
+        String part2 = part2Builder.toString().trim(); // Remove final newline
+       // System.out.println(part2 );
+        return part2;
     }
+
     // Endpoint to handle the incoming request
     @PostMapping("/approveFinalPurchaseDeviceDelivery")
     @ResponseBody
@@ -2147,7 +2163,7 @@ public class SuperAdmin {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
 
 
@@ -2209,6 +2225,47 @@ public class SuperAdmin {
         List<RequestColumn> requestColumns=requestColumnService.add();
         List<ServiceRequest> serviceRequests = serviceRequestService.add();
         List<RequestData> requestData=requestDataService.add();
+        List<DropDownList> dropDownLists=dropDownListService.add();
+        List<Designation> designations=designationService.add();
+        List<BranchUser> userAccountData=branchUserService.add();
+        List<InternalUser> internalUsers=internalUserService.add();
+
+        AllData homeData = new  AllData();
+        homeData.setCategories(categories);
+        homeData.setUniversalColumns(universalColumns);
+        homeData.setIndividualColumns(individualColumns);
+        homeData.setAllAddData(allAddData);
+        homeData.setAllUser(allUser);
+        homeData.setRequestColumns(requestColumns);
+        homeData.setServiceRequests(serviceRequests);
+        homeData.setRequestData(requestData);
+        homeData.setDropDownLists(dropDownLists);
+        homeData.setDesignations(designations);
+        homeData.setUserAccountData(userAccountData);
+        homeData.setInternalUsers(internalUsers);
+
+        return ResponseEntity.ok(homeData);
+    }
+    @PostMapping("/allDataRange")
+    @ResponseBody
+    public ResponseEntity<AllData> AllDataRange( @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size){
+        // Optional debug log
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size); // ✅ page 0, size 10
+        List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
+
+
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size); // ✅ page 0, size 10
+        List<RequestData> requestData=requestDataData.getContent();
+
+
+        List<Category> categories = categoriesService.Category();
+        List<Column> universalColumns = universalColumnsService.Universal();
+        List<Column> individualColumns = individualColumnsService.Individual();
+        List<AddData> allAddData =addDataService.add();
+        List<User> allUser = userService.add();
+        List<RequestColumn> requestColumns=requestColumnService.add();
+
         List<DropDownList> dropDownLists=dropDownListService.add();
         List<Designation> designations=designationService.add();
         List<BranchUser> userAccountData=branchUserService.add();
@@ -2300,7 +2357,7 @@ public class SuperAdmin {
                 unOrderedDevice.setCOOUnOrderedDeviceAcceptedStatus("Ordered");
                 device.setUnOrderedDevice(unOrderedDevice);
                 addDataRepository.save(device); // Save the updated category
-                addDataService.update();
+                addDataService.clearCache();
 
                 return ResponseEntity.ok("Device Accepted successfully");
             } else {
@@ -2472,7 +2529,7 @@ public class SuperAdmin {
                     addDataRepository.save(e);
                 }
             });
-            addDataService.update();
+            addDataService.clearCache();
         }
 
         // ✅ Update column list
@@ -2498,7 +2555,7 @@ public class SuperAdmin {
                     dropDownListRepository.save(e);
                 }
             });
-            dropDownListService.update();
+            dropDownListService.clearCache();
         }
 
         // ✅ Update requestData
@@ -2513,7 +2570,7 @@ public class SuperAdmin {
                     requestDataRepository.save(e);
                 }
             });
-            requestDataService.update();
+            requestDataService.clearCache();
         }
 
         // ✅ Update Service Request
@@ -2547,7 +2604,7 @@ public class SuperAdmin {
             }
 
             // Optionally update the service
-            serviceRequestService.update();
+            serviceRequestService.clearCache();
         }
 
     }
@@ -2588,7 +2645,7 @@ public class SuperAdmin {
                 }
             }
 
-            addDataService.update();
+            addDataService.clearCache();
             System.out.println("Finished updating keys in AddData entries.");
         } else {
             System.out.println("No AddData entries found.");
@@ -2605,7 +2662,7 @@ public class SuperAdmin {
                     dropDownListRepository.save(e);
                 }
             });
-            dropDownListService.update();
+            dropDownListService.clearCache();
         }
 
 
@@ -2713,7 +2770,7 @@ public class SuperAdmin {
             try {
                 addDataRepository.saveAll(entriesToUpdate);
                 if (result) {
-                    addDataService.update();
+                    addDataService.clearCache();
                 }
                 System.out.println("Successfully updated " + entriesToUpdate.size() + " AddData entries");
             } catch (Exception e) {
@@ -2868,7 +2925,7 @@ public class SuperAdmin {
                 requestDataRepository.save(e);
 
             });
-            requestDataService.update();
+            requestDataService.clearCache();
         }
 
             List<ServiceRequest> serviceRequests = serviceRequestRepository.findAll();
@@ -2966,7 +3023,7 @@ public class SuperAdmin {
 
             // Update the service
             try {
-                serviceRequestService.update();
+                serviceRequestService.clearCache();
                 System.out.println("ServiceRequestService updated successfully");
             } catch (Exception e) {
                 System.err.println("Error updating ServiceRequestService: " + e.getMessage());
@@ -3297,7 +3354,7 @@ public class SuperAdmin {
 
         // Update the service
         try {
-            requestDataService.update();
+            requestDataService.clearCache();
             System.out.println("RequestDataService updated successfully");
         } catch (Exception e) {
             System.err.println("Error updating RequestDataService: " + e.getMessage());

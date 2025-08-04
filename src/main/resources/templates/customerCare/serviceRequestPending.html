@@ -12,25 +12,68 @@
     <div class="row">
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
-                <div class="responsive-table-wrapper">
-                <table id="serviceInformationPendingTable" >
-                    <thead id="tableHeaderAddData" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Department Name</th>
-                        <th scope="col" style="background-color: gray;">Category</th>
-                        <!-- Dynamically generated headers from universalColumns -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
 
-                        <th scope="col" style="background-color: gray;">Problems</th>
-                        <th scope="col" style="background-color: gray;">Device Information</th>
-                        <th scope="col" style="background-color: gray;">Request Status</th>
-                        <th scope="col" style="background-color: gray;">Receive Device Date</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="serviceInformationPendingTable" placeholder="Search ...">
+                    </div>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table id="serviceInformationPendingTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 1, this)|">
+                                Department Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 2, this)|">
+                                Category <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 3, this)|">
+                                Problems <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 4, this)|">
+                                Device Information <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 5, this)|">
+                                Request Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 6, this)|">
+                                Receive Device Date <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationPendingTable', 7, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
                     <tbody id="serviceInformationPendingBody">
-                    <tr th:each="device, iterStat : ${serviceRequests}"  >
+                    <tr th:each="device, iterStat : ${serviceRequests}" th:if="${device.customerCareToDepartmentStatus !='Device delivered'}" >
                         <td scope="row" th:text="${device.visibleServiceId}">1</td>
                         <td th:text="${device.departmentName}">departmentName</td>
                         <td th:text="${device.categoryName}">categoryName</td>

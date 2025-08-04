@@ -276,7 +276,7 @@ function accessoriesProposal(serviceId) {
     var mergedFormData = {}; // Object to hold all form data based on formId
 
     // Loop through each form inside the modal-body div
-    $(".modal-body form").each(function() {
+    $("#publicModalAccessoriesNvn form").each(function() {
         var formId = $(this).attr('id'); // Get the form's id
         var formData = $(this).serializeArray(); // Serialize form data as an array of objects
 
@@ -316,6 +316,7 @@ function accessoriesProposal(serviceId) {
 
 window.initServicingListGeneral = function () {
   $('#serviceInformationServicingListTable tbody tr').click(function(event) {
+
     const $row = $(this); // Store the clicked row element
    var categoryName = $row.find('td:nth-child(3)').text();
     // Target the button itself for better accuracy
@@ -358,7 +359,7 @@ window.initServicingListGeneral = function () {
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                           </div>
                       `;
-                      $('.modal-body').html(htmlToAdd);
+                      $('.ModalExtraLarge').html(htmlToAdd);
                        // $('#publicModalLabel').text("Service Report");
                        requestInfo();
                       function requestInfo() {
@@ -781,7 +782,7 @@ window.initServicingListGeneral = function () {
 
                           ServiceReportExport(serviceId,"requestInfo","actions","extractComponents","needAccessories");
                       });
-                      showModal();
+                      showModalExtraLarge();
     }
     else if(buttonId==="editServiceReport"){
 
@@ -843,9 +844,9 @@ window.initServicingListGeneral = function () {
                    `;
 
                       // Add the HTML code to the modal body using jQuery
-                      $('.modal-body').html(htmlToAdd);
-                     $('#publicModalLabel').text("Edit Service Report:");
-                     showModal();
+                      $('.ModalExtraLarge').html(htmlToAdd);
+                     $('#publicModalExtraLargeLabel').text("Edit Service Report:");
+                     showModalExtraLarge();
 
                      problemActions();
                      function problemActions() {
@@ -994,8 +995,8 @@ window.initServicingListGeneral = function () {
                            `;
                            $('#problemExtraComponents').html(htmlToAddExtraComponents);
                               $('#addExtractBtn').on('click', function () {
-                                  addDeviceInformation();
-                                  function addDeviceInformation(){
+                                  addDeviceInformation1();
+                                  function addDeviceInformation1(){
 
                                    var htmlToAdd = `
                                                   <div class="mb-3" style="margin-left: 0%; text-align: left;">
@@ -1513,8 +1514,8 @@ window.initServicingListGeneral = function () {
                        `;
 
                           // Add the HTML code to the modal body using jQuery
-                          $('.modal-body').html(htmlToAdd);
-                         $('#publicModalLabel').text("Service Report Generate:")
+                          $('.ModalExtraLarge').html(htmlToAdd);
+                         $('#publicModalExtraLargeLabel').text("Service Report Generate:")
                            // problemActions
                           problemActions();
                          function problemActions() {
@@ -1631,9 +1632,9 @@ window.initServicingListGeneral = function () {
 
                                           `;
                                           $('#problemExtraComponents').html(htmlToAddExtraComponents);
-                                             $('#addExtractBtn').on('click', function () {
-                                                 addDeviceInformation();
-                                                 function addDeviceInformation(){
+                                          $('#addExtractBtn').on('click', function () {
+                                                 addDeviceInformation11();
+                                                 function addDeviceInformation11(){
 
                                                   var htmlToAdd = `
                                                                  <div class="mb-3" style="margin-left: 0%; text-align: left;">
@@ -2037,7 +2038,7 @@ window.initServicingListGeneral = function () {
                         });
 
 
-                     showModal();
+                     showModalExtraLarge();
 
      }
 
@@ -2133,7 +2134,6 @@ window.initServicingListGeneral = function () {
         }
      else if(buttonId === "Edit"){
               // Handle edit button click (add your logic here)
-              console.log("Edit button clicked!");
               const serviceId = button.data('serviceId'); // Get device ID from data-device-id attribute
 
                if (!serviceId) {
@@ -2161,8 +2161,8 @@ window.initServicingListGeneral = function () {
                        </div>
                    `;
 
-                   $('.modal-body').html(htmlToAdd);
-                   $('#publicModalLabel').text("Service Request");
+                   $('.ModalMedium').html(htmlToAdd);
+                   $('#publicModalMediumLabel').text("Service Request");
 
                    // Function to add a new problem input
                    function addNewProblem() {
@@ -2244,7 +2244,7 @@ window.initServicingListGeneral = function () {
                         });
 
                    // Show the modal
-                   showModal();
+                   showModalMedium();
 
                  /*if (confirm(`Are you sure you want to edit device ${deviceId}?`)) {
                      console.log("edited done.");
@@ -2289,10 +2289,10 @@ window.initServicingListGeneral = function () {
                                                  <div class="mb-3" style="margin-left: 0%; text-align: left;">
                                                      <label class="form-label">Problem: ${problem.name}</label>
                                                  </div>
-                                                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                                                     <div class="row align-items-center" style="min-height: 100px;">
+                                                 <div class="mb-1" style="margin-left: 0%; text-align: left;">
+                                                     <div class="row align-items-center" >
                                                          <div class="col-sm-4 mb-3 d-flex flex-column justify-content-end" style="height: 100%;">
-                                                             <div class="mb-3" style="text-align: left;">
+                                                             <div class="mb-1" style="text-align: left;">
                                                                  <div class="dropdown" id="${problemId}-categoryName">
                                                                      <input type="text" class="form-control dropdown-toggle deviceInputFieldAdd" data-bs-toggle="dropdown" placeholder="Category" aria-expanded="false" data-problem-id="${problemId}">
                                                                      <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldPopupBox">
@@ -2300,17 +2300,15 @@ window.initServicingListGeneral = function () {
                                                                      </ul>
                                                                  </div>
                                                              </div>
-                                                             <div class="mb-3" style="text-align: left;">
+                                                             <div class="mb-1" style="text-align: left;">
                                                                  <div id="${problemId}-listName"></div>
                                                              </div>
-                                                             <div class="mb-3" style="text-align: left;">
-                                                                 <div id="${problemId}-fieldName"></div>
-                                                             </div>
+
                                                          </div>
-                                                         <div id="${problemId}-div" class="col-sm-8 mb-3"></div>
+                                                         <div id="${problemId}-div" class="col-sm-8 mb-1"></div>
                                                      </div>
                                                  </div>
-                                                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                                                 <div class="mb-1" style="margin-left: 0%; text-align: left;">
                                                      <button type="button" class="btn btn-primary add-accessories-btn" data-problem="${problemId}">Add Accessories</button>
                                                  </div>
                                              </form>
@@ -2326,7 +2324,7 @@ window.initServicingListGeneral = function () {
                                          </div>
                                      `;
 
-                                     $('.modal-body').html(modalHtml);
+                                     $('#publicModalAccessoriesNvn').html(modalHtml);
 
                                      // print this
                                      $('#publicModalLabel').text("Add Accessories");
@@ -2346,337 +2344,24 @@ window.initServicingListGeneral = function () {
                                                  const dropdownInputField = $(this).closest('.dropdown').find('.deviceInputFieldAdd');
 
                                                  dropdownInputField.val(selectedCategory);
-                                                 console.log('Selected Category:', selectedCategory);
+                                                 //console.log('Selected Category:', selectedCategory);
 
                                                  const problemId = dropdownInputField.data('problem-id');
                                                   // do empty
+                                                 // Insert universal and individual items into the dropdown
+                                                var bodyList = `
+                                                  <div class="my-3">
+                                                    <label class="form-label fw-semibold text-primary">Description</label>
+                                                    <textarea
+                                                      class="form-control deviceInputFieldAddList shadow-sm rounded border-primary"
+                                                      placeholder="Enter list details..."
+                                                      rows="3"
+                                                    ></textarea>
+                                                  </div>
+                                                `;
 
 
-                                                 // Use the problemId in the print function
-                                                 print('universalColumns', function (universalColumns) {
-                                                     if (universalColumns) {
-                                                         var categoriesHtml1 = '';
-                                                         universalColumns.forEach(function (category) {
-                                                             categoriesHtml1 += `<li><a class="dropdown-item deviceInputEachItemList" href="#" data-columnName="${category.columnName}" data-problem-id="${problemId}">${category.columnName}</a></li>`;
-                                                         });
-                                                         // Insert universal categories into the "universal" div
-
-
-                                                         print('individualColumns', function (individualColumns) {
-                                                             if (individualColumns) {
-                                                                 var categoriesHtml2 = '';
-
-                                                                 // Loop through individualColumns and filter based on selectedCategory
-                                                                 individualColumns.forEach(function (category) {
-                                                                     console.log(selectedCategory + " " + category.categoryName);
-                                                                     if (selectedCategory === category.categoryName) {
-                                                                         categoriesHtml2 += `<li><a class="dropdown-item deviceInputEachItemList" href="#" data-columnName="${category.columnName}" data-problem-id="${problemId}">${category.columnName}</a></li>`;
-                                                                     }
-                                                                 });
-
-                                                                 // Insert filtered categories into the "individual" div
-                                                                 $('.individual').html(categoriesHtml2); // Append to .individual div
-                                                             }
-                                                         });
-
-
-                                                         // Insert universal and individual items into the dropdown
-                                                         var bodyList = `
-                                                             <div class="dropdown">
-                                                                 <input type="text" class="form-control dropdown-toggle deviceInputFieldAddList" data-bs-toggle="dropdown" placeholder="ListName" aria-expanded="false">
-                                                                 <ul class="dropdown-menu custom-dropdown-menu">
-                                                                     ${categoriesHtml1} <!-- Universal columns -->
-                                                                     <div class="individual"></div> <!-- Individual columns -->
-                                                                 </ul>
-                                                             </div>
-                                                         `;
-
-                                                         dropdownInputField.closest('form').find(`#${problemId}-listName`).html(bodyList);
-
-                                                         // Handle item selection in the dropdown
-                                                         $(document).on('click', '.deviceInputEachItemList', function () {
-                                                             const selectedListItem = $(this).data('columnname');
-                                                             const problemIdList = $(this).data('problem-id');
-                                                             console.log('Problem ID:', problemIdList);
-
-                                                             $(this).closest('.dropdown').find('.deviceInputFieldAddList').val(selectedListItem);
-                                                             console.log('Selected Column:', selectedListItem);
-
-                                                             // first time need data type according to category and columnName
-                                                            // alert(selectedCategory +" "+selectedListItem );
-
-                                                            // do empty
-
-                                                            print('universalColumns', function(universalColumns) {
-                                                            if (universalColumns) {
-                                                                // Generate HTML for categories
-                                                                     var categoriesHtml = '';
-                                                                universalColumns.forEach(function(column) {
-                                                                    console.log(column.dataType);
-                                                                   if(column.columnName===selectedListItem){
-
-                                                                     switch (column.dataType) {
-                                                                         case 'text':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'password':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'email':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'url':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'search':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'tel':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'number':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'range':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'date':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'month':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'week':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'time':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'datetime-local':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'color':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'file':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'checkbox':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'radio':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'button':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'submit':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'reset':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                        case 'customDropDownList':
-
-                                                                         print('dropDownLists', function(dropDownLists) {
-                                                                           if (dropDownLists) {
-                                                                             const dropDownData = dropDownLists.find(item =>
-                                                                               item.dropDownListName === selectedListItem && item.categoryName===selectedCategory
-                                                                             );
-
-                                                                             if (dropDownData) {
-
-                                                                               // Assuming dropDownData.allData is an array of values for the dropdown
-                                                                               categoriesHtml += `<div class="mb-3">
-                                                                                                   <label>${column.columnName} </label>
-                                                                                                   <div class="dropdown">
-                                                                                                     <input type="text" class="form-control dropdown-toggle InputFieldDropDownList"
-                                                                                                            data-bs-toggle="dropdown" placeholder="Select DropDownList Value"
-                                                                                                            aria-expanded="false" data-problem-id="${problemId}" readonly>
-                                                                                                     <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldPopupBox">`;
-
-                                                                               // Generate each option as a list item in the dropdown
-                                                                               dropDownData.allData.forEach(function(option) {
-                                                                                 categoriesHtml += `<li class="dropdown-item">${option}</li>`;
-                                                                               });
-
-                                                                               categoriesHtml += `     </ul>
-                                                                                                     </div>
-                                                                                                   </div>`;
-
-                                                                               // Insert the HTML with the custom dropdown into the page
-                                                                               $(`#${problemIdList}-fieldName`).html(categoriesHtml);
-
-                                                                               // Attach event listener after the dropdown is inserted into the DOM
-                                                                               $('.dropdown-item').on('click', function() {
-                                                                                 // Get the selected value from the clicked item
-                                                                                 const selectedValue = $(this).text();
-                                                                                 // Set the selected value in the input field
-                                                                                 $(this).closest('.dropdown').find('.InputFieldDropDownList').val(selectedValue);
-                                                                               });
-                                                                             }
-                                                                             else{
-                                                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName}</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                                                            $(`#${problemIdList}-fieldName`).html(categoriesHtml);
-                                                                             }
-                                                                           }
-                                                                         });
-
-                                                                          break;
-
-
-                                                                         default:
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label></div>`;
-                                                                             break;
-                                                                     }
-
-                                                                // Insert evaluated Thymeleaf expression
-                                                                $(`#${problemIdList}-fieldName`).html(categoriesHtml);
-                                                                }
-
-                                                                });
-
-
-                                                             }
-                                                            });
-
-                                                          print('individualColumns', function(individualColumns) {
-                                                            if (individualColumns) {
-                                                                // Generate HTML for categories
-                                                                     var categoriesHtml = '';
-                                                                individualColumns.forEach(function(column) {
-                                                                    console.log(column.dataType);
-                                                                   if(column.columnName===selectedListItem && column.categoryName===selectedCategory){
-
-                                                                     switch (column.dataType) {
-                                                                         case 'text':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'password':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'email':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'url':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'search':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'tel':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'number':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'range':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'date':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'month':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'week':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'time':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'datetime-local':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'color':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'file':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'checkbox':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'radio':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'button':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'submit':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                         case 'reset':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
-                                                                             break;
-                                                                          case 'customDropDownList':
-                                                                               print('dropDownLists', function(dropDownLists) {
-                                                                                 if (dropDownLists) {
-                                                                                   const dropDownData = dropDownLists.find(item =>
-                                                                                     item.dropDownListName === selectedListItem && item.categoryName===selectedCategory
-                                                                                   );
-
-                                                                                   if (dropDownData) {
-
-                                                                                     // Assuming dropDownData.allData is an array of values for the dropdown
-                                                                                     categoriesHtml += `<div class="mb-3">
-                                                                                                         <label>${column.columnName} </label>
-                                                                                                         <div class="dropdown">
-                                                                                                           <input type="text" class="form-control dropdown-toggle InputFieldDropDownList"
-                                                                                                                  data-bs-toggle="dropdown" placeholder="Select DropDownList Value"
-                                                                                                                  aria-expanded="false" data-problem-id="${problemId}" readonly>
-                                                                                                           <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldPopupBox">`;
-
-                                                                                     // Generate each option as a list item in the dropdown
-                                                                                     dropDownData.allData.forEach(function(option) {
-                                                                                       categoriesHtml += `<li class="dropdown-item">${option}</li>`;
-                                                                                     });
-
-                                                                                     categoriesHtml += `     </ul>
-                                                                                                           </div>
-                                                                                                         </div>`;
-
-                                                                                     // Insert the HTML with the custom dropdown into the page
-                                                                                     $(`#${problemIdList}-fieldName`).html(categoriesHtml);
-
-                                                                                     // Attach event listener after the dropdown is inserted into the DOM
-                                                                                     $('.dropdown-item').on('click', function() {
-                                                                                       // Get the selected value from the clicked item
-                                                                                       const selectedValue = $(this).text();
-                                                                                       // Set the selected value in the input field
-                                                                                       $(this).closest('.dropdown').find('.InputFieldDropDownList').val(selectedValue);
-                                                                                     });
-                                                                                   }
-                                                                                 }
-                                                                               });
-
-                                                                                break;
-                                                                         default:
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label></div>`;
-                                                                             break;
-                                                                     }
-
-                                                                // Insert evaluated Thymeleaf expression
-                                                                $(`#${problemIdList}-fieldName`).html(categoriesHtml);
-                                                                }
-
-                                                                });
-
-
-                                                             }
-                                                            });
-
-                                                             // Add a new text field to the corresponding fieldName div
-                                                             var textFieldHtml = `
-                                                                 <div class="input-group mb-3">
-                                                                     <input type="text" class="form-control" name="${selectedListItem}-field" placeholder="Enter value for ${selectedListItem}">
-                                                                 </div>
-                                                             `;
-
-                                                            // $(`#${problemIdList}-fieldName`).html(textFieldHtml);
-                                                         });
-                                                     }
-                                                 });
+                                                 dropdownInputField.closest('form').find(`#${problemId}-listName`).html(bodyList);
                                              });
                                          }
                                      });
@@ -2690,31 +2375,48 @@ window.initServicingListGeneral = function () {
                                         const textDiv = $('#' + problemId + '-fieldName');
                                         const listDiv = $('#' + problemId + '-listName');
 
+
+
                                          const categoryNameDiv = $('#' + problemId + '-categoryName');
                                          const categoryName=categoryNameDiv.find('input').val();
-                                        // Find the input field within the 'textDiv' and get its value
-                                        const inputValue = textDiv.find('input').val();
-                                        const inputValueList = listDiv.find('input').val();
-                                        console.log("Input value: " + inputValue); // This will print the value of the input field
+                                         // Find the input field within the 'textDiv' and get its value
+                                         const inputValueList = listDiv.find('textarea').val();
 
-                                        addNewAccessoryInput(problemDiv,inputValueList,inputValue ,categoryName);
+                                        addNewAccessoryInput(problemDiv,inputValueList,categoryName);
                                     });
 
 
-                                     function addNewAccessoryInput(problemDiv,inputValueList,inputValue, categoryName) {
+                                     function addNewAccessoryInput(problemDiv,inputValueList, categoryName) {
                                          const accessoryCount = problemDiv.find('.input-group').length + 1;
 
-                                         var newInputGroup = `
-                                         <div class="fieldDiv">
-                                              <div class="input-group mb-3">
-                                                  <input type="text" class="form-control problem-input" name="${categoryName}(${inputValueList})" placeholder="${inputValue}" value="${inputValue}" aria-label="Accessories${accessoryCount}" aria-describedby="basic-addon2">
-                                                  <div class="input-group-append">
-                                                      <button class="btn btn-outline-secondary remove-problem" type="button">X</button>
-                                                  </div>
+                                      var newInputGroup = `
+                                        <div class="fieldDiv my-3">
+                                          <div class="card shadow-sm rounded p-3 border border-success">
+                                            <div class="card-body p-1">
+                                              <div class="mb-2">
+                                                <label class="form-label fw-bold text-success">Category: ${categoryName}</label>
                                               </div>
-                                         </div>
+                                              <div class="input-group">
+                                                <textarea
+                                                  class="form-control problem-input border-success"
+                                                  name="${categoryName}(${inputValueList})"
+                                                  placeholder="${inputValueList}"
+                                                  rows="3"
+                                                  aria-label="Accessories${accessoryCount}"
+                                                  aria-describedby="removeBtn-${accessoryCount}">${inputValueList}</textarea>
+                                                <button
+                                                  class="btn btn-outline-danger remove-problem"
+                                                  type="button"
+                                                  id="removeBtn-${accessoryCount}">
+                                                  ✕
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      `;
 
-                                         `;
+
 
                                          problemDiv.append(newInputGroup);
 
@@ -2735,7 +2437,7 @@ window.initServicingListGeneral = function () {
                                          $(this).closest('.fieldDiv').remove();
                                      });
 
-                                     showModal();
+                                     showModalAccessories();
                                  }
                              }
                          });

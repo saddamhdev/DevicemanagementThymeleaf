@@ -304,8 +304,24 @@ public class AddData implements Serializable {
                 ", presentTime='" + presentTime + '\'' +
                 ", allData=" + allData +
                 ", status='" + status + '\'' +
+                ", visibleId='" + visibleId + '\'' +
+                ", orderedDeviceStatus='" + orderedDeviceStatus + '\'' +
+                ", unOrderedDevice=" + unOrderedDevice +
+                ", deviceUsers=" + deviceUsers +
+                ", deviceTypeServicingOrRequestingOrOldAsInputting='" + deviceTypeServicingOrRequestingOrOldAsInputting + '\'' +
+                ", deviceTypePrimaryOrSecondary='" + deviceTypePrimaryOrSecondary + '\'' +
+                ", deviceTypeSecondaryInOrOut='" + deviceTypeSecondaryInOrOut + '\'' +
+                ", addAccessories=" + addAccessories +
+                ", extractsNewComponents=" + extractsNewComponents +
+                ", extractsOldComponents=" + extractsOldComponents +
+                ", listedComponents=" + listedComponents +
+                ", listedChild=" + listedChild +
+                ", childDevices=" + childDevices +
+                ", parentDevices=" + parentDevices +
+                ", bookingStatus='" + bookingStatus + '\'' +
                 '}';
     }
+
     @Setter
     @Getter
     public static class UnOrderedDevice implements Serializable {

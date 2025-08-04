@@ -27,29 +27,87 @@
             <div class="d-flex justify-content-center mb-2">
                 <button class="btn btn-success btn-sm" onclick="addUerToggle111()" >Add</button>
             </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="requestCustomerCareTable" placeholder="Search ...">
+                    </div>
+                </div>
                 <div class="responsive-table-wrapper">
-            <table id="requestCustomerCareTable" >
-                <thead>
-                <tr>
-                    <th scope="col" style="background-color: gray;">SN</th>
-                    <th scope="col" style="background-color: gray;">Bivag Name</th>
-                    <th scope="col" style="background-color: gray;">Category Name</th>
-                    <!-- Dynamically generated headers from universalColumns -->
-                    <th th:each="column : ${requestColumns}"
-                        th:if="${column.visibleType} == 'yes'"
-                        th:text="${column.columnName}"
-                        style="background-color: gray;">
-                    </th>
-                    <th scope="col" style="background-color: gray;">Delivery Product <br> Details</th>
-                    <th scope="col" style="background-color: gray;">Delivery Mode In customerCare</th>
-                    <th scope="col" style="background-color: gray;">Feedback</th>
-                    <th scope="col" style="background-color: gray;">Status In COO</th>
-                    <th scope="col" style="background-color: gray;">Available Product</th>
-                    <th scope="col" style="background-color: gray;">Request Time</th>
-                    <th scope="col" style="background-color: gray;">Action</th>
-                </tr>
-                </thead>
-                <tbody id="requestCustomerCareTableBody">
+                    <table id="requestCustomerCareTable" class="table table-bordered table-hover customTh">
+                        <thead>
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', 0, this)|">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Bivag Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', 1, this)|">
+                                Bivag Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', 2, this)|">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic Columns -->
+                            <th th:each="column, iter : ${requestColumns}"
+                                th:if="${column.visibleType} == 'yes'"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${3 + iter.index}, this)|"
+                                style="background-color: gray; color:white;">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Remaining Static Columns -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${3 + requestColumns.size()}, this)|">
+                                Delivery Product <br> Details <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${4 + requestColumns.size()}, this)|">
+                                Delivery Mode In customerCare <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${5 + requestColumns.size()}, this)|">
+                                Feedback <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${6 + requestColumns.size()}, this)|">
+                                Status In COO <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${7 + requestColumns.size()}, this)|">
+                                Available Product <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('requestCustomerCareTable', ${8 + requestColumns.size()}, this)|">
+                                Request Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action (not sortable) -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
+                    <tbody id="requestCustomerCareTableBody">
                 <tr th:each="device, iterStat : ${requestData}"
                     th:if="${ (device.inventory != null && device.inventory.checkAvailability != null && device.inventory.checkAvailability != 'No')
                 && device.requestMode == 'Accepted' && (device.inventory.inventoryStatus == 'Direct Delivery'

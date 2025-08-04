@@ -87,7 +87,7 @@ public class customerCare {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -114,7 +114,7 @@ public class customerCare {
             requestData.setCustomerCare(customerCare);
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
@@ -167,8 +167,8 @@ public class customerCare {
             addDataRepository.save(deviceRequestData);
             // Save the updated document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with serviceId " + serviceId + " not found.");
         }
@@ -214,8 +214,8 @@ public class customerCare {
 
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
@@ -280,8 +280,8 @@ public class customerCare {
 
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
 
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
@@ -346,8 +346,8 @@ public class customerCare {
 
             // Save the updated RequestData document
             serviceRequestRepository.save(requestData);
-            serviceRequestService.update();
-            addDataService.update();
+            serviceRequestService.clearCache();
+            addDataService.clearCache();
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
         }
@@ -409,8 +409,8 @@ public class customerCare {
         } else {
             return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
         }
-        requestDataService.update();
-        addDataService.update();
+        requestDataService.clearCache();
+        addDataService.clearCache();
 
         return ResponseEntity.ok("Selected rows processed successfully");
     }
@@ -448,7 +448,7 @@ public class customerCare {
 
             // Save the updated RequestData document
             requestDataRepository.save(requestData);
-            requestDataService.update();
+            requestDataService.clearCache();
 
 
         } else {

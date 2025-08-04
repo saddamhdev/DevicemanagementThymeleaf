@@ -2,6 +2,8 @@ package com.device.DeviceManagement.repository;
 
 import com.device.DeviceManagement.model.DropDownList;
 import com.device.DeviceManagement.model.RequestData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,7 @@ public interface DropDownListRepository extends MongoRepository<DropDownList, St
     List<DropDownList> findByCategoryNameAndDropDownListNameAndStatus(String categoryName,String dropDownListName, String status);
     List<DropDownList> findByStatus(String status);
     List<DropDownList> findByCategoryName(String categoryName);
-
+    Page<DropDownList> findByStatus(String status, Pageable pageable);
     DropDownList findByIdAndStatus(String Id,String status);
 
     // Query to find a single record by id and status

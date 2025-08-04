@@ -107,9 +107,10 @@ window.initAddUserGeneral = function () {
                 </div>
             `;
 
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Edit User Information");
-            $('#publicModal').modal('show');
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Edit User Information");
+             showModalMedium();
+          //  $('#publicModal').modal('show');
 
             $('#saveEditBtn').click(function() {
                 editUserBtn($row, userIdData);

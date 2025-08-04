@@ -2,6 +2,8 @@ package com.device.DeviceManagement.repository;
 
 
 import com.device.DeviceManagement.model.AddData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,9 @@ public interface AddDataRepository extends MongoRepository<AddData, String> {
     // Custom query methods (if needed) can be defined here
     List<AddData> findByCategoryName(String categoryName);
     List<AddData> findByStatus(String status);
+
+    Page<AddData> findByStatus(String status, Pageable pageable);
+
     List<AddData> findByCategoryNameAndStatus(String categoryName, String status);
     AddData findByIdAndStatus(String id,String status);
     Optional<AddData> findByVisibleIdAndStatus(String deviceName, String status);

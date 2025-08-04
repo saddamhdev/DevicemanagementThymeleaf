@@ -254,22 +254,22 @@ function printRejectCause(element) {
            <h1>${rejectCause}
            </h1>
         </div>
-           <div class="mb-3" style="margin-right: 0%; text-align: right;">
+           <div class="mb-3" style="margin-right: 0%; text-align: center;">
                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
            </div>
        `;
 
        // Add the HTML code to the modal body using jQuery
-        $('.modal-body').html(htmlToAdd);
+        $('.ModalMedium').html(htmlToAdd);
        // edit individual column header
-        $('#publicModalLabel').text("Rejected Cause:");
+        $('#publicModalMediumLabel').text("Rejected Cause:");
 
          $('#DeniedBtn').click(function() {
 
                  setRequestStatus(requestId,"Denied");
           });
 
-        showModal();
+        showModalMedium();
     }
 function columnValue(requestId, columnName, callback) {
             print('requestData', function(allAddData) {

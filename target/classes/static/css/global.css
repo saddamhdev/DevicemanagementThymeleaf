@@ -232,4 +232,39 @@ input[type="text"], input[type="date"], select {
     cursor: pointer;
 }
 /*chatbot end*/
+/*text area start*/
+.compact-cell strong {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.compact-cell {
+  text-align: left;
+  text-indent: 0;
+  padding: 4px 8px;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  font-family: "Noto Sans Bengali", "SolaimanLipi", "Segoe UI", sans-serif;
+  white-space: normal; /* default; allows wrapping but not line breaks */
+  word-break: break-word;
+}
+
+
+/*text area end*/
+/*globally table sorting start*/
+    .sort-icon {
+            font-size: 1.2em;  /* Increase this value as needed */
+            margin-left: 5px;
+            color: white; /* Optional: make it match the header text */
+        }
+
+        th {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /*globally table sorting end*/
+
+
 

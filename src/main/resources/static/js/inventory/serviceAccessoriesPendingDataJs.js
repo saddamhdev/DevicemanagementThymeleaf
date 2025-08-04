@@ -35,7 +35,6 @@ function addTableInformationOfService() {
        });
 
        // Print all services
-       console.log("All services:");
        selectedServiceIds.forEach(service => console.log(service.toString()));
 
         var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
@@ -603,162 +602,198 @@ function addTableInformationOfService() {
 
                                      }
                                  }
-
 window.initServiceAccessoriesPendingDataTable = function () {
-            var departmentElement = $(".departmentName"); // Target element with department data
-            var departmentName = departmentElement.data("departmentname"); // e.g., "it"
-            var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
-            var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
-    // Perform a single AJAX call
+    const tableBody = document.getElementById("serviceAccessoriesPendingDataTableBody");
+    if (!tableBody) {
+        console.error("Table body not found.");
+        return;
+    }
+
+    const departmentElement = $(".departmentName");
+    const departmentName = departmentElement.data("departmentname");
+    const departmentUserName = departmentElement.data("departmentuser-name");
+    const departmentUserId = departmentElement.data("departmentuser-id");
+
+    // Generate row signature from <tr>
+    function generateRowKeyFromRow(row) {
+        return Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+    }
+
+    // Generate row signature from data
+    function generateRowKeyFromData(sn, bivagName, categoryName, problemName, solution, time) {
+        const value = (solution.value || '').trim().replace(/\n/g, '');
+        return [
+            sn, bivagName, categoryName, problemName,
+            solution.category, value, solution.deviceManageType || '',
+            solution.deliveryDate || '', solution.inventoryToServiceCenterDeviceStatus || '',
+            time || ''
+        ].join('|');
+    }
+
+    // Step 1: Capture current rows
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = generateRowKeyFromRow(row);
+        currentRowMap.set(key, row);
+    });
+
+    // Step 2: Fetch data
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
-        success: function(data) {
-            console.log(data); // Log the entire data for debugging
+         data: {
+                page: pageNumber,
+                size: localStorage.getItem("pageSize") || 0
+            },
+        success: function (data) {
+            const allData = data['serviceRequests'];
+            const allAddData = data['allAddData'];
+            const newRowKeys = new Set();
 
-            var allData = data['serviceRequests'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("serviceAccessoriesPendingDataTableBody");
-
-            // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
-                allAddData.forEach(function(device) {
-                    if (device.categoryName === categoryName && device.userName===departmentName) {
+                allAddData.forEach(device => {
+                    if (device.categoryName === categoryName && device.userName === departmentName) {
                         count++;
                     }
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
 
-           let counter = 1; // Initialize a counter variable
+            allData.forEach(device => {
+                const bivagName = device.departmentName || "N/A";
+                const categoryName = device.categoryName || "N/A";
+                const sn = device.visibleServiceId || "N/A";
+                const time = device.customerCareSendDeviceToServiceTime
+                    ? formatDateTimeToAmPm(device.customerCareSendDeviceToServiceTime)
+                    : "";
 
-           // Loop through each device in allData
-          allData.forEach(function(device) {
-              const bivagName = device?.departmentName || "N/A";
-              const categoryName = device?.categoryName || "N/A";
-              const sn = device?.visibleServiceId || "N/A";
+                if (!Array.isArray(device.allProblem)) return;
 
-              if (Array.isArray(device.allProblem)) {
-                  device.allProblem.forEach(function(problem) {
-                      if (problem && Array.isArray(problem.proposalSolution)) {
-                          problem.proposalSolution.forEach(function(solution) {
-                              if (solution?.serviceCenterToInventoryAccessoriesRequestStatus === 'Pending') {
-                                  const row = document.createElement("tr");
+                device.allProblem.forEach(problem => {
+                    if (!Array.isArray(problem.proposalSolution)) return;
 
-                                  const availability = getAvailability(solution.category);
+                    problem.proposalSolution.forEach(solution => {
+                        if (solution?.serviceCenterToInventoryAccessoriesRequestStatus !== 'Pending') return;
 
-                                  row.innerHTML = `
-                                      <td>${sn}</td>
-                                      <td>${bivagName}</td>
-                                      <td>${categoryName}</td>
-                                      <td>${problem?.name || ""}</td>
-                                      <td>${solution?.category || ""} (${solution?.name || ""}-${solution?.value || ""})</td>
+                        const availability = getAvailability(solution.category);
+                        const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, time);
+                        newRowKeys.add(rowKey);
 
-                                      <td>
-                                          <button class="btn btn-info btn-sm view-button-pending"
-                                              data-category="${solution.category}"
-                                              data-device-id="${device.deviceId}"
-                                              data-button-id="viewAlternative"
-                                              title="View Available Same Accessories Category Devices">
-                                              ${availability}
-                                          </button>
-                                      </td>
+                        if (!currentRowMap.has(rowKey)) {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${sn}</td>
+                                <td>${bivagName}</td>
+                                <td>${categoryName}</td>
+                                <td>${problem?.name || ''}</td>
+                                <td class="text-start">
+                                    <div class="compact-cell bg-light">
+                                        <div><strong class="text-success">Category: ${solution.category}</strong></div>
+                                        <div>${solution.value.trim().replace(/\n/g, "<br>")}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm view-button-pending"
+                                        data-category="${solution.category}"
+                                        data-device-id="${device.deviceId}"
+                                        data-button-id="viewAlternative"
+                                        title="View Available Same Accessories Category Devices">
+                                        ${availability}
+                                    </button>
+                                </td>
+                                <td>${solution.deviceManageType || ''}</td>
+                                <td>${solution.deliveryDate || ''}</td>
+                                <td>${solution.inventoryToServiceCenterDeviceStatus || ''}</td>
+                                <td>${time}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center align-items-center action-button-container">
+                                        ${
+                                            solution.deviceManageType === 'Purchased' &&
+                                            availability !== "Unavailable" &&
+                                            solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
+                                            ? `<button class="btn btn-sm text-white delivery-button"
+                                                  data-category="${solution.category}"
+                                                  data-solution-name="${solution.name}"
+                                                  data-problem-name="${problem.name}"
+                                                  data-service-id="${device.id}"
+                                                  style="background-color:green;"
+                                                  title="Purchased Device Delivery">✔</button>`
+                                            : ''
+                                        }
 
-                                      <td>${solution.deviceManageType || ""}</td>
-                                      <td>${solution.deliveryDate || ""}</td>
+                                        ${
+                                            solution.deviceManageType !== 'Purchased' &&
+                                            availability !== "Unavailable" &&
+                                            solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
+                                            ? `<button class="btn btn-sm text-white delivery-button"
+                                                  data-category="${solution.category}"
+                                                  data-solution-name="${solution.name}"
+                                                  data-problem-name="${problem.name}"
+                                                  data-service-id="${device.id}"
+                                                  style="background-color:green;"
+                                                  title="Existing Device Delivery">✔</button>`
+                                            : ''
+                                        }
 
-                                      <td>${solution.inventoryToServiceCenterDeviceStatus || ''}</td>
-                                      <td>${device.customerCareSendDeviceToServiceTime ? formatDateTimeToAmPm(device.customerCareSendDeviceToServiceTime) : ""}</td>
+                                        ${
+                                            availability === "Unavailable" &&
+                                            solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
+                                            ? `<button class="btn btn-sm text-white clock-button"
+                                                  data-date="${solution.deliveryDate}"
+                                                  data-solution-name="${solution.name}"
+                                                  data-problem-name="${problem.name}"
+                                                  data-service-id="${device.id}"
+                                                  style="background-color:#f44336;"
+                                                  title="Edit delivery Date">
+                                                  <i class="fas fa-clock"></i>
+                                               </button>`
+                                            : ''
+                                        }
 
-                                      <td>
-                                          <div class="d-flex justify-content-center align-items-center action-button-container">
-                                              ${
-                                                  solution.deviceManageType === 'Purchased' &&
-                                                  availability !== "Unavailable" &&
-                                                  solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
-                                                      ? `<button class="btn btn-sm text-white delivery-button"
-                                                          data-category="${solution.category}"
-                                                          data-solution-name="${solution.name}"
-                                                          data-problem-name="${problem.name}"
-                                                          data-service-id="${device.id}"
-                                                          data-button-id="accepted"
-                                                          style="background-color:green;"
-                                                          title="Purchased Device Delivery">✔</button>`
-                                                      : ""
-                                              }
+                                        ${
+                                            availability !== "Unavailable"
+                                            ? `<button class="btn btn-info btn-sm view-button-selected-device"
+                                                  data-category="${solution.category}"
+                                                  data-service-id="${device.id}"
+                                                  data-button-id="view"
+                                                  data-device-id="${solution.inventoryToServiceCenterDeviceId}">
+                                                  &#128065;
+                                              </button>`
+                                            : ''
+                                        }
 
-                                              ${
-                                                  solution.deviceManageType !== 'Purchased' &&
-                                                  availability !== "Unavailable" &&
-                                                  solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
-                                                      ? `<button class="btn btn-sm text-white delivery-button"
-                                                          data-category="${solution.category}"
-                                                          data-solution-name="${solution.name}"
-                                                          data-problem-name="${problem.name}"
-                                                          data-service-id="${device.id}"
-                                                          data-button-id="accepted"
-                                                          style="background-color:green;"
-                                                          title="Existing Device Delivery">✔</button>`
-                                                      : ""
-                                              }
+                                        ${
+                                            availability === "Unavailable" &&
+                                            solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
+                                            ? `<input type="checkbox"
+                                                  data-category="${solution.category}"
+                                                  data-solution-name="${solution.name}"
+                                                  data-problem-name="${problem.name}"
+                                                  data-service-id="${device.id}"
+                                                  style="background-color:green; transform: scale(1.5); width: 12px; height: 12px;"
+                                                  title="Delivery Device">`
+                                            : ''
+                                        }
+                                    </div>
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        }
+                    });
+                });
+            });
 
-                                              ${
-                                                  availability === "Unavailable" &&
-                                                  solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
-                                                      ? `<button class="btn btn-sm text-white clock-button"
-                                                          data-date="${solution.deliveryDate}"
-                                                          data-solution-name="${solution.name}"
-                                                          data-problem-name="${problem.name}"
-                                                          data-service-id="${device.id}"
-                                                          data-button-id="clock"
-                                                          style="background-color:#f44336;"
-                                                          title="Edit delivery Date">
-                                                          <i class="fas fa-clock"></i>
-                                                        </button>`
-                                                      : ""
-                                              }
+            // Step 3: Remove outdated rows
+            currentRowMap.forEach((row, key) => {
+                if (!newRowKeys.has(key)) {
+                    row.remove();
+                }
+            });
 
-                                              ${
-                                                  availability !== "Unavailable"
-                                                      ? `<button class="btn btn-info btn-sm view-button-selected-device"
-                                                          data-category="${solution.category}"
-                                                          data-service-id="${device.id}"
-                                                          data-button-id="view"
-                                                          data-device-id="${solution.inventoryToServiceCenterDeviceId}">
-                                                          &#128065;
-                                                        </button>`
-                                                      : ""
-                                              }
 
-                                              ${
-                                                  availability === "Unavailable" &&
-                                                  solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
-                                                      ? `<input type="checkbox"
-                                                          data-category="${solution.category}"
-                                                          data-solution-name="${solution.name}"
-                                                          data-problem-name="${problem.name}"
-                                                          data-service-id="${device.id}"
-                                                          data-button-id="accepted"
-                                                          style="background-color: green; transform: scale(1.5); width: 12px; height: 12px;"
-                                                          title="Delivery Device">`
-                                                      : ""
-                                              }
-                                          </div>
-                                      </td>
-                                  `;
-
-                                  // Optional: add counter++ if used
-                                  // counter++;
-
-                                  tableBody.appendChild(row);
-                              }
-                          });
-                      }
-                  });
-              }
-          });
 
            // const myTable = document.querySelector("table");  // or more specific selector if you want
           // const myTable= document.getElementById("serviceAccessoriesPendingDataTable");
@@ -866,15 +901,15 @@ window.initServiceAccessoriesPendingDataTable = function () {
                     <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
                     <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
                 </div>
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                <div class="mb-3" style="margin-left: 0%; text-align: center;">
                     <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Do you want to update delivery date?");
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Do you want to update delivery date?");
 
             // Add event listener for save button
             $('#saveEditBtn').click(function() {
@@ -904,7 +939,7 @@ window.initServiceAccessoriesPendingDataTable = function () {
                        });
                     });
 
-            showModal();
+            showModalMedium();
         });
  // Add event listener for the availability button click
             $(document).on('click', '.delivery-button', function() {

@@ -72,8 +72,8 @@ function addDropdownListInformation(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("DropDown List")
+            $('.ModalMedium').html(htmlToAdd);
+            $('#publicModalMediumLabel').text("DropDown List")
              print('categories', function(categories) {
                    if (categories) {
                        // Generate HTML for categories
@@ -97,7 +97,7 @@ function addDropdownListInformation(){
                   saveTableInformationOfDropDownList(categoryName,dropDownListName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
 
@@ -149,8 +149,8 @@ function addDropdownListInformation(){
        `;
 
        // Add the HTML code to the modal body using jQuery
-       $('.modal-body').html(htmlToAdd);
-       $('#publicModalLabel').text("Edit DropDown List");
+       $('.ModalMedium').html(htmlToAdd);
+       $('#publicModalMediumLabel').text("Edit DropDown List");
 
        // Fetch categories and populate dropdown
        print('categories', function(categories) {
@@ -246,7 +246,7 @@ function addDropdownListInformation(){
            editTableInformationOfDropDownList(listId, categoryName, dropDownListName);
        });
 
-       showModal();
+       showModalMedium();
    }
 
 

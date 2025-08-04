@@ -13,22 +13,73 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <!-- Toggle Content Button -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="unOrderedDeviceTable" placeholder="Search ...">
+                    </div>
+                </div>
 
                 <div class="responsive-table-wrapper">
-                <table id="unOrderedDeviceTable" >
-                    <thead id="tableHeaderAddData" >
-                    <tr  >
-                        <th scope="col" style="background-color: gray;">SN</th>
-                        <th scope="col" style="background-color: gray;">Category Name</th>
-                        <!-- Dynamically generated headers from universalColumns -->
-                        <th th:each="column : ${universalColumns}" th:text="${column.columnName}" style="background-color: gray;"></th>
-                        <th scope="col" style="background-color: gray;">Description</th>
-                        <th scope="col" style="background-color: gray;">Components</th>
-                        <th scope="col" style="background-color: gray;">Status</th>
-                        <th scope="col" style="background-color: gray;">Create Time</th>
-                        <th scope="col" style="background-color: gray;">Action</th>
-                    </tr>
-                    </thead>
+                    <table id="unOrderedDeviceTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('unOrderedDeviceTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('unOrderedDeviceTable', 1, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic Columns from universalColumns -->
+                            <th th:each="column, iter : ${universalColumns}"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${2 + iter.index}, this)|"
+                                style="background-color: gray; color:white;">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Description -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${2 + universalColumns.size()}, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Components -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${3 + universalColumns.size()}, this)|">
+                                Components <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Status -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${4 + universalColumns.size()}, this)|">
+                                Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Create Time -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${5 + universalColumns.size()}, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Action -->
+                            <th scope="col" style="background-color: gray; color:white;">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+
+
                     <tbody id="unOrderedDeviceBody">
                     <tr th:each="device, iterStat : ${allDeviceData}"
                         th:if="${device.userName == 'purchase' and
@@ -77,6 +128,7 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <!-- Toggle Content Button -->
+                <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
                 <div class="responsive-table-wrapper">
                 <table id="deviceListTable" >
                     <thead id="tableHeaderAddDataList" >

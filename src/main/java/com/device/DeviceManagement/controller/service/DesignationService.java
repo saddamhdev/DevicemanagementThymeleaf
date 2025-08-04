@@ -1,5 +1,6 @@
 package com.device.DeviceManagement.controller.service;
 
+import com.device.DeviceManagement.model.BranchUser;
 import com.device.DeviceManagement.model.Designation;
 import com.device.DeviceManagement.model.User;
 import com.device.DeviceManagement.repository.DesignationRepository;
@@ -8,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +22,11 @@ public class DesignationService {
     @Autowired
     private DesignationRepository designationRepository;
     // Check cache first, if not found, load from DB and cache it
+    @Cacheable(value = "DesignationService", key = "#page + '-' + #size")
+    public Page<Designation> getPagedAddData(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return designationRepository.findByStatus("1", pageable);
+    }
     @Cacheable(value = "DesignationService")
     public List<Designation> add() {
         System.out.println("Fetching user from DB...");
