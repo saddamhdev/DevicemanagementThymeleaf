@@ -14,8 +14,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,6 @@ import java.util.*;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayOutputStream;
@@ -1059,9 +1057,11 @@ public class Service {
             byte[] pdfBytes = outputStream.toByteArray();
             addDataService.clearCache();
             serviceRequestService.clearCache();
+            // Return PDF as browser download
+
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=service_report.pdf")
-                    .contentType(org.springframework.http.MediaType.APPLICATION_PDF)
+                    .contentType(MediaType.APPLICATION_PDF)
                     .body(pdfBytes);
 
         } catch (Exception e) {

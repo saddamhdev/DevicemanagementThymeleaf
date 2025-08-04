@@ -1,11 +1,9 @@
 function ServiceReportExport(serviceId, requestInfo, actions, extractComponents, needAccessories) {
-    // Convert tables to arrays
     const table1Data = tableToArray(requestInfo);
     const table2Data = tableToArray(actions);
     const table3Data = tableToArray(extractComponents);
     const table4Data = tableToArray(needAccessories);
 
-    // Prepare data payload
     const payload = {
         serviceId: serviceId,
         requestInfo: table1Data,
@@ -14,22 +12,33 @@ function ServiceReportExport(serviceId, requestInfo, actions, extractComponents,
         needAccessories: table4Data
     };
 
-    // Send data using $.ajax
-    $.ajax({
-        url: "/service/saveExcel", // Update the URL if necessary
-        type: "POST",
-        contentType: "application/json", // Specify JSON format for the payload
-        data: JSON.stringify(payload), // Convert payload to JSON string
-        success: function(response) {
-                        CustomAlert(response);
-                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                              location.reload();
-                          });
+    // Use XMLHttpRequest or fetch instead of $.ajax for binary handling
+    fetch('/service/saveExcel', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        error: function(xhr, status, error) {
-
-            CustomAlert("Failed to save the Excel file.");
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not OK');
         }
+        return response.blob(); // Handle binary PDF content
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'service_report.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+        CustomAlert("❌ Failed to download the PDF file.");
+        console.error('Download error:', error);
     });
 }
 
