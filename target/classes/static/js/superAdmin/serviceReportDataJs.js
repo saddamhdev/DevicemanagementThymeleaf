@@ -755,9 +755,9 @@ window.initServiceReportDataGeneral = function () {
                              </div>
 
                          `;
-                         $('.ModalExtralarge').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalExtralargeLabel').text("Device Information");
+                         $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -807,7 +807,7 @@ window.initServiceReportDataGeneral = function () {
 
 
 
-                         showModalExtralarge();
+                         showModalExtraLarge();
                      });
 
 

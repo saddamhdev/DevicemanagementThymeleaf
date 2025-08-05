@@ -840,8 +840,8 @@ window.initRequestDataTable = function () {
                                             </div>
                                         `;
 
-                                        $('.ModalExtralarge').html(htmlToAdd);
-                                        $('#publicModalExtralargeLabel').text("Device Information");
+                                        $('.ModalExtraLarge').html(htmlToAdd);
+                                        $('#publicModalExtraLargeLabel').text("Device Information");
 
                                         var rowsHtml = '';
 
@@ -881,7 +881,7 @@ window.initRequestDataTable = function () {
                                                         $('#listDeviceInformationBody').html(rowsHtml);
 
                                                         // Show modal only if rows were added
-                                                        showModalExtralarge();
+                                                        showModalExtraLarge();
                                                     } else {
                                                         CustomAlert("No data found to display in the modal.");
                                                     }

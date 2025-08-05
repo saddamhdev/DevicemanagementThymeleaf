@@ -165,9 +165,9 @@ function setCancelRequest(requestId,status){
                              </div>
 
                          `;
-                         $('.ModalExtralarge').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalExtralargeLabel').text("Alternative Device Information");
+                         $('#publicModalExtraLargeLabel').text("Alternative Device Information");
 
                           print('requestData', function(requestData) {
                                  if (requestData) {
@@ -226,7 +226,7 @@ function setCancelRequest(requestId,status){
 
                              });
 
-                         showModalExtralarge();
+                         showModalExtraLarge();
                      });
 
 

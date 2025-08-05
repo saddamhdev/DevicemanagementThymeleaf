@@ -112,9 +112,9 @@ window.initServiceRequestPendingGeneral = function () {
                              </div>
 
                          `;
-                         $('.ModalExtralarge').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalExtralargeLabel').text("Device Information");
+                         $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -164,7 +164,7 @@ window.initServiceRequestPendingGeneral = function () {
 
 
 
-                         showModalExtralarge();
+                         showModalExtraLarge();
                      });
 
 

@@ -386,9 +386,9 @@ window.initServiceProposalGeneral = function () {
                                  </div>
 
                              `;
-                             $('.ModalExtralarge').html(htmlToAdd);
+                             $('.ModalExtraLarge').html(htmlToAdd);
 
-                             $('#publicModalExtralargeLabel').text("Device Information");
+                             $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -437,7 +437,7 @@ window.initServiceProposalGeneral = function () {
 
 
 
-                             showModalExtralarge();
+                             showModalExtraLarge();
                          });
 
 
