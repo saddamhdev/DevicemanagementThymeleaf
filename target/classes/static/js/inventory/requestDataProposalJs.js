@@ -22,6 +22,10 @@ function sendDeliveryDeviceAccept(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+              headers: {
+                                    'Content-Type': 'application/json',
+                                   'Authorization': 'Bearer ' + getAuthToken()
+                               },
              success: function (response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -49,6 +53,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+              headers: {
+                                    'Content-Type': 'application/json',
+                                   'Authorization': 'Bearer ' + getAuthToken()
+                               },
                success: function(result) {
 
                           CustomAlert(result);
@@ -69,6 +77,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -88,6 +100,10 @@ function setRequestStatusCheckAvailability(requestId,status){
                     status:status
 
                     },
+                     headers: {
+                                           'Content-Type': 'application/json',
+                                          'Authorization': 'Bearer ' + getAuthToken()
+                                      },
                     success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -114,6 +130,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -139,6 +159,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                              CustomAlert(result);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -173,9 +197,7 @@ window.initRequestDataProposalGeneral = function () {
             return;
         }
 
-        console.log(`Button Pressed: ${buttonPressed}`);
-        console.log(`Button ID: ${buttonId}`);
-        console.log(`Request ID: ${requestId}`);
+
 
   if (buttonId === "deliver") {
 

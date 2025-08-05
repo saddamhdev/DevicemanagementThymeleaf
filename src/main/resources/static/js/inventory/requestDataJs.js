@@ -44,6 +44,10 @@ function addTableInformationAlternativeDeviceRequest(requestId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                   headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
              success: function (response) {
                  alert(response); // Display success response
                  location.reload(); // Refresh the page
@@ -69,6 +73,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+                headers: {
+                                      'Content-Type': 'application/json',
+                                     'Authorization': 'Bearer ' + getAuthToken()
+                                 },
                success: function(result) {
 
                    alert(result);
@@ -87,6 +95,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -106,6 +118,10 @@ function setRequestStatusCheckAvailability(requestId,status){
                     status:status
 
                     },
+                     headers: {
+                                           'Content-Type': 'application/json',
+                                          'Authorization': 'Bearer ' + getAuthToken()
+                                      },
                     success: function(result) {
                         alert(result);
                         location.reload();
@@ -130,6 +146,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                          alert(result);
                          location.reload();
@@ -153,6 +173,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                          alert(result);
                          location.reload();
@@ -189,6 +213,10 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                   headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
              success: function (response) {
                  alert(response); // Display success response
                  location.reload(); // Refresh the page
@@ -321,6 +349,10 @@ window.initRequestDataTable = function () {
                         page: pageNumber,
                         size: localStorage.getItem("pageSize") || 0
                     },
+        headers: {
+                              'Content-Type': 'application/json',
+                             'Authorization': 'Bearer ' + getAuthToken()
+                         },
         success: function (data) {
             const allData = data['requestData'];
             const requestColumns = data['requestColumns'];
@@ -808,8 +840,8 @@ window.initRequestDataTable = function () {
                                             </div>
                                         `;
 
-                                        $('.modal-body').html(htmlToAdd);
-                                        $('#publicModalLabel').text("Device Information");
+                                        $('.ModalExtralarge').html(htmlToAdd);
+                                        $('#publicModalExtralargeLabel').text("Device Information");
 
                                         var rowsHtml = '';
 
@@ -849,7 +881,7 @@ window.initRequestDataTable = function () {
                                                         $('#listDeviceInformationBody').html(rowsHtml);
 
                                                         // Show modal only if rows were added
-                                                        showModal();
+                                                        showModalExtralarge();
                                                     } else {
                                                         CustomAlert("No data found to display in the modal.");
                                                     }

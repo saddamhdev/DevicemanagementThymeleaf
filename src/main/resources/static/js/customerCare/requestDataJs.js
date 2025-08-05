@@ -151,9 +151,9 @@ window.initRequestDataGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Alternative Device Information");
+                         $('#publicModalExtralargeLabel').text("Alternative Device Information");
 
                           print('requestData', function(requestData) {
                                  if (requestData) {
@@ -212,7 +212,7 @@ window.initRequestDataGeneral = function () {
 
                              });
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -248,9 +248,17 @@ window.initRequestDataGeneral = function () {
 window.initRequestDataTable = function () {
     // Perform a single AJAX call
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
+         data: {
+                page: pageNumber,
+                size: localStorage.getItem("pageSize") || 0
+            },
         dataType: 'json',
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(data) {
             var allData = data['requestData'];
             var requestColumns = data['requestColumns'];
@@ -864,8 +872,8 @@ window.initRequestDataTable = function () {
                                             </div>
                                         `;
 
-                                        $('.modal-body').html(htmlToAdd);
-                                        $('#publicModalLabel').text("Device Information");
+                                        $('.ModalExtralarge').html(htmlToAdd);
+                                        $('#publicModalExtralargeLabel').text("Device Information");
 
                                         var rowsHtml = '';
 
@@ -905,7 +913,7 @@ window.initRequestDataTable = function () {
                                                         $('#listDeviceInformationBody').html(rowsHtml);
 
                                                         // Show modal only if rows were added
-                                                        showModal();
+                                                        showModalExtralarge();
                                                     } else {
                                                         CustomAlert("No data found to display in the modal.");
                                                     }

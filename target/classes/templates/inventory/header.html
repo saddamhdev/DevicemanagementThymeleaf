@@ -34,7 +34,21 @@
         <script src="/js/inventory/serviceAccessoriesDeliveryDataJs.js?v=3"></script>
         <script src="/js/inventory/fragment.js?v=3"></script>
 
-        <script src="/js/globalJS.js?v=1"></script>
+        <script src="/js/globalJS.js?v=2"></script>
+
+        <script th:inline="javascript">
+            // Inject token from Thymeleaf model
+            let token = /*[[${token}]]*/ "";
+            let refreshToken = /*[[${refreshToken}]]*/ "";
+
+            // Save to localStorage
+            if (token) {
+                localStorage.setItem("token", token);
+            }
+            if (refreshToken) {
+                localStorage.setItem("refreshToken", refreshToken);
+            }
+        </script>
     </head>
 </p>
 

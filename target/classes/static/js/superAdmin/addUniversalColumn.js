@@ -18,6 +18,10 @@ function saveUniversalColumnBtn(Id) {
              dataType:dataType,
              requiredType:requiredType
              },
+             headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
             success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -53,6 +57,10 @@ function  editUniversalColumnBtn($row){
                    newDataType:newDataType,
                    newRequiredType:newRequiredType
                },
+               headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
                success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -142,6 +150,10 @@ function  editUniversalColumnBtn($row){
                 url: '/superAdmin/deleteUniversalColumn', // URL to your delete endpoint
                 type: 'POST',
                 data: { universalColumnName: columnName }, // Send category name as data
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

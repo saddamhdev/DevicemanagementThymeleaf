@@ -14,6 +14,10 @@ function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) 
                   dataType:dataType,
                   requiredType:requiredType
               },
+              headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
               success: function(response) {
                           CustomAlert(response);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -55,6 +59,10 @@ function editIndividualColumnBtn($row) {
                   newDataType:newDataType,
                   newRequiredType:newRequiredType
               },
+              headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
               success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -121,6 +129,10 @@ function editIndividualColumnBtn($row) {
                $.ajax({
                      type: "POST",
                      url: "/superAdmin/inputTypes",
+                     headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                      success: function(response) {
                          const $inputTypeSelect = $('#inputTypeIndividualEdit');
                          response.forEach(type => {
@@ -147,6 +159,10 @@ function editIndividualColumnBtn($row) {
                     oldIndividualCategoryName: categoryName,
                     oldIndividualColumnName: columnName
                 }, // Send category name as data
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -339,6 +355,10 @@ function selectionAndInputHandlerForAddColumn(){
         $.ajax({
                 type: "POST",
                 url: "/superAdmin/inputTypes",
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(response) {
                     const $inputTypeSelect = $('#inputTypeIndividual');
                     response.forEach(type => {

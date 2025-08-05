@@ -15,6 +15,10 @@ function deliveryDeviceToCustomerCare(deviceId,serviceId,status){
                          departmentUserId:departmentUserId
 
                          },
+                         headers: {
+                                                 'Content-Type': 'application/json',
+                                                'Authorization': 'Bearer ' + getAuthToken()
+                                            },
                          success: function(result) {
                               CustomAlert(result);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -45,6 +49,10 @@ function setServiceRequestAccept1(serviceId,status){
                 departmentUserId:departmentUserId
 
                 },
+                headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                 success: function(result) {
                            CustomAlert(result);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -120,9 +128,9 @@ window.initDeviceInOutListGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -172,7 +180,7 @@ window.initDeviceInOutListGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtraLarge();
                      });
 
 

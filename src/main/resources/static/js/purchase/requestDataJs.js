@@ -18,6 +18,10 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
         url: '/purchase/addPurchaseProposalForService',
         type: 'POST',
         data: formData,
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -47,6 +51,10 @@ function saveFormData(requestId) {
         url: '/purchase/addPurchaseProposal',
         type: 'POST',
         data: formData,
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -92,6 +100,10 @@ function addTableInformationOfDeviceForService(categoryName,serviceId,problemNam
          url: '/purchase/addDeviceInformationForService', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+         headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
          success: function(response) {
                           CustomAlert(response);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -135,6 +147,10 @@ function addTableInformationOfDevice(categoryName,requestId) {
          url: '/purchase/addDeviceInformation', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+         headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
          success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -178,6 +194,10 @@ function addTableInformationOfDevice(categoryName,requestId) {
           url: '/purchase/addDeviceInformationPurchase', // URL to your endpoint for saving data
           type: 'POST',
           data: formData, // Send serialized form data along with additional fields
+          headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
           success: function(response) {
                               CustomAlert(response);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -196,6 +216,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -230,6 +254,10 @@ function sendDeliveryDevice22(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                  headers: {
+                                          'Content-Type': 'application/json',
+                                         'Authorization': 'Bearer ' + getAuthToken()
+                                     },
              success: function (response) {
                             CustomAlert(response);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -269,6 +297,10 @@ function sendDeliveryDeviceForService(serviceId,deviceId,problemName,solutionNam
                   solutionName:solutionName
 
                   }),
+                  headers: {
+                                          'Content-Type': 'application/json',
+                                         'Authorization': 'Bearer ' + getAuthToken()
+                                     },
              success: function (response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -291,6 +323,10 @@ function setRequestStatus(requestId,status){
                 status:status
 
                 },
+                headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                 success: function(result) {
                                      CustomAlert(result);
                                        $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -320,6 +356,10 @@ function saveTableInformationOfDevice(requestId,categoryName){
                               location.reload();
                           });
                  },
+                 headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
                  error: function(xhr, status, error) {
                      console.error("Error saving data: " + error);
                  }
@@ -391,6 +431,10 @@ window.initRequestDataPurchaseTable = function () {
             page: pageNumber,
             size: localStorage.getItem("pageSize") || 0
         },
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];
@@ -1279,6 +1323,10 @@ window.initRequestDataDirectTable = function () {
                         page: pageNumber,
                         size: localStorage.getItem("pageSize") || 0
                     },
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function (data) {
             const allData = data['requestData'];
             const requestColumns = data['requestColumns'];

@@ -18,6 +18,10 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
         url: '/purchase/addPurchaseProposalForService',
         type: 'POST',
         data: formData,
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                           CustomAlert(response);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -93,6 +97,10 @@ function addTableInformationOfServiceForPaymentApprove(){
              type: "POST",
              contentType: "application/json",
              data: JSON.stringify(requestData),
+             headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
              success: function (response) {
                               CustomAlert(response);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -123,6 +131,10 @@ function saveFormData(requestId) {
         url: '/purchase/addPurchaseProposal',
         type: 'POST',
         data: formData,
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                             CustomAlert(response);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -142,6 +154,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -163,6 +179,10 @@ function setRequestStatus(requestId,status){
                 status:status
 
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                   CustomAlert(result);
                                     $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -186,6 +206,10 @@ function saveTableInformationOfDevice(requestId,categoryName){
                  url: '/purchase/saveDeviceInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                 headers: {
+                                    'Content-Type': 'application/json',
+                                   'Authorization': 'Bearer ' + getAuthToken()
+                               },
                  success: function(response) {
                                CustomAlert(response);
                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -666,6 +690,10 @@ window.initRequestForPaymentTable = function () {
                             page: pageNumber,
                             size: localStorage.getItem("pageSize") || 0
                         },
+         headers: {
+                            'Content-Type': 'application/json',
+                           'Authorization': 'Bearer ' + getAuthToken()
+                       },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];
@@ -960,6 +988,10 @@ window.initRequestForPaymentTable = function () {
                                solutionName: solutionName,
                                date: updatedDate
                            },
+                           headers: {
+                                              'Content-Type': 'application/json',
+                                             'Authorization': 'Bearer ' + getAuthToken()
+                                         },
                            success: function(response) {
                                     CustomAlert(response);
                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

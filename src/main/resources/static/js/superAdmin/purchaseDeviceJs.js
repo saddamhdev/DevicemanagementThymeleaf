@@ -6,6 +6,10 @@ function purchaseRequest(requestId,links) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId,comment:$("#comments").val() ,links: links }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -28,6 +32,10 @@ function setDeviceStatusApprove(requestId,status,categoryName){
                 categoryName:categoryName
 
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                CustomAlert(result);
                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -51,6 +59,10 @@ function setCancelPurchaseDevice(requestId,status){
                 cause:$('#rejectCause').val()
 
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                   CustomAlert(result);
                                     $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

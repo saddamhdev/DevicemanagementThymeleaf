@@ -25,6 +25,10 @@ function distributeDevice(serviceId) {
         type: 'POST',
         contentType: 'application/json', // Set content type to JSON
         data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -57,6 +61,10 @@ function  receiveDeviceFromCustomerCare(deviceId,serviceId,status){
                          departmentUserId:departmentUserId
 
                          },
+                          headers: {
+                                                'Content-Type': 'application/json',
+                                               'Authorization': 'Bearer ' + getAuthToken()
+                                           },
                          success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -185,9 +193,9 @@ window.initServiceRequestGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -236,7 +244,7 @@ window.initServiceRequestGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -262,6 +270,10 @@ window.initServiceRequestGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                 headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
@@ -447,27 +459,6 @@ $(document).on('keyup', '#deviceInputFieldAdd', function() {
             });
 
 
-}
-function print(dataType, callback) {
-    // Ensure callback is a function
-    if (typeof callback !== 'function') {
-        console.error('Callback is not a function');
-        return;
-    }
-
-    $.ajax({
-        url: '/superAdmin/allData',
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            // Execute the callback with the requested dataType
-            callback(data[dataType]);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
 }
 
 

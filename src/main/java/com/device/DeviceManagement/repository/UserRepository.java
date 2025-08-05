@@ -15,4 +15,5 @@ public interface UserRepository extends MongoRepository<User, String> {
     User findByUserNameAndUserIdAndUserPasswordAndStatus(String userName,String userId,String userPassword,String status);
     boolean existsByUserNameAndUserIdAndStatus(String userName,String userId,String status);
     boolean existsByUserNameAndUserPasswordAndStatus(String userName,String userPassword,String status);
+    boolean existsByUserNameAndStatus(String userName,String status);
 }

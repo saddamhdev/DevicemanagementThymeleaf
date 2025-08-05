@@ -66,6 +66,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          url: '/inventory/addDeviceInformation', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+         headers: {
+              'Content-Type': 'application/json',
+             'Authorization': 'Bearer ' + getAuthToken()
+         },
          success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -105,6 +109,10 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  url: '/departmentUser/editDeviceInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                 headers: {
+                       'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + getAuthToken()
+                  },
                  success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -983,6 +991,10 @@ window.initDeviceInformationGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                 headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();

@@ -13,6 +13,10 @@ function addTableInformationOfService(deviceId,comment){
                  url: '/departmentUser/addDeviceInformationOfService', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                  headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                  success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -40,6 +44,10 @@ function setServiceRequestAcceptPending(serviceId,status){
                 departmentUserId:departmentUserId
 
                 },
+                 headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -104,9 +112,9 @@ window.initServiceRequestPendingGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -156,7 +164,7 @@ window.initServiceRequestPendingGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -196,6 +204,10 @@ window.initServiceRequestPendingGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                 headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();

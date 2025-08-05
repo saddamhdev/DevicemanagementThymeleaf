@@ -12,6 +12,10 @@ function saveFormData(requestId) {
         url: '/purchase/addPurchaseProposal',
         type: 'POST',
         data: formData,
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
               CustomAlert(response);
                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -32,6 +36,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -53,6 +61,10 @@ function setRequestStatusApprove(requestId,status){
                 status:status
 
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                              CustomAlert(result);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -76,6 +88,10 @@ function setCancelRequest(requestId,status){
                 cause:$('#rejectCause').val()
 
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                 CustomAlert(result);
                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -149,9 +165,9 @@ function setCancelRequest(requestId,status){
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Alternative Device Information");
+                         $('#publicModalExtralargeLabel').text("Alternative Device Information");
 
                           print('requestData', function(requestData) {
                                  if (requestData) {
@@ -210,7 +226,7 @@ function setCancelRequest(requestId,status){
 
                              });
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 

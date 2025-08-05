@@ -31,7 +31,14 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-        fetch(url)
+const token = getAuthToken();
+        fetch(url, {
+               method: 'GET',
+               headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token
+               }
+           })
             .then(response => response.text())
             .then(html => {
                 container.innerHTML = html;
@@ -173,7 +180,14 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-        fetch(url)
+const token = getAuthToken();
+        fetch(url, {
+               method: 'GET',
+               headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token
+               }
+           })
           .then(response => response.text())
           .then(html => {
             container.innerHTML = html;
@@ -327,7 +341,14 @@ function loadMoreDevices(direction = "down") {
 
     const url = `/fragment1/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-    fetch(url)
+const token = getAuthToken();
+        fetch(url, {
+               method: 'GET',
+               headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token
+               }
+           })
         .then(response => response.text())
         .then(html => {
             loader.style.display = "none";
@@ -386,7 +407,14 @@ function loadByRange(pageNumber, pageSize) {
        var departmentName = departmentElement.data("departmentname");//it
     const url = `/fragment1/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-    fetch(url)
+  const token = getAuthToken();
+          fetch(url, {
+                 method: 'GET',
+                 headers: {
+                      'Content-Type': 'application/json',
+                     'Authorization': 'Bearer ' + token
+                 }
+             })
         .then(response => response.text())
         .then(html => {
             const tempDiv = document.createElement('div');

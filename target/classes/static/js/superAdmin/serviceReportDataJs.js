@@ -4,6 +4,10 @@ function setServiceReportAccept(serviceId, status,comment){
             type: "POST",
             url: "/superAdmin/serviceReportAccept", // URL to your controller method
             data: { serviceId: serviceId,status:status,comment:comment },
+            headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
             success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -44,6 +48,10 @@ function   addExtractDeviceToService(categoryName,deviceId){
          url: '/service/addDeviceInformation', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+         headers: {
+                            'Content-Type': 'application/json',
+                           'Authorization': 'Bearer ' + getAuthToken()
+                       },
          success: function(response) {
 
              hideModalExtract();
@@ -144,6 +152,10 @@ function serviceReport(serviceId,selectedExtractListDeviceIds,selectedNeedAccess
         type: 'POST',
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                                     CustomAlert(response);
                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -174,6 +186,10 @@ function addTableInformationOfServiceForEdit(serviceId) {
         url: '/service/addDeviceInformationOfServiceForEdit', // Backend endpoint
         type: 'POST',
         data: formData,
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                           CustomAlert(response);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -215,6 +231,10 @@ function addTableInformationOfService22(serviceId) {
         type: 'POST',
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -735,9 +755,9 @@ window.initServiceReportDataGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -787,7 +807,7 @@ window.initServiceReportDataGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -1423,6 +1443,10 @@ window.initServiceReportDataGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

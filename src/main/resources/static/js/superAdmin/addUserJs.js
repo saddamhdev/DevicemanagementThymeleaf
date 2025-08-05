@@ -16,6 +16,10 @@ function saveUserBtn(Id) {
             userId:userId,
             userPassword:userPassword
             },
+            headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
             success: function(response) {
 
                 CustomAlert(response);
@@ -54,6 +58,10 @@ function editUserBtn($row) {
                   newUserId:newUserId,
                   newUserPassword:newUserPassword
               },
+              headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
               success: function(response) {
                    alert(response);
                   /* hideModal();
@@ -134,6 +142,10 @@ function editUserBtn($row) {
                 userId:userId,
                 userPassword:userPassword
                  }, // Send category name as data
+                 headers: {
+                                    'Content-Type': 'application/json',
+                                   'Authorization': 'Bearer ' + getAuthToken()
+                               },
                 success: function(result) {
                    // i want to remove rowIndex row remove from table body
                      $row.remove();

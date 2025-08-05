@@ -8,6 +8,10 @@ function setAcceptanceOfAccessoriesProposal(rowData) {
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSON
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function (response) {
                                 CustomAlert(response);
                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -61,6 +65,10 @@ function addTableInformationOfService(serviceId) {
             departmentUserName:departmentUserName,
             departmentUserId:departmentUserId
         }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -116,9 +124,9 @@ window.initServiceProposalGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -168,7 +176,7 @@ window.initServiceProposalGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -378,9 +386,9 @@ window.initServiceProposalGeneral = function () {
                                  </div>
 
                              `;
-                             $('.modal-body').html(htmlToAdd);
+                             $('.ModalExtralarge').html(htmlToAdd);
 
-                             $('#publicModalLabel').text("Device Information");
+                             $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -429,7 +437,7 @@ window.initServiceProposalGeneral = function () {
 
 
 
-                             showModal();
+                             showModalExtralarge();
                          });
 
 
@@ -532,7 +540,10 @@ window.initServiceProposalTable = function () {
             page: pageNumber,
             size: localStorage.getItem("pageSize") || 0
         },
-        dataType: 'json',
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];

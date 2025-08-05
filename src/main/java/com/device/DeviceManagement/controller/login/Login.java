@@ -5,6 +5,8 @@ import com.device.DeviceManagement.controller.service.*;
 import com.device.DeviceManagement.model.*;
 //import com.device.DeviceManagement.producer.KafkaProducer;
 import com.device.DeviceManagement.repository.*;
+import com.device.DeviceManagement.security.JwtFilter;
+import com.device.DeviceManagement.security.JwtGenerator;
 import com.device.DeviceManagement.service.RedisRateLimiter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -100,6 +102,13 @@ public class Login {
     @Autowired
     private UserService userService;
     private static final Logger logger = LogManager.getLogger(Login.class);
+
+    private JwtGenerator jwtGenerator;
+    private JwtFilter jwtFilter;
+    public Login(JwtGenerator jwtGenerator,JwtFilter jwtFilter) {
+        this.jwtGenerator = jwtGenerator;
+        this.jwtFilter=jwtFilter;
+    }
     @GetMapping("/hello")
     public String hello() {
         return "Hello from Spring Boot!";
@@ -107,6 +116,8 @@ public class Login {
 
     @PostMapping("/home")
     public String login(@RequestParam String username, @RequestParam String password, Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+
+       System.out.println("Login Bro");
 
         String ipAddress = request.getRemoteAddr(); // get client IP address        // Here you can implement your login logic
         logger.info("User '{}' logged in from IP [{}]", username, ipAddress);
@@ -182,6 +193,17 @@ public class Login {
             // Add cookies to response
             response.addCookie(usernameCookie);
             response.addCookie(userIdCookie);
+
+
+
+            String token = jwtGenerator.generateToken(username);
+            String refreshToken = jwtGenerator.generateRefreshToken(username);
+
+            // Successful authentication response
+
+            model.addAttribute("refreshToken", refreshToken);
+            model.addAttribute("result", "Authenticated");
+            model.addAttribute("token",token);
 
 
             if(userType.equals("Department")){

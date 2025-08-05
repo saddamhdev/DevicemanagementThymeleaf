@@ -22,6 +22,10 @@ function saveUserBtn(Id) {
             userJoinDate: userJoinDate,
             userDesignation: userDesignation
         },
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
               CustomAlert(response);
                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -55,6 +59,10 @@ function editUserBtn($row, userIdData) {
             newUserJoinDate: newUserJoinDate,
             newUserDesignation: newUserDesignation
         },
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
             CustomAlert(response);
               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -126,6 +134,10 @@ window.initAddUserGeneral = function () {
                 url: '/departmentUser/deleteUser',
                 type: 'POST',
                 data: { userId: userId },
+                 headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                     CustomAlert(result);
                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

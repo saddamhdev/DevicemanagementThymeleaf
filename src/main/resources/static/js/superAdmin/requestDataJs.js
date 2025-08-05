@@ -14,6 +14,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+               headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
                success: function(result) {
 
                                CustomAlert(result);
@@ -44,6 +48,10 @@ function setRequestStatusData(requestId,status){
                      departmentUserId:departmentUserId,
                      cause:$('#rejectCause').length ? $('#rejectCause').val() : null
                     },
+                    headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                     success: function(result) {
                                          CustomAlert(result);
                                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

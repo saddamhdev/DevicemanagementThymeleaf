@@ -30,13 +30,15 @@ function addTableInformationAlternativeDeviceRequest(requestId){
           var departmentUserName = departmentElement.data("departmentuser-name");//saho
           var departmentUserId = departmentElement.data("departmentuser-id");//s
 
-              console.log("xyz "+selectedDeviceIds)
 
          // Send AJAX request to backend
          $.ajax({
              url: "/inventory/addAlternativeDeviceList",
              type: "POST",
-             contentType: "application/json",
+             headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
              data: JSON.stringify({
                   requestId: requestId,
                   deviceIds: selectedDeviceIds ,
@@ -71,6 +73,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+               headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
                success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -90,6 +96,10 @@ function listRequest(requestId,deviceIds) {
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -109,6 +119,10 @@ function setRequestStatusCheckAvailability(requestId,status){
                     status:status
 
                     },
+                    headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                     success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -135,6 +149,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                     headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                      success: function(result) {
                              CustomAlert(result);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -160,6 +178,10 @@ function setRequestStatus(requestId,status){
                      status:status
 
                      },
+                     headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                      success: function(result) {
                                     CustomAlert(result);
                                       $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -198,6 +220,10 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                  headers: {
+                                     'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + getAuthToken()
+                                },
              success: function (response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -226,7 +252,10 @@ function approveFinalPurchaseDeviceDelivery(requestId,deviceId){
          $.ajax({
              url: "/superAdmin/approveFinalPurchaseDeviceDelivery",
              type: "POST",
-             contentType: "application/json",
+             headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
              data: JSON.stringify({
                   requestId: requestId,
                   deviceId: deviceId ,
@@ -297,6 +326,10 @@ function columnValue(requestId, columnName, callback) {
         url: '/superAdmin/allData',
         type: 'POST',
         dataType: 'json',
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(data) {
             var allData = data['requestData'];
             var requestColumns = data['requestColumns'];

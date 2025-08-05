@@ -15,6 +15,10 @@ function saveRequestBtnRequestColumn(){
             requiredType:requiredType,
             visibleType:visibleType
             },
+            headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
             success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -44,6 +48,10 @@ function EditTableInformationOfRequest(requestId){
                  visibleType:$('#visibleTypeEdit').val(),
 
                  }, // Send serialized form data and category name
+                 headers: {
+                                    'Content-Type': 'application/json',
+                                   'Authorization': 'Bearer ' + getAuthToken()
+                               },
                  success: function(response) {
                                CustomAlert(response);
                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -117,6 +125,10 @@ function EditTableInformationOfRequest(requestId){
                        $.ajax({
                                type: "POST",
                                url: "/superAdmin/inputTypes",
+                               headers: {
+                                                  'Content-Type': 'application/json',
+                                                 'Authorization': 'Bearer ' + getAuthToken()
+                                             },
                                success: function(response) {
                                    const $inputTypeSelect = $('#inputTypeEdit');
                                    response.forEach(type => {
@@ -151,6 +163,10 @@ function EditTableInformationOfRequest(requestId){
                 url: '/superAdmin/deleteRequestColumn',
                 type: 'POST',
                 data: { requestId: requestId },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

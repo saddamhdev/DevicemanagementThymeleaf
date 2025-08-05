@@ -27,4 +27,5 @@ public interface InternalUserRepository extends MongoRepository<InternalUser, St
     );
 
     boolean existsByUserNameAndUserPasswordAndStatus(String userName,String userPassword,String status);
+    boolean existsByUserNameAndStatus(String userName,String status);
 }

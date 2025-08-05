@@ -10,6 +10,10 @@
             type: "POST",
             url: "/superAdmin/addCategory", // URL to your controller method
             data: { categoryName: categoryName },
+             headers: {
+                   'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + getAuthToken()
+              },
             success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -47,6 +51,11 @@
                         oldCategoryName: categoryName,
                         newCategoryName: newCategoryName
                     },
+
+                 headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
                     success: function(result) {
 
                           CustomAlert(result);
@@ -69,6 +78,10 @@
                 url: '/superAdmin/deleteCategory', // URL to your delete endpoint
                 type: 'POST',
                 data: { categoryName: categoryName }, // Send category name as data
+               headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
                 success: function(result) {
                                      CustomAlert(result);
                                        $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

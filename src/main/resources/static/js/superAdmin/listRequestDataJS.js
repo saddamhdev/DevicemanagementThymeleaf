@@ -30,6 +30,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+               headers: {
+                                  'Content-Type': 'application/json',
+                                 'Authorization': 'Bearer ' + getAuthToken()
+                             },
                success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -48,6 +52,10 @@ function listRequestSelect(requestId, deviceId) {
         url: '/superAdmin/approvedListRequest',
         type: 'POST',
         data: {requestId: requestId, deviceId: deviceId }, // Send as JSON
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
             console.log("AJAX request successful:", response);
             // Handle success response
@@ -82,6 +90,10 @@ function ApproveAlternativeListDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                  headers: {
+                                     'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + getAuthToken()
+                                },
              success: function (response) {
                    CustomAlert(response);
                      $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -103,6 +115,10 @@ function setListRequestStatus(requestId){
                      requestId: requestId,
                      cause:$('#listRejectCause').val()
                      },
+                     headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                      success: function(result) {
                               CustomAlert(result);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -326,6 +342,10 @@ window.initListRequestInventoryTable = function () {
                     page: pageNumber,
                     size: localStorage.getItem("pageSize") || 0
                 },
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
         success: function (data) {
             const allData = data['requestData'];
             const requestColumns = data['requestColumns'];
@@ -467,8 +487,8 @@ window.initListRequestInventoryTable = function () {
                                             </div>
                                         `;
 
-                                        $('.modal-body').html(htmlToAdd);
-                                        $('#publicModalLabel').text("Device Information");
+                                        $('.ModalExtralarge').html(htmlToAdd);
+                                        $('#publicModalExtralargeLabel').text("Device Information");
 
                                         var rowsHtml = '';
                                             print('requestData', function(requestData){
@@ -525,7 +545,7 @@ window.initListRequestInventoryTable = function () {
                                                                 $('#listDeviceInformationBody').html(rowsHtml);
 
                                                                 // Show modal only if rows were added
-                                                                showModal();
+                                                                showModalExtralarge();
                                                             } else {
                                                                 CustomAlert("No data found to display in the modal.");
                                                             }

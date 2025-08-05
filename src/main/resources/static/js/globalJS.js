@@ -1,5 +1,13 @@
 window.sortState = {};  // Make global if needed elsewhere  // For multiple tables, use keys like "userTable-0"
-
+function getAuthToken() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert("⚠️ You are not logged in. Please log in first.");
+        window.location.href = "/"; // redirect to login page
+        return null;
+    }
+    return token;
+}
 
 $(document).ready(function () {
     function applyMobileStyles() {
@@ -217,12 +225,16 @@ function print(dataType, callback) {
           console.error('Callback is not a function');
           return;
       }
-
+const token = getAuthToken();
+//alert(dataType+" "+ token);
       $.ajax({
           url: '/superAdmin/allData1',
           type: 'POST',
           dataType: 'json',
            data: { dataType: dataType }, // send dataType in POST body
+           headers: {
+                          'Authorization': 'Bearer ' + token
+                      },
           success: function(data) {
              // console.log(data);
               // Execute the callback with the requested dataType
@@ -235,11 +247,15 @@ function print(dataType, callback) {
   }
 function print1(dataType) {
       return new Promise(function(resolve, reject) {
+      const token = getAuthToken();
           $.ajax({
               url: '/superAdmin/allData1',
               type: 'POST',
               dataType: 'json',
               data: { dataType: dataType }, // send dataType in POST body
+              headers: {
+                             'Authorization': 'Bearer ' + token
+                         },
               success: function(data) {
                 //  console.log(data);
                   // Resolve the Promise with the requested dataType
@@ -1273,6 +1289,10 @@ function sendReply(msg) {
     fetch('/api/chat/message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         body: JSON.stringify({
             message: msg,
             collectionName: collectionName

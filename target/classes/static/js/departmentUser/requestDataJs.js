@@ -9,6 +9,10 @@ function  saveTableInformationOfRequest(){
                  url: '/departmentUser/addRequestInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                  headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                  success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -166,6 +170,10 @@ function  editRequestColumnBtn(requestId){
                    dataType: dataType,
                    requiredType:requiredType
                },
+                headers: {
+                                      'Content-Type': 'application/json',
+                                     'Authorization': 'Bearer ' + getAuthToken()
+                                 },
                success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -186,6 +194,10 @@ function setReceivedStatus(requestId,status){
                      requestId: requestId,
                      status:status
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -208,6 +220,10 @@ function setRequestStatus(requestId,status){
                      requestId: requestId,
                      status:status
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -230,6 +246,10 @@ function setRequestStatus(requestId,status){
                      status:status,
                      cause:$('#rejectCause').val()
                      },
+                      headers: {
+                                            'Content-Type': 'application/json',
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                      success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -267,6 +287,10 @@ function acceptDeliveryDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                   headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
              success: function (response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -294,6 +318,10 @@ function EditTableInformationOfRequest(requestId){
                  url: '/departmentUser/editRequestInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                  headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                  success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -631,27 +659,6 @@ window.initRequestDataGeneral = function () {
 };
 
 
-    function print(dataType, callback) {
-        // Ensure callback is a function
-        if (typeof callback !== 'function') {
-            console.error('Callback is not a function');
-            return;
-        }
-
-        $.ajax({
-            url: '/superAdmin/allData',
-            type: 'POST',
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-                // Execute the callback with the requested dataType
-                callback(data[dataType]);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-    }
 
     function columnValue(requestId, columnName, callback) {
         print('requestData', function(allAddData) {

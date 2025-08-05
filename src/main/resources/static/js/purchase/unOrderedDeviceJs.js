@@ -14,6 +14,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  url: '/departmentUser/addDeviceInformationOfService', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                 headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
                  success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -60,6 +64,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          url: '/purchase/addDeviceInformationExtraDevice', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+         headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
          success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -87,6 +95,10 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  url: '/purchase/editDeviceInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                 headers: {
+                                         'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + getAuthToken()
+                                    },
                  success: function(response) {
                              CustomAlert(response);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -843,6 +855,10 @@ window.initUnOrderedDeviceGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                 success: function(result) {
                               CustomAlert(result);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -1204,6 +1220,10 @@ function confirmExport() {
         headers: {
             "Content-Type": "application/json"
         },
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         body: JSON.stringify(exportData)
     })
     .then(response => {

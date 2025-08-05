@@ -19,6 +19,10 @@ function addTableInformationOfService() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(mergedFormData),
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function(response) {
                                 CustomAlert(response);
                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -97,6 +101,10 @@ window.initServiceAccessoriesListDataTable = function () {
                     page: pageNumber,
                     size: localStorage.getItem("pageSize") || 0
                 },
+        headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];

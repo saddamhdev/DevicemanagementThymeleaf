@@ -15,9 +15,10 @@ function ServiceReportExport(serviceId, requestInfo, actions, extractComponents,
     // Use XMLHttpRequest or fetch instead of $.ajax for binary handling
     fetch('/service/saveExcel', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+          headers: {
+                       'Content-Type': 'application/json',
+                      'Authorization': 'Bearer ' + getAuthToken()
+                  },
         body: JSON.stringify(payload)
     })
     .then(response => {
@@ -147,6 +148,10 @@ function   addExtractDeviceToService(categoryName,deviceId){
           });
 
          },
+         headers: {
+                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getAuthToken()
+                    },
          error: function(xhr, status, error) {
              console.error("Error saving data: " + error);
          }
@@ -195,6 +200,10 @@ function serviceReport(serviceId,selectedExtractListDeviceIds,selectedNeedAccess
                                  location.reload();
                              });
         },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
         }
@@ -244,6 +253,10 @@ function serviceReportEdit(serviceId,selectedExtractListDeviceIds,selectedNeedAc
                                    location.reload();
                                });
         },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
         }
@@ -275,6 +288,10 @@ function addTableInformationOfServiceForEdit(serviceId) {
                                location.reload();
                            });
         },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
         }
@@ -316,6 +333,10 @@ function accessoriesProposal(serviceId) {
                                  location.reload();
                              });
         },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         error: function(xhr, status, error) {
             console.error("Error saving data: " + error);
         }
@@ -380,12 +401,12 @@ window.initServicingListGeneral = function () {
 
                           // Simulating data fetch
                           print('serviceRequests', function (serviceRequests) {
+                         // console.log("Service "+serviceRequests)
                               if (serviceRequests) {
                                   // Find the matching service data by serviceId
                                   const serviceData = serviceRequests.find(item => item.id === serviceId);
 
                                   // Debugging: Log serviceData to ensure it contains the required fields
-                                  console.log(serviceData);
 
                                   if (serviceData) {
                                       const tableHtml = `
@@ -2082,9 +2103,9 @@ window.initServicingListGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -2134,7 +2155,7 @@ window.initServicingListGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtraLarge();
                      });
 
 
@@ -2471,6 +2492,10 @@ window.initServicingListGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
                 success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

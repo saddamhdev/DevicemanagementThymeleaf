@@ -32,8 +32,14 @@ localStorage.setItem("pageSize",pageSize);// global
 // Construct URL with query parameters
     //const url = `/fragment/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}`;
      const url = `/fragment1/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
-
-        fetch(url)
+      const token = getAuthToken();
+        fetch(url, {
+               method: 'GET',
+               headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token
+               }
+           })
             .then(response => response.text())
             .then(html => {
                 container.innerHTML = html;
@@ -88,7 +94,14 @@ pageNumber=0;
        // const url = `/fragment/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}`;
      const url = `/fragment1/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-        fetch(url)
+        const token = getAuthToken();
+        fetch(url, {
+               method: 'GET',
+               headers: {
+                    'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token
+               }
+           })
           .then(response => response.text())
           .then(html => {
             container.innerHTML = html;
@@ -153,7 +166,14 @@ function loadMoreDevices(direction = "down") {
 
     const url = `/fragment1/${pageName}?folder=departmentUser&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-    fetch(url)
+   const token = getAuthToken();
+   fetch(url, {
+          method: 'GET',
+          headers: {
+               'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+          }
+      })
         .then(response => response.text())
         .then(html => {
             loader.style.display = "none";
@@ -197,7 +217,14 @@ function loadByRange(pageNumber, pageSize) {
     const departmentName = $(".departmentName").data("departmentuser-name");
     const url = `/fragment1/${pageName}?folder=departmentUser&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-    fetch(url)
+   const token = getAuthToken();
+   fetch(url, {
+          method: 'GET',
+          headers: {
+               'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+          }
+      })
         .then(response => response.text())
         .then(html => {
             const tempDiv = document.createElement('div');

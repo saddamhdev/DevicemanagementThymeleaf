@@ -5,7 +5,11 @@ function setServiceRequestToInventoryData(rowData) {
         url: '/service/setServiceRequestToInventoryData', // Replace with your controller's endpoint
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(rowData), // Send the data as JSON
+        data: JSON.stringify(rowData), // Send the data as JSO
+        headers: {
+                'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + getAuthToken()
+           },
         success: function (response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -44,6 +48,10 @@ function addTableInformationOfService(serviceId) {
         type: 'POST',
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -74,6 +82,10 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
                 departmentUserId:departmentUserId
 
                 },
+                headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -138,9 +150,9 @@ window.initCooFeedbackGeneral = function () {
                              </div>
 
                          `;
-                         $('.modal-body').html(htmlToAdd);
+                         $('.ModalExtralarge').html(htmlToAdd);
 
-                         $('#publicModalLabel').text("Device Information");
+                         $('#publicModalExtralargeLabel').text("Device Information");
 
 
 
@@ -190,7 +202,7 @@ window.initCooFeedbackGeneral = function () {
 
 
 
-                         showModal();
+                         showModalExtralarge();
                      });
 
 
@@ -702,6 +714,10 @@ window.initCooFeedbackGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -864,27 +880,7 @@ function selectionAndInputDevice(){
 
 
 }
-function print(dataType, callback) {
-    // Ensure callback is a function
-    if (typeof callback !== 'function') {
-        console.error('Callback is not a function');
-        return;
-    }
 
-    $.ajax({
-        url: '/superAdmin/allData',
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            // Execute the callback with the requested dataType
-            callback(data[dataType]);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-}
 window.initCooFeedbackTable = function () {
     const tableBody = document.getElementById("cooFeedbackTableBody");
     if (!tableBody) {
@@ -931,6 +927,10 @@ window.initCooFeedbackTable = function () {
                 page: pageNumber,
                 size: localStorage.getItem("pageSize") || 0
             },
+        headers: {
+                        'Content-Type': 'application/json',
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];
@@ -1161,6 +1161,10 @@ window.initCooFeedbackTable = function () {
                                solutionName: solutionName,
                                date: updatedDate
                            },
+                           headers: {
+                                           'Content-Type': 'application/json',
+                                          'Authorization': 'Bearer ' + getAuthToken()
+                                      },
                            success: function(response) {
                             CustomAlert(response);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

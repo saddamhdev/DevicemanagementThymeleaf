@@ -1,5 +1,4 @@
 function distributeDeviceDirect(deviceId) {
-alert(deviceId);
     // Retrieve additional data from elements
     var departmentElement = $(".departmentName"); // Ensure this selector targets the correct element
     var departmentName = departmentElement.data("departmentname"); // e.g., "IT"
@@ -26,6 +25,10 @@ alert(deviceId);
         type: 'POST',
         contentType: 'application/json', // Set content type to JSON
         data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -52,6 +55,10 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  url: '/departmentUser/addDeviceInformationOfService', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                  headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                  success: function(response) {
                            CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -87,13 +94,16 @@ function addTableInformationOfService(deviceId,comment,categoryName){
      formData += '&deviceType=' + encodeURIComponent(deviceType);
 
      // Debugging: Print the collected data
-     console.log("Form Data:", formData);
 
      // AJAX call to save data
      $.ajax({
          url: '/departmentUser/addDeviceInformation', // URL to your endpoint for saving data
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
+          headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
          success: function(response) {
               CustomAlert(response);
               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -111,7 +121,6 @@ function editTableInformationOfDevice(deviceId,categoryName){
          var formData=$("#dynamicFormEditDevice").serialize();
           var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
          var departmentName = departmentElement.data("departmentuser-name");
-         console.log(departmentName); // Prints the department name to the console
              // Append the deviceId and category name to the form data
              formData += '&deviceId=' + encodeURIComponent(deviceId);
              formData += '&categoryName=' + encodeURIComponent(categoryName);
@@ -121,6 +130,10 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  url: '/departmentUser/editDeviceInformation', // URL to your endpoint for saving data
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
+                  headers: {
+                                        'Content-Type': 'application/json',
+                                       'Authorization': 'Bearer ' + getAuthToken()
+                                   },
                  success: function(response) {
                          CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

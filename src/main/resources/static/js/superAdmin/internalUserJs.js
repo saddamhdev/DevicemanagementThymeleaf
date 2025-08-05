@@ -16,6 +16,10 @@ function saveInternalUserBtn(branchName,userName,userId,userPassword) {
                  userId:userId,
                  userPassword:userPassword
               },
+              headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
               success: function(response) {
                                       CustomAlert(response);
                                         $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -59,6 +63,10 @@ function editInternalUserBtn($row) {
                  newUserId:newUserId,
                  newUserPassword:newUserPassword
               },
+              headers: {
+                                 'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + getAuthToken()
+                            },
               success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -136,6 +144,10 @@ function editInternalUserBtn($row) {
                     userId:userId,
                     userPassword:userPassword
                 }, // Send category name as data
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                   CustomAlert(result);
                                     $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

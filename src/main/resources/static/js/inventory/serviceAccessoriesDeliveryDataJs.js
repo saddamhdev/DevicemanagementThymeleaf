@@ -19,6 +19,10 @@ function addTableInformationOfService1() {
         type: "POST",
         contentType: "application/json",
         data: JSON.stringify(mergedFormData),
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function(response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -87,9 +91,17 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
     });
 
     $.ajax({
-        url: '/superAdmin/allData',
+        url: '/superAdmin/allDataRange',
         type: 'POST',
         dataType: 'json',
+         data: {
+                                page: pageNumber,
+                                size: localStorage.getItem("pageSize") || 0
+                            },
+         headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];
@@ -325,6 +337,10 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
                                solutionName: solutionName,
                                date: updatedDate
                            },
+                            headers: {
+                                                  'Content-Type': 'application/json',
+                                                 'Authorization': 'Bearer ' + getAuthToken()
+                                             },
                            success: function(response) {
                                // Handle success (e.g., show a message or close the modal)
                                      CustomAlert(response);

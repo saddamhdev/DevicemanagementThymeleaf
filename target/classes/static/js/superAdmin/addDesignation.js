@@ -10,6 +10,10 @@
             type: "POST",
             url: "/superAdmin/addDesignation", // URL to your controller method
             data: { designationName: designationName },
+            headers: {
+                               'Content-Type': 'application/json',
+                              'Authorization': 'Bearer ' + getAuthToken()
+                          },
             success: function(response) {
                         CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -49,6 +53,10 @@
                         oldDesignationName: designationName,
                         newDesignationName: newDesignationName
                     },
+                    headers: {
+                                       'Content-Type': 'application/json',
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                     success: function(result) {
                          CustomAlert(result);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -72,6 +80,10 @@
                 url: '/superAdmin/deleteDesignation', // URL to your delete endpoint
                 type: 'POST',
                 data: { designationName: designationName }, // Send category name as data
+                headers: {
+                                   'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + getAuthToken()
+                              },
                 success: function(result) {
                                CustomAlert(result);
                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

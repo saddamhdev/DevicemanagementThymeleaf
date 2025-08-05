@@ -59,5 +59,30 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById("customLoginForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // prevent default form submission
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+       fetch('/login/home', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: 'admin',
+                    password: 'password'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('token',token); // ✅ Store token
+            })
+
+    });
+</script>
+
 </body>
 </html>

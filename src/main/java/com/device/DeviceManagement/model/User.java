@@ -21,6 +21,10 @@ public class User implements Serializable {
     public User() {
     }
 
+    public  User(String userName)
+    {
+        this.userName = userName;
+    }
     // Parameterized constructor
     public User( String userName, String userId, String userPassword, String date, String presentTime, String status) {
 

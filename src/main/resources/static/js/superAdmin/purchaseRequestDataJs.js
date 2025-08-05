@@ -17,6 +17,10 @@ function purchaseRequest1(requestId,links) {
         departmentUserName:departmentUserName,
         departmentUserId:departmentUserId
         }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                              CustomAlert(response);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -49,6 +53,10 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
         departmentUserName:departmentUserName,
         departmentUserId:departmentUserId
         }),
+        headers: {
+                           'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
         success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -90,6 +98,10 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                        page: pageNumber,
                        size: localStorage.getItem("pageSize") || 0
                    },
+                   headers: {
+                                      'Content-Type': 'application/json',
+                                     'Authorization': 'Bearer ' + getAuthToken()
+                                 },
            success: function (data) {
                const allData = data['serviceRequests'];
                const allAddData = data['allAddData'];
@@ -527,6 +539,10 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                     solutionName: solutionName,
                                     date: updatedDate
                                 },
+                                headers: {
+                                                   'Content-Type': 'application/json',
+                                                  'Authorization': 'Bearer ' + getAuthToken()
+                                              },
                                 success: function(response) {
                                                           CustomAlert(response);
                                                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -692,6 +708,10 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                              page: pageNumber,
                              size: localStorage.getItem("pageSize") || 0
                          },
+             headers: {
+                                'Content-Type': 'application/json',
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
              success: function (data) {
                  const allData = data['requestData'];
                  const requestColumns = data['requestColumns'];
