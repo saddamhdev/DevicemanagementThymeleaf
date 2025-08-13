@@ -15,11 +15,7 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <!-- Toggle Content Button -->
-               <!-- <div class="d-flex justify-content-center mb-2">
-                    &lt;!&ndash;        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>&ndash;&gt;
-                    <button class="btn btn-success btn-sm" onclick="addDeviceInformation()" style=" white-space: nowrap;">Add Old Device</button>
 
-                </div>-->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <!-- Left: Page Size Selector -->
                     <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
@@ -68,9 +64,7 @@
                                 Device User <span class="sort-icon">⇅</span>
                             </th>
 
-                          <!--  <th scope="col" style="background-color: gray; color:white">
-                                Action
-                            </th>-->
+
                         </tr>
                         </thead>
 
@@ -93,16 +87,9 @@
                                   th:if="${iter.last}"
                                   th:text="${du.userName}">
                             </span>
-                            <button class="btn btn-info btn-sm deviceUserHistory" th:data-device-id="${device.id}" th:data-button-id="componentsView" style="margin-left:5px;">
-                                &#128065;
-                            </button>
+
                         </td>
-                       <!-- <td>
-                            <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}"></button>
-                            </div>
-                        </td>-->
+
                     </tr>
                     </tbody>
                 </table>

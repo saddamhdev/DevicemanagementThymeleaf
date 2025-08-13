@@ -23,7 +23,8 @@ function saveUserBtn(Id) {
             userDesignation: userDesignation
         },
          headers: {
-                               'Content-Type': 'application/json',
+
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(response) {
@@ -60,7 +61,8 @@ function editUserBtn($row, userIdData) {
             newUserDesignation: newUserDesignation
         },
          headers: {
-                               'Content-Type': 'application/json',
+
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(response) {
@@ -135,7 +137,8 @@ window.initAddUserGeneral = function () {
                 type: 'POST',
                 data: { userId: userId },
                  headers: {
-                                       'Content-Type': 'application/json',
+
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                 success: function(result) {

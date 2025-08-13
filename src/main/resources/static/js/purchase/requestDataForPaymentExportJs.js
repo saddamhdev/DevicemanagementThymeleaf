@@ -25,7 +25,7 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
                            });
         },
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         error: function(xhr, status, error) {
@@ -74,8 +74,8 @@ function confirmExport(){
          });
 
          // Print all services
-         console.log("All services:");
-         selectedServiceIds.forEach(service => console.log(service.toString()));
+
+       //  selectedServiceIds.forEach(service => console.log(service.toString()));
 
           var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
           var departmentName = departmentElement.data("departmentname");//it
@@ -100,12 +100,12 @@ function confirmExport(){
              success: function (response) {
                 // alert(response); // Display success response
                  confirmExport1(); // pdf download
-                 location.reload(); // Refresh the page
+
              },
              headers: {
-                                     'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + getAuthToken()
-                                },
+
+                    'Authorization': 'Bearer ' + getAuthToken()
+                },
              error: function (xhr, status, error) {
                  CustomAlert("Error: " + error); // Display error response
                  console.error("Error:", error);
@@ -131,7 +131,7 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function(response) {
@@ -154,7 +154,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function(response) {
@@ -179,7 +179,7 @@ function setRequestStatus(requestId,status){
 
                 },
                 headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                 success: function(result) {
@@ -206,7 +206,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
 
@@ -224,33 +224,6 @@ function saveTableInformationOfDevice(requestId,categoryName){
 window.initRequestDataForPaymentExportGeneral = function () {
 
 };
-
-
-
-$(document).ready(function() {
-            $('.hideButton').click(function() {
-                // Hide the second column
-                $('.secondDiv').hide();
-
-                // Show the showButton and set display to inline-block
-                $('.showButton').css('display', 'inline-block');
-
-                // Change the class of the first column to make it full-width
-                $('.firstDiv').removeClass('col-sm-9').addClass('col-sm-12');
-            });
-
-            $('.showButton').click(function() {
-                // Show the second column
-                $('.secondDiv').show();
-
-                // Hide the showButton again
-                $('.showButton').hide();
-
-                // Revert the class of the first column back to original
-                $('.firstDiv').removeClass('col-sm-12').addClass('col-sm-9');
-                $('.secondDiv').addClass('col-sm-3');
-            });
-        });
 
 
 window.initRequestDataForPaymentExportTable = function () {
@@ -277,7 +250,7 @@ window.initRequestDataForPaymentExportTable = function () {
             size: localStorage.getItem("pageSize") || 0
         },
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function (data) {
@@ -670,9 +643,9 @@ function addTableInformationOfServiceForPaymentExportModal() {
               if ( text === "components") {
                   removeIndexes.push(index);
               }
-              if (text === "price") {
-                  priceColumnIndex = index;
-              }
+              if (text.startsWith("price")) {
+                     priceColumnIndex = index;
+                 }
           });
 
           removeIndexes.reverse().forEach(i => headerClone.deleteCell(i));
@@ -714,6 +687,7 @@ function addTableInformationOfServiceForPaymentExportModal() {
 }
 
 function confirmExport1() {
+
     const modalRows = document.querySelectorAll("#modalBodyRows tr");
     const headerCells = document.querySelectorAll("#modalHeaderRow th");
 
@@ -735,7 +709,8 @@ function confirmExport1() {
     fetch("/purchase/exportDataForOrderedDevice", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + getAuthToken()
         },
         body: JSON.stringify(exportData)
     })
@@ -754,6 +729,7 @@ function confirmExport1() {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
+        location.reload(); // Refresh the page
     })
     .catch(error => {
         console.error("Error:", error);
@@ -782,7 +758,7 @@ window.initRequestDataDirectExportTable = function () {
                         size: localStorage.getItem("pageSize") || 0
                     },
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function (data) {
@@ -824,7 +800,7 @@ window.initRequestDataDirectExportTable = function () {
 
                 if (!currentRowMap.has(rowKey)) {
                     const row = document.createElement("tr");
-                    row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
+                 
 
                     let htmlData = `
                         <td>${sn}</td>
@@ -848,7 +824,7 @@ window.initRequestDataDirectExportTable = function () {
                             </div>
                             <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
                         </td>
-                        <td>${device.purchase?.purchaseStatus || "Pending"}</td>
+                        <td>${device.purchase?.budget || " "}</td>
                         <td>${device.purchase?.cooAns || " "}</td>
                         <td>${device.purchase?.purchaseDeviceExportStatus || 'Not Exported'}</td>
                         <td>${device.purchase?.requestTime ? formatDateTimeToAmPm(device.purchase?.requestTime) : "N/A"}</td>

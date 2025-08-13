@@ -737,7 +737,8 @@ public class ServiceRequest implements Serializable {
             private String serviceCenterManInfoToInventoryAccessoriesRequest;
             private String serviceCenterToInventoryAccessoriesRequestTime;
             private String serviceCenterToInventoryAccessoriesRequestStatus;
-
+            private String serviceCenterToCOOAccessoriesReRequestStatus;
+            private String serviceCenterToCOOAccessoriesReRequestStatusChecking;
 
             private String purchaseProposalToCooManInfo;
             private String purchaseProposalToCooAns;
@@ -778,6 +779,22 @@ public class ServiceRequest implements Serializable {
                 this.price = "0";
                 this.action = " ";
                 this.comment = " ";
+            }
+
+            public String getServiceCenterToCOOAccessoriesReRequestStatusChecking() {
+                return serviceCenterToCOOAccessoriesReRequestStatusChecking;
+            }
+
+            public void setServiceCenterToCOOAccessoriesReRequestStatusChecking(String serviceCenterToCOOAccessoriesReRequestStatusChecking) {
+                this.serviceCenterToCOOAccessoriesReRequestStatusChecking = serviceCenterToCOOAccessoriesReRequestStatusChecking;
+            }
+
+            public String getServiceCenterToCOOAccessoriesReRequestStatus() {
+                return serviceCenterToCOOAccessoriesReRequestStatus;
+            }
+
+            public void setServiceCenterToCOOAccessoriesReRequestStatus(String serviceCenterToCOOAccessoriesReRequestStatus) {
+                this.serviceCenterToCOOAccessoriesReRequestStatus = serviceCenterToCOOAccessoriesReRequestStatus;
             }
 
             public String getDeviceManageType() {
@@ -1243,9 +1260,61 @@ public class ServiceRequest implements Serializable {
                 return "ProposalSolutionItem{" +
                         "name='" + name + '\'' +
                         ", value='" + value + '\'' +
+                        ", category='" + category + '\'' +
                         ", price='" + price + '\'' +
                         ", action='" + action + '\'' +
                         ", comment='" + comment + '\'' +
+                        ", purchaseStatus='" + purchaseStatus + '\'' +
+                        ", deliveryDate='" + deliveryDate + '\'' +
+                        ", deviceManageType='" + deviceManageType + '\'' +
+                        ", inventoryToServiceCenterDeviceStatus='" + inventoryToServiceCenterDeviceStatus + '\'' +
+                        ", inventoryToServiceCenterDeviceTime='" + inventoryToServiceCenterDeviceTime + '\'' +
+                        ", inventoryToServiceCenterDeviceReceiveTime='" + inventoryToServiceCenterDeviceReceiveTime + '\'' +
+                        ", inventoryToServiceCenterDeviceId='" + inventoryToServiceCenterDeviceId + '\'' +
+                        ", inventoryManInfoSendingDeviceToServiceCenter='" + inventoryManInfoSendingDeviceToServiceCenter + '\'' +
+                        ", serviceCenterManInfoReceivingDeviceOfInventory='" + serviceCenterManInfoReceivingDeviceOfInventory + '\'' +
+                        ", purchaseManInfoOfPriceSetter='" + purchaseManInfoOfPriceSetter + '\'' +
+                        ", purchaseManInfoOfPriceSettingTime='" + purchaseManInfoOfPriceSettingTime + '\'' +
+                        ", purchaseManInfoOfPriceStatus='" + purchaseManInfoOfPriceStatus + '\'' +
+                        ", inventoryManInfoOfForPurchaseRequest='" + inventoryManInfoOfForPurchaseRequest + '\'' +
+                        ", inventoryForPurchaseRequestTime='" + inventoryForPurchaseRequestTime + '\'' +
+                        ", inventoryForPurchaseRequestStatus='" + inventoryForPurchaseRequestStatus + '\'' +
+                        ", cooManInfoOfPriceAcceptanceCommentSetter='" + cooManInfoOfPriceAcceptanceCommentSetter + '\'' +
+                        ", cooManInfoOfPriceAcceptanceCommentSettingTime='" + cooManInfoOfPriceAcceptanceCommentSettingTime + '\'' +
+                        ", cooManInfoOfPriceAcceptanceCommentStatus='" + cooManInfoOfPriceAcceptanceCommentStatus + '\'' +
+                        ", serviceCenterManInfoToInventoryAccessoriesRequest='" + serviceCenterManInfoToInventoryAccessoriesRequest + '\'' +
+                        ", serviceCenterToInventoryAccessoriesRequestTime='" + serviceCenterToInventoryAccessoriesRequestTime + '\'' +
+                        ", serviceCenterToInventoryAccessoriesRequestStatus='" + serviceCenterToInventoryAccessoriesRequestStatus + '\'' +
+                        ", serviceCenterToCOOAccessoriesReRequestStatus='" + serviceCenterToCOOAccessoriesReRequestStatus + '\'' +
+                        ", purchaseProposalToCooManInfo='" + purchaseProposalToCooManInfo + '\'' +
+                        ", purchaseProposalToCooAns='" + purchaseProposalToCooAns + '\'' +
+                        ", purchaseProposalToCooComment='" + purchaseProposalToCooComment + '\'' +
+                        ", purchaseProposalToCooBudget='" + purchaseProposalToCooBudget + '\'' +
+                        ", purchaseProposalToCooLinks=" + purchaseProposalToCooLinks +
+                        ", purchaseProposalToCooAcceptedLinks=" + purchaseProposalToCooAcceptedLinks +
+                        ", purchaseProposalToCooRejectedCause='" + purchaseProposalToCooRejectedCause + '\'' +
+                        ", purchaseProposalToCooDetails='" + purchaseProposalToCooDetails + '\'' +
+                        ", purchaseProposalToCooProposalStatus='" + purchaseProposalToCooProposalStatus + '\'' +
+                        ", purchaseProposalToCooTime='" + purchaseProposalToCooTime + '\'' +
+                        ", purchaseProposalToCooAcceptedTime='" + purchaseProposalToCooAcceptedTime + '\'' +
+                        ", purchaseProposalCooAcceptedManInfo='" + purchaseProposalCooAcceptedManInfo + '\'' +
+                        ", purchasePaymentToCooRequestManInfo='" + purchasePaymentToCooRequestManInfo + '\'' +
+                        ", purchasePaymentToCooRequestTime='" + purchasePaymentToCooRequestTime + '\'' +
+                        ", purchasePaymentToCooRequestStatus='" + purchasePaymentToCooRequestStatus + '\'' +
+                        ", purchasePaymentExportCount='" + purchasePaymentExportCount + '\'' +
+                        ", purchasePaymentToCooAcceptManInfo='" + purchasePaymentToCooAcceptManInfo + '\'' +
+                        ", purchasePaymentToCooAcceptingTime='" + purchasePaymentToCooAcceptingTime + '\'' +
+                        ", deviceBuyingStatus='" + deviceBuyingStatus + '\'' +
+                        ", buyingDeviceId='" + buyingDeviceId + '\'' +
+                        ", purchaseDeviceSenderToInventoryManInfo='" + purchaseDeviceSenderToInventoryManInfo + '\'' +
+                        ", purchaseDeviceSenderToInventoryStatus='" + purchaseDeviceSenderToInventoryStatus + '\'' +
+                        ", purchaseDeviceSenderToInventoryTime='" + purchaseDeviceSenderToInventoryTime + '\'' +
+                        ", purchaseDeviceSenderToInventoryDeviceId='" + purchaseDeviceSenderToInventoryDeviceId + '\'' +
+                        ", purchaseDeviceReceiverToInventoryManInfo='" + purchaseDeviceReceiverToInventoryManInfo + '\'' +
+                        ", purchaseDeviceReceiverToInventoryTime='" + purchaseDeviceReceiverToInventoryTime + '\'' +
+                        ", purchaseDeviceExportStatus='" + purchaseDeviceExportStatus + '\'' +
+                        ", purchaseDeviceExportManInfo='" + purchaseDeviceExportManInfo + '\'' +
+                        ", purchaseDeviceExportTime='" + purchaseDeviceExportTime + '\'' +
                         '}';
             }
         }

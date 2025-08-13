@@ -11,7 +11,7 @@
             url: "/superAdmin/addDesignation", // URL to your controller method
             data: { designationName: designationName },
             headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
             success: function(response) {
@@ -54,7 +54,7 @@
                         newDesignationName: newDesignationName
                     },
                     headers: {
-                                       'Content-Type': 'application/json',
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                     success: function(result) {
@@ -81,7 +81,7 @@
                 type: 'POST',
                 data: { designationName: designationName }, // Send category name as data
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

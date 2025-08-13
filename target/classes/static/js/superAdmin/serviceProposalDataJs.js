@@ -9,13 +9,38 @@ function setAcceptanceOfAccessoriesProposal(rowData) {
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSON
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function (response) {
                                 CustomAlert(response);
                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                      //location.reload();
+                                      location.reload();
+                                  });
+        },
+        error: function (xhr, status, error) {
+
+            CustomAlert("An error occurred while saving the data!");
+        }
+    });
+}
+function setAcceptanceOfAccessoriesProposalResubmit(rowData) {
+   // console.log("Sending Row Data:", rowData);
+
+    // Send the data to the controller using AJAX
+    $.ajax({
+        url: '/superAdmin/setAcceptanceOfAccessoriesProposalResubmission', // Replace with your controller's endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(rowData), // Send the data as JSON
+        headers: {
+
+                          'Authorization': 'Bearer ' + getAuthToken()
+                      },
+        success: function (response) {
+                                CustomAlert(response);
+                                  $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                      location.reload();
                                   });
         },
         error: function (xhr, status, error) {
@@ -66,7 +91,7 @@ function addTableInformationOfService(serviceId) {
             departmentUserId:departmentUserId
         }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -124,9 +149,9 @@ window.initServiceProposalGeneral = function () {
                              </div>
 
                          `;
-                         $('.ModalExtralarge').html(htmlToAdd);
+                         $('.ModalExtraLarge').html(htmlToAdd);
 
-                         $('#publicModalExtralargeLabel').text("Device Information");
+                         $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -176,7 +201,7 @@ window.initServiceProposalGeneral = function () {
 
 
 
-                         showModalExtralarge();
+                         showModalExtraLarge();
                      });
 
 
@@ -184,6 +209,7 @@ window.initServiceProposalGeneral = function () {
 
         }
         else if (buttonId === "accepted"){
+
           var htmlToAdd = `
                      <div class="mb-3" style="margin-left: 0%; text-align:center;">
                          <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
@@ -541,9 +567,9 @@ window.initServiceProposalTable = function () {
             size: localStorage.getItem("pageSize") || 0
         },
         headers: {
-                           'Content-Type': 'application/json',
-                          'Authorization': 'Bearer ' + getAuthToken()
-                      },
+
+              'Authorization': 'Bearer ' + getAuthToken()
+          },
         success: function (data) {
             const allData = data['serviceRequests'];
             const allAddData = data['allAddData'];
@@ -573,6 +599,14 @@ window.initServiceProposalTable = function () {
                        // if (solution.name == null) return;
                         if (solution.name !== null ) {
                         const status = solution.cooManInfoOfPriceAcceptanceCommentStatus || "";
+                          let statusResubmission = null;
+                          if (solution.serviceCenterToCOOAccessoriesReRequestStatus !== "Yes") {
+                            statusResubmission = "Good";
+                          }
+                         if (solution.serviceCenterToCOOAccessoriesReRequestStatusChecking === "Done") {
+                             statusResubmission = "Good";
+                           }
+
                         const availability = getAvailability(solution.category);
 
                         const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, status, presentTime);
@@ -592,26 +626,45 @@ window.initServiceProposalTable = function () {
                                     </div>
                                 </td>
                                 <td><input type="text" class="form-control" value="${solution.price || ''}"></td>
+
                                 <td>
-                                    <select class="form-select form-select-sm">
-                                        <option value="" disabled ${solution.action == null ? 'selected' : ''}>Select</option>
-                                        <option value="accept" ${solution.action == 'accept' ? 'selected' : ''}>Accept</option>
-                                        <option value="reject" ${solution.action == 'reject' ? 'selected' : ''}>Reject</option>
-                                    </select>
+                                ${statusResubmission
+                                    ? status
+                                    : `
+                                        <select class="form-select form-select-sm">
+                                            <option value="" disabled ${solution.action == null ? 'selected' : ''}>Select</option>
+                                            <option value="accept" ${solution.action == 'accept' ? 'selected' : ''}>Accept</option>
+                                            <option value="reject" ${solution.action == 'reject' ? 'selected' : ''}>Reject</option>
+                                        </select>
+                                    `
+                                }
                                 </td>
+                                 <td>${solution.serviceCenterToCOOAccessoriesReRequestStatus || ''}</td>
+
                                 <td><input type="text" class="form-control" value="${solution.comment || ''}"></td>
-                                <td>
-                                    <button class="btn btn-info btn-sm">${availability}</button>
-                                </td>
-                                <td>${status}</td>
+                                 <td>
+                                       <button class="btn btn-info btn-sm view-button-pending" data-category="${solution.category}" data-device-id="${device.deviceId}" data-button-id="viewAlternative" title="View Available Same Accessories Category Devices" >
+                                           ${availability}
+                                       </button>
+                                   </td>
+                               <td>${status ? "Done" : "Pending"}</td>
                                 <td>${presentTime}</td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        ${status !== "Accepted" ? `
-                                            <button class="btn btn-sm text-white" style="background-color:green;">✔</button>
-                                        ` : ""}
-                                    </div>
-                                </td>
+
+                                 <td>
+
+                                  <div class="d-flex justify-content-center align-items-center action-button-container">
+
+
+                                             ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted"  ? `
+                                                 <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on accessories (accept or reject)">✔</button>
+                                             ` : ""}
+                                            ${solution.serviceCenterToCOOAccessoriesReRequestStatusChecking === "Pending"  ? `
+                                                 <button class="btn btn-sm text-white setAcceptanceCommentBtnResubmission" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on Resubmission accessories (accept or reject)">✔</button>
+                                             ` : ""}
+
+
+                                          </div>
+                               </td>
                             `;
                             tableBody.appendChild(row);
                         }
@@ -810,13 +863,58 @@ window.initServiceProposalTable = function () {
               const confirmation = confirm(`Are you sure you want to submit hh?`);
 
               if (confirmation) {
-                  console.log("Row Data:", rowData);
+                 // console.log("Row Data:", rowData);
                   setAcceptanceOfAccessoriesProposal(rowData);
               } else {
                   console.log("Submission cancelled.");
               }
           });
+        $(document).off('click', '.setAcceptanceCommentBtnResubmission').on('click', '.setAcceptanceCommentBtnResubmission', function () {
 
+              const $button = $(this);
+              var button = $(event.target).closest('button');
+              var serviceId = button.data('serviceId');
+              const $row = $button.closest('tr');
+
+              const bibagName = $row.find('td:nth-child(2)').text();
+              const solutionCategory = $row.find('td:nth-child(3)').text();
+              const solutionName = $row.find('td:nth-child(4)').text();
+              const problemName = $row.find('td:nth-child(5)').text();
+              const price = $row.find('td:nth-child(6) input').val();
+              const action = $row.find('td:nth-child(7) select').val();
+              const comment = $row.find('td:nth-child(8) input').val();
+
+
+
+              var departmentElement = $(".departmentName");
+              var departmentName = departmentElement.data("departmentname");
+              var departmentUserName = departmentElement.data("departmentuser-name");
+              var departmentUserId = departmentElement.data("departmentuser-id");
+
+              const rowData = {
+                  serviceId: serviceId,
+                  bibagName: bibagName,
+                  solutionCategory: solutionCategory,
+                  solutionName: solutionName,
+                  problemName: problemName,
+                  price: price,
+                  action: action,
+                  comment: comment,
+                  departmentName: departmentName,
+                  departmentUserName: departmentUserName,
+                  departmentUserId: departmentUserId
+              };
+
+              // Show confirmation dialog
+              const confirmation = confirm(`Are you sure you want to Resubmit ?`);
+
+              if (confirmation) {
+                 // console.log("Row Data:", rowData);
+                  setAcceptanceOfAccessoriesProposalResubmit(rowData);
+              } else {
+                  console.log("Submission cancelled.");
+              }
+          });
 
             // Add event listener for the availability button click
         $(document).on('click', '.view-button-pending', function() {

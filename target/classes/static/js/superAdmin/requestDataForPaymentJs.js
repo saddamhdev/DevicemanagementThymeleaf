@@ -19,7 +19,7 @@ function saveFormDataForService(serviceId,problemName,solutionName) {
         type: 'POST',
         data: formData,
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -98,7 +98,7 @@ function addTableInformationOfServiceForPaymentApprove(){
              contentType: "application/json",
              data: JSON.stringify(requestData),
              headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
              success: function (response) {
@@ -132,7 +132,7 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -155,7 +155,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -180,7 +180,7 @@ function setRequestStatus(requestId,status){
 
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {
@@ -207,7 +207,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                    'Content-Type': 'application/json',
+
                                    'Authorization': 'Bearer ' + getAuthToken()
                                },
                  success: function(response) {
@@ -691,7 +691,7 @@ window.initRequestForPaymentTable = function () {
                             size: localStorage.getItem("pageSize") || 0
                         },
          headers: {
-                            'Content-Type': 'application/json',
+
                            'Authorization': 'Bearer ' + getAuthToken()
                        },
         success: function (data) {
@@ -989,7 +989,7 @@ window.initRequestForPaymentTable = function () {
                                date: updatedDate
                            },
                            headers: {
-                                              'Content-Type': 'application/json',
+
                                              'Authorization': 'Bearer ' + getAuthToken()
                                          },
                            success: function(response) {

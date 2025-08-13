@@ -100,6 +100,7 @@ public class AddData implements Serializable {
         this.status = status;
 
         this.visibleId=other.visibleId;
+        this.unOrderedDevice=other.unOrderedDevice;
         this.orderedDeviceStatus=other.orderedDeviceStatus;
         this.deviceTypeServicingOrRequestingOrOldAsInputting=other.deviceTypeServicingOrRequestingOrOldAsInputting;
         this.deviceTypePrimaryOrSecondary=other.deviceTypePrimaryOrSecondary;

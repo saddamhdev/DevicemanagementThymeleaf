@@ -549,7 +549,7 @@ window.initServiceAccessoriesPendingPurchaseDataTable = function () {
                                date: updatedDate
                            },
                             headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                            success: function(response) {
@@ -711,7 +711,7 @@ window.initServiceAccessoriesPendingPurchaseDataTable = function () {
                                                                    departmentUserId:departmentUserId
                                                                },
                                                                 headers: {
-                                                                                      'Content-Type': 'application/json',
+
                                                                                      'Authorization': 'Bearer ' + getAuthToken()
                                                                                  },
                                                                success: function(response) {

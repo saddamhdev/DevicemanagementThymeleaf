@@ -250,7 +250,14 @@ function loadByRange(pageNumber, pageSize) {
        var departmentName = departmentElement.data("departmentname");//it
        const url = `/fragment1/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-    fetch(url)
+    const token = getAuthToken();
+       fetch(url, {
+              method: 'GET',
+              headers: {
+                   'Content-Type': 'application/json',
+                  'Authorization': 'Bearer ' + token
+              }
+          })
         .then(response => response.text())
         .then(html => {
         console.log(html);

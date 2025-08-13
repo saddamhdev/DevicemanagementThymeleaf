@@ -965,6 +965,75 @@ public class Service {
                     .body("Error saving data. Please try again.");
         }
     }
+    @PostMapping("/setServiceRequestToCOODataAgain")
+    @ResponseBody
+    public ResponseEntity<String> setServiceRequestToCOODataAgain(@RequestBody Map<String, Object> rowData) {
+        try {
+            // Extract data
+            String serviceId = rowData.getOrDefault("serviceId", "N/A").toString();
+            String bibagName = rowData.getOrDefault("bibagName", "N/A").toString();
+            String solutionCategory = rowData.getOrDefault("solutionCategory", "N/A").toString();
+            String solutionName = rowData.getOrDefault("solutionName", "N/A").toString();
+            String problemName = rowData.getOrDefault("problemName", "N/A").toString();
+            String price = rowData.getOrDefault("price", "0").toString();
+            String action = rowData.getOrDefault("action", " ").toString();
+            String comment = rowData.getOrDefault("comment", " ").toString();
+
+            String departmentName = rowData.getOrDefault("departmentName", "Unknown").toString();
+            String departmentUserName = rowData.getOrDefault("departmentUserName", "Anonymous").toString();
+            String departmentUserId = rowData.getOrDefault("departmentUserId", "UnknownID").toString();
+
+            // Retrieve the ServiceRequest by serviceId and status
+            Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
+            System.out.println("Fetched ServiceRequest: " + optionalRequestData);
+
+            if (optionalRequestData.isPresent()) {
+                ServiceRequest requestData = optionalRequestData.get();
+                requestData.setServiceCenterToInventorySendDeviceRequestTime(getCurrentLocalDateTime());
+                // Iterate through each problem in the service request
+                requestData.getAllProblem().forEach(problem -> {
+                    if (problem.getName().equals(solutionName)) {
+                        // Find and update the existing solution's price by name
+                        problem.getProposalSolution().forEach(proposalSolutionItem -> {
+                            System.out.println(proposalSolutionItem.getName()+" "+problemName);
+                            if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
+
+                                proposalSolutionItem.setServiceCenterToCOOAccessoriesReRequestStatus("Yes");
+                                proposalSolutionItem.setServiceCenterToCOOAccessoriesReRequestStatusChecking("Pending");
+                            }
+                        });
+
+
+                        System.out.println("Updated proposalSolution: " + problem.getProposalSolution());
+                    }
+
+                });
+                // Persist changes
+                serviceRequestRepository.save(requestData);
+                serviceRequestService.clearCache();
+            }
+
+
+            // Log received data for debugging
+
+
+            // TODO: Process the data (e.g., save it to the database)
+            // Example:
+            // servicePriceService.savePrice(serviceId, solutionCategory, solutionName, problemName, price);
+
+            // Return success response
+            return ResponseEntity.ok("Data saved successfully!");
+
+        } catch (Exception ex) {
+            // Log the error
+            System.err.println("Error processing data: " + ex.getMessage());
+            ex.printStackTrace();
+
+            // Return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error saving data. Please try again.");
+        }
+    }
 
     @PostMapping("/saveExcel")
     public ResponseEntity<?> saveExcel(@RequestBody Map<String, Object> payload) {
@@ -974,6 +1043,8 @@ public class Service {
 
             // Extract specific data
             String serviceId = (String) payload.get("serviceId");
+
+            System.out.println(serviceId);
             List<List<String>> requestInfo = (List<List<String>>) payload.get("requestInfo");
             List<List<String>> actions = (List<List<String>>) payload.get("actions");
             List<List<String>> extractComponents = (List<List<String>>) payload.get("extractComponents");

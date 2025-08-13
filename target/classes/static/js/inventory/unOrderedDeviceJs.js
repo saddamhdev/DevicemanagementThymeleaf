@@ -15,7 +15,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -65,7 +65,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
           headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
          success: function(response) {
@@ -96,7 +96,7 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -429,7 +429,6 @@ window.initUnOrderedDeviceGeneral = function () {
                          $.ajax({
                                 url: '/inventory/receiveUnOrderedDeviceInformation', // URL to your delete endpoint
                                 type: 'POST',
-                               contentType: "application/json",
                                 data: JSON.stringify({
                                      deviceId: deviceId ,
                                      departmentName:departmentName,
@@ -437,9 +436,9 @@ window.initUnOrderedDeviceGeneral = function () {
                                      departmentUserId:departmentUserId
                                      }),// Send category name as data
                                       headers: {
-                                                            'Content-Type': 'application/json',
-                                                           'Authorization': 'Bearer ' + getAuthToken()
-                                                       },
+                                           "Content-Type": "application/json",
+                                           'Authorization': 'Bearer ' + getAuthToken()
+                                       },
                                 success: function(result) {
                             CustomAlert(result);
                               $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -859,7 +858,7 @@ window.initUnOrderedDeviceGeneral = function () {
 
                 }, // Send category name as data
                  headers: {
-                                       'Content-Type': 'application/json',
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                 success: function(result) {
@@ -1199,7 +1198,7 @@ function confirmExport() {
     fetch("/purchase/exportDataForExtraDevice", {
         method: "POST",
          headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         body: JSON.stringify(exportData)

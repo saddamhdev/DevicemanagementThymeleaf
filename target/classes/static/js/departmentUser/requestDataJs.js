@@ -10,7 +10,7 @@ function  saveTableInformationOfRequest(){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -171,7 +171,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                 headers: {
-                                      'Content-Type': 'application/json',
+
                                      'Authorization': 'Bearer ' + getAuthToken()
                                  },
                success: function(result) {
@@ -195,7 +195,7 @@ function setReceivedStatus(requestId,status){
                      status:status
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -221,7 +221,7 @@ function setRequestStatus(requestId,status){
                      status:status
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -247,7 +247,7 @@ function setRequestStatus(requestId,status){
                      cause:$('#rejectCause').val()
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -288,7 +288,7 @@ function acceptDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
                    headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
              success: function (response) {
@@ -319,7 +319,7 @@ function EditTableInformationOfRequest(requestId){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {

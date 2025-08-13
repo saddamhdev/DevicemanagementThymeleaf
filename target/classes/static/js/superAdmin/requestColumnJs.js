@@ -16,7 +16,7 @@ function saveRequestBtnRequestColumn(){
             visibleType:visibleType
             },
             headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
             success: function(response) {
@@ -49,7 +49,7 @@ function EditTableInformationOfRequest(requestId){
 
                  }, // Send serialized form data and category name
                  headers: {
-                                    'Content-Type': 'application/json',
+
                                    'Authorization': 'Bearer ' + getAuthToken()
                                },
                  success: function(response) {
@@ -126,7 +126,7 @@ function EditTableInformationOfRequest(requestId){
                                type: "POST",
                                url: "/superAdmin/inputTypes",
                                headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                                success: function(response) {
@@ -164,7 +164,7 @@ function EditTableInformationOfRequest(requestId){
                 type: 'POST',
                 data: { requestId: requestId },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

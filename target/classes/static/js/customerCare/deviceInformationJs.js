@@ -13,7 +13,6 @@
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -42,7 +41,8 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -186,7 +186,12 @@ function addDeviceInformation(){
 
              $('#saveEditBtn').click(function() {
                  var categoryName=$('#deviceInputFieldAdd').val();
-                saveTableInformationOfDevice(categoryName);
+                  if(categoryName && $('#calendar').val() && $('#userInputFieldAdd').val()){
+                    saveTableInformationOfDevice(categoryName);
+                 }
+                 else{
+                 alert("Please Insert mandatory field (Category, Date, User)");
+                 }
                 });
 
           showModalMedium();

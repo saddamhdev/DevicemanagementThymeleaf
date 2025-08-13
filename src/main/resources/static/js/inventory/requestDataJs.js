@@ -45,7 +45,7 @@ function addTableInformationAlternativeDeviceRequest(requestId){
                   departmentUserId:departmentUserId
                   }),
                    headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
              success: function (response) {
@@ -74,7 +74,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                 headers: {
-                                      'Content-Type': 'application/json',
+
                                      'Authorization': 'Bearer ' + getAuthToken()
                                  },
                success: function(result) {
@@ -96,7 +96,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
          headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(response) {
@@ -119,7 +119,7 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                      headers: {
-                                           'Content-Type': 'application/json',
+
                                           'Authorization': 'Bearer ' + getAuthToken()
                                       },
                     success: function(result) {
@@ -147,7 +147,7 @@ function setRequestStatus(requestId,status){
 
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -174,7 +174,7 @@ function setRequestStatus(requestId,status){
 
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -214,7 +214,7 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
                    headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
              success: function (response) {
@@ -350,7 +350,7 @@ window.initRequestDataTable = function () {
                         size: localStorage.getItem("pageSize") || 0
                     },
         headers: {
-                              'Content-Type': 'application/json',
+
                              'Authorization': 'Bearer ' + getAuthToken()
                          },
         success: function (data) {
@@ -391,7 +391,7 @@ window.initRequestDataTable = function () {
 
                 if (!currentRowMap.has(rowKey)) {
                     const row = document.createElement("tr");
-                    row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
+
 
                     let htmlData = `
                         <td>${sn}</td>
@@ -430,66 +430,74 @@ window.initRequestDataTable = function () {
                             <div class="d-flex justify-content-center align-items-center action-button-container">
                     `;
 
-                    if (device.inventory?.inventoryStatus === 'Alternative Proposal Accepted' &&
-                        device.inventory?.inventoryToAlternativeDeviceRequestStatus === 'Accepted' &&
-                        device.inventory?.inventoryToCustomerCareDeviceSendingStatus !== 'Accepted') {
-                        htmlData += `
-                            <button class="btn btn-primary btn-sm text-white fas deliverDeviceForAlternative"
-                                data-category-id="${device.allData['category']}"
-                                data-alternativedevice-id="${device.inventory.acceptedId}"
-                                data-request-id="${device.id}">&#xf0d1;</button>`;
-                    }
+                                    if (device.inventory?.inventoryStatus === 'Alternative Proposal Accepted' &&
+                                        device.inventory?.inventoryToAlternativeDeviceRequestStatus === 'Accepted' &&
+                                        device.inventory?.inventoryToCustomerCareDeviceSendingStatus !== 'Accepted') {
+                                        htmlData += `
+                                            <button class="btn btn-primary btn-sm text-white fas deliverDeviceForAlternative"
+                                                data-category-id="${device.allData['category']}"
+                                                data-alternativedevice-id="${device.inventory.acceptedId}"
+                                                title="Deliver Device To CustomerCare"
+                                                data-request-id="${device.id}">&#xf0d1;</button>`;
+                                    }
 
-                    if (device.inventory?.inventoryStatus === 'Purchased' &&
-                        device.purchase?.purchaseDeviceSenderToInventoryStatus === 'Accepted' &&
-                        device.inventory?.inventoryToCustomerCareDeviceSendingStatus !== 'Accepted') {
-                        htmlData += `
-                            <button class="btn btn-primary btn-sm text-white fas deliverDeviceForPurchase"
-                                data-category-id="${device.allData['category']}"
-                                data-buyingdevice-id="${device.purchase.purchaseDeviceSenderToInventoryDeviceId}"
-                                data-request-id="${device.id}">&#xf0d1;</button>`;
-                    }
+                                    if (device.inventory?.inventoryStatus === 'Purchased' &&
+                                        device.purchase?.purchaseDeviceSenderToInventoryStatus === 'Accepted' &&
+                                        device.inventory?.inventoryToCustomerCareDeviceSendingStatus !== 'Accepted') {
+                                        htmlData += `
+                                            <button class="btn btn-primary btn-sm text-white fas deliverDeviceForPurchase"
+                                                data-category-id="${device.allData['category']}"
+                                                title="Deliver Device To CustomerCare"
+                                                data-buyingdevice-id="${device.purchase.purchaseDeviceSenderToInventoryDeviceId}"
+                                                data-request-id="${device.id}">&#xf0d1;</button>`;
+                                    }
 
-                    if (device.inventory?.inventoryStatus !== 'Purchased' &&
-                        device.purchase?.cooAns !== 'Accepted') {
-                        htmlData += `
-                            <button class="btn btn-danger btn-sm delete-button fas purchase"
-                                data-request-id="${device.id}">&#xf07a;</button>`;
-                    }
+                                    if (device.inventory?.inventoryStatus !== 'Purchased' &&
+                                        device.purchase?.cooAns !== 'Accepted') {
+                                        htmlData += `
+                                            <button class="btn btn-danger btn-sm delete-button fas purchase"
+                                              title="Send Purchase Device Request"  data-request-id="${device.id}">&#xf07a;</button>`;
+                                    }
 
-                    if (device.inventory?.inventoryToAlternativeDeviceRequestStatus === 'Rejected') {
-                        htmlData += `
-                            <button class="btn btn-danger btn-sm delete-button fas purchase"
-                                data-request-id="${device.id}">&#xf07a;</button>`;
-                    }
+                                    if (device.inventory?.inventoryToAlternativeDeviceRequestStatus === 'Rejected') {
+                                        htmlData += `
+                                            <button class="btn btn-danger btn-sm delete-button fas purchase"
+                                             title="Send Purchase Device Request"
 
-                    if (device.inventory?.inventoryStatus !== 'Purchased' &&
-                        device.inventory?.inventoryToAlternativeDeviceRequestStatus !== 'Accepted') {
-                        htmlData += `
-                            <button class="btn btn-secondary btn-sm chat-button viewAlternativeDevice"
-                                data-category-id="${device.allData['category']}"
-                                data-request-id="${device.id}">&#128172;</button>`;
-                    }
+                                               data-request-id="${device.id}">&#xf07a;</button>`;
+                                    }
 
-                    if (device.purchase?.cooAns === 'Rejected') {
-                        htmlData += `
-                            <button class="btn btn-secondary btn-sm chat-button viewAlternativeDevice"
-                                data-category-id="${device.allData['category']}"
-                                data-request-id="${device.id}">&#128172;</button>`;
-                    }
+                                    if (device.inventory?.inventoryStatus !== 'Purchased' &&
+                                        device.inventory?.inventoryToAlternativeDeviceRequestStatus !== 'Accepted') {
+                                        htmlData += `
+                                            <button class="btn btn-secondary btn-sm chat-button viewAlternativeDevice"
+                                                data-category-id="${device.allData['category']}"
+                                                title="Send Alternative Device Request"
+                                                data-request-id="${device.id}">
+                                                &#128172;</button>`;
+                                    }
 
-                    htmlData += `
-                        <button class="btn btn-info btn-sm view-button chat"
-                            data-buyingdevice-id="${device.purchase?.purchaseDeviceSenderToInventoryDeviceId}"
-                            data-alternativedevice-id="${device.inventory.acceptedId}"
-                            data-category-id="${device.allData['category']}"
-                            data-request-id="${device.id}" title="View Delivery device">
-                            &#128065;
-                        </button>
-                        </div></td>`;
+                                    if (device.purchase?.cooAns === 'Rejected') {
+                                        htmlData += `
+                                            <button class="btn btn-secondary btn-sm chat-button viewAlternativeDevice"
+                                                data-category-id="${device.allData['category']}"
+                                                 title="Send Alternative Device Request"
+                                                data-request-id="${device.id}">&#128172;</button>`;
+                                    }
 
-                    row.innerHTML = htmlData;
-                    tableBody.appendChild(row);
+                                    htmlData += `
+                                        <button class="btn btn-info btn-sm view-button chat"
+                                            data-buyingdevice-id="${device.purchase?.purchaseDeviceSenderToInventoryDeviceId}"
+                                            data-alternativedevice-id="${device.inventory.acceptedId}"
+                                            data-category-id="${device.allData['category']}"
+                                            data-request-id="${device.id}"
+                                            title="View Delivery device">
+                                            &#128065;
+                                        </button>
+                                        </div></td>`;
+
+                                    row.innerHTML = htmlData;
+                                    tableBody.appendChild(row);
                 }
             });
 

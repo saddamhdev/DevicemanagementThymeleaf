@@ -19,7 +19,7 @@ function saveUniversalColumnBtn(Id) {
              requiredType:requiredType
              },
              headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
             success: function(response) {
@@ -58,7 +58,7 @@ function  editUniversalColumnBtn($row){
                    newRequiredType:newRequiredType
                },
                headers: {
-                                  'Content-Type': 'application/json',
+
                                  'Authorization': 'Bearer ' + getAuthToken()
                              },
                success: function(result) {
@@ -151,7 +151,7 @@ function  editUniversalColumnBtn($row){
                 type: 'POST',
                 data: { universalColumnName: columnName }, // Send category name as data
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

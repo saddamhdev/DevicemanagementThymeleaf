@@ -103,8 +103,12 @@
 
                         <td th:text="${device != null && device.customerCareServiceRequestStatus != null ? device.customerCareServiceRequestStatus : 'Pending'}">
                         </td>
-                        <td th:text="${device != null && device.departmentReceiveDeviceFromCustomerCareStatus != null ? device.departmentReceiveDeviceFromCustomerCareStatus : ' '}">
+                        <td th:text="${device?.customerCareToDepartmentStatus == 'Device delivered'
+                          ? (device?.departmentReceiveDeviceFromCustomerCareStatus ?: 'Pending')
+                          : ''}">
                         </td>
+
+
                         <td>
                             <span th:if="${device.customerCareServiceRequestStatus == 'Accepted'}" th:text="${device.proposalReceivingDateTime}" >10/11/2024</span>
                             <span th:unless="${device.customerCareServiceRequestStatus == 'Accepted'}"></span>

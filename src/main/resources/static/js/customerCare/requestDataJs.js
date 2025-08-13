@@ -14,7 +14,7 @@ function AcceptDeliveryDevice(requestId,deviceId){
          $.ajax({
              url: "/customerCare/acceptDeliveryDeviceCustomerCareFromInventory",
              type: "POST",
-             contentType: "application/json",
+
              data: JSON.stringify({
                   requestId: requestId,
                   deviceId: deviceId ,
@@ -22,6 +22,11 @@ function AcceptDeliveryDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+               headers: {
+
+                       "Content-Type": "application/json",
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
              success: function (response) {
                          CustomAlert(response);
                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -50,7 +55,7 @@ function sendDeliveryDevice(requestId,deviceId){
          $.ajax({
              url: "/customerCare/sendDeliveryDeviceCustomerCareToDepartment",
              type: "POST",
-             contentType: "application/json",
+
              data: JSON.stringify({
                   requestId: requestId,
                   deviceId: deviceId ,
@@ -58,6 +63,11 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
                   }),
+                  headers: {
+
+                     "Content-Type": "application/json",
+                     'Authorization': 'Bearer ' + getAuthToken()
+                 },
              success: function (response) {
                           CustomAlert(response);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -80,6 +90,11 @@ function setDeliveryMode(requestId,status){
                 status:status
 
                 },
+                headers: {
+
+
+                   'Authorization': 'Bearer ' + getAuthToken()
+               },
                 success: function(result) {
                           CustomAlert(result);
                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -256,7 +271,6 @@ window.initRequestDataTable = function () {
             },
         dataType: 'json',
          headers: {
-                               'Content-Type': 'application/json',
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(data) {

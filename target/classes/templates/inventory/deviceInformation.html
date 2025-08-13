@@ -79,7 +79,7 @@
 
 
                     <tbody id="deviceInformationBody">
-                    <tr th:each="device, iterStat : ${allDeviceData}"  th:if="${device.userName==departmentName}">
+                    <tr th:each="device, iterStat : ${allDeviceData}" th:if="${device.userName==departmentName}" >
                         <td scope="row" th:text="${device.visibleId}">1</td>
                         <td th:text="${device.categoryName}">categoryName</td>
                         <td th:each="universalColumn : ${universalColumns}" th:text="${device.allData[universalColumn.columnName]}"></td>

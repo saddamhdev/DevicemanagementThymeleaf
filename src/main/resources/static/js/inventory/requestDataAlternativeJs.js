@@ -15,7 +15,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                 headers: {
-                                      'Content-Type': 'application/json',
+
                                      'Authorization': 'Bearer ' + getAuthToken()
                                  },
                success: function(result) {
@@ -39,7 +39,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
          headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
 
@@ -63,7 +63,7 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                      headers: {
-                                           'Content-Type': 'application/json',
+
                                           'Authorization': 'Bearer ' + getAuthToken()
                                       },
                     success: function(result) {
@@ -93,7 +93,7 @@ function setRequestStatus(requestId,status){
 
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {
@@ -122,7 +122,7 @@ function setRequestStatus(requestId,status){
 
                      },
                       headers: {
-                                            'Content-Type': 'application/json',
+
                                            'Authorization': 'Bearer ' + getAuthToken()
                                        },
                      success: function(result) {

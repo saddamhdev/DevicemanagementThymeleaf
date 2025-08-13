@@ -13,7 +13,7 @@ function saveFormData(requestId) {
         type: 'POST',
         data: formData,
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -37,7 +37,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -62,7 +62,7 @@ function setRequestStatusApprove(requestId,status){
 
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {
@@ -89,7 +89,7 @@ function setCancelRequest(requestId,status){
 
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

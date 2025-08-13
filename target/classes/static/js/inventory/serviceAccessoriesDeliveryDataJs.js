@@ -338,7 +338,7 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
                                date: updatedDate
                            },
                             headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                            success: function(response) {

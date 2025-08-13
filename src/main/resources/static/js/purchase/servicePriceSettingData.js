@@ -35,7 +35,7 @@ function addTableInformationOfService(serviceId) {
         contentType: 'application/json', // Send data as JSON
         data: JSON.stringify(mergedServiceData), // Convert data to JSON string
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function(response) {
@@ -252,7 +252,6 @@ $(document).ready(function() {
 
 
 function setPriceData1(rowData) {
-    console.log("Sending Row Data:", rowData);
 
     // Send the data to the controller using AJAX
     $.ajax({
@@ -261,15 +260,13 @@ function setPriceData1(rowData) {
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSON
         headers: {
-                                'Content-Type': 'application/json',
-                               'Authorization': 'Bearer ' + getAuthToken()
-                           },
+               'Authorization': 'Bearer ' + getAuthToken()
+           },
         success: function (response) {
-                            CustomAlert(response);
-                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                  location.reload();
-                              });
-            // Optionally refresh the table or update the UI
+              CustomAlert(response);
+              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                  location.reload();
+              });
         },
         error: function (xhr, status, error) {
 
@@ -314,7 +311,7 @@ window.initServicePriceDataTable = function () {
                     size: localStorage.getItem("pageSize") || 0
                 },
          headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
         success: function (data) {
@@ -382,13 +379,7 @@ window.initServicePriceDataTable = function () {
                                                 data-button-id="accepted"
                                                 style="background-color:green;" title="Set Price">✔</button>
                                         ` : ''}
-                                        <button class="btn btn-info btn-sm view-button-selected-device"
-                                            data-category="${solution.category}"
-                                            data-service-id="${device.id}"
-                                            data-button-id="view"
-                                            data-device-id="${solution.inventoryToServiceCenterDeviceId}">
-                                            &#128065;
-                                        </button>
+
                                     </div>
                                 </td>
                             `;
@@ -535,7 +526,7 @@ window.initServicePriceDataTable = function () {
                                date: updatedDate
                            },
                            headers: {
-                                                   'Content-Type': 'application/json',
+
                                                   'Authorization': 'Bearer ' + getAuthToken()
                                               },
                            success: function(response) {
@@ -588,10 +579,7 @@ window.initServicePriceDataTable = function () {
                             departmentUserName: departmentUserName,
                             departmentUserId: departmentUserId
                         };
-
-                    // Print the row's data
-                    console.log("Row Data:", rowData);
-
+                    // console.log("📦 Extracted rowData:", rowData);
                     setPriceData1(rowData);
 
 

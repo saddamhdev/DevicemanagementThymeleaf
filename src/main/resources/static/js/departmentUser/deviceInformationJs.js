@@ -26,7 +26,8 @@ function distributeDeviceDirect(deviceId) {
         contentType: 'application/json', // Set content type to JSON
         data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
          headers: {
-                               'Content-Type': 'application/json',
+
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(response) {
@@ -56,7 +57,8 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -85,6 +87,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
      var deviceType = $('#deviceType').val();
 
 
+
      // Append the category name, department name, starting date, username, and userId to the form data
      formData += '&categoryName=' + encodeURIComponent(categoryName);
      formData += '&departmentName=' + encodeURIComponent(departmentName);
@@ -101,7 +104,8 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
           headers: {
-                                'Content-Type': 'application/json',
+
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
          success: function(response) {
@@ -131,9 +135,8 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
-                                       'Authorization': 'Bearer ' + getAuthToken()
-                                   },
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
                  success: function(response) {
                          CustomAlert(response);
                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -329,7 +332,12 @@ function addDeviceInformation(){
 
              $('#saveEditBtn').click(function() {
                  var categoryName=$('#deviceInputFieldAdd').val();
-                saveTableInformationOfDevice(categoryName);
+                   if(categoryName && $('#calendar').val() && $('#userInputFieldAdd').val()){
+                     saveTableInformationOfDevice(categoryName);
+                   }
+                   else{
+                   alert("Please Insert mandatory field (Category, Date, User)");
+                   }
                 });
 
           showModalMedium();
@@ -932,7 +940,11 @@ window.initDeviceInformationGeneral = function () {
                 data: {
                     deviceId:deviceId
 
-                }, // Send category name as data
+                },
+                 headers: {
+                   'Authorization': 'Bearer ' + getAuthToken()
+               },
+                                   // Send category name as data
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
@@ -952,6 +964,8 @@ window.initDeviceInformationGeneral = function () {
     } else {
       // Perform actions for other buttons, if needed
       console.log(`Other button clicked: ${buttonText}`);
+
+
     }
   });
 };

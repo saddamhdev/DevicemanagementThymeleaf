@@ -34,17 +34,16 @@ localStorage.setItem("pageSize",pageSize);// global
           fetch(url, {
                  method: 'GET',
                  headers: {
-                      'Content-Type': 'application/json',
                      'Authorization': 'Bearer ' + token
                  }
              })
             .then(response => response.text())
             .then(html => {
                 container.innerHTML = html;
-                console.log(html);
+
                 // Page-specific initializers map
                 const fragmentInitializers = {
-                    requestData: [window.initRequestDataDirectTable,window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
+                    requestData: [window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
                     requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
                     requestDataForPaymentExport: [window.initRequestDataDirectExportTable,window.initRequestDataForPaymentExportTable,window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
                     servicePriceData: [window.initServicePriceDataTable,window.initServicePriceDataGeneral,window.initGlobalDivToggle],
@@ -101,7 +100,6 @@ localStorage.setItem("pageSize",pageSize);// global
            fetch(url, {
                   method: 'GET',
                   headers: {
-                       'Content-Type': 'application/json',
                       'Authorization': 'Bearer ' + token
                   }
               })
@@ -111,7 +109,7 @@ localStorage.setItem("pageSize",pageSize);// global
 
             // Page-specific initializers map
                const fragmentInitializers = {
-                     requestData: [window.initRequestDataDirectTable,window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
+                     requestData: [window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
                      requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
                      requestDataForPaymentExport: [window.initRequestDataDirectExportTable,window.initRequestDataForPaymentExportTable,window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
                      servicePriceData: [window.initServicePriceDataTable,window.initServicePriceDataGeneral,window.initGlobalDivToggle],
@@ -176,7 +174,6 @@ function loadMoreDevices(direction = "down") {
          fetch(url, {
                 method: 'GET',
                 headers: {
-                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
                 }
             })
@@ -219,7 +216,8 @@ function loadMoreDevices(direction = "down") {
 
 
 function loadByRange(pageNumber, pageSize) {
-    console.log("📦 Loading range with pageSize:", pageSize);
+
+
 
     const pageName = localStorage.getItem("lastActivePage");
 
@@ -228,8 +226,9 @@ function loadByRange(pageNumber, pageSize) {
                return;
             }
             else if(pageName==='requestData'){
-            window.initRequestDataPurchaseTable();
-             window.initRequestDataDirectTable();
+            window.initRequestDataGeneral();
+             window.initRequestDataPurchaseTable();
+
             return;
             }
             else if(pageName==='requestDataForPaymentExport'){
@@ -245,7 +244,6 @@ function loadByRange(pageNumber, pageSize) {
          fetch(url, {
                 method: 'GET',
                 headers: {
-                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token
                 }
             })

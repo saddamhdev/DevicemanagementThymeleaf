@@ -15,7 +15,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
                  success: function(response) {
@@ -64,7 +64,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
          success: function(response) {
@@ -95,9 +95,8 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                         'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + getAuthToken()
-                                    },
+                            'Authorization': 'Bearer ' + getAuthToken()
+                        },
                  success: function(response) {
                                 CustomAlert(response);
                                   $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -271,7 +270,13 @@ function addDeviceInformationOfPurchase(){
 
              $('#saveEditBtn').click(function() {
                  var categoryName=$('#deviceInputFieldAdd').val();
-                  saveTableInformationOfDeviceOfPurchase(categoryName);
+
+                   if(categoryName && $('#calendar').val() ){
+                       saveTableInformationOfDeviceOfPurchase(categoryName);
+                   }
+                   else{
+                   alert("Please Insert mandatory field (Category, Date)");
+                   }
                 });
 
           showModalMedium();
@@ -815,7 +820,7 @@ window.initDeviceInformationGeneral = function () {
 
                 }, // Send category name as data
                 headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                 success: function(result) {

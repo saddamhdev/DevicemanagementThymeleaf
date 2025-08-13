@@ -427,7 +427,7 @@ public class purchase {
     @ResponseBody
     public ResponseEntity<String> setPrice(@RequestBody Map<String, Object> rowData) {
         try {
-            System.out.println("Received data: " + rowData);
+          //  System.out.println("Received data: " + rowData);
             // Extract data
             String serviceId = rowData.getOrDefault("serviceId", "N/A").toString();
             String bibagName = rowData.getOrDefault("bibagName", "N/A").toString();
@@ -442,14 +442,14 @@ public class purchase {
 
             // Retrieve the ServiceRequest by serviceId and status
             Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
-            System.out.println("Fetched ServiceRequest: " + optionalRequestData);
+         //   System.out.println("Fetched ServiceRequest: " + optionalRequestData);
 
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
 
                 // Iterate through each problem in the service request
                 requestData.getAllProblem().forEach(problem -> {
-                    System.out.println("Processing problem: " + problem.getName());
+                //    System.out.println("Processing problem: " + problem.getName());
                     if (problem.getName().equals(solutionName)) {
                         // Find and update the existing solution's price by name
                         problem.getProposalSolution().forEach(proposalSolutionItem -> {
@@ -464,7 +464,7 @@ public class purchase {
                         });
 
 
-                        System.out.println("Updated proposalSolution: " + problem.getProposalSolution());
+                      //  System.out.println("Updated proposalSolution: " + problem.getProposalSolution());
                     }
 
                 });
@@ -482,7 +482,7 @@ public class purchase {
 
             // Return success response
             serviceRequestService.clearCache();
-            return ResponseEntity.ok("Data saved successfully!");
+            return ResponseEntity.ok("Data saved successfully 1!");
 
         } catch (Exception ex) {
             // Log the error
@@ -806,8 +806,8 @@ public class purchase {
         String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         AddData adddata=new AddData(departmentName,categoryName,formattedDateTime,currentDate,allParams,"1");
-        adddata.setVisibleId(generateNewVisibleIdForOldDevice());
-        adddata.setDeviceTypeServicingOrRequestingOrOldAsInputting("Old");
+        adddata.setVisibleId(generateNewVisibleIdForNewDevice());
+        adddata.setDeviceTypeServicingOrRequestingOrOldAsInputting("New");
         adddata.setDeviceTypePrimaryOrSecondary(deviceType);
         if(deviceType.equals("Secondary")){
             adddata.setDeviceTypeSecondaryInOrOut("Out");
@@ -871,7 +871,7 @@ public class purchase {
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         AddData adddata=new AddData(departmentName,categoryName,formattedDateTime,currentDate,allParams,"1");
 
-        adddata.setVisibleId(generateNewVisibleIdForOldDevice());
+        adddata.setVisibleId(generateNewVisibleIdForNewDevice());
         adddata.setDeviceTypeServicingOrRequestingOrOldAsInputting("New");
         adddata.setDeviceTypePrimaryOrSecondary(deviceType);
         if(deviceType.equals("Secondary")){
@@ -1066,16 +1066,22 @@ public class purchase {
                 Set<String> headers = data.get(0).keySet();
 
                 double totalPrice = data.stream()
-                        .map(row -> row.get("Price"))
+                        .map(row -> row.entrySet().stream()
+                                .filter(e -> e.getKey() != null && e.getKey().trim().toLowerCase().startsWith("price"))
+                                .map(Map.Entry::getValue)
+                                .findFirst()
+                                .orElse(null))
                         .filter(Objects::nonNull)
-                        .mapToDouble(p -> {
-                            try {
-                                return Double.parseDouble(p);
-                            } catch (Exception e) {
-                                return 0.0;
-                            }
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .mapToDouble(s -> {
+                            // strip currency/commas: "$1,234.50" -> "1234.50"
+                            String cleaned = s.replaceAll("[^0-9.\\-]", "");
+                            if (cleaned.isEmpty() || ".".equals(cleaned) || "-".equals(cleaned)) return 0.0;
+                            try { return Double.parseDouble(cleaned); } catch (NumberFormatException ex) { return 0.0; }
                         })
                         .sum();
+
 
                 // Info table for total price and date
                 Table infoTable = new Table(2).useAllAvailableWidth();
@@ -1192,11 +1198,21 @@ public class purchase {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    @PostMapping("/exportDataForExtraDevice")
-    public ResponseEntity<byte[]> receiveExportData(@RequestBody List<Map<String, String>> data) {
+    @PostMapping("/exportDataForUnOrderedDevice")
+    public ResponseEntity<byte[]> exportDataForUnOrderedDevice(@RequestBody List<Map<String, String>> data) {
+
         System.out.println("Received data: " + data);
         data.forEach(e->{
-            Optional<AddData> info=addDataRepository.findByVisibleIdAndStatus(e.get("SN"),"1");
+            String snKey = e.keySet().stream()
+                    .filter(k -> k != null && k.trim().toUpperCase().startsWith("SN"))
+                    .findFirst()
+                    .orElse(null);
+
+            String sn = (snKey == null) ? null : Optional.ofNullable(e.get(snKey)).map(String::trim).orElse(null);
+            if (sn == null || sn.isEmpty()) return;
+
+            Optional<AddData> info = addDataRepository.findByVisibleIdAndStatus(sn, "1");
+
             if(info.isPresent()){
                 AddData mat=info.get();
                 AddData.UnOrderedDevice unOrderedDevice=mat.getUnOrderedDevice();
@@ -1210,6 +1226,8 @@ public class purchase {
             }
         });
         addDataService.clearCache();
+
+
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
             PdfWriter writer = new PdfWriter(baos);
@@ -1238,7 +1256,7 @@ public class purchase {
 
             document.add(new Paragraph("\n"));
 
-            Paragraph title = new Paragraph("(Un-Ordered Devices)")
+            Paragraph title = new Paragraph("(UnOrdered Devices)")
                     .setBold()
                     .setFontSize(16)
                     .setTextAlignment(TextAlignment.CENTER);
@@ -1250,16 +1268,22 @@ public class purchase {
                 Set<String> headers = data.get(0).keySet();
 
                 double totalPrice = data.stream()
-                        .map(row -> row.get("Price"))
+                        .map(row -> row.entrySet().stream()
+                                .filter(e -> e.getKey() != null && e.getKey().trim().toLowerCase().startsWith("price"))
+                                .map(Map.Entry::getValue)
+                                .findFirst()
+                                .orElse(null))
                         .filter(Objects::nonNull)
-                        .mapToDouble(p -> {
-                            try {
-                                return Double.parseDouble(p);
-                            } catch (Exception e) {
-                                return 0.0;
-                            }
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .mapToDouble(s -> {
+                            // strip currency/commas: "$1,234.50" -> "1234.50"
+                            String cleaned = s.replaceAll("[^0-9.\\-]", "");
+                            if (cleaned.isEmpty() || ".".equals(cleaned) || "-".equals(cleaned)) return 0.0;
+                            try { return Double.parseDouble(cleaned); } catch (NumberFormatException ex) { return 0.0; }
                         })
                         .sum();
+
 
                 // Info table for total price and date
                 Table infoTable = new Table(2).useAllAvailableWidth();
@@ -1281,11 +1305,15 @@ public class purchase {
                 document.add(infoTable);
                 document.add(new Paragraph("\n"));
 
-                Table table = new Table(UnitValue.createPercentArray(headers.size()))
-                        .useAllAvailableWidth();
+                // Remove "Action" from headers before setting column widths
+                List<String> filteredHeaders = headers.stream()
+                        .filter(h -> !"Action".equalsIgnoreCase(h))
+                        .collect(Collectors.toList());
 
+                Table table = new Table(UnitValue.createPercentArray(filteredHeaders.size()))
+                        .useAllAvailableWidth();
                 // Header row with gray background and white text
-                for (String header : headers) {
+                for (String header : filteredHeaders) {
                     Cell headerCell = new Cell()
                             .add(new Paragraph(header).setBold().setFontColor(ColorConstants.WHITE))
                             .setTextAlignment(TextAlignment.CENTER)
@@ -1296,15 +1324,24 @@ public class purchase {
                 // Data rows with alternating background colors and centered text
                 boolean alternate = false;
                 for (Map<String, String> row : data) {
-                    for (String header : headers) {
+                    for (String header : filteredHeaders) {
+                        String value = row.getOrDefault(header, "");
+
+                        // Clean only the "Description" field
+                        if ("Description".equalsIgnoreCase(header)) {
+                            value = value.replaceAll("\\s+", " ").trim();
+                        }
+
                         Cell cell = new Cell()
-                                .add(new Paragraph(row.getOrDefault(header, "")))
+                                .add(new Paragraph(value))
                                 .setTextAlignment(TextAlignment.CENTER);
+
                         if (alternate) {
                             cell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
                         }
                         table.addCell(cell);
                     }
+
                     alternate = !alternate;
                 }
 
@@ -1364,6 +1401,7 @@ public class purchase {
         }
     }
 
+
     @PostMapping("/deliverUnOrderedDeviceInformation")
     @ResponseBody
     public ResponseEntity<String> deleteDeviceInformation(@RequestBody Map<String, Object> payload) {
@@ -1382,7 +1420,7 @@ public class purchase {
                 dd.setUnWantedSendDeviceToInventoryManInfo(departmentName+"_"+departmentUserName+"_"+departmentUserId);
                 addDataRepository.save(device); // Save the updated category
 
-
+                addDataService.clearCache();
                 return ResponseEntity.ok("Device deliver request successfully");
             } else {
                 return ResponseEntity.notFound().build();
@@ -1390,21 +1428,34 @@ public class purchase {
 
 
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error deleting category");
+            return ResponseEntity.badRequest().body("Error deleting category bro");
         }
     }
     // Method to extract the part before the hyphen inside parentheses
+    // Method to extract the part before the hyphen inside parentheses
     public static String extractSolution(String input) {
-        // Regular expression to capture the part before the hyphen inside parentheses
-        Pattern pattern = Pattern.compile("\\(([^-\\)]+)-.*\\)");
-        Matcher matcher = pattern.matcher(input);
+        //  System.out.println(input);
+        // Trim to remove leading/trailing white space
+        input = input.trim();
 
-        // If the pattern is found, return the captured group (before the hyphen)
-        if (matcher.find()) {
-            return matcher.group(1); // Capture the part before the hyphen
-        } else {
-            return "No match found"; // Return a default message if no match is found
+        // Split by newline
+        String[] lines = input.split("\\r?\\n");
+
+        if (lines.length == 0) {
+            return "No data";
         }
+
+        String part1 = lines[0].trim(); // First line (Category)
+
+        // Join the remaining lines as the second part
+        StringBuilder part2Builder = new StringBuilder();
+        for (int i = 1; i < lines.length; i++) {
+            part2Builder.append(lines[i].trim()).append("\n");
+        }
+
+        String part2 = part2Builder.toString().trim(); // Remove final newline
+        // System.out.println(part2 );
+        return part2;
     }
     public String  generateNewVisibleIdForServiceRequest(){
         String prefix = getLastTwoDigitsOfYear().concat(getCurrentMonthAsTwoCharacterInteger());

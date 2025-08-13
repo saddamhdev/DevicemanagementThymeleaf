@@ -1,4 +1,8 @@
-function addTableInformationOfService() {
+
+
+function addTableInformationOfServiceCheckBox() {
+
+ if (!confirm('Are you sure you want to send device Purchase Request?')) return;
 // Define the Service class
         class Service {
         constructor(serviceId, problemName, solutionName) {
@@ -73,31 +77,6 @@ function addTableInformationOfService() {
        });
 }
 
-
- $(document).ready(function() {
-            $('.hideButton').click(function() {
-                // Hide the second column
-                $('.secondDiv').hide();
-
-                // Show the showButton and set display to inline-block
-                $('.showButton').css('display', 'inline-block');
-
-                // Change the class of the first column to make it full-width
-                $('.firstDiv').removeClass('col-sm-9').addClass('col-sm-12');
-            });
-
-            $('.showButton').click(function() {
-                // Show the second column
-                $('.secondDiv').show();
-
-                // Hide the showButton again
-                $('.showButton').hide();
-
-                // Revert the class of the first column back to original
-                $('.firstDiv').removeClass('col-sm-12').addClass('col-sm-9');
-                $('.secondDiv').addClass('col-sm-3');
-            });
-        });
 window.initServiceAccessoriesPendingDataTable = function () {
     const tableBody = document.getElementById("serviceAccessoriesPendingDataTableBody");
     if (!tableBody) {
@@ -220,7 +199,8 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                                   data-problem-name="${problem.name}"
                                                   data-service-id="${device.id}"
                                                   style="background-color:green;"
-                                                  title="Purchased Device Delivery">✔</button>`
+                                                  data-buyingdevice-id="${solution.buyingDeviceId}"
+                                                  title="Purchased Device Delivery To Service Center">✔</button>`
                                             : ''
                                         }
 
@@ -273,6 +253,7 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                                   data-solution-name="${solution.name}"
                                                   data-problem-name="${problem.name}"
                                                   data-service-id="${device.id}"
+
                                                   style="background-color:green; transform: scale(1.5); width: 12px; height: 12px;"
                                                   title="Delivery Device">`
                                             : ''
@@ -426,7 +407,7 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                date: updatedDate
                            },
                             headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                            success: function(response) {
@@ -451,11 +432,12 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                 var serviceId = $(this).data('serviceId');  // Corrected to 'service-id'
                                 var problemName = $(this).data('problemName');
                                 var solutionName = $(this).data('solutionName');
-
+                                var buyingDeviceId = $(this).data('buyingdeviceId');
                                  var departmentElement = $(".departmentName"); // Target element with department data
                                 var departmentName = departmentElement.data("departmentname"); // e.g., "it"
                                 var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
                                 var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
+
                              var selectedDevices = [];
                               print('universalColumns', function(universalColumns) {
                                 var categoriesHtml = '';
@@ -533,10 +515,12 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                                                     // Close the list
                                                                     rowsHtml += `</ul></td>`;
 
-                                                                    // Add checkbox in a new td cell
-                                                                    rowsHtml += `<td>
-                                                                        <input type="checkbox" name="selectRow" value="${data.id}" data-device-id="${data.id}">
-                                                                    </td>`;
+                                                                   const isChecked =(data.id) === buyingDeviceId ? 'checked' : '';
+
+                                                                   rowsHtml += `<td>
+                                                                     <input type="checkbox" name="selectRow"
+                                                                            value="${data.id}" data-device-id="${data.id}" ${isChecked}>
+                                                                   </td>`;
 
                                                                     // Close the row
                                                                     rowsHtml += `</tr>`;
@@ -587,6 +571,10 @@ window.initServiceAccessoriesPendingDataTable = function () {
                                                                    departmentUserName:departmentUserName,
                                                                    departmentUserId:departmentUserId
                                                                },
+                                                               headers: {
+
+                                                                    'Authorization': 'Bearer ' + getAuthToken()
+                                                                },
                                                                success: function(response) {
                                                                    // Handle success (e.g., show a message or close the modal)
 

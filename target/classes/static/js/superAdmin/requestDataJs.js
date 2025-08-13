@@ -15,7 +15,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                headers: {
-                                  'Content-Type': 'application/json',
+
                                  'Authorization': 'Bearer ' + getAuthToken()
                              },
                success: function(result) {
@@ -49,7 +49,7 @@ function setRequestStatusData(requestId,status){
                      cause:$('#rejectCause').length ? $('#rejectCause').val() : null
                     },
                     headers: {
-                                       'Content-Type': 'application/json',
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                     success: function(result) {

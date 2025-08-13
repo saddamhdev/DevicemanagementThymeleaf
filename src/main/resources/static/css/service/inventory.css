@@ -407,6 +407,9 @@ img {
     z-index: 1060; /* Higher than Bootstrap's default 1055 for modal */
 }
 
+#publicModalView.modal {
+    z-index: 1060; /* Higher than Bootstrap's default 1055 for modal */
+}
 .modal-backdrop.show:nth-of-type(2) {
     z-index: 1055; /* So it's between modal 1 and modal 2 */
 }

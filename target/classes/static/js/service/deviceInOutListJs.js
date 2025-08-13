@@ -16,7 +16,7 @@ function deliveryDeviceToCustomerCare(deviceId,serviceId,status){
 
                          },
                          headers: {
-                                                 'Content-Type': 'application/json',
+
                                                 'Authorization': 'Bearer ' + getAuthToken()
                                             },
                          success: function(result) {
@@ -50,7 +50,7 @@ function setServiceRequestAccept1(serviceId,status){
 
                 },
                 headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                 success: function(result) {
@@ -692,6 +692,10 @@ window.initDeviceInOutListGeneral = function () {
                     deviceId:deviceId
 
                 }, // Send category name as data
+                headers: {
+
+                    'Authorization': 'Bearer ' + getAuthToken()
+                },
                 success: function(result) {
                              CustomAlert(result);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

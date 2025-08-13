@@ -11,7 +11,7 @@
             url: "/superAdmin/addCategory", // URL to your controller method
             data: { categoryName: categoryName },
              headers: {
-                   'Content-Type': 'application/json',
+
                   'Authorization': 'Bearer ' + getAuthToken()
               },
             success: function(response) {
@@ -53,7 +53,7 @@
                     },
 
                  headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
                     success: function(result) {
@@ -79,7 +79,7 @@
                 type: 'POST',
                 data: { categoryName: categoryName }, // Send category name as data
                headers: {
-                                  'Content-Type': 'application/json',
+
                                  'Authorization': 'Bearer ' + getAuthToken()
                              },
                 success: function(result) {

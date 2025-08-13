@@ -39,10 +39,8 @@ public class JwtFilter extends OncePerRequestFilter {
         );
 
         final String authHeader = request.getHeader("Authorization");
-         System.out.println("Auth Header Received: " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("Missing or Invalid Token");
             chain.doFilter(request, response);
             return;
         }

@@ -13,7 +13,7 @@
          type: 'POST',
          data: formData, // Send serialized form data
          headers: {
-                            'Content-Type': 'application/json',
+
                            'Authorization': 'Bearer ' + getAuthToken()
                        },
          success: function(response) {
@@ -41,7 +41,7 @@ function editTableInformationOfDropDownList(listId, categoryName, dropDownListNa
         type: 'POST',
         data: formData, // Send serialized form data along with listId
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {

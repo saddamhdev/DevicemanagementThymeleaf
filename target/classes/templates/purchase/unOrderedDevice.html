@@ -67,9 +67,17 @@
                                 th:onclick="|window.sortTable('unOrderedDeviceTable', ${4 + universalColumns.size()}, this)|">
                                 Status In COO <span class="sort-icon">⇅</span>
                             </th>
-
                             <th scope="col" style="background-color: gray; color:white;"
                                 th:onclick="|window.sortTable('unOrderedDeviceTable', ${5 + universalColumns.size()}, this)|">
+                                Delivery Status <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${6 + universalColumns.size()}, this)|">
+                                Export Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('unOrderedDeviceTable', ${7 + universalColumns.size()}, this)|">
                                 Create Time <span class="sort-icon">⇅</span>
                             </th>
 
@@ -105,6 +113,8 @@
                             </button>
                         </td>
                         <td th:text="${device.unOrderedDevice != null and device.unOrderedDevice.COOUnOrderedDeviceAcceptedStatus == 'Ordered' ? 'Approved' : 'Pending'}"></td>
+                        <td th:text="${device.unOrderedDevice?.unWantedSendDeviceToInventoryStatus ?: ' '}"></td>
+                        <td th:text="${device.unOrderedDevice?.extraDeviceExportingStatus ?: ' '}"></td>
                         <td th:text="${device.presentTime}">userPassword</td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">

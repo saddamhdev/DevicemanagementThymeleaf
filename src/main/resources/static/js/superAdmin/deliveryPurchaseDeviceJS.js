@@ -36,7 +36,7 @@ function addTableInformationAlternativeDeviceRequest(requestId){
              url: "/inventory/addAlternativeDeviceList",
              type: "POST",
              headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
              data: JSON.stringify({
@@ -74,7 +74,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                headers: {
-                                  'Content-Type': 'application/json',
+
                                  'Authorization': 'Bearer ' + getAuthToken()
                              },
                success: function(result) {
@@ -97,7 +97,7 @@ function listRequest(requestId,deviceIds) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId, deviceIds: deviceIds }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -120,7 +120,7 @@ function setRequestStatusCheckAvailability(requestId,status){
 
                     },
                     headers: {
-                                       'Content-Type': 'application/json',
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                     success: function(result) {
@@ -150,7 +150,7 @@ function setRequestStatus(requestId,status){
 
                      },
                      headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                      success: function(result) {
@@ -179,7 +179,7 @@ function setRequestStatus(requestId,status){
 
                      },
                      headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                      success: function(result) {
@@ -221,7 +221,7 @@ function sendDeliveryDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
                   headers: {
-                                     'Content-Type': 'application/json',
+
                                     'Authorization': 'Bearer ' + getAuthToken()
                                 },
              success: function (response) {
@@ -253,7 +253,7 @@ function approveFinalPurchaseDeviceDelivery(requestId,deviceId){
              url: "/superAdmin/approveFinalPurchaseDeviceDelivery",
              type: "POST",
              headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
              data: JSON.stringify({
@@ -327,7 +327,7 @@ function columnValue(requestId, columnName, callback) {
         type: 'POST',
         dataType: 'json',
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(data) {

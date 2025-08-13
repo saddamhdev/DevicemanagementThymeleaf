@@ -443,7 +443,7 @@ public class departmentUser {
                 addDataRepository.save(device); // Save the updated category
                 addDataService.clearCache();
 
-                return ResponseEntity.ok("Device deleted successfully");
+                return ResponseEntity.ok("Device deleted successfully1");
             } else {
                 return ResponseEntity.notFound().build();
             }

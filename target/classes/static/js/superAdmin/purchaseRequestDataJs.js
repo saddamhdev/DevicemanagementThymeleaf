@@ -18,7 +18,7 @@ function purchaseRequest1(requestId,links) {
         departmentUserId:departmentUserId
         }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -54,7 +54,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
         departmentUserId:departmentUserId
         }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -99,7 +99,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                        size: localStorage.getItem("pageSize") || 0
                    },
                    headers: {
-                                      'Content-Type': 'application/json',
+
                                      'Authorization': 'Bearer ' + getAuthToken()
                                  },
            success: function (data) {
@@ -237,9 +237,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                         </div>
 
                                     `;
-                                    $('.modal-body').html(htmlToAdd);
+                                    $('.ModalMedium').html(htmlToAdd);
 
-                                    $('#publicModalLabel').text("Accepted Request Form");
+                                    $('#publicModalMediumLabel').text("Accepted Request Form");
 
                                           $("#detailsId").text("Details: " + details);
                                           $("#budgetId").text("Budget: " + budget);
@@ -278,7 +278,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 
 
-                                      showModal();
+                                      showModalMedium();
                                    });
                  $(document).on('click', '.chat-buttonForService', function() {
 
@@ -317,9 +317,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                               </div>
 
                                           `;
-                                          $('.modal-body').html(htmlToAdd);
+                                          $('.ModalMedium').html(htmlToAdd);
 
-                                          $('#publicModalLabel').text("Accepted Request Form");
+                                          $('#publicModalMediumLabel').text("Accepted Request Form");
 
                                         print('serviceRequests', function(serviceRequests) {
                                             if (serviceRequests) {
@@ -377,7 +377,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
                                             }
                                         });
-                $('#saveEditBtn1').click(function(event) {
+                                        $('#saveEditBtn1').click(function(event) {
                              event.preventDefault(); // Prevent the default action (form submission)
                              var serviceId=$(this).data('service-id');
                              var problemName=$(this).data('problemname-id');
@@ -412,7 +412,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
                          });
 
-                                     showModal();
+                                     showModalMedium();
                         });
       // Add event listener for the availability button click
                  $(document).on('click', '.view-button-selected-device', function() {
@@ -447,9 +447,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                          </div>
 
                                      `;
-                                     $('.modal-body').html(htmlToAdd);
+                                     $('.ModalExtraLarge').html(htmlToAdd);
 
-                                     $('#publicModalLabel').text("Device Information");
+                                     $('#publicModalExtraLargeLabel').text("Device Information");
 
 
 
@@ -499,65 +499,12 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 
 
-                                     showModal();
+                                     showModalExtraLarge();
                                  });
 
 
                  });
-               $(document).on('click', '.clock-button', function() {
-                 var serviceId = $(this).data('serviceId');  // Corrected to 'service-id'
-                 var problemName = $(this).data('problemName');
-                 var solutionName = $(this).data('solutionName');
-                 var date = $(this).data('date');
 
-                 var htmlToAdd = `
-                     <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                         <label for="deliveryDate" class="form-label">Change Delivery Date:</label>
-                         <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" value="${date}">
-                     </div>
-                     <div class="mb-3" style="margin-left: 0%; text-align: center;">
-                         <button type="button" class="btn btn-primary" id="saveEditBtn">Yes</button>
-                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                     </div>
-                 `;
-
-                 // Add the HTML code to the modal body using jQuery
-                 $('.ModalMedium').html(htmlToAdd);
-                 $('#publicModalMediumLabel').text("Do you want to update delivery date?");
-
-                 // Add event listener for save button
-                 $('#saveEditBtn').click(function() {
-                     var updatedDate = $('#deliveryDate').val();
-
-                     // Send data to the controller using AJAX
-                    $.ajax({
-                                type: "POST",
-                                url: "/inventory/updateDeliveryDate",  // Replace with your controller endpoint
-                                data: {
-                                    serviceId: serviceId,
-                                    problemName: problemName,
-                                    solutionName: solutionName,
-                                    date: updatedDate
-                                },
-                                headers: {
-                                                   'Content-Type': 'application/json',
-                                                  'Authorization': 'Bearer ' + getAuthToken()
-                                              },
-                                success: function(response) {
-                                                          CustomAlert(response);
-                                                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                                                location.reload();
-                                                            });
-                                },
-                                error: function(error) {
-                                    // Handle error (e.g., show an error message)
-                                    CustomAlert("Error updating delivery date!");
-                                }
-                            });
-                         });
-
-                 showModalMedium();
-             });
              // Add event listener for the availability button click
                  $(document).on('click', '.setPriceBtn', function() {// Get the clicked button
                          const $button = $(this);
@@ -632,8 +579,8 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                     </div>
                                 `;
 
-                                $('.modal-body').html(htmlToAdd);
-                                $('#publicModalLabel').text("Device Information");
+                                $('.ModalExtralarge').html(htmlToAdd);
+                                $('#publicModalExtraLargeLabel').text("Device Information");
 
                                 var rowsHtml = '';
 
@@ -671,7 +618,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                                 $('#listDeviceInformationBody').html(rowsHtml);
 
                                                 // Show modal only if rows were added
-                                                showModal();
+                                                showModalExtraLarge();
                                             } else {
                                                 CustomAlert("No data found to display in the modal.");
                                             }
@@ -709,7 +656,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                              size: localStorage.getItem("pageSize") || 0
                          },
              headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
              success: function (data) {
@@ -867,9 +814,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                             </div>
 
                                         `;
-                                        $('.modal-body').html(htmlToAdd);
+                                        $('.ModalExtraLarge').html(htmlToAdd);
 
-                                        $('#publicModalLabel').text("Request Information");
+                                        $('#publicModalExtraLargeLabel').text("Request Information");
 
 
 
@@ -908,7 +855,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 
 
-                                        showModal();
+                                        showModalExtraLarge();
                                     });
 
 
@@ -946,9 +893,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                            </div>
 
                        `;
-                       $('.modal-body').html(htmlToAdd);
+                       $('.ModalMedium').html(htmlToAdd);
 
-                       $('#publicModalLabel').text("Purchase Request Form");
+                       $('#publicModalMediumLabel').text("Purchase Request Form");
 
                      print('requestData', function(requestData) {
                          if (requestData) {
@@ -1016,7 +963,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
                        });
 
-                         showModal();
+                         showModalMedium();
                      }
 
               else if (buttonId === "view") {
@@ -1050,9 +997,9 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                     </div>
 
                                 `;
-                                $('.modal-body').html(htmlToAdd);
+                                $('.ModalMedium').html(htmlToAdd);
 
-                                $('#publicModalLabel').text("Accepted Request Form");
+                                $('#publicModalMediumLabel').text("Accepted Request Form");
 
                               print('requestData', function(requestData) {
                                   if (requestData) {
@@ -1096,7 +1043,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                               });
 
 
-                                  showModal();
+                                  showModalMedium();
                       }
                   });
 

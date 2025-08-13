@@ -15,7 +15,7 @@ function addTableInformationOfService(deviceId,comment,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                         'Content-Type': 'application/json',
+
                                         'Authorization': 'Bearer ' + getAuthToken()
                                     },
                  success: function(response) {
@@ -65,9 +65,9 @@ function addTableInformationOfService(deviceId,comment,categoryName){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          headers: {
-                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer ' + getAuthToken()
-                            },
+
+                    'Authorization': 'Bearer ' + getAuthToken()
+                },
          success: function(response) {
                            CustomAlert(response);
                              $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -96,9 +96,8 @@ function editTableInformationOfDevice(deviceId,categoryName){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                  headers: {
-                                         'Content-Type': 'application/json',
-                                        'Authorization': 'Bearer ' + getAuthToken()
-                                    },
+                            'Authorization': 'Bearer ' + getAuthToken()
+                        },
                  success: function(response) {
                              CustomAlert(response);
                                $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
@@ -275,7 +274,14 @@ function addDeviceInformationOfExtraDevice(){
 
              $('#saveEditBtn').click(function() {
                  var categoryName=$('#deviceInputFieldAdd').val();
-                  saveExtraDevice(categoryName);
+
+                if(categoryName && $('#calendar').val()){
+                     saveExtraDevice(categoryName);
+                 }
+                 else{
+                 alert("Please Insert mandatory field (Category, Date)");
+                 }
+
                 });
 
           showModalMedium();
@@ -429,19 +435,23 @@ window.initUnOrderedDeviceGeneral = function () {
                      $.ajax({
                             url: '/purchase/deliverUnOrderedDeviceInformation', // URL to your delete endpoint
                             type: 'POST',
-                           contentType: "application/json",
+
                             data: JSON.stringify({
                                  deviceId: deviceId ,
                                  departmentName:departmentName,
                                  departmentUserName:departmentUserName,
                                  departmentUserId:departmentUserId
                                  }),// Send category name as data
+                                 headers: {
+                                        "Content-Type": "application/json",
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                             success: function(result) {
                                 // Remove the row from the table body
-                          CustomAlert(result);
-                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                location.reload();
-                            });
+                                          CustomAlert(result);
+                                            $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                                location.reload();
+                                            });
                             },
                             error: function(xhr, status, error) {
                                 console.error("Error deleting category: " + error);
@@ -454,7 +464,7 @@ window.initUnOrderedDeviceGeneral = function () {
             }
     else if (button.hasClass("Edit")) {
       // Handle edit button click (add your logic here)
-      console.log("Edit button clicked!");
+
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
        if (!deviceId) {
@@ -482,7 +492,7 @@ window.initUnOrderedDeviceGeneral = function () {
 
         // Add the HTML code to the modal body using jQuery
         $('.ModalMedium').html(htmlToAdd);
-          $('#publicModalMediumLabel').text("Edit Device Information")
+          $('#publicModalMediumLabel').text("Edit Device Information1")
          print('categories', function(categories) {
                if (categories) {
                    // Generate HTML for categories
@@ -586,7 +596,7 @@ window.initUnOrderedDeviceGeneral = function () {
 
                          if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
                              // Only update if there's no custom dropdown list pending
-                               console.log(" check "+categoriesHtml);
+
                              $('#universalDivEdit').html(categoriesHtml);
                          }
                       }
@@ -856,7 +866,7 @@ window.initUnOrderedDeviceGeneral = function () {
 
                 }, // Send category name as data
                 headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                 success: function(result) {
@@ -1133,10 +1143,11 @@ function myFunctionThatHandlesCase(column, text,formId) {
 
 
 function exportToModalOfSelectedRow() {
-    const mainTable = document.getElementById("unOrderedDeviceTable");
-      const modalHeader = document.getElementById("modalHeaderRow");
-          const modalBody = document.getElementById("modalBodyRows");
-          const totalPriceDisplay = document.getElementById("totalPriceDisplay");
+
+          const mainTable = document.getElementById("unOrderedDeviceTable");
+          const modalHeader = document.getElementById("modalHeaderRowUnOrderedDevice");
+          const modalBody = document.getElementById("modalBodyRowsUnOrderedDevice");
+          const totalPriceDisplay = document.getElementById("totalPriceDisplayUnOrderedDevice");
 
           // Clear previous content
           modalHeader.innerHTML = "";
@@ -1155,7 +1166,7 @@ function exportToModalOfSelectedRow() {
               if (text === "action" || text === "components") {
                   removeIndexes.push(index);
               }
-              if (text === "price") {
+              if (text.startsWith("price")) {
                   priceColumnIndex = index;
               }
           });
@@ -1189,16 +1200,16 @@ function exportToModalOfSelectedRow() {
 
           if (checkboxes.length > 0) {
               totalPriceDisplay.textContent = "Total Price: $" + totalPrice.toFixed(2);
-              const modal = new bootstrap.Modal(document.getElementById("exportModal"));
+              const modal = new bootstrap.Modal(document.getElementById("exportModalUnOrderedDevice"));
               modal.show();
           } else {
               CustomAlert("Please select at least one row.");
           }
 }
 
-function confirmExport() {
-    const modalRows = document.querySelectorAll("#modalBodyRows tr");
-    const headerCells = document.querySelectorAll("#modalHeaderRow th");
+function confirmExportUnOrderedDevice() {
+    const modalRows = document.querySelectorAll("#modalBodyRowsUnOrderedDevice tr");
+    const headerCells = document.querySelectorAll("#modalHeaderRowUnOrderedDevice th");
 
     const exportData = [];
 
@@ -1215,36 +1226,34 @@ function confirmExport() {
         exportData.push(rowData);
     });
 
-    fetch("/purchase/exportDataForExtraDevice", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        headers: {
-                                'Content-Type': 'application/json',
-                               'Authorization': 'Bearer ' + getAuthToken()
-                           },
-        body: JSON.stringify(exportData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Failed to export PDF");
-        }
-        return response.blob();  // <-- Get PDF blob
-    })
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "exported-data For UnOrdered.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        CustomAlert("Error occurred during export.");
-    });
+     fetch("/purchase/exportDataForUnOrderedDevice", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + getAuthToken()
+            },
+            body: JSON.stringify(exportData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to export PDF");
+            }
+            return response.blob();  // <-- Get PDF blob
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "exported-data For Ordered.pdf";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            location.reload(); // Refresh the page
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            CustomAlert("Error occurred during export.");
+        });
 }
 

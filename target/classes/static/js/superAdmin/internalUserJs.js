@@ -17,7 +17,7 @@ function saveInternalUserBtn(branchName,userName,userId,userPassword) {
                  userPassword:userPassword
               },
               headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
               success: function(response) {
@@ -64,7 +64,7 @@ function editInternalUserBtn($row) {
                  newUserPassword:newUserPassword
               },
               headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
               success: function(response) {
@@ -145,7 +145,7 @@ function editInternalUserBtn($row) {
                     userPassword:userPassword
                 }, // Send category name as data
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

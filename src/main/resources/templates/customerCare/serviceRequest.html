@@ -57,15 +57,19 @@
                             </th>
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('serviceInformationTable', 6, this)|">
-                                Service To Dept <br> Status <span class="sort-icon">⇅</span>
+                                CustomerCare To Service <br> Status <span class="sort-icon">⇅</span>
                             </th>
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('serviceInformationTable', 7, this)|">
+                                Service To Customer <br> Status <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 8, this)|">
                                 CustomerCare To Dept <br> Status <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white"
-                                th:onclick="|window.sortTable('serviceInformationTable', 8, this)|">
+                                th:onclick="|window.sortTable('serviceInformationTable', 9, this)|">
                                 Create Time <span class="sort-icon">⇅</span>
                             </th>
 
@@ -94,9 +98,10 @@
 
                         </td>
 
+                        <td th:text="${device != null && device.customerCareServiceRequestStatus != null ? device.customerCareServiceRequestStatus : 'Pending'}">
                         <td th:text="${device != null && device.customerCareSendDeviceToServiceStatus != null ? device.customerCareSendDeviceToServiceStatus : ' '}">
                         </td>
-                        <td th:text="${device != null && device.customerCareReceiveDeviceFromServiceStatus != null ? device.customerCareReceiveDeviceFromServiceStatus : ' '}">
+                        <td th:if="${device.serviceCenterToCustomerCareStatus =='Device delivered'}" th:text="${device != null && device.customerCareReceiveDeviceFromServiceStatus != null ? device.customerCareReceiveDeviceFromServiceStatus : 'Pending'}">
                         </td>
                         <td th:text="${device != null && device.customerCareToDepartmentStatus != null ? device.customerCareToDepartmentStatus : ' '}">
                         </td>

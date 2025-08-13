@@ -16,7 +16,8 @@ function  sendDeviceToDepartment(deviceId,serviceId,status){
 
                          },
                           headers: {
-                                                'Content-Type': 'application/json',
+
+
                                                'Authorization': 'Bearer ' + getAuthToken()
                                            },
                          success: function(result) {
@@ -49,7 +50,8 @@ function  receiveDeviceFromService(deviceId,serviceId,status){
 
                          },
                           headers: {
-                                                'Content-Type': 'application/json',
+
+
                                                'Authorization': 'Bearer ' + getAuthToken()
                                            },
                          success: function(result) {
@@ -79,7 +81,8 @@ function addTableInformationOfService(deviceId,comment){
                  type: 'POST',
                  data: formData, // Send serialized form data and category name
                   headers: {
-                                        'Content-Type': 'application/json',
+
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                  success: function(response) {
@@ -111,7 +114,8 @@ function setServiceRequestAccept(serviceId,status){
 
                 },
                  headers: {
-                                       'Content-Type': 'application/json',
+
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                 success: function(result) {
@@ -290,7 +294,8 @@ window.initServiceRequestGeneral = function () {
 
                 }, // Send category name as data
                  headers: {
-                                       'Content-Type': 'application/json',
+
+
                                       'Authorization': 'Bearer ' + getAuthToken()
                                   },
                 success: function(result) {

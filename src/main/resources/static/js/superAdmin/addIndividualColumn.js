@@ -15,7 +15,7 @@ function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) 
                   requiredType:requiredType
               },
               headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
               success: function(response) {
@@ -60,7 +60,7 @@ function editIndividualColumnBtn($row) {
                   newRequiredType:newRequiredType
               },
               headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
               success: function(response) {
@@ -130,7 +130,7 @@ function editIndividualColumnBtn($row) {
                      type: "POST",
                      url: "/superAdmin/inputTypes",
                      headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                      success: function(response) {
@@ -160,7 +160,7 @@ function editIndividualColumnBtn($row) {
                     oldIndividualColumnName: columnName
                 }, // Send category name as data
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {
@@ -356,7 +356,7 @@ function selectionAndInputHandlerForAddColumn(){
                 type: "POST",
                 url: "/superAdmin/inputTypes",
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(response) {

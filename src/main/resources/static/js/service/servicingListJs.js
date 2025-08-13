@@ -16,7 +16,7 @@ function ServiceReportExport(serviceId, requestInfo, actions, extractComponents,
     fetch('/service/saveExcel', {
         method: 'POST',
           headers: {
-                       'Content-Type': 'application/json',
+                       "Content-Type": "application/json",
                       'Authorization': 'Bearer ' + getAuthToken()
                   },
         body: JSON.stringify(payload)
@@ -149,7 +149,7 @@ function   addExtractDeviceToService(categoryName,deviceId){
 
          },
          headers: {
-                         'Content-Type': 'application/json',
+
                         'Authorization': 'Bearer ' + getAuthToken()
                     },
          error: function(xhr, status, error) {
@@ -201,7 +201,7 @@ function serviceReport(serviceId,selectedExtractListDeviceIds,selectedNeedAccess
                              });
         },
         headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         error: function(xhr, status, error) {
@@ -254,7 +254,7 @@ function serviceReportEdit(serviceId,selectedExtractListDeviceIds,selectedNeedAc
                                });
         },
         headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         error: function(xhr, status, error) {
@@ -289,7 +289,7 @@ function addTableInformationOfServiceForEdit(serviceId) {
                            });
         },
         headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         error: function(xhr, status, error) {
@@ -334,7 +334,7 @@ function accessoriesProposal(serviceId) {
                              });
         },
         headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         error: function(xhr, status, error) {
@@ -345,7 +345,8 @@ function accessoriesProposal(serviceId) {
 
 
 window.initServicingListGeneral = function () {
-  $('#serviceInformationServicingListTable tbody tr').click(function(event) {
+  $('#serviceInformationServicingListTable tbody tr').click(function(event)
+   {
 
     const $row = $(this); // Store the clicked row element
    var categoryName = $row.find('td:nth-child(3)').text();
@@ -1593,8 +1594,7 @@ window.initServicingListGeneral = function () {
                                              const fieldContainer = $(`#${problemId}-fieldNameProblemActions`); // Select the target div
 
                                              // Debugging logs
-                                             console.log("Button clicked for problemId:", problemId);
-                                             console.log("Field container:", fieldContainer);
+
 
                                              // Create a new input group with a text field and a remove button
                                              const newIndex = fieldContainer.children().length + 1; // Calculate new index
@@ -2298,180 +2298,226 @@ window.initServicingListGeneral = function () {
               });
               showModal();
                }
-     else if (buttonId === "accessoriesProposal") {
-                         print('serviceRequests', function(serviceRequests) {
-                             if (serviceRequests) {
-                                 const serviceData = serviceRequests.find(item => item.id === serviceId);
+     else if (buttonId === "accessoriesProposal")
+     {
+     print('serviceRequests', function(serviceRequests) {
+         if (serviceRequests) {
+             const serviceData = serviceRequests.find(item => item.id === serviceId);
 
-                                 if (serviceData && serviceData.allProblem) {
-                                     var categoriesHtml = '';
+             if (serviceData && serviceData.allProblem) {
+                 var categoriesHtml = '';
 
-                                     // Print all names of allProblem
-                                     serviceData.allProblem.forEach(problem => {
-                                         console.log(problem.name); // Logs each problem name
+                 // Print all names of allProblem
+                  serviceData.allProblem.forEach((problem, index) => {
+                      console.log(problem.name); // Logs each problem name
 
-                                         // Replace spaces in problem name with dashes for valid HTML IDs
-                                         var problemId = problem.name.replace(/\s+/g, '-');
+                      // Replace spaces in problem name with dashes for valid HTML IDs
+                      var problemId = problem.name.replace(/\s+/g, '-');
 
-                                         // HTML structure for the "Add Accessories" button and initial input
-                                         var htmlToAdd = `
-                                             <form id="${problemId}">
-                                                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                                                     <label class="form-label">Problem: ${problem.name}</label>
-                                                 </div>
-                                                 <div class="mb-1" style="margin-left: 0%; text-align: left;">
-                                                     <div class="row align-items-center" >
-                                                         <div class="col-sm-4 mb-3 d-flex flex-column justify-content-end" style="height: 100%;">
-                                                             <div class="mb-1" style="text-align: left;">
-                                                                 <div class="dropdown" id="${problemId}-categoryName">
-                                                                     <input type="text" class="form-control dropdown-toggle deviceInputFieldAdd" data-bs-toggle="dropdown" placeholder="Category" aria-expanded="false" data-problem-id="${problemId}">
-                                                                     <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldPopupBox">
-                                                                         <div class="listItemAddDevice"></div>
-                                                                     </ul>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="mb-1" style="text-align: left;">
-                                                                 <div id="${problemId}-listName"></div>
-                                                             </div>
-
-                                                         </div>
-                                                         <div id="${problemId}-div" class="col-sm-8 mb-1"></div>
-                                                     </div>
-                                                 </div>
-                                                 <div class="mb-1" style="margin-left: 0%; text-align: left;">
-                                                     <button type="button" class="btn btn-primary add-accessories-btn" data-problem="${problemId}">Add Accessories</button>
-                                                 </div>
-                                             </form>
-                                         `;
-                                         categoriesHtml += htmlToAdd;
-                                     });
-
-                                     var modalHtml = `
-                                         ${categoriesHtml}
-                                         <div class="mb-3" style="margin-right: 0%; text-align: center;">
-                                             <button type="button" class="btn btn-primary" id="AcceptBtn">Save</button>
-                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                         </div>
-                                     `;
-
-                                     $('#publicModalAccessoriesNvn').html(modalHtml);
-
-                                     // print this
-                                     $('#publicModalLabel').text("Add Accessories");
-
-                                     // Fetch and update category list for each category field
-                                     print('categories', function (categories) {
-                                         if (categories) {
-                                             var categoriesHtml = '';
-                                             categories.forEach(function (category) {
-                                                 categoriesHtml += `<li><a class="dropdown-item deviceInputEachItem" href="#" data-category="${category.categoryName}">${category.categoryName}</a></li>`;
-                                             });
-
-                                             $('.listItemAddDevice').html(categoriesHtml);
-
-                                             $('.deviceInputEachItem').click(function () {
-                                                 const selectedCategory = $(this).data('category'); // Get selected category
-                                                 const dropdownInputField = $(this).closest('.dropdown').find('.deviceInputFieldAdd');
-
-                                                 dropdownInputField.val(selectedCategory);
-                                                 //console.log('Selected Category:', selectedCategory);
-
-                                                 const problemId = dropdownInputField.data('problem-id');
-                                                  // do empty
-                                                 // Insert universal and individual items into the dropdown
-                                                var bodyList = `
-                                                  <div class="my-3">
-                                                    <label class="form-label fw-semibold text-primary">Description</label>
-                                                    <textarea
-                                                      class="form-control deviceInputFieldAddList shadow-sm rounded border-primary"
-                                                      placeholder="Enter list details..."
-                                                      rows="3"
-                                                    ></textarea>
-                                                  </div>
-                                                `;
-
-
-                                                 dropdownInputField.closest('form').find(`#${problemId}-listName`).html(bodyList);
-                                             });
-                                         }
-                                     });
-
-
-                                    // Add new accessories handler
-                                    $('.add-accessories-btn').click(function () {
-
-                                        const problemId = $(this).data('problem');
-                                        const problemDiv = $('#' + problemId + '-div');
-                                        const textDiv = $('#' + problemId + '-fieldName');
-                                        const listDiv = $('#' + problemId + '-listName');
-
-
-
-                                         const categoryNameDiv = $('#' + problemId + '-categoryName');
-                                         const categoryName=categoryNameDiv.find('input').val();
-                                         // Find the input field within the 'textDiv' and get its value
-                                         const inputValueList = listDiv.find('textarea').val();
-
-                                        addNewAccessoryInput(problemDiv,inputValueList,categoryName);
-                                    });
-
-
-                                     function addNewAccessoryInput(problemDiv,inputValueList, categoryName) {
-                                         const accessoryCount = problemDiv.find('.input-group').length + 1;
-
-                                      var newInputGroup = `
-                                        <div class="fieldDiv my-3">
-                                          <div class="card shadow-sm rounded p-3 border border-success">
-                                            <div class="card-body p-1">
-                                              <div class="mb-2">
-                                                <label class="form-label fw-bold text-success">Category: ${categoryName}</label>
+                      // HTML structure for the "Add Accessories" button and initial input
+                      var htmlToAdd = `
+                          <form id="${problemId}">
+                              <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                                  <label class="form-label fw-bold">
+                                      <span style="color: #555;">[${index + 1}]</span> ${problem.name}
+                                  </label>
+                              </div>
+                              <div class="mb-1" style="margin-left: 0%; text-align: left;">
+                                  <div class="row align-items-center">
+                                      <div class="col-sm-4 mb-3 d-flex flex-column justify-content-end" style="height: 100%;">
+                                          <div class="mb-1" style="text-align: left;">
+                                              <div class="dropdown" id="${problemId}-categoryName">
+                                                  <input type="text" class="form-control dropdown-toggle deviceInputFieldAdd"
+                                                         data-bs-toggle="dropdown" placeholder="Select Device Category" aria-expanded="false"
+                                                         data-problem-id="${problemId}">
+                                                  <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldPopupBox">
+                                                      <div class="listItemAddDevice"></div>
+                                                  </ul>
                                               </div>
-                                              <div class="input-group">
-                                                <textarea
-                                                  class="form-control problem-input border-success"
-                                                  name="${categoryName}(${inputValueList})"
-                                                  placeholder="${inputValueList}"
-                                                  rows="3"
-                                                  aria-label="Accessories${accessoryCount}"
-                                                  aria-describedby="removeBtn-${accessoryCount}">${inputValueList}</textarea>
-                                                <button
-                                                  class="btn btn-outline-danger remove-problem"
-                                                  type="button"
-                                                  id="removeBtn-${accessoryCount}">
-                                                  ✕
-                                                </button>
-                                              </div>
-                                            </div>
                                           </div>
-                                        </div>
-                                      `;
+                                          <div class="mb-1" style="text-align: left;">
+                                              <div id="${problemId}-listName"></div>
+                                          </div>
+                                      </div>
+                                      <div id="${problemId}-div" class="col-sm-8 mb-1"></div>
+                                  </div>
+                              </div>
+                              <div class="mb-1" style="margin-left: 0%; text-align: left;">
+                                  <button type="button" class="btn btn-primary add-accessories-btn"
+                                          data-problem="${problemId}">Add Accessories</button>
+                              </div>
+                          </form>
+                      `;
+                      categoriesHtml += htmlToAdd;
+                  });
 
 
+                 var modalHtml = `
+                     ${categoriesHtml}
+                     <div class="mb-3" style="margin-right: 0%; text-align: center;">
+                         <button type="button" class="btn btn-primary" id="AcceptBtn">Save</button>
+                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                     </div>
+                 `;
 
-                                         problemDiv.append(newInputGroup);
+                 $('#publicModalAccessoriesNvn').html(modalHtml);
+
+                 // print this
+                 $('#publicModalLabelAccessories').text("Add Accessories For Each Problem");
+
+                 // Fetch and update category list for each category field
+                 print('categories', function (categories) {
+                     if (categories) {
+                         var categoriesHtml = '';
+                         categories.forEach(function (category) {
+                             categoriesHtml += `<li><a class="dropdown-item deviceInputEachItem" href="#" data-category="${category.categoryName}">${category.categoryName}</a></li>`;
+                         });
+
+                         $('.listItemAddDevice').html(categoriesHtml);
+
+                         $('.deviceInputEachItem').click(function () {
+                             const selectedCategory = $(this).data('category'); // Get selected category
+                             const dropdownInputField = $(this).closest('.dropdown').find('.deviceInputFieldAdd');
+
+                             dropdownInputField.val(selectedCategory);
+                             //console.log('Selected Category:', selectedCategory);
+
+                             const problemId = dropdownInputField.data('problem-id');
+                              // do empty
+                             // Insert universal and individual items into the dropdown
+                            var bodyList = `
+                              <div class="my-3">
+                                <label class="form-label fw-semibold text-primary">Description</label>
+                                <textarea
+                                  class="form-control deviceInputFieldAddList shadow-sm rounded border-primary"
+                                  placeholder="Describe about accessories..."
+                                  rows="2"
+                                ></textarea>
+                              </div>
+                            `;
 
 
-                                         problemDiv.find('.remove-problem').last().click(function () {
-                                             $(this).closest('.fieldDiv').remove();
-
-                                         });
-                                     }
-
-                                     // Save button handler
-                                     $('#AcceptBtn').click(function() {
-
-                                         accessoriesProposal(serviceId);
-                                     });
-
-                                     $('.remove-problem').click(function () {
-                                         $(this).closest('.fieldDiv').remove();
-                                     });
-
-                                     showModalAccessories();
-                                 }
-                             }
+                             dropdownInputField.closest('form').find(`#${problemId}-listName`).html(bodyList);
                          });
                      }
+                 });
+
+
+               // Delegate so it works for dynamically inserted buttons
+               $(document).on('click', '.add-accessories-btn', function () {
+                 const problemId = $(this).data('problem');
+
+                 const $problemDiv = $('#' + problemId + '-div');          // accessories container
+                 const $listDiv    = $('#' + problemId + '-listName');      // where textarea lives
+                 const $catInput   = $('#' + problemId + '-categoryName input');
+
+                 const categoryName   = ($catInput.val() || '').trim();
+                 const inputValueList = ($listDiv.find('textarea').val() || '').trim();
+
+                 if (!categoryName) { CustomAlert?.('Please select a category.'); return; }
+                 if (!inputValueList) { CustomAlert?.('Please enter accessory details.'); return; }
+
+                 addNewAccessoryInput($problemDiv, inputValueList, categoryName);
+
+                 // Clear inputs after add
+                 $catInput.val('');
+                 $listDiv.find('textarea').val('');
+               });
+
+
+
+          function escapeHtml(str = "") {
+            return String(str)
+              .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+          }
+
+          function ensureContainerId($el) {
+            let id = $el.attr('id');
+            if (!id) {
+              id = `acc-container-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+              $el.attr('id', id);
+            }
+            return id;
+          }
+
+          function addNewAccessoryInput(problemDiv, inputValueList, categoryName) {
+            const $container = $(problemDiv);
+            const containerId = ensureContainerId($container);
+
+            const category = escapeHtml(String(categoryName ?? '').trim());
+            const value = escapeHtml(String(inputValueList ?? '').trim());
+            const uid = `acc-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+            const block = `
+              <div class="fieldDiv my-3" id="${uid}">
+                <div class="card border-0 shadow-sm rounded-2">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center mb-2">
+                      <span class="badge text-bg-secondary me-2 serial-number"></span>
+                      <span class="text-muted small me-1">Category:</span>
+                      <span class="fw-semibold">${category}</span>
+                    </div>
+                    <div class="input-group">
+                      <textarea
+                        class="form-control problem-input"
+                        name="${category}(${value})"
+                        placeholder="${value}"
+                        rows="1"
+                        aria-label="Accessory for ${category}">${value}</textarea>
+                      <button
+                        class="btn btn-outline-danger remove-problem"
+                        type="button"
+                        title="Remove"
+                        aria-label="Remove accessory"
+                        data-target="${uid}"
+                        data-container-id="${containerId}">
+                        &times;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+
+            $container.append(block);
+            updateSerialNumbers($container);
+          }
+
+          // Delegate remove clicks (works for dynamic items)
+          $(document).on('click', '.remove-problem', function () {
+            const $btn = $(this);
+            const targetId = $btn.data('target');
+            const containerId = $btn.data('containerId');
+
+            const $container = $('#' + containerId);      // get container BEFORE removal
+            $('#' + targetId).remove();                    // remove the block
+            updateSerialNumbers($container);               // re-index the rest
+          });
+
+          function updateSerialNumbers($container) {
+            $container.find('.fieldDiv .serial-number').each(function (i) {
+              $(this).text(i + 1);
+            });
+          }
+
+
+                 // Save button handler
+                 $('#AcceptBtn').click(function() {
+
+                     accessoriesProposal(serviceId);
+                 });
+
+                 $('.remove-problem').click(function () {
+                     $(this).closest('.fieldDiv').remove();
+                 });
+
+                 showModalAccessories();
+             }
+         }
+     });
+ }
 
      else if (button.hasClass("Delete")) {
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
@@ -2493,7 +2539,7 @@ window.initServicingListGeneral = function () {
 
                 }, // Send category name as data
                 headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
                 success: function(result) {

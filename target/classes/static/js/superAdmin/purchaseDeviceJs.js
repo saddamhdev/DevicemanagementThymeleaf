@@ -7,7 +7,7 @@ function purchaseRequest(requestId,links) {
         contentType: 'application/json',
         data: JSON.stringify({requestId: requestId,comment:$("#comments").val() ,links: links }),
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -33,7 +33,7 @@ function setDeviceStatusApprove(requestId,status,categoryName){
 
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {
@@ -60,7 +60,7 @@ function setCancelPurchaseDevice(requestId,status){
 
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

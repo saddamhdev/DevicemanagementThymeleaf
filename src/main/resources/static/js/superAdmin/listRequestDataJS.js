@@ -31,7 +31,7 @@ function  editRequestColumnBtn(requestId){
                    requiredType:requiredType
                },
                headers: {
-                                  'Content-Type': 'application/json',
+
                                  'Authorization': 'Bearer ' + getAuthToken()
                              },
                success: function(result) {
@@ -53,7 +53,7 @@ function listRequestSelect(requestId, deviceId) {
         type: 'POST',
         data: {requestId: requestId, deviceId: deviceId }, // Send as JSON
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -91,7 +91,7 @@ function ApproveAlternativeListDevice(requestId,deviceId){
                   departmentUserId:departmentUserId
                   }),
                   headers: {
-                                     'Content-Type': 'application/json',
+
                                     'Authorization': 'Bearer ' + getAuthToken()
                                 },
              success: function (response) {
@@ -116,7 +116,7 @@ function setListRequestStatus(requestId){
                      cause:$('#listRejectCause').val()
                      },
                      headers: {
-                                        'Content-Type': 'application/json',
+
                                        'Authorization': 'Bearer ' + getAuthToken()
                                    },
                      success: function(result) {
@@ -343,7 +343,7 @@ window.initListRequestInventoryTable = function () {
                     size: localStorage.getItem("pageSize") || 0
                 },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
         success: function (data) {

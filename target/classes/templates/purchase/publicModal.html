@@ -33,6 +33,34 @@
     </div>
 
 </div>
+<div th:fragment="exportModalUnOrderedDevice">
+    <!-- Modal -->
+    <div class="modal fade" id="exportModalUnOrderedDevice" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Selected Rows for Export of Unordered Device</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p id="totalPriceDisplayUnOrderedDevice" class="text-center fw-bold text-success mb-3"></p>
+
+                    <table class="table table-bordered">
+                        <thead id="modalHeaderRowUnOrderedDevice"></thead>
+                        <tbody id="modalBodyRowsUnOrderedDevice"></tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="confirmExportUnOrderedDevice()">Confirm Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 <div th:fragment="publicModal">
     <!-- Modal structure -->
     <div class="modal fade" id="publicModal" tabindex="-1" aria-labelledby="publicModalLabel" aria-hidden="true">

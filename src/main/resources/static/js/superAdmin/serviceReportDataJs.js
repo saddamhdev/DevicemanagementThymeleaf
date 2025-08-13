@@ -5,7 +5,7 @@ function setServiceReportAccept(serviceId, status,comment){
             url: "/superAdmin/serviceReportAccept", // URL to your controller method
             data: { serviceId: serviceId,status:status,comment:comment },
             headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
             success: function(response) {
@@ -49,7 +49,7 @@ function   addExtractDeviceToService(categoryName,deviceId){
          type: 'POST',
          data: formData, // Send serialized form data along with additional fields
          headers: {
-                            'Content-Type': 'application/json',
+
                            'Authorization': 'Bearer ' + getAuthToken()
                        },
          success: function(response) {
@@ -153,7 +153,7 @@ function serviceReport(serviceId,selectedExtractListDeviceIds,selectedNeedAccess
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -187,7 +187,7 @@ function addTableInformationOfServiceForEdit(serviceId) {
         type: 'POST',
         data: formData,
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -232,7 +232,7 @@ function addTableInformationOfService22(serviceId) {
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
         headers: {
-                           'Content-Type': 'application/json',
+
                           'Authorization': 'Bearer ' + getAuthToken()
                       },
         success: function(response) {
@@ -1444,7 +1444,7 @@ window.initServiceReportDataGeneral = function () {
 
                 }, // Send category name as data
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

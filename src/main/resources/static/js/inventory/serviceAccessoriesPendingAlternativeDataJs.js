@@ -529,7 +529,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                                date: updatedDate
                            },
                             headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                            success: function(response) {
@@ -690,7 +690,7 @@ window.initServiceAccessoriesPendingAlternativeDataTable = function () {
                                                                    departmentUserId:departmentUserId
                                                                },
                                                                 headers: {
-                                                                                      'Content-Type': 'application/json',
+
                                                                                      'Authorization': 'Bearer ' + getAuthToken()
                                                                                  },
                                                                success: function(response) {

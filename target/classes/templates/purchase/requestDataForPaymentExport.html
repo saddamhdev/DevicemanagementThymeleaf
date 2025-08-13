@@ -89,56 +89,7 @@
 
 
                     <tbody id="requestForPaymentExportTableBody">
-                    <tr th:each="device, iterStat : ${requestData}"
-                        onclick="printRowDataForCustomerCare(this)"
-                        th:if="${device.purchase != null and device.purchase.cooAns == 'Accepted'  }">
-                        <td  th:text="${device.visibleRequestId}" >1</td>
-                        <td  th:text="${device.departmentName}" >1</td>
-                        <td  th:text="${device.allData[category]}" >1</td>
-                        <td style="text-align: left;" th:data-request-id="${device.id}" class="viewInfo"  >
-                            <!-- Loop over the requestColumns to create list items -->
-                            <div  th:each="individualColumn : ${requestColumns}"
-                                 th:if="${individualColumn.visibleType == 'yes' && device.requestMode == 'Accepted' && device.inventory.inventoryStatus == 'Purchased'}">
-                                <!-- Check if the column data type is 'textarea' -->
-                                <div th:if="${individualColumn.dataType == 'textarea'}">
-                                    <textarea class="plain-textarea"
-                                              th:text="${device.allData[individualColumn.columnName]}"></textarea>
-                                </div>
-                                <!-- For any other data type -->
-                                <div th:if="${individualColumn.dataType != 'textarea'}">
-                                    <span th:text="${individualColumn.columnName}"></span>:
-                                    <span th:text="${device.allData[individualColumn.columnName] ?: 'N/A'}"></span>
-                                </div>
-                            </div>
-                            <p  th:data-request-id="${device.id}" th:data-button-id="viewInfo">
-                                &#128065;
-                            </p>
-                        </td>
 
-
-                        <td
-                                th:text="${device.purchase != null && device.purchase?.budget != null ? device.purchase?.budget : ' '}">
-                        </td>
-
-                        <td
-                            th:text="${device.purchase != null && device.purchase?.cooAns != null ? device.purchase?.cooAns : ' '}">
-                        </td>
-                        <td
-                            th:text="${device.purchase != null && device.purchase?.purchaseDeviceExportStatus != null ? device.purchase?.purchaseDeviceExportStatus : 'No Exported'}">
-                        </td>
-                        <td th:if="${device.requestMode == 'Accepted' && device.inventory.inventoryStatus == 'Purchased'}"
-                            th:text="${device.purchase.RequestTime != null ? device.purchase.RequestTime : ' '}">
-                        </td>
-                        <td >
-                            <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <input type="checkbox"  th:data-request-id="${device.id}" th:data-button-id="accepted" style="background-color: green; transform: scale(1.5); width: 12px; height: 12px;"  title="Select For Payment" th:if="${device.purchase?.cooAns =='Accepted'}">
-
-                            </div>
-
-                        </td>
-
-
-                    </tr>
                     </tbody>
 
                 </table>

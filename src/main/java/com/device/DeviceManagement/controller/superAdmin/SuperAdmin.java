@@ -1980,6 +1980,81 @@ public class SuperAdmin {
                     .body("Error saving data. Please try again.");
         }
     }
+
+    @PostMapping("/setAcceptanceOfAccessoriesProposalResubmission")
+    @ResponseBody
+    public ResponseEntity<String> setAcceptanceOfAccessoriesProposalResubmission(@RequestBody Map<String, Object> rowData) {
+        try {
+            // System.out.println("Received data: " + rowData);
+            // Extract data
+            String serviceId = rowData.getOrDefault("serviceId", "N/A").toString();
+            String bibagName = rowData.getOrDefault("bibagName", "N/A").toString();
+            String solutionCategory = rowData.getOrDefault("solutionCategory", "N/A").toString();
+            String solutionName = rowData.getOrDefault("solutionName", "N/A").toString();
+            String problemName = rowData.getOrDefault("problemName", "N/A").toString();
+            String price = rowData.getOrDefault("price", "0").toString();
+            String action = rowData.getOrDefault("action", " ").toString();
+            String comment = rowData.getOrDefault("comment", " ").toString();
+
+            String departmentName = rowData.getOrDefault("departmentName", "Unknown").toString();
+            String departmentUserName = rowData.getOrDefault("departmentUserName", "Anonymous").toString();
+            String departmentUserId = rowData.getOrDefault("departmentUserId", "UnknownID").toString();
+
+            // Retrieve the ServiceRequest by serviceId and status
+            Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
+
+            if (optionalRequestData.isPresent()) {
+                ServiceRequest requestData = optionalRequestData.get();
+                requestData.setServiceAccessoriesSolutionAcceptingByCOOTime(getCurrentLocalDateTime());
+                // Iterate through each problem in the service request
+                requestData.getAllProblem().forEach(problem -> {
+                    if (problem.getName().equals(solutionName)) {
+                        // Find and update the existing solution's price by name
+                        problem.getProposalSolution().forEach(proposalSolutionItem -> {
+
+                            if (proposalSolutionItem.getName().equals( extractSolution(problemName))) {
+                                // System.out.println(proposalSolutionItem.getName()+" "+extractSolution(problemName));
+                                proposalSolutionItem.setPrice( price);
+                                proposalSolutionItem.setComment(comment);
+                                proposalSolutionItem.setAction(action);
+
+                                proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentSetter(departmentName + "_" + departmentUserName + "_" + departmentUserId);
+                                proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentStatus("Accepted");
+                                proposalSolutionItem.setCooManInfoOfPriceAcceptanceCommentSettingTime(getCurrentLocalDateTime());
+                                proposalSolutionItem.setServiceCenterToCOOAccessoriesReRequestStatusChecking("Done");
+                            }
+                        });
+
+
+                    }
+
+                });
+                // Persist changes
+                serviceRequestRepository.save(requestData);
+                serviceRequestService.clearCache();
+            }
+
+
+            // Log received data for debugging
+
+
+            // TODO: Process the data (e.g., save it to the database)
+            // Example:
+            // servicePriceService.savePrice(serviceId, solutionCategory, solutionName, problemName, price);
+
+            // Return success response
+            return ResponseEntity.ok("Data saved successfully!");
+
+        } catch (Exception ex) {
+            // Log the error
+            System.err.println("Error processing data: " + ex.getMessage());
+            ex.printStackTrace();
+
+            // Return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error saving data. Please try again.");
+        }
+    }
     // Endpoint to handle the incoming request
     @PostMapping("/addPaymentListApprove")
     @ResponseBody

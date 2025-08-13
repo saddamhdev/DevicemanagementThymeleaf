@@ -13,11 +13,11 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <!-- Toggle Content Button -->
-                <div class="d-flex justify-content-center mb-2">
-                    <!--        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>-->
+               <!-- <div class="d-flex justify-content-center mb-2">
+                    &lt;!&ndash;        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>&ndash;&gt;
                     <button class="btn btn-success btn-sm" onclick="addDeviceInformationOfPurchase()" style=" white-space: nowrap;">Add Old Device</button>
 
-                </div>
+                </div>-->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <!-- Left: Page Size Selector -->
                     <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
@@ -114,8 +114,8 @@
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">
                                 <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-tools text-primary small-button Service ms-2" th:data-device-id="${device.id}"></button>
-                                <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}"></button>
+
+                              <!--  <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}"></button>-->
                             </div>
                         </td>
                     </tr>

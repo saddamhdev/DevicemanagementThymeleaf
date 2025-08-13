@@ -7,7 +7,32 @@ function setServiceRequestToInventoryData(rowData) {
         contentType: 'application/json',
         data: JSON.stringify(rowData), // Send the data as JSO
         headers: {
-                'Content-Type': 'application/json',
+
+               'Authorization': 'Bearer ' + getAuthToken()
+           },
+        success: function (response) {
+                        CustomAlert(response);
+                          $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                              location.reload();
+                          });
+            // Optionally refresh the table or update the UI
+        },
+        error: function (xhr, status, error) {
+
+            CustomAlert("An error occurred while saving the data!");
+        }
+    });
+}
+function  setServiceRequestToCOODataAgain(rowData) {
+
+    // Send the data to the controller using AJAX
+    $.ajax({
+        url: '/service/setServiceRequestToCOODataAgain', // Replace with your controller's endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(rowData), // Send the data as JSO
+        headers: {
+
                'Authorization': 'Bearer ' + getAuthToken()
            },
         success: function (response) {
@@ -48,8 +73,8 @@ function addTableInformationOfService(serviceId) {
         type: 'POST',
         contentType: 'application/json', // Ensure content type is JSON
         data: JSON.stringify(mergedFormData), // Convert mergedFormData object to JSON string
-        headers: {
-                        'Content-Type': 'application/json',
+headers: {
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         success: function(response) {
@@ -83,7 +108,7 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
 
                 },
                 headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
                 success: function(result) {
@@ -715,7 +740,7 @@ window.initCooFeedbackGeneral = function () {
 
                 }, // Send category name as data
                 headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
                 success: function(result) {
@@ -927,8 +952,8 @@ window.initCooFeedbackTable = function () {
                 page: pageNumber,
                 size: localStorage.getItem("pageSize") || 0
             },
-        headers: {
-                        'Content-Type': 'application/json',
+headers: {
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         success: function (data) {
@@ -981,6 +1006,7 @@ window.initCooFeedbackTable = function () {
                                 </td>
                                 <td>${solution.price || ''}</td>
                                 <td>${displayAction}</td>
+                                <td>${solution.serviceCenterToCOOAccessoriesReRequestStatus || ''}</td>
                                 <td>${solution.comment || ''}</td>
                                 <td>${presentTime}</td>
                                 <td>
@@ -999,6 +1025,20 @@ window.initCooFeedbackTable = function () {
                                                     title="Request to Inventory For Accessories">
                                                 ✔
                                             </button>` : ''}
+                                             ${solution.cooManInfoOfPriceAcceptanceCommentStatus === 'Accepted'
+                                                  && solution.serviceCenterToInventoryAccessoriesRequestStatus !== 'Accepted'
+                                                  && solution.action === 'reject'
+                                                  && solution.serviceCenterToInventoryAccessoriesRequestStatus !== 'Pending'
+                                                  ? `
+                                                    <button class="btn btn-sm text-white againRequestToCOOForAccessories"
+                                                            data-category="${solution.category}"
+                                                            data-solution-name="${solution.name}"
+                                                            data-problem-name="${problem.name}"
+                                                            data-service-id="${device.id}"
+                                                            style="background-color:green;"
+                                                            title="Again Request to COO For Accessories">
+                                                        ✔
+                                                    </button>` : ''}
 
                                         ${availability === "Unavailable" ? `
                                             <button class="btn btn-sm text-white clock-button"
@@ -1010,14 +1050,7 @@ window.initCooFeedbackTable = function () {
                                                 <i class="fas fa-clock"></i>
                                             </button>` : ''}
 
-                                        ${availability !== "Unavailable" ? `
-                                            <button class="btn btn-info btn-sm view-button-selected-device"
-                                                    data-category="${solution.category}"
-                                                    data-service-id="${device.id}"
-                                                    data-button-id="view"
-                                                    data-device-id="${solution.inventoryToServiceCenterDeviceId}">
-                                                &#128065;
-                                            </button>` : ''}
+
                                     </div>
                                 </td>
                             `;
@@ -1162,7 +1195,8 @@ window.initCooFeedbackTable = function () {
                                date: updatedDate
                            },
                            headers: {
-                                           'Content-Type': 'application/json',
+
+
                                           'Authorization': 'Bearer ' + getAuthToken()
                                       },
                            success: function(response) {
@@ -1228,7 +1262,52 @@ window.initCooFeedbackTable = function () {
                }
            });
 
+           $(document).on('click', '.againRequestToCOOForAccessories', function (event) {
+               // Get the clicked button
+               const $button = $(this);
+               var button = $(event.target).closest('button');
+               var serviceId = button.data('serviceId');
 
+               // Get the parent row (tr)
+               const $row = $button.closest('tr');
+
+               // Extract data from specific child cells using nth-child (1-based index)
+               const bibagName = $row.find('td:nth-child(2)').text();
+               const solutionCategory = $row.find('td:nth-child(3)').text();
+               const solutionName = $row.find('td:nth-child(4)').text();
+               const problemName = $row.find('td:nth-child(5)').text();
+               const price = $row.find('td:nth-child(6) input').val();
+               const action = $row.find('td:nth-child(7) select').val();
+               const comment = $row.find('td:nth-child(8) input').val();
+
+               var departmentElement = $(".departmentName");
+               var departmentName = departmentElement.data("departmentname");
+               var departmentUserName = departmentElement.data("departmentuser-name");
+               var departmentUserId = departmentElement.data("departmentuser-id");
+
+               const rowData = {
+                   serviceId: serviceId,
+                   bibagName: bibagName,
+                   solutionCategory: solutionCategory,
+                   solutionName: solutionName,
+                   problemName: problemName,
+                   price: price,
+                   action: action,
+                   comment: comment,
+                   departmentName: departmentName,
+                   departmentUserName: departmentUserName,
+                   departmentUserId: departmentUserId
+               };
+
+               // Confirmation dialog
+               const confirmed = confirm("Are you sure you want to Resubmit this service accessories request to COO?");
+               if (confirmed) {
+                   //console.log("Row Data:", rowData);
+                   setServiceRequestToCOODataAgain(rowData);
+               } else {
+                   console.log("Action cancelled by user.");
+               }
+           });
             // Add event listener for the availability button click
         $(document).on('click', '.view-button-pending', function() {
                        var category = $(this).data('category');

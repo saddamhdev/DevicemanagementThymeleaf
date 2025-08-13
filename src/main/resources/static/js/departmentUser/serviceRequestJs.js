@@ -26,7 +26,7 @@ function distributeDevice(serviceId) {
         contentType: 'application/json', // Set content type to JSON
         data: JSON.stringify(dataToSend), // Convert the data object to a JSON string
          headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
         success: function(response) {
@@ -62,7 +62,7 @@ function  receiveDeviceFromCustomerCare(deviceId,serviceId,status){
 
                          },
                           headers: {
-                                                'Content-Type': 'application/json',
+
                                                'Authorization': 'Bearer ' + getAuthToken()
                                            },
                          success: function(result) {
@@ -271,9 +271,9 @@ window.initServiceRequestGeneral = function () {
 
                 }, // Send category name as data
                  headers: {
-                                       'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer ' + getAuthToken()
-                                  },
+
+                      'Authorization': 'Bearer ' + getAuthToken()
+                  },
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();

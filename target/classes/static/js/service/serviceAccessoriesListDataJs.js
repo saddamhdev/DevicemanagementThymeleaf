@@ -20,7 +20,7 @@ function addTableInformationOfService() {
         contentType: "application/json",
         data: JSON.stringify(mergedFormData),
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function(response) {
@@ -102,7 +102,7 @@ window.initServiceAccessoriesListDataTable = function () {
                     size: localStorage.getItem("pageSize") || 0
                 },
         headers: {
-                                'Content-Type': 'application/json',
+
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function (data) {
@@ -132,7 +132,7 @@ window.initServiceAccessoriesListDataTable = function () {
                     if (!Array.isArray(problem.proposalSolution)) return;
 
                     problem.proposalSolution.forEach(solution => {
-                        if (solution.cooManInfoOfPriceAcceptanceCommentStatus !== 'Accepted') return;
+                        if (solution.serviceCenterToInventoryAccessoriesRequestStatus ===null ) return;
 
                         const availability = getAvailability(solution.category);
                         const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, presentTime);
@@ -239,6 +239,10 @@ window.initServiceAccessoriesListDataTable = function () {
                                             departmentUserId:departmentUserId,
                                             deviceId:deviceId
                                         },
+                                        headers: {
+
+                                             'Authorization': 'Bearer ' + getAuthToken()
+                                         },
                                         success: function(response) {
                                                  CustomAlert(response);
                                                    $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

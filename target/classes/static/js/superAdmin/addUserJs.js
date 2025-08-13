@@ -17,7 +17,7 @@ function saveUserBtn(Id) {
             userPassword:userPassword
             },
             headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
             success: function(response) {
@@ -59,7 +59,7 @@ function editUserBtn($row) {
                   newUserPassword:newUserPassword
               },
               headers: {
-                                 'Content-Type': 'application/json',
+
                                 'Authorization': 'Bearer ' + getAuthToken()
                             },
               success: function(response) {
@@ -143,7 +143,7 @@ function editUserBtn($row) {
                 userPassword:userPassword
                  }, // Send category name as data
                  headers: {
-                                    'Content-Type': 'application/json',
+
                                    'Authorization': 'Bearer ' + getAuthToken()
                                },
                 success: function(result) {

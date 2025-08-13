@@ -15,7 +15,7 @@ function saveRequestBtn(){
             visibleType:visibleType
             },
             headers: {
-                               'Content-Type': 'application/json',
+
                               'Authorization': 'Bearer ' + getAuthToken()
                           },
             success: function(response) {
@@ -50,7 +50,7 @@ function EditTableInformationOfService(serviceId){
 
                  }, // Send serialized form data and category name
                  headers: {
-                                    'Content-Type': 'application/json',
+
                                    'Authorization': 'Bearer ' + getAuthToken()
                                },
                  success: function(response) {
@@ -127,7 +127,7 @@ window.initServiceColumnGeneral = function () {
                                type: "POST",
                                url: "/superAdmin/inputTypes",
                                headers: {
-                                                  'Content-Type': 'application/json',
+
                                                  'Authorization': 'Bearer ' + getAuthToken()
                                              },
                                success: function(response) {
@@ -164,7 +164,7 @@ window.initServiceColumnGeneral = function () {
                 type: 'POST',
                 data: { serviceId: serviceId },
                 headers: {
-                                   'Content-Type': 'application/json',
+
                                   'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(result) {

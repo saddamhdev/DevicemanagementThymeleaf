@@ -1290,7 +1290,7 @@ function sendReply(msg) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         headers: {
-                        'Content-Type': 'application/json',
+
                        'Authorization': 'Bearer ' + getAuthToken()
                    },
         body: JSON.stringify({

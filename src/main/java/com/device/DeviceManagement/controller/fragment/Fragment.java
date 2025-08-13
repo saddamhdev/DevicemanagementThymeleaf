@@ -83,7 +83,6 @@ public class Fragment {
                                @RequestParam(name = "folder", required = false) String folderName,
                                @RequestParam String departmentName,
                                Model model) {
-       // System.out.println(pageName+" "+folderName+" "+departmentName);
         if(folderName.equals("departmentUser")){
             model.addAttribute("departmentUserName", departmentName);
         }
@@ -150,7 +149,6 @@ public class Fragment {
         boolean isLastPage = page >= pagedAddData.getTotalPages() - 1;
         model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
         model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
-        System.out.println("Total Elements: " + pagedAddData.getTotalElements());
 
 
         model.addAttribute("data",categories);
@@ -169,7 +167,7 @@ public class Fragment {
 
 
         model.addAttribute("inputTypes", inputTypes);
-        System.out.println(folderName+"/" + pageName + " :: " + pageName);
+
         return folderName+"/" + pageName + " :: " + pageName;
     }
     @GetMapping("/fragment1/{pageName}")
@@ -197,7 +195,6 @@ public class Fragment {
         // ✅ Correct lastPage calculation
         model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
         model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
-       //System.out.println("Total Elements: " + pagedAddData.getTotalElements());
 
         // Optional debug log
         Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size); // ✅ page 0, size 10
@@ -209,12 +206,7 @@ public class Fragment {
         List<RequestData> requestData=requestDataData.getContent();
         model.addAttribute("lastPage"+pageName, requestDataData.isLast());
         model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
-        System.out.println("Page: " + page + ", Size: " + size + ", Total Pages: " + requestDataData.getTotalPages());
-       // System.out.println(requestData.size());
-        allDeviceData.forEach(e->{
 
-            System.out.println( e.toString());
-        });
         // Inject other required data (non-paginated for now)
         List<Category> categories = categoriesService.Category();
         List<User> allUser = userService.add();
@@ -239,7 +231,6 @@ public class Fragment {
         model.addAttribute("userAccountData", userAccountData);
         model.addAttribute("inputTypes", inputTypes);
 
-        System.out.println(folderName + "/" + pageName + " :: " + pageName);
         return folderName + "/" + pageName + " :: " + pageName;
     }
 
@@ -248,7 +239,6 @@ public class Fragment {
                                @RequestParam(name = "folder", required = false) String folderName,
                                @RequestParam String departmentName,
                                Model model) {
-        // System.out.println(pageName+" "+folderName+" "+departmentName);
         if(folderName.equals("departmentUser")){
             model.addAttribute("departmentUserName", departmentName);
         }
@@ -266,10 +256,7 @@ public class Fragment {
         boolean lastPage = pagedAddData.getTotalPages() <= 1;
         model.addAttribute("lastPage", lastPage);
         model.addAttribute("totalPage", pagedAddData.getTotalPages());
-        System.out.println("lastPage status "+lastPage+" PageNumber 0 "+"PageSize 7"+" Total Page "+pagedAddData.getTotalPages());
-        allDeviceData.forEach(e->{
-            System.out.println(e.getVisibleId());
-        });
+
 
         List<User> allUser=userService.add();
         List<InternalUser> internalUsers=internalUserService.add();
@@ -296,7 +283,6 @@ public class Fragment {
 
 
         model.addAttribute("inputTypes", inputTypes);
-       // System.out.println(folderName+"/" + pageName + " :: " + pageName);
         return folderName+"/" + pageName + " :: " + pageName;
     }
     @GetMapping("/clearCache")
