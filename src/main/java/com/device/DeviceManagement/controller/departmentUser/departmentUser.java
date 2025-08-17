@@ -531,6 +531,35 @@ public class departmentUser {
         return ResponseEntity.ok("Selected rows processed successfully");
 
     }
+
+    @PostMapping("/deleteServiceRequest")
+    @ResponseBody
+    public ResponseEntity<String> deleteServiceRequest(
+            @RequestParam String serviceId,
+            @RequestParam String departmentName,
+            @RequestParam String departmentUserName,
+            @RequestParam String departmentUserId) {
+
+
+
+        // Find the RequestData document by requestId and status
+        Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
+
+        if (optionalRequestData.isPresent()) {
+            ServiceRequest requestData = optionalRequestData.get();
+            requestData.setStatus("2");
+
+            // Save the updated RequestData document
+            serviceRequestRepository.save(requestData);
+            serviceRequestService.clearCache();
+
+        } else {
+            return ResponseEntity.status(404).body("RequestData with requestId " + serviceId + " not found.");
+        }
+
+        return ResponseEntity.ok("Selected rows processed successfully");
+
+    }
     @PostMapping("/distributeDevice")
     public ResponseEntity<String> distributeDevice(@RequestBody Map<String, String> requestData1) {
         try {

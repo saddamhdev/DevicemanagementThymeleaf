@@ -120,7 +120,12 @@
                         <td>
 
                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button  th:if="${device.customerCareServiceRequestStatus != 'Accepted'}" class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-sevice-id="${device.id}"></button>
+                                <button
+                                        th:if="${device.customerCareServiceRequestStatus != 'Accepted'}"
+                                        class="btn btn-sm fas fa-trash text-danger small-button Delete ms-2"
+                                        th:data-service-id="${device.id}"
+                                       title="Delete this device">
+                                </button>
                                 <span th:unless="${device.customerCareServiceRequestStatus == 'Accepted'}"></span>
                                 <button th:if="${device.customerCareToDepartmentStatus == 'Device delivered' && device.departmentReceiveDeviceFromCustomerCareStatus != 'Device received' }" class="btn  btn-sm text-white receiveDevice" th:data-service-id="${device.id}" th:data-button-id="receiveDevice" style="background-color:green;" title="Receive device from CustomerCare">✔</button>
 

@@ -123,7 +123,7 @@
                             <div class="d-flex justify-content-center align-items-center action-button-container">
                                 <button class="btn  btn-sm text-white" th:data-request-id="${device.id}" style="background-color:green;" th:if="${device.requestMode !='Accepted'}"  title="Accept Device Request">✔</button>
 
-                                <button class="btn btn-danger btn-sm delete-button" th:data-request-id="${device.id}" th:if="${device.requestMode !='Accepted'}" title="Cancel Device Request">
+                                <button class="btn btn-danger btn-sm delete-button" th:data-request-id="${device.id}" th:if="${device.requestMode !='Accepted' && device.requestMode !='Denied' }" title="Cancel Device Request">
                                     &#10007;
                                 </button>
 

@@ -109,11 +109,11 @@
                             <div class="d-flex justify-content-center align-items-center action-button-container">
                                 <button class="btn btn-sm fas fa-pencil-alt text-primary small-button Edit ms-2"
                                         th:data-request-id="${device.id}"
-                                        th:if="${device.requestMode != 'Accepted'}">
+                                        th:if="${device.requestMode != 'Accepted' && device.requestMode !='Denied'}">
                                 </button>
                                 <button class="btn btn-sm fas fa-trash text-danger small-button Delete ms-2"
                                         th:data-request-id="${device.id}"
-                                        th:if="${device.requestMode != 'Accepted'}">
+                                        th:if="${device.requestMode != 'Accepted'  && device.requestMode !='Denied'}">
                                 </button>
                                 <button class="btn fas fa-check-circle btn btn-info btn-sm receiveButton"
                                         th:data-request-id="${device.id}"

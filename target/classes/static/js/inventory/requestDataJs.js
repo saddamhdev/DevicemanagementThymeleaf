@@ -370,7 +370,8 @@ window.initRequestDataTable = function () {
             }
 
             allData.forEach(device => {
-                if (device.requestMode === "Denied") return;
+                if (device.requestMode === "Accepted")
+                {
 
                 const bivagName = device.departmentName || "N/A";
                 const categoryName = device.allData["category"] || "N/A";
@@ -498,6 +499,7 @@ window.initRequestDataTable = function () {
 
                                     row.innerHTML = htmlData;
                                     tableBody.appendChild(row);
+                }
                 }
             });
 

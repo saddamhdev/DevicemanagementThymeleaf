@@ -57,9 +57,13 @@
                                 th:onclick="|window.sortTable('serviceInformationServicingListTable', 5, this)|">
                                 Delivery Date <span class="sort-icon">⇅</span>
                             </th>
-
                             <th scope="col" style="background-color: gray; color:white;"
                                 th:onclick="|window.sortTable('serviceInformationServicingListTable', 6, this)|">
+                                Service Report<br> status  <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('serviceInformationServicingListTable', 7, this)|">
                                 Create Time <span class="sort-icon">⇅</span>
                             </th>
 
@@ -95,6 +99,10 @@
 
                         </td>
 
+
+                        <td>
+                            <span th:text="${device.cooServiceReportAcceptStatus ?: ' '}"></span>
+                        </td>
 
                         <td>
                             <span th:if="${device.customerCareSendDeviceToServiceStatus == 'Device In Received'}" th:text="${device.proposalReceivingDateTime}" >10/11/2024</span>

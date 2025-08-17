@@ -504,6 +504,9 @@ window.initRequestDataGeneral = function () {
                 url: '/departmentUser/deleteRequest',
                 type: 'POST',
                 data: { requestId: requestId },
+                 headers: {
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
                 success: function(result) {
                    // alert(result);
                     CustomAlert(result);

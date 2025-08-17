@@ -101,10 +101,15 @@
                         <td th:text="${device != null && device.customerCareServiceRequestStatus != null ? device.customerCareServiceRequestStatus : 'Pending'}">
                         <td th:text="${device != null && device.customerCareSendDeviceToServiceStatus != null ? device.customerCareSendDeviceToServiceStatus : ' '}">
                         </td>
-                        <td th:if="${device.serviceCenterToCustomerCareStatus =='Device delivered'}" th:text="${device != null && device.customerCareReceiveDeviceFromServiceStatus != null ? device.customerCareReceiveDeviceFromServiceStatus : 'Pending'}">
+                        <!-- 1) Always render the cell; show value only when 'Device delivered' -->
+                        <td th:text="${device.serviceCenterToCustomerCareStatus == 'Device delivered'
+                           ? (device.customerCareReceiveDeviceFromServiceStatus ?: 'Pending')
+                           : ''}">
                         </td>
-                        <td th:text="${device != null && device.customerCareToDepartmentStatus != null ? device.customerCareToDepartmentStatus : ' '}">
-                        </td>
+
+                        <!-- 2) Always render; show status or empty string -->
+                        <td th:text="${device.customerCareToDepartmentStatus ?: ''}"></td>
+
 
                         <td th:text="${device.presentTime}">userPassword</td>
 

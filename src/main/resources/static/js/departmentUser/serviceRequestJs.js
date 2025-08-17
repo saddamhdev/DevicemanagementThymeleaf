@@ -252,28 +252,36 @@ window.initServiceRequestGeneral = function () {
 
         }
   else if (button.hasClass("Delete")) {
-      const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
+      const serviceId = button.data('serviceId'); // Get device ID from data-device-id attribute
 
-      if (!deviceId) {
-        console.error("Missing data-device-id attribute on delete button!");
+      if (!serviceId) {
+        console.error("Missing data-service-id attribute on delete button!");
         return; // Handle potential missing attribute error gracefully
       }
 
       // Confirmation step (optional):
-      if (confirm(`Are you sure you want to delete device ${deviceId}?`)) {
+      if (confirm(`Are you sure you want to delete device ${serviceId}?`)) {
         // Send AJAX request to server for deletion (explained below)
 
+  var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
+         var departmentName = departmentElement.data("departmentname");//it
+         var departmentUserName = departmentElement.data("departmentuser-name");//saho
+         var departmentUserId = departmentElement.data("departmentuser-id");//sahoid
+
          $.ajax({
-                url: '/departmentUser/deleteDeviceInformation', // URL to your delete endpoint
+                url: '/departmentUser/deleteServiceRequest', // URL to your delete endpoint
                 type: 'POST',
                 data: {
-                    deviceId:deviceId
+                serviceId: serviceId,
+                departmentName:departmentName,
+                departmentUserName:departmentUserName,
+                departmentUserId:departmentUserId
 
-                }, // Send category name as data
+                },
                  headers: {
 
-                      'Authorization': 'Bearer ' + getAuthToken()
-                  },
+                                      'Authorization': 'Bearer ' + getAuthToken()
+                                  },
                 success: function(result) {
                     // Remove the row from the table body
                   //  $row.remove();
