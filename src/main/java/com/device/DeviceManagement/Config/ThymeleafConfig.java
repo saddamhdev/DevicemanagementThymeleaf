@@ -49,7 +49,8 @@ public class ThymeleafConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
         registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/firebase/**").addResourceLocations("classpath:/static/firebase/");
-
+        // 👉 এই লাইনটা যোগ করুন
+        registry.addResourceHandler("/doc/**").addResourceLocations("classpath:/static/doc/");
         registry.addResourceHandler("/file/**").addResourceLocations("classpath:/static/file/");
     }
 }

@@ -346,6 +346,8 @@ function addDeviceInformation(){
 
 window.initDeviceInformationGeneral = function () {
   $('#deviceInformationTable tbody tr').click(function(event) {
+    $(document).off('click', '.action-button-container .Edit');
+         $(document).off('click', '.action-button-container .Delete');
     const $row = $(this); // Store the clicked row element
    var categoryName = $row.find('td:nth-child(2)').text();
    var text=categoryName;
@@ -389,7 +391,7 @@ window.initDeviceInformationGeneral = function () {
 
                     // Add the HTML code to the modal body using jQuery
                     $('.ModalMedium').html(htmlToAdd);
-                    $('#publicModalMediumLabel').text("Add Old Device Information")
+                    $('#publicModalMediumLabel').text("Distribute device to a user")
 
                      print('userAccountData', function(userAccountData) {
                                if (userAccountData) {
@@ -922,51 +924,64 @@ window.initDeviceInformationGeneral = function () {
                   }*/
 
              }
-    else if (button.hasClass("Delete")) {
-      const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
+      // ---------- DELETE ----------
+    $(document).on('click', '.action-button-container .Delete', async function (event) {
+      event.preventDefault();
+      const button = $(this);
 
-      if (!deviceId) {
-        console.error("Missing data-device-id attribute on delete button!");
-        return; // Handle potential missing attribute error gracefully
-      }
 
-      // Confirmation step (optional):
-      if (confirm(`Are you sure you want to delete device ${deviceId}?`)) {
-        // Send AJAX request to server for deletion (explained below)
+       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
-         $.ajax({
-                url: '/departmentUser/deleteDeviceInformation', // URL to your delete endpoint
-                type: 'POST',
-                data: {
-                    deviceId:deviceId
+        if (!deviceId) {
+          console.error("Missing data-device-id attribute on delete button!");
+          return; // Handle potential missing attribute error gracefully
+        }
 
-                },
-                 headers: {
-                   'Authorization': 'Bearer ' + getAuthToken()
-               },
-                                   // Send category name as data
-                success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                         CustomAlert(result);
-                           $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                               location.reload();
-                           });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error deleting category: " + error);
-                }
-            });
 
+
+      const userName = button.closest('tr').find('td').eq(0).text().trim() || 'this';
+
+      // Use the promise-based confirm modal if available (from earlier), else native confirm
+      let confirmed;
+      if (window.bootstrap && typeof askConfirm === 'function') {
+        confirmed = await askConfirm(
+          `Do you really want to delete "${userName}"? This action cannot be undone.`,
+          'Delete'
+        );
       } else {
-        console.log("Delete canceled.");
+        confirmed = window.confirm(`Do you really want to delete "${userName}"?`);
       }
-    } else {
-      // Perform actions for other buttons, if needed
-      console.log(`Other button clicked: ${buttonText}`);
+      if (!confirmed) return;
 
+      // Prevent double-clicks
+      button.prop('disabled', true).addClass('disabled');
 
-    }
+       $.ajax({
+              url: '/departmentUser/deleteDeviceInformation', // URL to your delete endpoint
+              type: 'POST',
+              data: {
+                  deviceId:deviceId
+
+              },
+               headers: {
+                 'Authorization': 'Bearer ' + getAuthToken()
+             },
+                                 // Send category name as data
+              success: function(result) {
+                  // Remove the row from the table body
+                //  $row.remove();
+                       CustomAlert(result);
+                         $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                             location.reload();
+                         });
+              },
+              error: function(xhr, status, error) {
+                  console.error("Error deleting category: " + error);
+              }
+          });
+
+       });
+
   });
 };
 

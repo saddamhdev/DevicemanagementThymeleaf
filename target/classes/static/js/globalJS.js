@@ -1439,3 +1439,40 @@ function handleKey(event) {
            row.style.display = text.includes(query) ? "" : "none";
        });
    };
+
+
+
+   // Bootstrap 5 promise-based confirmation
+     function askConfirm(message = 'Are you sure?', okText = 'Delete') {
+       return new Promise((resolve) => {
+         const modalEl = document.getElementById('confirmModal');
+         const msgEl   = document.getElementById('confirmMessage');
+         const okBtn   = document.getElementById('confirmOkBtn');
+
+         msgEl.textContent = message;
+         okBtn.textContent = okText;
+
+         const bsModal = new bootstrap.Modal(modalEl, { backdrop: 'static' });
+
+         const cleanup = () => {
+           okBtn.removeEventListener('click', onOk);
+           modalEl.removeEventListener('hidden.bs.modal', onHide);
+         };
+
+         const onOk = () => {
+           cleanup();
+           bsModal.hide();
+           resolve(true);
+         };
+
+         const onHide = () => {
+           cleanup();
+           resolve(false); // closed via X, Cancel, or backdrop
+         };
+
+         okBtn.addEventListener('click', onOk, { once: true });
+         modalEl.addEventListener('hidden.bs.modal', onHide, { once: true });
+
+         bsModal.show();
+       });
+     }

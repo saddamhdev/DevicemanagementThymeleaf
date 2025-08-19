@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 "/login/home",
                                 "/css/**",
                                 "/js/**",
+                                "/doc/**",
                                 "/img/**",
                                 "/fonts/**",
                                 "/favicon.ico",

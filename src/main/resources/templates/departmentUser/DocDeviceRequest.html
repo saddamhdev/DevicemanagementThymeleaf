@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>User Documentation</title>
+</head>
+<body>
+
+<div th:fragment="DocDeviceRequest">
+    <!-- ========== Overview ========== -->
+    <div id="doc-device-request-overview" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-2"><i class="fa-solid fa-circle-info text-primary me-2"></i> Overview</h2>
+        <p class="text-muted mb-3">
+            এই পেজ থেকে আপনি ডিভাইসের জন্য রিকোয়েস্ট <strong>তৈরি</strong>, <strong>সম্পাদনা</strong>, <strong>ডিলিট</strong> এবং
+            কাস্টমারকেয়ার থেকে পাঠানো ডিভাইস <strong>রিসিভ</strong> করতে পারবেন। দ্রুত খোঁজার জন্য <em>Search</em>/<em>Sort</em> ও <em>Page Size</em> সিলেক্টর রয়েছে।
+        </p>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Quick actions</h6>
+                    <ul class="mb-0">
+                        <li><i class="fa-solid fa-user-plus me-1 text-success"></i><strong>Add Device Request</strong> — <em>Category</em> সিলেক্ট করে
+                            <em>requestColumns</em> অনুযায়ী ফর্ম পূরণ করুন, এরপর <strong>Save</strong>।</li>
+                        <li><i class="fa-solid fa-pen-to-square me-1 text-primary"></i><strong>Edit</strong> — ✏ (Action) থেকে রিকোয়েস্ট আপডেট করুন; ফিল্ডগুলো অটো-ফিল হয়ে আসবে।</li>
+                        <li><i class="fa-solid fa-trash-can me-1 text-danger"></i><strong>Delete</strong> — 🗑 (Action) থেকে কনফার্ম করে রিকোয়েস্ট মুছুন।</li>
+                        <li><i class="fa-solid fa-check-circle me-1 text-info"></i><strong>Receive Device</strong> — কাস্টমারকেয়ার পাঠানো ডিভাইস থাকা রিকোয়েস্টে ✔ চাপুন, তালিকা থেকে <strong>একটি</strong> ডিভাইস সিলেক্ট করে <em>Accept</em> করুন।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Find & Track</h6>
+                    <ul class="mb-0">
+                        <li><i class="fa-solid fa-magnifying-glass me-1"></i><strong>Search</strong> বক্সে টাইপ করে দ্রুত খুঁজুন; কলাম হেডারের
+                            <span class="sort-icon">⇅</span> দিয়ে সোর্ট করুন।</li>
+                        <li><i class="fa-solid fa-list-ol me-1"></i><strong>Page Size</strong> দিয়ে প্রতিপৃষ্ঠায় আইটেম সংখ্যা ঠিক করুন।</li>
+                        <li><i class="fa-solid fa-route me-1"></i><strong>Tracking → View</strong> ক্লিক করে রিকোয়েস্টের ধাপ/প্রগ্রেস দেখুন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Status & rules</h6>
+                    <ul class="mb-0">
+                        <li><strong>Request Status in COO</strong>: Pending / Accepted / Denied</li>
+                        <li><strong>Device Received Status</strong>: Pending / Received</li>
+                        <li><em>Accepted/Denied</em> হলে সাধারণত <strong>Edit/Delete</strong> নিষ্ক্রিয়/লুকানো থাকে।</li>
+                        <li><em>Denied</em> হলে স্ট্যাটাসে ক্লিক করে <strong>Reject Cause</strong> দেখা যায়।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Notes</h6>
+                    <ul class="mb-0">
+                        <li><strong>Mandatory (Add)</strong>: Category + প্রাসঙ্গিক ডায়নামিক ফিল্ডসমূহ (<code>requestColumns</code>).</li>
+                        <li>ড্রপডাউন ইনপুটে শুধু টাইপ নয়—লিস্ট থেকে <strong>ক্লিক করে সিলেক্ট</strong> করুন, নইলে মান সঠিকভাবে সেট নাও হতে পারে।</li>
+                        <li>একই রেকর্ডে বারবার <strong>Save/Accept/Delete</strong> চাপবেন না—একবার ক্লিকই যথেষ্ট।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 small text-muted">
+            <strong>Icon legend:</strong> ✏ Edit • 🗑 Delete • ✔ Receive • 👁 Tracking View
+        </div>
+    </div>
+
+    <!-- ========== Add Device Request ========== -->
+    <div id="doc-user-add" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-plus text-primary me-2"></i> Add Device Request</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Add Device Request ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li>উপরে <strong>Add</strong> বাটনে ক্লিক করুন — <em>Add Request Information</em> মডাল ওপেন হবে।</li>
+                        <li><strong>Category Name</strong> ইনপুটে ক্লিক করে ড্রপডাউন থেকে সঠিক ক্যাটাগরি সিলেক্ট করুন
+                            (লিস্ট আসে সিস্টেমের <em>categories</em> থেকে; টাইপ করে ফিল্টার করা যায়)।</li>
+                        <li>ক্যাটাগরি সিলেক্ট করার পর <em>requestColumns</em> থেকে ডায়নামিক ফিল্ডগুলো (যেমন: text, number, date, time, datetime-local, file, checkbox, radio, <em>textarea</em> ইত্যাদি) <strong>Request</strong> সেকশনে দেখা যাবে—প্রয়োজন অনুযায়ী পূরণ করুন।</li>
+                        <li>সব ঠিক থাকলে <strong>Save</strong> ক্লিক করুন—সিস্টেম <code>saveTableInformationOfRequest()</code> কল করে রিকোয়েস্ট সংরক্ষণ করবে।</li>
+                        <li>সাকসেসের পর মূল তালিকায় রেকর্ড এসেছে কি না যাচাই করুন; প্রয়োজন হলে সার্চ/সোর্ট ব্যবহার করুন।</li>
+                        <li>রিকোয়েস্টের অগ্রগতি দেখতে <strong>Tracking</strong> কলামের <em>View</em>–এ ক্লিক করুন।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>Category</strong> শুধু টাইপ করলে হবে না—ড্রপডাউন থেকে আইটেমে <strong>ক্লিক করে সিলেক্ট</strong> করুন; তবেই মান সঠিকভাবে সেট হবে (<code>selectionAndInputDevice()</code> হ্যান্ডলার)।</li>
+                        <li><em>textarea</em> ফিল্ডে রিকোয়েস্টের যুক্তি/ডিটেইলস স্পষ্টভাবে লিখুন—রিভিউতে সহায়তা করবে।</li>
+                        <li>ফাইল/চেকবক্স/রেডিও টাইপ ফিল্ডে সঠিক নির্বাচন/ফাইল দিন; প্রয়োজনে ফাইল সাইজ/ফরম্যাট নীতিমালা অনুসরণ করুন।</li>
+                        <li>একই রেকর্ডে বারবার <strong>Save</strong> চাপবেন না—ডুপ্লিকেট/রেস কন্ডিশন এড়াতে একবার ক্লিকই যথেষ্ট।</li>
+                        <li><strong>Request Status in COO</strong> এবং <strong>Device Received Status</strong> কলাম থেকে প্রগ্রেস দেখুন; <em>Denied</em> হলে স্ট্যাটাসে ক্লিক করে <strong>Reject Cause</strong> দেখুন।</li>
+                        <li>অনেক ডেটা হলে বাম পাশের <em>Page Size</em> সিলেক্টর ও ডান পাশের <em>Search</em> বক্স ব্যবহার করুন।</li>
+                        <li>রিকোয়েস্ট <em>Accepted/Denied</em> হলে Action–এর <strong>Edit/Delete</strong> বাটন লুকানো থাকতে পারে—নীতিমালা অনুযায়ী লকড স্ট্যাটাস।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== Edit Device Request ========== -->
+    <div id="doc-user-edit" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-pen text-primary me-2"></i> Edit Device Request</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Edit Device Request ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li><strong>Device Request</strong> তালিকা থেকে সার্চ/সোর্ট করে রিকোয়েস্টটি খুঁজে নিন।</li>
+                        <li><i class="fa-solid fa-pen-to-square"></i> <strong>Edit</strong> আইকনে ক্লিক করুন (Action কলাম)।</li>
+                        <li><em>Edit Request Information</em> মডাল ওপেন হবে; <strong>Category Name</strong> ফিল্ডে বর্তমান ক্যাটাগরি প্রি-ফিলড থাকবে। প্রয়োজন হলে ড্রপডাউন থেকে নতুন ক্যাটাগরি নির্বাচন করুন (হ্যান্ডলার: <code>selectionAndInputDeviceEdit2()</code>).</li>
+                        <li>নিচের <strong>Request</strong> সেকশনে <code>requestColumns</code> অনুসারে ডায়নামিক ফিল্ডগুলো (text, number, date, time, datetime-local, file, checkbox, radio, <em>textarea</em> ইত্যাদি) রেন্ডার হবে।</li>
+                        <li>সিস্টেম <code>columnValue(requestIdData, ...)</code> দিয়ে আগের মানগুলো স্বয়ংক্রিয়ভাবে বসাবে—একটু সময় দিন, তারপর প্রয়োজনমতো আপডেট করুন।</li>
+                        <li><strong>Save</strong> চাপুন—সিস্টেম <code>EditTableInformationOfRequest(requestIdData)</code> কল করে পরিবর্তন সংরক্ষণ করবে।</li>
+                        <li>সাকসেসের পর তালিকায় আপডেট দেখা যাচ্ছে কি না যাচাই করুন; প্রয়োজনে <strong>Tracking</strong> কলামের <em>View</em> দিয়ে প্রগ্রেস দেখুন।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>Accepted/Denied</strong> স্ট্যাটাসে Edit/Delete বাটন লুকানো/লক থাকতে পারে—নীতিমালা অনুসারে পরিবর্তন করা যায় না।</li>
+                        <li>ক্যাটাগরি বদলালে সংশ্লিষ্ট ফিল্ড/ভ্যালিডেশন বদলাতে পারে—সেভের আগে সব প্রয়োজনীয় ফিল্ড পূরণ করুন।</li>
+                        <li>ড্রপডাউনভিত্তিক ইনপুটে শুধু টাইপ নয়—লিস্টের আইটেমে <strong>ক্লিক করে সিলেক্ট</strong> করুন, নইলে মান সঠিকভাবে সেট নাও হতে পারে।</li>
+                        <li><em>file / checkbox / radio</em> টাইপ সাধারণত অটো-ফিল হয় না—ম্যানুয়ালি সেট করুন। <em>textarea</em> তে সাধারণ টেক্সট ব্যবহার করুন (<span class="text-muted">plain-textarea</span>)।</li>
+                        <li>একই রেকর্ডে বারবার <strong>Save</strong> চাপবেন না—ডুপ্লিকেট/রেস কন্ডিশন এড়াতে একবার ক্লিকই যথেষ্ট।</li>
+                        <li>অগ্রগতি/কারণ জানতে তালিকার <strong>Request Status in COO</strong> ও <strong>Device Received Status</strong> দেখুন; <em>Denied</em> হলে স্ট্যাটাসে ক্লিক করে <strong>Reject Cause</strong> পড়ুন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== Delete Device Request ========== -->
+    <div id="doc-user-delete" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-xmark text-danger me-2"></i> Delete Device Request</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Delete Device Request ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li><strong>Device Request</strong> তালিকা থেকে সার্চ/সোর্ট করে রিকোয়েস্টটি খুঁজে নিন।</li>
+                        <li><i class="fa-solid fa-trash-can"></i> <strong>Delete</strong> আইকনে ক্লিক করুন (Action কলাম)।</li>
+                        <li>কনফার্মেশন ডায়ালগে <strong>Delete/Yes</strong> চাপুন।</li>
+                        <li>সাকসেস বার্তার পর তালিকায় রিকোয়েস্টটি আর আছে কি না যাচাই করুন; না থাকলে ডিলিট সফল হয়েছে।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>Accepted</strong> বা <strong>Denied</strong> স্ট্যাটাসে সাধারণত <em>Edit/Delete</em> বাটন লুকানো থাকে—এ সময় ডিলিট করা যায় না।</li>
+                        <li>ডিলিট করার আগে <strong>Request Status in COO</strong>, <strong>Device Received Status</strong> এবং <strong>Tracking → View</strong> দেখে নিন—প্রসেসে থাকলে ডিলিট না করাই ভালো।</li>
+                        <li>ডিলিট <em>permanent</em>—পুনরুদ্ধার সম্ভব নয়; প্রয়োজন হলে আগে তথ্য ব্যাকআপ নিন।</li>
+                        <li><em>Denied</em> হলে স্ট্যাটাসে ক্লিক করে <strong>Reject Cause</strong> দেখা যায়—ডিলিট না করে কারণ বুঝে পুনরায় সাবমিট করার সিদ্ধান্ত নিন।</li>
+                        <li>একবারই <strong>Delete</strong> চাপুন—ডাবল-ক্লিক করলে অপ্রত্যাশিত আচরণ হতে পারে।</li>
+                        <li>অনেক রেকর্ড হলে <em>Page Size</em> সিলেক্টর ও <em>Search</em> বক্স ব্যবহার করে দ্রুত খুঁজে নিন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== Receive Device From CustomerCare ========== -->
+    <div id="doc-user-Receive-Device" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3">✔ Receive Device </h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Receive Device ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li><strong>Device Request</strong> তালিকায় যে রিকোয়েস্টের <em>Device Received Status = Pending</em>, সেটি সার্চ/সোর্ট করে খুঁজে নিন।</li>
+                        <li>Action কলামের <i class="fa-solid fa-check-circle"></i> <strong>Receive</strong> বাটনে ক্লিক করুন—<em>Device Information</em> মডাল ওপেন হবে।</li>
+                        <li>টেবিলে ডিভাইসের ডিটেইলস যাচাই করুন (SN, Category, ডায়নামিক কলাম, Description)।</li>
+                        <li><strong>Action</strong> কলামের চেকবক্সে ক্লিক করে <strong>শুধু একটি</strong> ডিভাইস সিলেক্ট করুন।</li>
+                        <li><strong>Accept</strong> বাটনে ক্লিক করুন → কনফার্ম ডায়ালগে <strong>OK</strong> চাপুন।</li>
+                        <li>মডাল ক্লোজ হলে তালিকায় স্ট্যাটাস আপডেট হয়েছে কি না দেখুন (প্রয়োজনে <em>Tracking → View</em> থেকে ডিটেইলস দেখুন)।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li>একাধিক বা শূন্য সিলেকশন করলে সিস্টেম সতর্ক করবে—ঠিকভাবে কাজ করতে <strong>একটি মাত্র</strong> ডিভাইস সিলেক্ট করুন।</li>
+                        <li>লিস্ট না এলে বা খালি থাকলে সিস্টেম <em>“No data found to display in the modal.”</em> দেখাতে পারে—ক্যাটাগরি/ডিভাইস আইডি মিলছে কি না যাচাই করুন।</li>
+                        <li><strong>Accept</strong> ক্লিকের পর ডাবল-ক্লিক করবেন না—একবার ক্লিকই যথেষ্ট (ফাংশন: <code>acceptDeliveryDevice(requestId, selectedRows)</code>)।</li>
+                        <li>চেকবক্স থাকা কলামে ডিভাইসের <em>hidden id</em> (২য় কলাম) ব্যবহৃত হয়—কলাম অর্ডার না বদলানো উত্তম।</li>
+                        <li>স্ট্যাটাস আপডেট না দেখালে পেজ রিফ্রেশ করুন বা <em>Tracking</em> থেকে প্রসেস স্টেপ যাচাই করুন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+</body>
+</html>

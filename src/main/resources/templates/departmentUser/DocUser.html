@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>User Documentation</title>
+</head>
+<body>
+
+<div th:fragment="DocUser">
+    <!-- ========== Overview ========== -->
+    <div id="doc-user-overview" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-2"><i class="fa-solid fa-circle-info text-primary me-2"></i> Overview</h2>
+        <p class="text-muted mb-3">
+            এই পেজ থেকে আপনি ইউজার <strong>যোগ</strong>, <strong>সম্পাদনা</strong> ও <strong>ডিলিট</strong> করতে পারবেন।
+            দ্রুত খোঁজার জন্য <em>Search users…</em> ও কলাম <em>Sort</em> (⇅) রয়েছে। তালিকায় শুধুমাত্র আপনার ডিপার্টমেন্ট/ব্রাঞ্চের ইউজার দেখাবে।
+        </p>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Quick actions</h6>
+                    <ul class="mb-0">
+                        <li><i class="fa-solid fa-user-plus me-1 text-success"></i><strong>Add User</strong> — <em>User Name</em>, <em>User ID</em>, <em>Designation</em>, <em>Join Date</em> দিয়ে নতুন ইউজার তৈরি করুন, তারপর <strong>Save</strong>।</li>
+                        <li><i class="fa-solid fa-pen-to-square me-1 text-primary"></i><strong>Edit</strong> — Action কলামের ✏ আইকনে ক্লিক করে তথ্য আপডেট করুন; <em>Designation</em> DB থেকে লোড হয়।</li>
+                        <li><i class="fa-solid fa-trash-can me-1 text-danger"></i><strong>Delete</strong> — 🗑 আইকনে ক্লিক; কনফার্মেশনের পর ইউজার রিমুভ হবে।</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Find & review</h6>
+                    <ul class="mb-0">
+                        <li><i class="fa-solid fa-magnifying-glass me-1"></i><strong>Search users…</strong> বক্সে টাইপ করে দ্রুত খুঁজুন।</li>
+                        <li><i class="fa-solid fa-arrow-up-wide-short me-1"></i>কলাম হেডারের <span class="sort-icon">⇅</span> এ ক্লিক করে <em>User Name / User ID / Join Date</em> ইত্যাদি অনুযায়ী সোর্ট করুন।</li>
+                        <li><i class="fa-solid fa-eye me-1"></i>তৈরির পর তালিকায় এন্ট্রি/আপডেট হয়েছে কি না সাথে সাথেই যাচাই করুন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 small text-muted">
+            <strong>Mandatory (Add):</strong> User Name, User ID, Designation, Join Date •
+            <strong>Note:</strong> Designation তালিকা সিস্টেমে প্রি-কনফিগার্ড এবং এডিটের সময় DB থেকে লোড হয় •
+            <strong>Tip:</strong> <em>User ID</em> ইউনিক রাখুন; বারবার <strong>Save</strong> চাপবেন না।
+        </div>
+    </div>
+
+    <!-- ========== Add User ========== -->
+    <div id="doc-user-add" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-plus text-primary me-2"></i> Add User</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Add User ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li>উপরে <strong>Add</strong> বাটনে ক্লিক করে ফর্মটি ওপেন করুন।</li>
+                        <li><em>User Name</em> ও <em>User ID</em> লিখুন।</li>
+                        <li><em>Designation</em> ড্রপডাউন থেকে সঠিক পদবি নির্বাচন করুন।</li>
+                        <li><em>User Join Date</em> (তারিখ) সিলেক্ট করুন।</li>
+                        <li><strong>Save</strong> বাটনে ক্লিক করে রেকর্ড তৈরি করুন।</li>
+                        <li>নিচের তালিকায় নতুন ইউজার যুক্ত হয়েছে কিনা যাচাই করুন।
+                            প্রয়োজনে উপরের ডান পাশে থাকা <em>Search users…</em> বক্সে খুঁজে দেখুন।</li>
+                        <li>ফর্ম বন্ধ করতে <strong>Close</strong> বাটন ব্যবহার করুন।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>User ID</strong> ইউনিক রাখুন (ডুপ্লিকেট হলে পরে লগইন/সনাক্তকরণে সমস্যা হবে)।</li>
+                        <li>Designation তালিকা সিস্টেমে প্রি-কনফিগার্ড—ভুল পজিশন সিলেক্ট করলে পারমিশন/রোল মিসম্যাচ হতে পারে।</li>
+                        <li>টেবিলের শিরোনামে থাকা <span class="sort-icon">⇅</span> আইকনে ক্লিক করে কলামভিত্তিক সাজাতে পারেন
+                            (User Name, User ID, Join Date ইত্যাদি)।</li>
+                        <li>উপরে ডানদিকে থাকা সার্চ বক্স (<em>Search users…</em>) লাইভ ফিল্টার করে; দ্রুত রেকর্ড খুঁজে পেতে এটি ব্যবহার করুন।</li>
+                        <li>তথ্য বদলাতে <em>Edit</em> (<i class="fas fa-pencil-alt"></i>) এবং মুছতে <em>Delete</em> (<i class="fas fa-trash"></i>) ব্যবহার করুন।</li>
+                        <li>এই তালিকায় শুধু আপনার ডিপার্টমেন্ট/ব্রাঞ্চের ইউজারই দেখাবে (সিস্টেমে ব্রাঞ্চ ফিল্টার প্রযোজ্য)।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== Edit User ========== -->
+    <div id="doc-user-edit" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-pen text-primary me-2"></i> Edit User</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Edit User ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li><strong>User List</strong> থেকে সার্চ/সোর্ট করে ইউজার নির্বাচন করুন।</li>
+                        <li><i class="fa-solid fa-pen-to-square"></i> <strong>Edit</strong> আইকনে ক্লিক করুন (Action কলাম)।</li>
+                        <li><em>Edit User Information</em> মডাল ওপেন হবে; <em>User Name</em>, <em>User Id</em>, <em>Join Date</em> আগের ভ্যালু সহ দেখা যাবে।</li>
+                        <li><em>User Designation</em> ড্রপডাউন প্রথমে <strong>Loading…</strong> দেখাবে—ডাটাবেস থেকে তালিকা লোড হলে সঠিক পদবি সিলেক্ট করুন (আগেরটি প্রি-সিলেক্টেড হতে পারে)।</li>
+                        <li>প্রয়োজনীয় ফিল্ডগুলো আপডেট করুন।</li>
+                        <li><strong>Save</strong> বাটনে ক্লিক করুন।</li>
+                        <li>সাকসেস মেসেজের পর তালিকায় ডেটা আপডেট হয়েছে কি না যাচাই করুন।</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li><strong>Designation</strong> তালিকা ডাটাবেস থেকে আসে; দীর্ঘ সময় <em>Loading…</em> থাকলে রিফ্রেশ করে আবার চেষ্টা করুন।</li>
+                        <li><em>No designations found</em> দেখালে আগে সিস্টেমে Designation যোগ হয়েছে কিনা যাচাই করুন।</li>
+                        <li><strong>User ID</strong> অকারণে পরিবর্তন করবেন না—লগইন/পারমিশনে প্রভাব পড়তে পারে।</li>
+                        <li><em>Join Date</em> ইনপুটে <code>YYYY-MM-DD</code> ফরম্যাট লাগে; টেবিল থেকে অটো-ফরম্যাট না হলে ম্যানুয়ালি দিন।</li>
+                        <li>একই রেকর্ডে বারবার <strong>Save</strong> না চাপুন; একবার ক্লিক করলেই যথেষ্ট।</li>
+                        <li>দ্রুত খুঁজতে সার্চ বক্স ও কলাম <em>Sort</em> (⇅) ব্যবহার করুন।</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== Delete User ========== -->
+    <div id="doc-user-delete" class="doc-anchor doc-section p-4 bg-white mb-4">
+        <h2 class="h5 mb-3"><i class="fa-solid fa-user-xmark text-danger me-2"></i> Delete User</h2>
+
+        <!-- Video -->
+        <div class="mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/add-user-poster.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Delete User ডেমো</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
+
+        <!-- Steps & Tips -->
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Steps</h6>
+                    <ol class="mb-0">
+                        <li>User List থেকে ইউজার খুঁজুন</li>
+                        <li><i class="fa-solid fa-trash-can"></i> Delete আইকনে ক্লিক করুন</li>
+                        <li>Confirmation মডালে <strong>Yes</strong> চাপুন</li>
+                        <li>ইউজার তালিকা থেকে মুছে গেছে কিনা যাচাই করুন</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 border rounded-4 h-100">
+                    <h6 class="fw-semibold mb-2">Tips</h6>
+                    <ul class="mb-0">
+                        <li>ডিলিট করার আগে ডাটা ব্যাকআপ প্রয়োজন কিনা ভেবে নিন</li>
+                        <li>ভুল ইউজার ডিলিট হলে তা পুনরুদ্ধার করা যাবে না</li>
+                        <li>Admin রোলের ইউজার ডিলিট করতে বিশেষ অনুমতি লাগতে পারে</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

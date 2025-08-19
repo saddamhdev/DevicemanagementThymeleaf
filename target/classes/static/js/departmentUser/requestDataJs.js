@@ -493,31 +493,6 @@ window.initRequestDataGeneral = function () {
                      showModalMedium();
                      selectionAndInputDeviceEdit2();
         }
-        else if (buttonPressed.hasClass('Delete')) {
-        const requestId = button.data('requestId');
-            if (!requestId) {
-                console.error("Missing data-request-id attribute on delete button!");
-                return;
-            }
-
-            $.ajax({
-                url: '/departmentUser/deleteRequest',
-                type: 'POST',
-                data: { requestId: requestId },
-                 headers: {
-                       'Authorization': 'Bearer ' + getAuthToken()
-                   },
-                success: function(result) {
-                   // alert(result);
-                    CustomAlert(result);
-                    // use CustomAlert(result)
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error deleting user:", error);
-                }
-            });
-        }
         else if (buttonPressed.hasClass('receiveButton')) {
 
         var selectedDevices = [];
@@ -658,6 +633,55 @@ window.initRequestDataGeneral = function () {
 
                   });
                  }
+      // ---------- DELETE ----------
+         $(document).on('click', '.action-button-container .Delete', async function (event) {
+           event.preventDefault();
+              const button = $(this);
+
+             const requestId = button.data('requestId');
+              if (!requestId) {
+                  console.error("Missing data-request-id attribute on delete button!");
+                  return;
+              }
+                const userName = button.closest('tr').find('td').eq(0).text().trim() || 'this';
+
+                 // Use the promise-based confirm modal if available (from earlier), else native confirm
+                 let confirmed;
+                 if (window.bootstrap && typeof askConfirm === 'function') {
+                   confirmed = await askConfirm(
+                     `Do you really want to delete "${userName}"? This action cannot be undone.`,
+                     'Delete'
+                   );
+                 } else {
+                   confirmed = window.confirm(`Do you really want to delete "${userName}"?`);
+                 }
+                 if (!confirmed) return;
+
+                 // Prevent double-clicks
+                 button.prop('disabled', true).addClass('disabled');
+
+
+            $.ajax({
+                url: '/departmentUser/deleteRequest',
+                type: 'POST',
+                data: { requestId: requestId },
+                 headers: {
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
+                success: function(result) {
+                   // alert(result);
+                    CustomAlert(result);
+                    // use CustomAlert(result)
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error deleting user:", error);
+                }
+            });
+
+
+
+           });
     });
 };
 

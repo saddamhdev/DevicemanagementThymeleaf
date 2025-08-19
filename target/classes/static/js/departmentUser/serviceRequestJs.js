@@ -251,58 +251,67 @@ window.initServiceRequestGeneral = function () {
 
 
         }
-  else if (button.hasClass("Delete")) {
-      const serviceId = button.data('serviceId'); // Get device ID from data-device-id attribute
+    $(document).on('click', '.action-button-container .Delete', async function (event) {
+          event.preventDefault();
+          const button = $(this);
+           const serviceId = button.data('serviceId'); // Get device ID from data-device-id attribute
 
-      if (!serviceId) {
-        console.error("Missing data-service-id attribute on delete button!");
-        return; // Handle potential missing attribute error gracefully
-      }
-
-      // Confirmation step (optional):
-      if (confirm(`Are you sure you want to delete device ${serviceId}?`)) {
-        // Send AJAX request to server for deletion (explained below)
-
-  var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
-         var departmentName = departmentElement.data("departmentname");//it
-         var departmentUserName = departmentElement.data("departmentuser-name");//saho
-         var departmentUserId = departmentElement.data("departmentuser-id");//sahoid
-
-         $.ajax({
-                url: '/departmentUser/deleteServiceRequest', // URL to your delete endpoint
-                type: 'POST',
-                data: {
-                serviceId: serviceId,
-                departmentName:departmentName,
-                departmentUserName:departmentUserName,
-                departmentUserId:departmentUserId
-
-                },
-                 headers: {
-
-                                      'Authorization': 'Bearer ' + getAuthToken()
-                                  },
-                success: function(result) {
-                    // Remove the row from the table body
-                  //  $row.remove();
-                           CustomAlert(result);
-                             $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
-                                 location.reload();
-                             });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error deleting category: " + error);
+                if (!serviceId) {
+                  console.error("Missing data-service-id attribute on delete button!");
+                  return; // Handle potential missing attribute error gracefully
                 }
-            });
 
-      } else {
-        console.log("Delete canceled.");
-      }
-    }
-    else {
-      // Perform actions for other buttons, if needed
-      console.log(`Other button clicked: ${buttonText}`);
-    }
+            const userName = button.closest('tr').find('td').eq(0).text().trim() || 'this';
+
+                 // Use the promise-based confirm modal if available (from earlier), else native confirm
+                 let confirmed;
+                 if (window.bootstrap && typeof askConfirm === 'function') {
+                   confirmed = await askConfirm(
+                     `Do you really want to delete "${userName}"? This action cannot be undone.`,
+                     'Delete'
+                   );
+                 } else {
+                   confirmed = window.confirm(`Do you really want to delete "${userName}"?`);
+                 }
+                 if (!confirmed) return;
+
+                 // Prevent double-clicks
+                 button.prop('disabled', true).addClass('disabled');
+                var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
+                 var departmentName = departmentElement.data("departmentname");//it
+                 var departmentUserName = departmentElement.data("departmentuser-name");//saho
+                 var departmentUserId = departmentElement.data("departmentuser-id");//sahoid
+
+                 $.ajax({
+                        url: '/departmentUser/deleteServiceRequest', // URL to your delete endpoint
+                        type: 'POST',
+                        data: {
+                        serviceId: serviceId,
+                        departmentName:departmentName,
+                        departmentUserName:departmentUserName,
+                        departmentUserId:departmentUserId
+
+                        },
+                         headers: {
+
+                                              'Authorization': 'Bearer ' + getAuthToken()
+                                          },
+                        success: function(result) {
+                            // Remove the row from the table body
+                          //  $row.remove();
+                                   CustomAlert(result);
+                                     $('#globalCustomAlertModal').on('hidden.bs.modal', function () {
+                                         location.reload();
+                                     });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error deleting category: " + error);
+                        }
+                    });
+
+
+          });
+
   });
 };
 
