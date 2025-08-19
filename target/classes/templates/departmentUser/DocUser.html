@@ -44,7 +44,26 @@
             <strong>Note:</strong> Designation তালিকা সিস্টেমে প্রি-কনফিগার্ড এবং এডিটের সময় DB থেকে লোড হয় •
             <strong>Tip:</strong> <em>User ID</em> ইউনিক রাখুন; বারবার <strong>Save</strong> চাপবেন না।
         </div>
+
+        <!-- Toggle button -->
+        <div class="mt-3">
+            <!-- Toggle button -->
+            <button
+                    class="btn btn-outline-primary btn-sm js-toggle"
+                    data-bs-toggle="collapse" data-toggle="collapse"
+                    data-bs-target="#doc-user-details" data-target="#doc-user-details"
+                    aria-expanded="false" aria-controls="doc-user-details">
+                <span class="label-collapsed">Show more</span>
+                <span class="label-expanded">Show less</span>
+            </button>
+
+        </div>
     </div>
+
+
+
+    <!-- ========== Details (collapsed by default) ========== -->
+    <div id="doc-user-details" class="collapse">
 
     <!-- ========== Add User ========== -->
     <div id="doc-user-add" class="doc-anchor doc-section p-4 bg-white mb-4">
@@ -208,8 +227,20 @@
             </div>
         </div>
     </div>
+    </div>
+    <style>
+        /* Label swap based on aria-expanded */
+        .js-toggle .label-expanded { display: none; }
+        .js-toggle[aria-expanded="true"] .label-expanded { display: inline; }
+        .js-toggle[aria-expanded="true"] .label-collapsed { display: none; }
+
+        /* Fallback collapse behavior if Bootstrap CSS isn’t present */
+        .collapse { display: none; }
+        .collapse.show { display: block; }
+    </style>
 
 </div>
+
 
 </body>
 </html>

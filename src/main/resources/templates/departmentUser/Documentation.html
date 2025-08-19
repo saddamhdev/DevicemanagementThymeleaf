@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>User Documentation</title>
+</head>
+<body>
+<div th:fragment="Documentation">
+  <!-- Tabs header -->
+  <div class="card shadow-sm border-0 mb-3">
+    <div class="card-body pb-0">
+      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+        <h2 class="h5 mb-0">
+          <i class="fa-solid fa-book-open text-primary me-2"></i>
+          Documentation
+        </h2>
+        <span class="text-muted small">Quick guide to manage users & devices</span>
+      </div>
+
+      <ul id="docTab" class="nav nav-tabs mt-3 flex-nowrap overflow-auto" role="tablist" style="--bs-nav-tabs-border-width:2px;">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-add-user-btn" data-bs-toggle="tab"
+                  data-bs-target="#tab-add-user" type="button" role="tab"
+                  aria-controls="tab-add-user" aria-selected="true">
+            <i class="fa-solid fa-user-plus me-2"></i> Add User
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-device-request-btn" data-bs-toggle="tab"
+                  data-bs-target="#tab-device-request" type="button" role="tab"
+                  aria-controls="tab-device-request" aria-selected="false">
+            <i class="fa-solid fa-clipboard-list me-2"></i> Device Request
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-device-list-btn" data-bs-toggle="tab"
+                  data-bs-target="#tab-device-list" type="button" role="tab"
+                  aria-controls="tab-device-list" aria-selected="false">
+            <i class="fa-solid fa-laptop me-2"></i> Device List
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-service-request-btn" data-bs-toggle="tab"
+                  data-bs-target="#tab-service-request" type="button" role="tab"
+                  aria-controls="tab-service-request" aria-selected="false">
+            <i class="fa-solid fa-tools me-2"></i> Service Request
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Tabs content -->
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-add-user" role="tabpanel">
+      <div th:replace="~{departmentUser/DocUser :: DocUser}"></div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-device-request" role="tabpanel">
+      <div th:replace="~{departmentUser/DocDeviceRequest :: DocDeviceRequest}"></div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-device-list" role="tabpanel">
+      <div th:replace="~{departmentUser/DocDeviceList :: DocDeviceList}"></div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-service-request" role="tabpanel">
+      <div th:replace="~{departmentUser/DocDeviceServicing :: DocDeviceServicing}"></div>
+    </div>
+  </div>
+
+
+  <!-- Styles (optional, for a cleaner look) -->
+  <style>
+    #docTab .nav-link {
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: .65rem 1rem;
+      color: #6c757d;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    #docTab .nav-link:hover { color: #0d6efd; }
+    #docTab .nav-link.active {
+      color: #0d6efd;
+      border-color: #0d6efd;
+      background: transparent;
+    }
+    .tab-content .doc-section { border: 1px solid #eef0f3; border-radius: .75rem; }
+  </style>
+
+  <!-- JS: remember last active tab + allow deep-link via hash -->
+  <script>
+    (function () {
+      const KEY = 'docs.activeTab';
+      const tabButtons = document.querySelectorAll('#docTab [data-bs-toggle="tab"]');
+
+      // Restore from hash or localStorage
+      const hash = window.location.hash;
+      const stored = localStorage.getItem(KEY);
+      const targetId = (hash && document.querySelector(hash)) ? hash : stored;
+
+      if (targetId) {
+        const btn = document.querySelector(`#docTab [data-bs-target="${targetId}"]`);
+        if (btn) new bootstrap.Tab(btn).show();
+      }
+
+      // Persist on change + update URL hash (no scroll jump)
+      tabButtons.forEach(btn => {
+        btn.addEventListener('shown.bs.tab', e => {
+          const target = e.target.getAttribute('data-bs-target');
+          localStorage.setItem(KEY, target);
+          history.replaceState(null, '', target);
+        });
+      });
+    }());
+  </script>
+</div>
+
+
+</body>
+</html>

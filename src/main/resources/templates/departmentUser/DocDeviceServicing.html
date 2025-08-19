@@ -48,10 +48,24 @@
                 </div>
             </div>
         </div>
+
+        <!-- Toggle button -->
+        <div class="mt-3">
+            <!-- Toggle button -->
+            <button
+                    class="btn btn-outline-primary btn-sm js-toggle"
+                    data-bs-toggle="collapse" data-toggle="collapse"
+                    data-bs-target="#doc-device-service" data-target="#doc-device-service"
+                    aria-expanded="false" aria-controls="doc-device-service">
+                <span class="label-collapsed">Show more</span>
+                <span class="label-expanded">Show less</span>
+            </button>
+
+        </div>
     </div>
 
 
-
+    <div id="doc-device-service" class="collapse">
     <!-- ========== Delete Service Request ========== -->
     <div id="doc-user-delete" class="doc-anchor doc-section p-4 bg-white mb-4">
         <h2 class="h5 mb-3"><i class="fa-solid fa-user-xmark text-danger me-2"></i> Delete Service Request</h2>
@@ -168,7 +182,17 @@
 
 
     </div>
+    </div>
+    <style>
+        /* Label swap based on aria-expanded */
+        .js-toggle .label-expanded { display: none; }
+        .js-toggle[aria-expanded="true"] .label-expanded { display: inline; }
+        .js-toggle[aria-expanded="true"] .label-collapsed { display: none; }
 
+        /* Fallback collapse behavior if Bootstrap CSS isn’t present */
+        .collapse { display: none; }
+        .collapse.show { display: block; }
+    </style>
 </div>
 
 </body>

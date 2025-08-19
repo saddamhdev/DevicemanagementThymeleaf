@@ -34,31 +34,13 @@
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceRequest')">
                     <i class="fas fa-tools me-2"></i> Device Servicing
                 </li>
+
+
                 <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
                 </li>
-                <!-- Documentation -->
-                <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'Documentation')">
                     <i class="fas fa-book me-2"></i> Documentation
-                    <i class="fas fa-chevron-down float-end"></i>
-                    <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation();toggleListItem(this,'DocUser')">
-                            <i class="fas fa-user-plus me-2"></i> Add User
-                        </li>
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation();toggleListItem(this,'DocDeviceRequest')">
-                            <i class="fas fa-laptop me-2"></i> Device Request
-                        </li>
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation();toggleListItem(this,'DocDeviceList')">
-                            <i class="fas fa-list me-2"></i> Device List
-                        </li>
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation();toggleListItem(this,'DocDeviceServicing')">
-                            <i class="fas fa-tools me-2"></i> Device Servicing
-                        </li>
-                    </ul>
                 </li>
                 <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
