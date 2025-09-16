@@ -1,5 +1,5 @@
 
-const pageSize = 10; // size per request
+const pageSize = 3; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -19,7 +19,9 @@ $(function () {
 
 // Main function to load and initialize fragment
 function loadFragment(pageName) {
- pageNumber=0;
+        pageNumber=0;
+        localStorage.setItem("pageSize",pageSize);
+
         var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
         var departmentName = departmentElement.data("departmentname");//it
         // Save page name to localStorage
@@ -86,7 +88,7 @@ window.toggleListItem = function (item, pageName) {
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("customerCare")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-   const token = getAuthToken();
+        const token = getAuthToken();
            fetch(url, {
                   method: 'GET',
                   headers: {

@@ -18,7 +18,7 @@ public interface AddDataRepository extends MongoRepository<AddData, String> {
     List<AddData> findByStatus(String status);
 
     Page<AddData> findByStatus(String status, Pageable pageable);
-
+    Page<AddData> findByStatusAndUserName(String status,String userName, Pageable pageable);
     List<AddData> findByCategoryNameAndStatus(String categoryName, String status);
     AddData findByIdAndStatus(String id,String status);
     Optional<AddData> findByVisibleIdAndStatus(String deviceName, String status);

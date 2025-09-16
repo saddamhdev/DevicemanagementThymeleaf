@@ -1,4 +1,4 @@
-const pageSize = 10; // size per request
+const pageSize = 3; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -19,67 +19,95 @@ $(function () {
 
 // Main function to load and initialize fragment
 function loadFragment(pageName) {
-localStorage.setItem("pageSize",pageSize);// global
 
-          pageNumber=0;
-        var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
-        var departmentName = departmentElement.data("departmentuser-name");
-        // Save page name to localStorage
-        localStorage.setItem("lastActivePage", pageName);
+  // ✅ Otherwise normal fragment load
+  localStorage.setItem("pageSize", pageSize);
+  pageNumber = 0;
 
-        const container = document.getElementById("departmentContainer");
-        container.innerHTML = "<p>Loading...</p>";
-// Construct URL with query parameters
-    //const url = `/fragment/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}`;
-     const url = `/fragment1/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
-      const token = getAuthToken();
-        fetch(url, {
-               method: 'GET',
-               headers: {
-                    'Content-Type': 'application/json',
-                   'Authorization': 'Bearer ' + token
-               }
-           })
-            .then(response => response.text())
-            .then(html => {
-                container.innerHTML = html;
+  var departmentElement = $(".departmentName");
+  var departmentName = departmentElement.data("departmentuser-name");
 
-                // Page-specific initializers map
-                const fragmentInitializers = {
-                    serviceRequest: [window.initServiceRequestGeneral ,window.initGlobalDivToggle],
-                    addUser: [window.initAddUserGeneral ,window.initGlobalDivToggle],
-                    Request: [window.initRequestDataGeneral ,window.initGlobalDivToggle],
-                    deviceInformation: [window.initDeviceInformationGeneral ,window.initGlobalDivToggle]
-                    // Add more pageName: initFunction pairs as needed
-                };
+  localStorage.setItem("lastActivePage", pageName);
+  const container = document.getElementById("departmentContainer");
 
-               const initFun = fragmentInitializers[pageName];
-                 if (Array.isArray(initFun)) {
-                     initFun.forEach(fn => {
-                         if (typeof fn === "function") {
-                             fn();
-                         }
-                     });
-                 } else if (typeof initFuncs === "function") {
-                     // For backward compatibility
-                     initFun();
-                 }
+  container.innerHTML = "<p>Loading...</p>";
 
-                // Optional: general fragment initialization
-                if (typeof window.initFragment === "function") {
-                    window.initFragment(pageName);
-                }
-            // ✅ Add this line to bind the search input after fragment loads
-                   if (typeof window.setupGlobalFilter === "function") {
-                       window.setupGlobalFilter();
-                   }
-                pageNumber++;
-            })
-            .catch(error => {
-                console.error("Error loading fragment:", error);
-                container.innerHTML = "<p>Error loading content.</p>";
-            });
+  const url = `/fragment1/${pageName}?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+  const token = getAuthToken();
+
+
+   if (!localStorage.getItem("firstPageSeen")) {
+     console.log("🚀 First login detected -> loading analytic fragment");
+   const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("departmentUser")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+  fetch(analyticUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      }
+    })
+      .then(response => {
+        console.log("Response status:", response.status);
+        return response.text();
+      })
+      .then(html => {
+        console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
+        container.innerHTML = html;
+        localStorage.setItem("firstPageSeen", "true");
+        console.log("Welcome page injected.");
+      })
+      .catch(error => {
+        console.error("Error loading analytic fragment:", error);
+        container.innerHTML = "<p>Error loading analytics.</p>";
+      });
+
+
+     return; // stop here
+   }
+
+
+
+  fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
     }
+  })
+    .then(response => response.text())
+    .then(html => {
+      container.innerHTML = html;
+
+      const fragmentInitializers = {
+        serviceRequest: [window.initServiceRequestGeneral, window.initGlobalDivToggle],
+        addUser: [window.initAddUserGeneral, window.initGlobalDivToggle],
+        Request: [window.initRequestDataGeneral, window.initGlobalDivToggle],
+        deviceInformation: [window.initDeviceInformationGeneral, window.initGlobalDivToggle]
+      };
+
+      const initFun = fragmentInitializers[pageName];
+      if (Array.isArray(initFun)) {
+        initFun.forEach(fn => typeof fn === "function" && fn());
+      } else if (typeof initFun === "function") {
+        initFun();
+      }
+
+      if (typeof window.initFragment === "function") {
+        window.initFragment(pageName);
+      }
+
+      if (typeof window.setupGlobalFilter === "function") {
+        window.setupGlobalFilter();
+      }
+
+      pageNumber++;
+    })
+    .catch(error => {
+      console.error("Error loading fragment:", error);
+      container.innerHTML = "<p>Error loading content.</p>";
+    });
+}
 // Expose globally for use elsewhere (e.g., in nav click handlers)
 window.toggleListItem = loadFragment;
 window.toggleListItem = function (item, pageName) {

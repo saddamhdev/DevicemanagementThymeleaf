@@ -5,7 +5,8 @@
         function resetTimer() {
             clearTimeout(logoutTimer);
             logoutTimer = setTimeout(() => {
-                //alert("You have been logged out due to inactivity1.");
+                alert("You have been logged out due to inactivity.");
+                handleLogout();
                 window.location.href = "/"; // Change to your logout URL
             }, 1200000); // 2hours minutes (12000 milliseconds)
         }

@@ -140,20 +140,20 @@ public class Login {
             List<Column> individualColumns = individualColumnsService.Individual();
 
 
-            Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 2); // ✅ page 0, size 10
+            Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 2,"x"); // ✅ page 0, size 10
             List<AddData> allDeviceData = pagedAddData.getContent();
             boolean lastPage = pagedAddData.getTotalPages() <= 1;
            // System.out.println(lastPage);
 
             List<User> allUser=userService.add();
-            List<InternalUser> internalUsers=internalUserService.add();
+            List<InternalUser> internalUsers=internalUserService.add("x","x");
             List<RequestColumn> requestColumns=requestColumnService.add();
 
-            Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(0, 1); // ✅ page 0, size 10
+            Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(0, 1,"x","x"); // ✅ page 0, size 10
             List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
 
 
-            Page<RequestData> requestDataData=requestDataService.getPagedAddData(0, 1); // ✅ page 0, size 10
+            Page<RequestData> requestDataData=requestDataService.getPagedAddData(0, 1,"x","x"); // ✅ page 0, size 10
             List<RequestData> requestData=requestDataData.getContent();
 
 
@@ -204,7 +204,7 @@ public class Login {
             model.addAttribute("refreshToken", refreshToken);
             model.addAttribute("result", "Authenticated");
             model.addAttribute("token",token);
-
+            model.addAttribute("firstPageStatus",true);
 
             if(userType.equals("Department")){
                // model.addAttribute("lastPage", lastPage);

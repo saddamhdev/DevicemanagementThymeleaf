@@ -16,6 +16,7 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
     List<RequestData> findByDepartmentNameAndStatus(String departmentName, String status);
     List<RequestData> findByStatus(String status);
     Page<RequestData> findByStatus(String status, Pageable pageable);
+    Page<RequestData> findByStatusAndDepartmentName(String status,String userName, Pageable pageable);
 
     RequestData findByIdAndStatus(String Id,String status);
 

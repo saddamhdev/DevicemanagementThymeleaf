@@ -262,6 +262,7 @@ window.initRequestDataGeneral = function () {
 
 window.initRequestDataTable = function () {
     // Perform a single AJAX call
+    console.log(localStorage.getItem("pageSize"));
     $.ajax({
         url: '/superAdmin/allDataRange',
         type: 'POST',
@@ -269,16 +270,19 @@ window.initRequestDataTable = function () {
                 page: pageNumber,
                 size: localStorage.getItem("pageSize") || 0
             },
-        dataType: 'json',
+
          headers: {
-                              'Authorization': 'Bearer ' + getAuthToken()
-                          },
+                  'Authorization': 'Bearer ' + getAuthToken()
+              },
         success: function(data) {
             var allData = data['requestData'];
             var requestColumns = data['requestColumns'];
             var allAddData = data['allAddData'];
             const tableBody = document.getElementById("requestCustomerCareTableBody");
-
+         if (!tableBody) {
+             console.error("❌ Table body element not found!");
+             return; // stop here to avoid crashing
+         }
             // Function to check availability count
             function getAvailability(categoryName) {
                 let count = 0;
@@ -290,8 +294,12 @@ window.initRequestDataTable = function () {
                 });
                 return count === 0 ? "Unavailable" : `Available(${count})`;
             }
-
-           let counter = 1; // Initialize a counter variable
+            console.log(allData);
+             let counter = 1; // Initialize a counter variable
+             if (!Array.isArray(allData)) {
+                 console.warn("requestData is not an array:", allData);
+                 allData = [];
+             }
 
            // Loop through each device in allData
           allData.forEach(function (device) {

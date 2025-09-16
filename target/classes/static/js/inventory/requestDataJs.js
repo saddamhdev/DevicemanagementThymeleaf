@@ -340,19 +340,17 @@ window.initRequestDataTable = function () {
         const key = Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
         currentRowMap.set(key, row);
     });
-
+     console.log(localStorage.getItem("pageSize"));
     $.ajax({
         url: '/superAdmin/allDataRange',
         type: 'POST',
-        dataType: 'json',
          data: {
-                        page: pageNumber,
-                        size: localStorage.getItem("pageSize") || 0
-                    },
+                page: pageNumber,
+                size: localStorage.getItem("pageSize") || 0
+            },
         headers: {
-
-                             'Authorization': 'Bearer ' + getAuthToken()
-                         },
+                     'Authorization': 'Bearer ' + getAuthToken()
+                 },
         success: function (data) {
             const allData = data['requestData'];
             const requestColumns = data['requestColumns'];

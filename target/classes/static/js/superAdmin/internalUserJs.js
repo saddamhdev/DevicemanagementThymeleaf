@@ -212,7 +212,7 @@ function addInternalUser(){
                   saveInternalUserBtn(branchName,userName,userId,userPassword);
                 });
 
-showModal();
+            showModalMedium();
 }
 function selectionAndInputHandler(){
 // Event delegation for dynamically added items

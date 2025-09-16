@@ -20,10 +20,7 @@
                     <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body" style="background-color: #D3D3D3;">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 topUI">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.html" style="color: black;">Home</a>
-                        </li>
+                    <ul class="navbar-nav ms-auto d-flex flex-row align-items-center topUI">
                         <li >
                             <div class="notification-icon profile" >
                                 <i class="fas fa-bell"></i> <!-- FontAwesome bell icon -->
@@ -36,12 +33,14 @@
                                 <img th:src="@{/img/manLogo.png}" class="profile" alt="Uploaded Image">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item departmentName" href="#" th:text="${departmentName} + ' -> ' + ${departmentUserName}" th:data-departmentname="${departmentName}" th:data-departmentuser-name="${departmentUserName}" th:data-departmentuser-Id="${userId}"></a>
+                                <li >
+                                    <a  class="dropdown-item departmentName" href="#" th:text="${departmentName} + ' -> ' + ${departmentUserName}" th:data-departmentname="${departmentName}" th:data-departmentuser-name="${departmentUserName}" id="myPageStatus" th:data-departmentuser-Id="${userId}" th:data-firstpagestatus-id="${firstPageStatus}"></a>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li class="list-group-item " data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+                                    <i style="margin-left:10px" class="fas fa-sign-out-alt me-2"></i> Logout
+                                </li>
                             </ul>
                         </li>
 

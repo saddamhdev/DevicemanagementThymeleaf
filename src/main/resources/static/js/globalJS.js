@@ -1476,3 +1476,15 @@ function handleKey(event) {
          bsModal.show();
        });
      }
+function handleLogout() {
+  // clear first-login flag
+  localStorage.removeItem("firstPageSeen");
+
+  // optionally clear other values
+  localStorage.removeItem("lastActivePage");
+  localStorage.removeItem("pageSize");
+
+  console.log("🔹 LocalStorage cleared on logout");
+
+  // let the browser continue redirect to "/"
+}

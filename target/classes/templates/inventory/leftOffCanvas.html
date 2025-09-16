@@ -40,33 +40,33 @@
 
             <ul class="list-group">
                 <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
-                    <i class="fas fa-laptop me-2"></i> Device Request
+                    <i class="fas fa-laptop me-2"></i>New Device Request
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestData')">
-                            <i class="fas fa-file-alt me-2"></i> Request
+                            <i class="fas fa-file-alt me-2"></i> Request Condition
                         </li>
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestDataProposal')">
-                            <i class="fas fa-shopping-cart me-2"></i> Purchase
+                            <i class="fas fa-shopping-cart me-2"></i> Purchase Request
                         </li>
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'requestDataAlternative')">
-                            <i class="fas fa-random me-2"></i> Alternative
+                            <i class="fas fa-random me-2"></i> Alternative Request
                         </li>
                     </ul>
                 </li>
 
                 <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
-                    <i class="fas fa-tools me-2"></i> Service Request
+                    <i class="fas fa-tools me-2"></i> Service Management
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingData')">
-                            <i class="fas fa-file-alt me-2"></i> Request
+                            <i class="fas fa-file-alt me-2"></i>Request Condition
                         </li>
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingPurchaseData')">
-                            <i class="fas fa-shopping-cart me-2"></i> Purchase
+                            <i class="fas fa-shopping-cart me-2"></i> Purchase Request
                         </li>
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesPendingAlternativeData')">
-                            <i class="fas fa-random me-2"></i> Alternative
+                            <i class="fas fa-random me-2"></i>Send Alternative
                         </li>
                         <li class="list-group-item leftListBgColor" onclick="event.stopPropagation();toggleListItem(this,'serviceAccessoriesDeliveryData')">
                             <i class="fas fa-truck me-2"></i> Accessories Delivery List
@@ -75,14 +75,14 @@
                 </li>
 
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">
-                    <i class="fas fa-info-circle me-2"></i> Device Information
+                    <i class="fas fa-info-circle me-2"></i> Device List
                 </li>
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'unOrderedDevice')">
                     <i class="fas fa-ban me-2"></i> Un-Ordered Device
                 </li>
-                <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
+               <!-- <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
-                </li>
+                </li>-->
                 <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </li>

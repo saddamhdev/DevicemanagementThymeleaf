@@ -22,9 +22,10 @@ public class AddDataService {
     private AddDataRepository addDataRepository;
     // Check cache first, if not found, load from DB and cache it
     @Cacheable(value = "AddDataService", key = "#page + '-' + #size")
-    public Page<AddData> getPagedAddData(int page, int size) {
+    public Page<AddData> getPagedAddData(int page, int size , String userName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return addDataRepository.findByStatus("1", pageable);
+        System.out.println(userName);
+        return addDataRepository.findByStatusAndUserName("1",userName ,pageable);
     }
 
     @Cacheable(value = "AddDataService")

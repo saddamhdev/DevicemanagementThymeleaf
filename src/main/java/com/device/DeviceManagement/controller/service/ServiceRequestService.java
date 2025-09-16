@@ -23,8 +23,13 @@ public class ServiceRequestService {
     private ServiceRequestRepository serviceRequestRepository;
     // Check cache first, if not found, load from DB and cache it
     @Cacheable(value = "ServiceRequestService", key = "#page + '-' + #size")
-    public Page<ServiceRequest> getPagedAddData(int page, int size) {
+    public Page<ServiceRequest> getPagedAddData(int page, int size, String folderName,String userName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        System.out.println(folderName);
+        if(folderName.equals("departmentUser")){
+            System.out.println(folderName);
+            return serviceRequestRepository.findByStatusAndDepartmentName("1", userName,pageable);
+        }
         return serviceRequestRepository.findByStatus("1", pageable);
     }
     @Cacheable(value = "ServiceRequestService")

@@ -23,9 +23,14 @@ public class RequestDataService {
     private RequestDataRepository requestDataRepository;
     // Check cache first, if not found, load from DB and cache it
     @Cacheable(value = "RequestDataService", key = "#page + '-' + #size")
-    public Page<RequestData> getPagedAddData(int page, int size) {
+    public Page<RequestData> getPagedAddData(int page, int size,String folderName, String userName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return requestDataRepository.findByStatus("1", pageable);
+        //System.out.println(userName);
+        if(folderName.equals("departmentUser")){
+            return requestDataRepository.findByStatusAndDepartmentName("1",userName,pageable);
+        }
+        return requestDataRepository.findByStatus("1",pageable);
+
     }
     @Cacheable(value = "RequestDataService")
     public List<RequestData> add() {

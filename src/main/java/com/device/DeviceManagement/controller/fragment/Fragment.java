@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,12 +84,14 @@ public class Fragment {
                                @RequestParam(name = "folder", required = false) String folderName,
                                @RequestParam String departmentName,
                                Model model) {
+        List<InternalUser> internalUsers=new ArrayList<>();
         if(folderName.equals("departmentUser")){
+            internalUsers=internalUserService.add(folderName,departmentName);
             model.addAttribute("departmentUserName", departmentName);
         }
         else{
             model.addAttribute("departmentName", departmentName);
-
+            internalUsers = internalUserService.add(folderName,departmentName);
         }
         // Add any model attributes you want here based on fragmentName
         Page<Category> categoriesData = categoriesService.getPagedAddData(page, size); // ✅ page 0, size 10
@@ -107,7 +110,7 @@ public class Fragment {
         model.addAttribute("totalPage"+pageName, allUserData.getTotalPages());
 
         Page<InternalUser> internalUsersData=internalUserService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<InternalUser> internalUsers=internalUserService.add();
+
         model.addAttribute("lastPage"+pageName, internalUsersData.getTotalPages() <=-1);
         model.addAttribute("totalPage"+pageName, internalUsersData.getTotalPages());
 
@@ -116,12 +119,12 @@ public class Fragment {
         model.addAttribute("lastPage"+pageName, requestColumnsData.getTotalPages() <=-1);
         model.addAttribute("totalPage"+pageName, requestColumnsData.getTotalPages());
 
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size); // ✅ page 0, size 10
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestService.add();
         model.addAttribute("lastPage"+pageName, serviceRequestsData.getTotalPages() <=-1);
         model.addAttribute("totalPage"+pageName, serviceRequestsData.getTotalPages());
 
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size); // ✅ page 0, size 10
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
         List<RequestData> requestData=requestDataService.add();
         model.addAttribute("lastPage"+pageName, requestDataData.getTotalPages() <=-1);
         model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
@@ -142,7 +145,7 @@ public class Fragment {
         model.addAttribute("totalPage"+pageName,userAccountDataData.getTotalPages());
 
         // ✅ Pagination logic for AddData (main scrollable content)
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size);
+        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,departmentName);
         List<AddData> allDeviceData = pagedAddData.getContent();
 
         // ✅ Correct lastPage calculation
@@ -177,32 +180,44 @@ public class Fragment {
                                 @RequestParam(name = "folder", required = false) String folderName,
                                 @RequestParam String departmentName,
                                 Model model) {
-
+        List<InternalUser> internalUsers=new ArrayList<>();
         if ("departmentUser".equals(folderName)) {
             model.addAttribute("departmentUserName", departmentName);
+            internalUsers = internalUserService.add(folderName,departmentName);
+            // ✅ Special case: analytic page
+            if ("analyticFragment".equals(pageName)) {
+                model.addAttribute("userCount", 4);
+                model.addAttribute("deviceCount", 8);
+                model.addAttribute("servicingCount", 8);
+                model.addAttribute("requestCount", 10);
+                return folderName + "/" + pageName + " :: " + pageName;
+            }
         } else {
             model.addAttribute("departmentName", departmentName);
+            internalUsers = internalUserService.add(folderName,departmentName);
         }
+
 
         // Load only required data for this page (optimize later as needed)
         List<Column> universalColumns = universalColumnsService.Universal();
         List<Column> individualColumns = individualColumnsService.Individual();
 
         // ✅ Pagination logic for AddData (main scrollable content)
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size);
-        List<AddData> allDeviceData = pagedAddData.getContent();
 
+        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,departmentName);
+        List<AddData> allDeviceData = pagedAddData.getContent();
+        System.out.println(departmentName +" "+allDeviceData.size()+" "+size);
         // ✅ Correct lastPage calculation
         model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
         model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
 
         // Optional debug log
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size); // ✅ page 0, size 10
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
         model.addAttribute("lastPage"+pageName, serviceRequestsData.isLast());
         model.addAttribute("totalPage"+pageName, serviceRequestsData.getTotalPages());
 
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size); // ✅ page 0, size 10
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
         List<RequestData> requestData=requestDataData.getContent();
         model.addAttribute("lastPage"+pageName, requestDataData.isLast());
         model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
@@ -210,7 +225,7 @@ public class Fragment {
         // Inject other required data (non-paginated for now)
         List<Category> categories = categoriesService.Category();
         List<User> allUser = userService.add();
-        List<InternalUser> internalUsers = internalUserService.add();
+
         List<RequestColumn> requestColumns = requestColumnService.add();
 
         List<DropDownList> dropDownLists = dropDownListService.add();
@@ -239,19 +254,21 @@ public class Fragment {
                                @RequestParam(name = "folder", required = false) String folderName,
                                @RequestParam String departmentName,
                                Model model) {
+        List<InternalUser> internalUsers=new ArrayList<>();
         if(folderName.equals("departmentUser")){
+            internalUsers=internalUserService.add(folderName,departmentName);
             model.addAttribute("departmentUserName", departmentName);
         }
         else{
             model.addAttribute("departmentName", departmentName);
-
+            internalUsers = internalUserService.add(folderName,departmentName);
         }
         // Add any model attributes you want here based on fragmentName
         List<Category> categories = categoriesService.Category();
         List<Column> universalColumns = universalColumnsService.Universal();
         List<Column> individualColumns = individualColumnsService.Individual();
         // List<AddData> allDeviceData=addDataService.add();
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 7); // ✅ page 0, size 10
+        Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 7,departmentName); // ✅ page 0, size 10
         List<AddData> allDeviceData = pagedAddData.getContent();
         boolean lastPage = pagedAddData.getTotalPages() <= 1;
         model.addAttribute("lastPage", lastPage);
@@ -259,7 +276,7 @@ public class Fragment {
 
 
         List<User> allUser=userService.add();
-        List<InternalUser> internalUsers=internalUserService.add();
+
         List<RequestColumn> requestColumns=requestColumnService.add();
         List<ServiceRequest> serviceRequests = serviceRequestService.add();
         List<RequestData> requestData=requestDataService.add();

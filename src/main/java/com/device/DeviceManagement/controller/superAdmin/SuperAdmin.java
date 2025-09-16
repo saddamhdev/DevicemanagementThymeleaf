@@ -104,7 +104,7 @@ public class SuperAdmin {
         List<Column> individualColumns = individualColumnsService.Individual();
         List<AddData> allDeviceData=addDataService.add();
         List<User> allUser=userService.add();
-        List<InternalUser> internalUsers=internalUserService.add();
+        List<InternalUser> internalUsers=internalUserService.add(" ", " ");
         List<RequestColumn> requestColumns=requestColumnService.add();
         List<ServiceRequest> serviceRequests = serviceRequestService.add();
         List<RequestData> requestData=requestDataService.add();
@@ -2303,7 +2303,7 @@ public class SuperAdmin {
         List<DropDownList> dropDownLists=dropDownListService.add();
         List<Designation> designations=designationService.add();
         List<BranchUser> userAccountData=branchUserService.add();
-        List<InternalUser> internalUsers=internalUserService.add();
+        List<InternalUser> internalUsers=internalUserService.add("x", "x");
 
         AllData homeData = new  AllData();
         homeData.setCategories(categories);
@@ -2326,13 +2326,14 @@ public class SuperAdmin {
     public ResponseEntity<AllData> AllDataRange( @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size){
         // Optional debug log
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size); // ✅ page 0, size 10
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,"x", "x"); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
 
 
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<RequestData> requestData=requestDataData.getContent();
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,"x","x"); // ✅ page 0, size 10
 
+        List<RequestData> requestData=requestDataData.getContent();
+        System.out.println(size+" "+requestData.size());
 
         List<Category> categories = categoriesService.Category();
         List<Column> universalColumns = universalColumnsService.Universal();
@@ -2344,7 +2345,7 @@ public class SuperAdmin {
         List<DropDownList> dropDownLists=dropDownListService.add();
         List<Designation> designations=designationService.add();
         List<BranchUser> userAccountData=branchUserService.add();
-        List<InternalUser> internalUsers=internalUserService.add();
+        List<InternalUser> internalUsers=internalUserService.add("x", "x");
 
         AllData homeData = new  AllData();
         homeData.setCategories(categories);
@@ -2413,7 +2414,7 @@ public class SuperAdmin {
             homeData.setUserAccountData(userAccountData);
         }
         else if(dataType.equals("internalUsers")){
-            List<InternalUser> internalUsersData=internalUserService.add();
+            List<InternalUser> internalUsersData=internalUserService.add("x","x");
             homeData.setInternalUsers(internalUsersData);
         }
 

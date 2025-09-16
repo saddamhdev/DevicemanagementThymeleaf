@@ -10,6 +10,8 @@ import java.util.List;
 public interface InternalUserRepository extends MongoRepository<InternalUser, String> {
 
     List<InternalUser> findByStatus(String status);
+    List<InternalUser> findByStatusAndUserName(String status,String userName);
+    List<InternalUser> findByStatusAndBranchName(String status,String branchName);
     Page<InternalUser> findByStatus(String status, Pageable pageable);
     List<InternalUser> findByBranchNameAndStatus(String branchName,String status);
     InternalUser findByUserNameAndUserPasswordAndStatus(String userName,String userPassword,String status);

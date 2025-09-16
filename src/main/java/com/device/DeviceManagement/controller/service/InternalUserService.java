@@ -27,9 +27,15 @@ public class InternalUserService {
         return internalUserRepository.findByStatus("1", pageable);
     }
     @Cacheable(value = "InternalUserService")
-    public List<InternalUser> add() {
+    public List<InternalUser> add(String folderName,String userName) {
         System.out.println("Fetching user from DB...");
-        return internalUserRepository.findByStatus("1");
+        if(folderName.equals("superAdmin")){
+            return internalUserRepository.findByStatus("1");
+        }
+        if(folderName.equals("departmentUser")){
+            return internalUserRepository.findByStatusAndUserName("1",userName);
+        }
+        return internalUserRepository.findByStatusAndBranchName("1",userName);
     }
 
     // Use this to update the cache when data is modified

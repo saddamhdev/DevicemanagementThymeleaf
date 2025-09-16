@@ -1,5 +1,5 @@
 
-const pageSize = 10; // size per request
+const pageSize = 3; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -28,7 +28,7 @@ localStorage.setItem("pageSize",pageSize);// global
 
         const container = document.getElementById("inventoryContainer");
         container.innerHTML = "<p>Loading...</p>";
-        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}`;
+        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
    const token = getAuthToken();
            fetch(url, {
@@ -94,7 +94,7 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
 
         const container = document.getElementById("inventoryContainer");
         container.innerHTML = "<p>Loading...</p>";
-        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}`;
+        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
    const token = getAuthToken();
            fetch(url, {

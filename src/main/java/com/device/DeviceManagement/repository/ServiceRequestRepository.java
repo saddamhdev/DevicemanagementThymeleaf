@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface ServiceRequestRepository extends MongoRepository<ServiceRequest, String> {
     List<ServiceRequest> findByStatus(String status);
     Page<ServiceRequest> findByStatus(String status, Pageable pageable);
+    Page<ServiceRequest> findByStatusAndDepartmentName(String status,String userName, Pageable pageable);
     ServiceRequest findByIdAndStatus(String id, String status);
     // Query to find a single record by id and status
     @Query("{ 'id': ?0, 'status': ?1 }")
