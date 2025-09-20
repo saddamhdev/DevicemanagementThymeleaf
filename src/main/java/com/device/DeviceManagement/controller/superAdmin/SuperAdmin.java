@@ -2326,11 +2326,11 @@ public class SuperAdmin {
     public ResponseEntity<AllData> AllDataRange( @RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size){
         // Optional debug log
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,"x", "x"); // ✅ page 0, size 10
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,"x", "x","x"); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
 
 
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,"x","x"); // ✅ page 0, size 10
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,"x","x","x"); // ✅ page 0, size 10
 
         List<RequestData> requestData=requestDataData.getContent();
         System.out.println(size+" "+requestData.size());

@@ -26,4 +26,25 @@ public interface AddDataRepository extends MongoRepository<AddData, String> {
     @Query("{ 'deviceTypeServicingOrRequestingOrOldAsInputting': ?0, 'status': ?1 }")
     List<AddData> findByDeviceTypeServicingOrRequestingOrOldAsInputtingAndStatus(String deviceType, String status);
 
+    @Query("{ 'status': ?0, 'unOrderedDevice.unWantedSendDeviceToInventoryStatus': ?1 }")
+    Page<AddData> findByStatusAndUnOrderedDeviceStatus(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'unOrderedDevice.COOUnOrderedDeviceAcceptedStatus': { $in: ?1 } }")
+    Page<AddData> findByStatusAndUnOrderedDeviceListForPurchase(
+            String rootStatus,
+            List<String> nestedStatus,
+            Pageable pageable
+    );
+
+
+long countByStatusAndUserName(String status, String BranchName);
+
+
+
+
+
 }

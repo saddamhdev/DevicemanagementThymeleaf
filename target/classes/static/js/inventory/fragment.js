@@ -17,141 +17,299 @@ $(function () {
         }
     });
 
-// Main function to load and initialize fragment
-function loadFragment(pageName) {
-localStorage.setItem("pageSize",pageSize);// global
- pageNumber=0;
-        var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
-        var departmentName = departmentElement.data("departmentname");//it
-        // Save page name to localStorage
-        localStorage.setItem("lastActivePage", pageName);
+async function loadFragment(pageName) {
+    localStorage.setItem("pageSize", pageSize);
+    pageNumber = 0;
 
-        const container = document.getElementById("inventoryContainer");
-        container.innerHTML = "<p>Loading...</p>";
-        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+    const departmentElement = $(".departmentName");
+    const departmentName = departmentElement.data("departmentname");
+    localStorage.setItem("lastActivePage", pageName);
 
-   const token = getAuthToken();
-           fetch(url, {
-                  method: 'GET',
-                  headers: {
-                       'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + token
-                  }
-              })
-            .then(response => response.text())
+    const container = document.getElementById("inventoryContainer");
+    container.innerHTML = "<p>Loading...</p>";
+    const url = `/fragment1/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+    const token = getAuthToken();
+    console.log("start " + pageName);
+       if (!localStorage.getItem("firstPageSeen")) {
+           console.log("🚀 First login detected -> loading analytic fragment");
+         const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+        fetch(analyticUrl, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token
+            }
+          })
+            .then(response => {
+              console.log("Response status:", response.status);
+              return response.text();
+            })
             .then(html => {
-                container.innerHTML = html;
-
-                // Page-specific initializers map
-                const fragmentInitializers = {
-                    requestData: [window.initRequestDataTable,window.initGlobalDivToggle],
-                    serviceAccessoriesPendingData: [window.initServiceAccessoriesPendingDataTable,window.initGlobalDivToggle],
-                    serviceAccessoriesPendingPurchaseData: [window.initServiceAccessoriesPendingPurchaseDataTable,window.initGlobalDivToggle],
-                    serviceAccessoriesPendingAlternativeData: [window.initServiceAccessoriesPendingAlternativeDataTable,window.initGlobalDivToggle],
-                    serviceAccessoriesDeliveryData: [window.initServiceAccessoriesDeliveryDataTable,window.initGlobalDivToggle],
-                    deviceInformation: [window.initDeviceInformationGeneral],
-                    requestDataAlternative: [window.initRequestDataAlternativeGeneral,window.initGlobalDivToggle],
-                    requestDataProposal: [window.initRequestDataProposalGeneral,window.initGlobalDivToggle],
-                    unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle]
-                    // Add more pageName: initFunction pairs as needed
-                };
-
-                const initFun = fragmentInitializers[pageName];
-                    if (Array.isArray(initFun)) {
-                        initFun.forEach(fn => {
-                            if (typeof fn === "function") {
-                                fn();
-                            }
-                        });
-                    } else if (typeof initFuncs === "function") {
-                        // For backward compatibility
-                        initFun();
-                    }
-
-                // Optional: general fragment initialization
-                if (typeof window.initFragment === "function") {
-                    window.initFragment(pageName);
-                }
-
-               // ✅ Add this line to bind the search input after fragment loads
-                       if (typeof window.setupGlobalFilter === "function") {
-                           window.setupGlobalFilter();
-                       }
+              console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
+              container.innerHTML = html;
+              localStorage.setItem("firstPageSeen", "true");
+              console.log("Welcome page injected.");
             })
             .catch(error => {
-                console.error("Error loading fragment:", error);
-                container.innerHTML = "<p>Error loading content.</p>";
+              console.error("Error loading analytic fragment:", error);
+              container.innerHTML = "<p>Error loading analytics.</p>";
             });
+
+
+           return; // stop here
+         }
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        });
+
+        const html = await response.text();
+        container.innerHTML = html;
+
+        // fragment initializers
+        const fragmentInitializers = {
+            //requestData: [window.initRequestDataTable, window.initGlobalDivToggle],
+            requestData: [ window.initGlobalDivToggle],
+           // serviceAccessoriesPendingData: [window.initServiceAccessoriesPendingDataTable, window.initGlobalDivToggle],
+            serviceAccessoriesPendingData: [ window.initGlobalDivToggle],
+            //serviceAccessoriesPendingPurchaseData: [window.initServiceAccessoriesPendingPurchaseDataTable, window.initGlobalDivToggle],
+            serviceAccessoriesPendingPurchaseData: [ window.initGlobalDivToggle],
+            //serviceAccessoriesPendingAlternativeData: [window.initServiceAccessoriesPendingAlternativeDataTable, window.initGlobalDivToggle],
+            serviceAccessoriesPendingAlternativeData: [ window.initGlobalDivToggle],
+            //serviceAccessoriesDeliveryData: [window.initServiceAccessoriesDeliveryDataTable, window.initGlobalDivToggle],
+            serviceAccessoriesDeliveryData: [ window.initGlobalDivToggle],
+            deviceInformation: [window.initDeviceInformationGeneral],
+            requestDataAlternative: [window.initRequestDataAlternativeGeneral, window.initGlobalDivToggle],
+            requestDataProposal: [window.initRequestDataProposalGeneral, window.initGlobalDivToggle],
+            unOrderedDevice: [window.initUnOrderedDeviceGeneral, window.initGlobalDivToggle]
+        };
+
+        const initFun = fragmentInitializers[pageName];
+        if (Array.isArray(initFun)) {
+            initFun.forEach(fn => typeof fn === "function" && fn());
+        }
+
+        if (typeof window.initFragment === "function") {
+            window.initFragment(pageName);
+        }
+
+        if (typeof window.setupGlobalFilter === "function") {
+            window.setupGlobalFilter();
+        }
+
+        // ✅ Special handling for requestData
+        if (pageName === 'requestData') {
+            //console.log("Before");
+            const [requestData, requestColumns, allAddData] = await Promise.all([
+                fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+            ]);
+
+            window.initRequestDataTable(requestData, requestColumns, allAddData);
+            return ;
+        }
+         if(pageName==='serviceAccessoriesPendingData'){
+
+              // ✅ Await all three fetches
+              const [serviceRequests, allAddData] = await Promise.all([
+                  fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                  fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+              ]);
+
+              // ✅ Now they are resolved JSON arrays, not promises
+              window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+              return;
+
+        }
+         if(pageName==='serviceAccessoriesPendingPurchaseData'){
+
+                     // ✅ Await all three fetches
+                     const [serviceRequests, allAddData] = await Promise.all([
+                         fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                     ]);
+
+                     // ✅ Now they are resolved JSON arrays, not promises
+
+                     window.initServiceAccessoriesPendingPurchaseDataTable(serviceRequests, allAddData);
+                     return;
+
+             }
+              if(pageName==='serviceAccessoriesPendingAlternativeData'){
+
+                             // ✅ Await all three fetches
+                             const [serviceRequests, allAddData] = await Promise.all([
+                                 fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                             ]);
+
+                             // ✅ Now they are resolved JSON arrays, not promises
+                             window.initServiceAccessoriesPendingAlternativeDataTable(serviceRequests, allAddData);
+                             return;
+
+                      }
+                    if (pageName === 'serviceAccessoriesDeliveryData') {
+
+                                 // ✅ Await all three fetches
+                                 const [serviceRequests, allAddData] = await Promise.all([
+                                     fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                 ]);
+
+                                 // ✅ Now they are resolved JSON arrays, not promises
+                                  window.initServiceAccessoriesDeliveryDataTable(serviceRequests, allAddData);
+                                 return;
+
+                       }
+
+    } catch (error) {
+        console.error("❌ Error loading fragment:", error);
+        container.innerHTML = "<p>Error loading content.</p>";
     }
+}
+
 // Expose globally for use elsewhere (e.g., in nav click handlers)
-window.toggleListItem = loadFragment;
-window.toggleListItem = function (item, pageName) {
-localStorage.setItem("pageSize",pageSize);// global
- pageNumber=0;
-var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
-        var departmentName = departmentElement.data("departmentname");//it
-        localStorage.setItem("lastActivePage", pageName);
+ window.toggleListItem = loadFragment;
+ window.toggleListItem = async function (item, pageName) {
+     localStorage.setItem("pageSize", pageSize); // global
+     pageNumber = 0;
 
-        const container = document.getElementById("inventoryContainer");
-        container.innerHTML = "<p>Loading...</p>";
-        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("inventory")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+     const departmentElement = $(".departmentName");
+     const departmentName = departmentElement.data("departmentname");
+     localStorage.setItem("lastActivePage", pageName);
 
-   const token = getAuthToken();
-           fetch(url, {
-                  method: 'GET',
-                  headers: {
-                       'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + token
-                  }
-              })
-          .then(response => response.text())
-          .then(html => {
-            container.innerHTML = html;
-            // Page-specific initializers map
+     const container = document.getElementById("inventoryContainer");
+     container.innerHTML = "<p>Loading...</p>";
+     const url = `/fragment1/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+     const token = getAuthToken();
+
+     try {
+         const response = await fetch(url, {
+             method: 'GET',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'Authorization': 'Bearer ' + token
+             }
+         });
+
+         const html = await response.text();
+         container.innerHTML = html;
+
+         // Page-specific initializers map
          const fragmentInitializers = {
-             requestData: [window.initRequestDataTable,window.initGlobalDivToggle],
-             serviceAccessoriesPendingData: [window.initServiceAccessoriesPendingDataTable,window.initGlobalDivToggle],
-             serviceAccessoriesPendingPurchaseData: [window.initServiceAccessoriesPendingPurchaseDataTable,window.initGlobalDivToggle],
-             serviceAccessoriesPendingAlternativeData: [window.initServiceAccessoriesPendingAlternativeDataTable,window.initGlobalDivToggle],
-             serviceAccessoriesDeliveryData: [window.initServiceAccessoriesDeliveryDataTable,window.initGlobalDivToggle],
+            // requestData: [window.initRequestDataTable, window.initGlobalDivToggle],
+             requestData: [ window.initGlobalDivToggle],
+             // serviceAccessoriesPendingData: [window.initServiceAccessoriesPendingDataTable, window.initGlobalDivToggle],
+             serviceAccessoriesPendingData: [ window.initGlobalDivToggle],
+             //serviceAccessoriesPendingPurchaseData: [window.initServiceAccessoriesPendingPurchaseDataTable, window.initGlobalDivToggle],
+             serviceAccessoriesPendingPurchaseData: [ window.initGlobalDivToggle],
+             //serviceAccessoriesPendingAlternativeData: [window.initServiceAccessoriesPendingAlternativeDataTable, window.initGlobalDivToggle],
+             serviceAccessoriesPendingAlternativeData: [ window.initGlobalDivToggle],
+            //serviceAccessoriesDeliveryData: [window.initServiceAccessoriesDeliveryDataTable, window.initGlobalDivToggle],
+             serviceAccessoriesDeliveryData: [ window.initGlobalDivToggle],
              deviceInformation: [window.initDeviceInformationGeneral],
-             requestDataAlternative: [window.initRequestDataAlternativeGeneral,window.initGlobalDivToggle],
-             requestDataProposal: [window.initRequestDataProposalGeneral,window.initGlobalDivToggle],
-             unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle]
-             // Add more pageName: initFunction pairs as needed
+             requestDataAlternative: [window.initRequestDataAlternativeGeneral, window.initGlobalDivToggle],
+             requestDataProposal: [window.initRequestDataProposalGeneral, window.initGlobalDivToggle],
+             unOrderedDevice: [window.initUnOrderedDeviceGeneral, window.initGlobalDivToggle]
          };
 
-      const initFun = fragmentInitializers[pageName];
-          if (Array.isArray(initFun)) {
-              initFun.forEach(fn => {
-                  if (typeof fn === "function") {
-                      fn();
+         const initFun = fragmentInitializers[pageName];
+         if (Array.isArray(initFun)) {
+             initFun.forEach(fn => typeof fn === "function" && fn());
+         }
+
+         if (typeof window.initFragment === "function") {
+             window.initFragment(pageName);
+         }
+
+         if (typeof window.setupGlobalFilter === "function") {
+             window.setupGlobalFilter();
+         }
+
+         // ✅ Special handling for requestData
+         if (pageName === 'requestData') {
+            // console.log("Before");
+             const [requestData, requestColumns, allAddData] = await Promise.all([
+                 fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                 fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                 fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+             ]);
+            // console.log("Next");
+            // console.log("✅ requestData loaded:", requestData);
+             window.initRequestDataTable(requestData, requestColumns, allAddData);
+             return;
+         }
+
+          if(pageName==='serviceAccessoriesPendingData'){
+
+                      // ✅ Await all three fetches
+                      const [serviceRequests, allAddData] = await Promise.all([
+                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                      ]);
+
+                      // ✅ Now they are resolved JSON arrays, not promises
+                     // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                      window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+                      return;
+
+             }
+
+             if(pageName==='serviceAccessoriesPendingPurchaseData'){
+
+                         // ✅ Await all three fetches
+                         const [serviceRequests, allAddData] = await Promise.all([
+                             fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                         ]);
+
+                         // ✅ Now they are resolved JSON arrays, not promises
+
+                         window.initServiceAccessoriesPendingPurchaseDataTable(serviceRequests, allAddData);
+                         return;
+
+                 }
+              if(pageName==='serviceAccessoriesPendingAlternativeData'){
+
+                         // ✅ Await all three fetches
+                         const [serviceRequests, allAddData] = await Promise.all([
+                             fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                         ]);
+
+                         // ✅ Now they are resolved JSON arrays, not promises
+                         window.initServiceAccessoriesPendingAlternativeDataTable(serviceRequests, allAddData);
+                         return;
+
                   }
-              });
-          } else if (typeof initFuncs === "function") {
-              // For backward compatibility
-              initFun();
-          }
 
-            // Optional: General fragment init
-            if (typeof window.initFragment === "function") {
-              window.initFragment(pageName);
-            }
+                  if (pageName === 'serviceAccessoriesDeliveryData') {
 
-       // ✅ Add this line to bind the search input after fragment loads
-               if (typeof window.setupGlobalFilter === "function") {
-                   window.setupGlobalFilter();
-               }
+                      // ✅ Await all three fetches
+                      const [serviceRequests, allAddData] = await Promise.all([
+                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                      ]);
 
-          })
-          .catch(error => {
-            console.error("Error loading fragment:", error);
-            container.innerHTML = "<p>Error loading content.</p>";
-          });
+                      // ✅ Now they are resolved JSON arrays, not promises
+                       window.initServiceAccessoriesDeliveryDataTable(serviceRequests, allAddData);
+                      return;
 
-    };
+                   }
 
-// Adjust styles on window resize
+     } catch (error) {
+         console.error("❌ Error loading fragment:", error);
+         container.innerHTML = "<p>Error loading content.</p>";
+     }
+ };
 });
 
 // === Infinite Scroll Load ===
@@ -219,38 +377,115 @@ function loadMoreDevices(direction = "down") {
         });
 }
 
-function loadByRange(pageNumber, pageSize) {
+async function loadByRange(pageNumber, pageSize) {
     console.log("📦 Loading range with pageSize:", pageSize);
 
     const pageName = localStorage.getItem("lastActivePage");
 
-      if(pageName==='serviceAccessoriesPendingData'){
-            window.initServiceAccessoriesPendingDataTable();
-        return;
-        }
-        else if(pageName==='serviceAccessoriesPendingPurchaseData'){
-        window.initServiceAccessoriesPendingPurchaseDataTable();
-        return;
-        }
-         else if(pageName==='serviceAccessoriesPendingAlternativeData'){
-                window.initServiceAccessoriesPendingAlternativeDataTable();
-                return;
-                }
-       else if(pageName==='serviceAccessoriesDeliveryData'){
-          window.initServiceAccessoriesDeliveryDataTable();
-          return;
-          }
 
-            else if(pageName==='requestData'){
-                window.initRequestDataTable();
-                return;
-                }
 
     var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
        var departmentName = departmentElement.data("departmentname");//it
        const url = `/fragment1/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
     const token = getAuthToken();
+     const requestData=(fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`,token));
+     const requestColumns=(fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`,token));
+     const allAddData=(fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`,token));
+
+     if(pageName==='serviceAccessoriesPendingData'){
+
+                try {
+                     // ✅ Await all three fetches
+                     const [serviceRequests, allAddData] = await Promise.all([
+                         fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                     ]);
+
+                     // ✅ Now they are resolved JSON arrays, not promises
+                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                     window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+                     return;
+                 } catch (e) {
+                     console.error("❌ Error loading requestData:", e);
+                     return;
+                 }
+
+            }
+            else if(pageName==='serviceAccessoriesPendingPurchaseData'){
+
+            try {
+                    // ✅ Await all three fetches
+                    const [serviceRequests, allAddData] = await Promise.all([
+                        fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                        fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                    ]);
+
+                    // ✅ Now they are resolved JSON arrays, not promises
+
+                    window.initServiceAccessoriesPendingPurchaseDataTable(serviceRequests, allAddData);
+                    return;
+                } catch (e) {
+                    console.error("❌ Error loading requestData:", e);
+                    return;
+                }
+            }
+             else if(pageName==='serviceAccessoriesPendingAlternativeData'){
+
+                    try {
+                           // ✅ Await all three fetches
+                           const [serviceRequests, allAddData] = await Promise.all([
+                               fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                               fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                           ]);
+
+                           // ✅ Now they are resolved JSON arrays, not promises
+                           window.initServiceAccessoriesPendingAlternativeDataTable(serviceRequests, allAddData);
+                           return;
+                       } catch (e) {
+                           console.error("❌ Error loading requestData:", e);
+                           return;
+                       }
+                    }
+             // work
+             else if (pageName === 'serviceAccessoriesDeliveryData') {
+
+                              try {
+                                    // ✅ Await all three fetches
+                                    const [serviceRequests, allAddData] = await Promise.all([
+                                        fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                        fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                    ]);
+
+                                    // ✅ Now they are resolved JSON arrays, not promises
+                                     window.initServiceAccessoriesDeliveryDataTable(serviceRequests, allAddData);
+                                    return;
+                                } catch (e) {
+                                    console.error("❌ Error loading requestData:", e);
+                                    return;
+                                }
+                         }
+
+                else if (pageName === 'requestData') {
+                             try {
+                                 // ✅ Await all three fetches
+                                 const [requestData, requestColumns, allAddData] = await Promise.all([
+                                     fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                 ]);
+
+                                 // ✅ Now they are resolved JSON arrays, not promises
+                                 window.initRequestDataTable(requestData, requestColumns, allAddData);
+                                 return;
+                             } catch (e) {
+                                 console.error("❌ Error loading requestData:", e);
+                                 return;
+                             }
+                         }
+
+
+
        fetch(url, {
               method: 'GET',
               headers: {
@@ -260,8 +495,7 @@ function loadByRange(pageNumber, pageSize) {
           })
         .then(response => response.text())
         .then(html => {
-        console.log(html);
-
+           // console.log(html);
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
 
@@ -336,3 +570,5 @@ function loadByRange(pageNumber, pageSize) {
             isLoading = false;
         });
 }
+
+

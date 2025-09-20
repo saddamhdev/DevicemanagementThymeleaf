@@ -14,12 +14,7 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
 
-                <div class="dropdown">
-                    <input type="text" style="width:20%" class="form-control dropdown-toggle custom-width" id="individualTopInput" data-bs-toggle="dropdown" placeholder="Category" aria-expanded="false" value="Category">
-                    <ul  class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownTextFieldTop" id="individualTopUlList">
-                        <li th:each="category : ${data}"><a class="dropdown-item individualTopSelection" href="#" th:text="${category.categoryName}"></a></li>
-                    </ul>
-                </div>
+
 
                 <!-- Toggle Content Button -->
                 <div class="d-flex justify-content-center mb-2">

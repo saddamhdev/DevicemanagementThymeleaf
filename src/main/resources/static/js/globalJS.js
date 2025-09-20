@@ -1488,3 +1488,26 @@ function handleLogout() {
 
   // let the browser continue redirect to "/"
 }
+
+// Generic method to call backend and return DB data
+async function fetchDataFromDB(url, token) {
+    try {
+        const response = await fetch(url, {   // ✅ must await here
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json(); // ✅ must await here too
+
+    } catch (error) {
+        console.error("❌ Error fetching DB data:", error);
+        throw error;
+    }
+}

@@ -78,9 +78,7 @@
 
                     <tbody id="unOrderedDeviceBody">
                     <tr th:each="device, iterStat : ${allDeviceData}"
-                        th:if="${device.userName == 'purchase' and
-                        device.unOrderedDevice != null and
-                        (device.unOrderedDevice?.unWantedSendDeviceToInventoryStatus == 'Pending' )}">
+                        th:if="${(device.unOrderedDevice?.unWantedSendDeviceToInventoryStatus == 'Pending' )}">
 
                         <td scope="row" th:text="${device.visibleId}">1</td>
                         <td th:text="${device.categoryName}">categoryName</td>

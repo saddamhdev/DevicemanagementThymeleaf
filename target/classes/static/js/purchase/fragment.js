@@ -1,4 +1,4 @@
-const pageSize = 10; // size per request
+const pageSize = 3; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -17,7 +17,7 @@ $(function () {
     });
 
 // Main function to load and initialize fragment
-function loadFragment(pageName) {
+async function loadFragment(pageName) {
 localStorage.setItem("pageSize",pageSize);// global
 
         pageNumber=0;
@@ -30,53 +30,138 @@ localStorage.setItem("pageSize",pageSize);// global
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("purchase")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-  const token = getAuthToken();
-          fetch(url, {
-                 method: 'GET',
-                 headers: {
-                     'Authorization': 'Bearer ' + token
-                 }
-             })
-            .then(response => response.text())
-            .then(html => {
-                container.innerHTML = html;
+        const token = getAuthToken();
+          if (!localStorage.getItem("firstPageSeen")) {
+                  console.log("🚀 First login detected -> loading analytic fragment");
+                const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("purchase")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-                // Page-specific initializers map
-                const fragmentInitializers = {
-                    requestData: [window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
-                    requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
-                    requestDataForPaymentExport: [window.initRequestDataDirectExportTable,window.initRequestDataForPaymentExportTable,window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
-                    servicePriceData: [window.initServicePriceDataTable,window.initServicePriceDataGeneral,window.initGlobalDivToggle],
-                    deviceInformation: [window.initDeviceInformationGeneral,window.initGlobalDivToggle],
-                    unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle],
-                    // Add more pageName: initFunction pairs as needed
-                };
-
-          const initFun = fragmentInitializers[pageName];
-                   if (Array.isArray(initFun)) {
-                       initFun.forEach(fn => {
-                           if (typeof fn === "function") {
-                               fn();
-                           }
-                       });
-                   } else if (typeof initFuncs === "function") {
-                       // For backward compatibility
-                       initFun();
+               fetch(analyticUrl, {
+                   method: "GET",
+                   headers: {
+                     "Content-Type": "application/json",
+                     "Authorization": "Bearer " + token
                    }
+                 })
+                   .then(response => {
+                     console.log("Response status:", response.status);
+                     return response.text();
+                   })
+                   .then(html => {
+                     console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
+                     container.innerHTML = html;
+                     localStorage.setItem("firstPageSeen", "true");
+                     console.log("Welcome page injected.");
+                   })
+                   .catch(error => {
+                     console.error("Error loading analytic fragment:", error);
+                     container.innerHTML = "<p>Error loading analytics.</p>";
+                   });
 
-                // Optional: general fragment initialization
-                if (typeof window.initFragment === "function") {
-                    window.initFragment(pageName);
+
+                  return; // stop here
                 }
-               // ✅ Add this line to bind the search input after fragment loads
-                       if (typeof window.setupGlobalFilter === "function") {
-                           window.setupGlobalFilter();
-                       }
-            })
-            .catch(error => {
-                console.error("Error loading fragment:", error);
-                container.innerHTML = "<p>Error loading content.</p>";
-            });
+        try {
+        const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                const html = await response.text();
+                container.innerHTML = html;
+           // Page-specific initializers map
+               const fragmentInitializers = {
+                   requestData: [window.initGlobalDivToggle],
+                   requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
+                   requestDataForPaymentExport: [window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
+                   servicePriceData: [window.initServicePriceDataGeneral,window.initGlobalDivToggle],
+                   deviceInformation: [window.initDeviceInformationGeneral,window.initGlobalDivToggle],
+                   unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle],
+                   // Add more pageName: initFunction pairs as needed
+               };
+
+         const initFun = fragmentInitializers[pageName];
+                  if (Array.isArray(initFun)) {
+                      initFun.forEach(fn => {
+                          if (typeof fn === "function") {
+                              fn();
+                          }
+                      });
+                  } else if (typeof initFuncs === "function") {
+                      // For backward compatibility
+                      initFun();
+                  }
+
+               // Optional: general fragment initialization
+               if (typeof window.initFragment === "function") {
+                   window.initFragment(pageName);
+               }
+              // ✅ Add this line to bind the search input after fragment loads
+                      if (typeof window.setupGlobalFilter === "function") {
+                          window.setupGlobalFilter();
+                      }
+
+
+                if(pageName==='requestData'){
+
+                   // ✅ Await all three fetches
+                   const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                       fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                       fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                       fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                       fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                   ]);
+
+                   // ✅ Now they are resolved JSON arrays, not promises
+                  // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                   window.initRequestDataPurchaseTable(serviceRequests, allAddData);
+                   window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                   return;
+
+          }
+          if(pageName==='requestDataForPaymentExport'){
+
+
+                 // ✅ Await all three fetches
+                 const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                     fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                     fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                     fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                     fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                 ]);
+
+                 // ✅ Now they are resolved JSON arrays, not promises
+                // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                 window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
+                 window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+                 return;
+
+
+           }
+
+            if(pageName==='servicePriceData'){
+
+                     // ✅ Await all three fetches
+                     const [serviceRequests, allAddData] = await Promise.all([
+                         fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                     ]);
+
+                     // ✅ Now they are resolved JSON arrays, not promises
+                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                     window.initServicePriceDataTable(serviceRequests, allAddData);
+
+                     return;
+
+            }
+
+         }catch (error) {
+            console.error("❌ Error loading fragment:", error);
+            container.innerHTML = "<p>Error loading content.</p>";
+          }
+
 
            // request data need
 
@@ -84,7 +169,7 @@ localStorage.setItem("pageSize",pageSize);// global
     }
 // Expose globally for use elsewhere (e.g., in nav click handlers)
 window.toggleListItem = loadFragment;
-window.toggleListItem = function (item, pageName) {
+window.toggleListItem = async function (item, pageName) {
 localStorage.setItem("pageSize",pageSize);// global
 
  pageNumber=0;
@@ -96,54 +181,107 @@ localStorage.setItem("pageSize",pageSize);// global
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("purchase")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-   const token = getAuthToken();
-           fetch(url, {
-                  method: 'GET',
-                  headers: {
-                      'Authorization': 'Bearer ' + token
-                  }
-              })
-          .then(response => response.text())
-          .then(html => {
-            container.innerHTML = html;
+         const token = getAuthToken();
+          try {
+                  const response = await fetch(url, {
+                              method: 'GET',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer ' + token
+                              }
+                          });
 
-            // Page-specific initializers map
-               const fragmentInitializers = {
-                     requestData: [window.initRequestDataPurchaseTable,window.initRequestDataGeneral,window.initGlobalDivToggle],
-                     requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
-                     requestDataForPaymentExport: [window.initRequestDataDirectExportTable,window.initRequestDataForPaymentExportTable,window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
-                     servicePriceData: [window.initServicePriceDataTable,window.initServicePriceDataGeneral,window.initGlobalDivToggle],
-                     deviceInformation: [window.initDeviceInformationGeneral,window.initGlobalDivToggle],
-                     unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle],
-                   // Add more pageName: initFunction pairs as needed
-               };
+                          const html = await response.text();
+                          container.innerHTML = html;
+                     // Page-specific initializers map
+                         const fragmentInitializers = {
+                             requestData: [window.initGlobalDivToggle],
+                             requestDataForPayment: [window.initRequestDataDirectExportTable,window.initRequestForPaymentTable,window.initRequestDataForPaymentGeneral,window.initGlobalDivToggle],
+                             requestDataForPaymentExport: [window.initRequestDataForPaymentExportGeneral,window.initGlobalDivToggle],
+                             servicePriceData: [window.initServicePriceDataGeneral,window.initGlobalDivToggle],
+                             deviceInformation: [window.initDeviceInformationGeneral,window.initGlobalDivToggle],
+                             unOrderedDevice: [window.initUnOrderedDeviceGeneral,window.initGlobalDivToggle],
+                             // Add more pageName: initFunction pairs as needed
+                         };
 
-          const initFun = fragmentInitializers[pageName];
-           if (Array.isArray(initFun)) {
-               initFun.forEach(fn => {
-                   if (typeof fn === "function") {
-                       fn();
-                   }
-               });
-           } else if (typeof initFuncs === "function") {
-               // For backward compatibility
-               initFun();
-           }
+                   const initFun = fragmentInitializers[pageName];
+                            if (Array.isArray(initFun)) {
+                                initFun.forEach(fn => {
+                                    if (typeof fn === "function") {
+                                        fn();
+                                    }
+                                });
+                            } else if (typeof initFuncs === "function") {
+                                // For backward compatibility
+                                initFun();
+                            }
 
-            // Optional: General fragment init
-            if (typeof window.initFragment === "function") {
-              window.initFragment(pageName);
-            }
-           // ✅ Add this line to bind the search input after fragment loads
-                   if (typeof window.setupGlobalFilter === "function") {
-                       window.setupGlobalFilter();
-                   }
+                         // Optional: general fragment initialization
+                         if (typeof window.initFragment === "function") {
+                             window.initFragment(pageName);
+                         }
+                        // ✅ Add this line to bind the search input after fragment loads
+                                if (typeof window.setupGlobalFilter === "function") {
+                                    window.setupGlobalFilter();
+                                }
 
-          })
-          .catch(error => {
-            console.error("Error loading fragment:", error);
-            container.innerHTML = "<p>Error loading content.</p>";
-          });
+
+                          if(pageName==='requestData'){
+
+                             // ✅ Await all three fetches
+                             const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                                 fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                             ]);
+
+                             // ✅ Now they are resolved JSON arrays, not promises
+                            // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                             window.initRequestDataPurchaseTable(serviceRequests, allAddData);
+                             window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                             return;
+
+                    }
+                    if(pageName==='requestDataForPaymentExport'){
+
+
+                           // ✅ Await all three fetches
+                           const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                               fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                               fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                               fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                               fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                           ]);
+
+                           // ✅ Now they are resolved JSON arrays, not promises
+                          // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                           window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
+                           window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+                           return;
+
+
+                     }
+                    if(pageName==='servicePriceData'){
+
+                              // ✅ Await all three fetches
+                              const [serviceRequests, allAddData] = await Promise.all([
+                                  fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                  fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                              ]);
+
+                              // ✅ Now they are resolved JSON arrays, not promises
+                             // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                              window.initServicePriceDataTable(serviceRequests, allAddData);
+
+                              return;
+
+                     }
+
+                   }catch (error) {
+                      console.error("❌ Error loading fragment:", error);
+                      container.innerHTML = "<p>Error loading content.</p>";
+                    }
 
     };
 
@@ -215,32 +353,81 @@ function loadMoreDevices(direction = "down") {
 }
 
 
-function loadByRange(pageNumber, pageSize) {
+async function loadByRange(pageNumber, pageSize) {
 
 
 
     const pageName = localStorage.getItem("lastActivePage");
 
-           if(pageName==='servicePriceData'){
-               window.initServicePriceDataTable();
-               return;
-            }
-            else if(pageName==='requestData'){
-            window.initRequestDataGeneral();
-             window.initRequestDataPurchaseTable();
 
-            return;
-            }
-            else if(pageName==='requestDataForPaymentExport'){
-              window.initRequestDataForPaymentExportTable();
-              window.initRequestDataDirectExportTable();
-              return;
-            }
     var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
        var departmentName = departmentElement.data("departmentname");//it
      const url = `/fragment1/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
- const token = getAuthToken();
+       const token = getAuthToken();
+        if(pageName==='servicePriceData'){
+                try {
+
+                      // ✅ Await all three fetches
+                      const [serviceRequests, allAddData] = await Promise.all([
+                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                      ]);
+
+                      // ✅ Now they are resolved JSON arrays, not promises
+                     // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                      window.initServicePriceDataTable(serviceRequests, allAddData);
+
+                      return;
+                  } catch (e) {
+                      console.error("❌ Error loading requestData:", e);
+                      return;
+                  }
+             }
+             else if(pageName==='requestData'){
+
+              try {
+
+                      // ✅ Await all three fetches
+                      const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                      ]);
+
+                      // ✅ Now they are resolved JSON arrays, not promises
+                     // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                      window.initRequestDataPurchaseTable(serviceRequests, allAddData);
+                      window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                      return;
+                  } catch (e) {
+                      console.error("❌ Error loading requestData:", e);
+                      return;
+                  }
+             }
+             else if(pageName==='requestDataForPaymentExport'){
+              try {
+
+               // ✅ Await all three fetches
+               const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                   fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                   fetchDataFromDB(`/requestData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                   fetchDataFromDB(`/requestColumns/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                   fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+               ]);
+
+               // ✅ Now they are resolved JSON arrays, not promises
+              // window.initRequestDataTable(requestData, requestColumns, allAddData);
+               window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
+               window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+               return;
+           } catch (e) {
+               console.error("❌ Error loading requestData:", e);
+               return;
+           }
+
+             }
          fetch(url, {
                 method: 'GET',
                 headers: {
@@ -249,6 +436,7 @@ function loadByRange(pageNumber, pageSize) {
             })
         .then(response => response.text())
         .then(html => {
+          console.log(html);
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
 
@@ -275,7 +463,7 @@ function loadByRange(pageNumber, pageSize) {
             // ✅ Remove extra old rows not present in new data and start with 'R'
             currentRows.forEach(row => {
                 const id = row.cells[0]?.textContent.trim();
-                if (id && id.startsWith('R') && !newIds.has(id)) {
+                if (id && !newIds.has(id)) {
                     row.remove();
                 }
             });

@@ -319,165 +319,135 @@ function columnValue(requestId, columnName, callback) {
                 }
             });
         }
+window.initDeliveryPurchaseDeviceGeneral = function (allData, requestColumns, allAddData) {
+    const tableBody = document.getElementById("deliveryDeviceTableBody");
+    if (!tableBody) {
+        console.error("Table body element with id 'deliveryDeviceTableBody' not found.");
+        return;
+    }
 
- window.initDeliveryPurchaseDeviceGeneral = function () {
-    // Perform a single AJAX call
-    $.ajax({
-        url: '/superAdmin/allData',
-        type: 'POST',
-        dataType: 'json',
-        headers: {
+    // Step 1: Capture current rows
+    const currentRows = Array.from(tableBody.querySelectorAll("tr"));
+    const currentRowMap = new Map();
+    currentRows.forEach(row => {
+        const key = Array.from(row.cells).map(cell => cell.textContent.trim()).join('|');
+        currentRowMap.set(key, row);
+    });
 
-                          'Authorization': 'Bearer ' + getAuthToken()
-                      },
-        success: function(data) {
-            var allData = data['requestData'];
-            var requestColumns = data['requestColumns'];
-            var allAddData = data['allAddData'];
-            const tableBody = document.getElementById("deliveryDeviceTableBody");
+    const newRowKeys = new Set();
 
-            // Function to check availability count
-            function getAvailability(categoryName) {
-                let count = 0;
-                allAddData.forEach(function(device) {
+    // Helper: Check availability
+    function getAvailability(categoryName) {
+        let count = 0;
+        allAddData.forEach(device => {
+            if (device.categoryName === categoryName && device.userName === 'inventory') {
+                count++;
+            }
+        });
+        return count === 0 ? "Unavailable" : `Available(${count})`;
+    }
 
-                    if (device.categoryName === categoryName && device.userName==='inventory') {
-                        count++;
-                    }
-                });
-                return count === 0 ? "Unavailable" : `Available(${count})`;
+    // Step 2: Add or update rows
+    allData.forEach(device => {
+        if (device.inventory?.inventoryStatus === 'Purchased' &&
+            device.inventory?.inventoryToCustomerCareDeviceSendingStatus === 'Pending') {
+
+            const bivagName = device.departmentName || "N/A";
+            const categoryName = device.allData["category"] || "N/A";
+            const sn = device.visibleRequestId || "N/A";
+
+            let content = '';
+            if (device.inventory?.inventoryStatus === "Purchased") {
+                content = device.inventory?.inventoryToCustomerCareDeviceSendingStatus || ' ';
+            } else if (device.inventory?.inventoryStatus === "Alternative Proposal Accepted") {
+                content = device.inventory?.cooDeliveryAns || ' ';
             }
 
-           let counter = 1; // Initialize a counter variable
+            const availability = getAvailability(categoryName);
 
-           // Loop through each device in allData
-          allData.forEach(function (device) {
-          if(device.inventory?.inventoryStatus==='Purchased' && device.inventory?.inventoryToCustomerCareDeviceSendingStatus==='Pending' ){
+            // Unique row key
+            const rowKey = [sn, bivagName, categoryName, content, availability].join('|');
+            newRowKeys.add(rowKey);
+            if (currentRowMap.has(rowKey)) return; // already present
 
-              // Extract required variables
-              const bivagName = device.departmentName || "N/A"; // Handle undefined cases
-              const categoryName = device.allData["category"] || "N/A";
-              const sn = device.visibleRequestId || "N/A";
-              console.log(bivagName);
-                 let content = '';
+            const row = document.createElement("tr");
+            row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
 
-                  if (device.inventory?.inventoryStatus === "Purchased") {
-                      content = device.inventory?.inventoryToCustomerCareDeviceSendingStatus || ' ';
-                  } else if (device.inventory?.inventoryStatus === "Alternative Proposal Accepted") {
-                      content = device.inventory?.cooDeliveryAns || ' ';
-                  } else {
-                      content = ' ';
-                  }
-             const availability = getAvailability(categoryName);
-              // Create a new row
-              const row = document.createElement("tr");
-                // Add the onclick attribute dynamically
-                row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
-              // Base table row HTML
-              let htmlData = `
-                  <td>${sn}</td>  <!-- Serial Number -->
-                  <td>${bivagName}</td>
-                  <td>${device.allData["category"] || "N/A"}</td>
-              `;
+            let htmlData = `
+                <td>${sn}</td>
+                <td>${bivagName}</td>
+                <td>${categoryName}</td>
+                <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
+                    <div>
+            `;
 
-              // Conditional cell for request information
-              htmlData += `
-                  <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
-                      <div th:if="${device.requestMode === 'Accepted' && device.inventory?.inventoryStatus === 'Purchased'}">
-              `;
+            requestColumns.forEach(column => {
+                if (column.visibleType === "yes") {
+                    const columnName = column.columnName || "N/A";
+                    const columnType = column.dataType || "text";
+                    const value = device.allData[columnName] || "N/A";
+                    htmlData += columnType === "textarea"
+                        ? `<div><textarea class="plain-textarea">${value}</textarea></div>`
+                        : `<div><span>${columnName}</span>: <span>${value}</span></div>`;
+                }
+            });
 
-              // Loop through request columns to add additional data
-              requestColumns.forEach(function (column) {
-                  if (column.visibleType === "yes") {
-                      const columnName = column.columnName || "N/A";
-                      const columnType = column.dataType || "text";
-                      const value = device.allData[columnName] || "N/A";
-
-                      if (columnType === "textarea") {
-                          // Add textarea for columns with 'textarea' data type
-                          htmlData += `
-                              <div>
-                                  <textarea class="plain-textarea">${value}</textarea>
-                              </div>
-                          `;
-                      } else {
-                          // Add spans for other data types
-                          htmlData += `
-                              <div>
-                                  <span>${columnName}</span>: <span>${value}</span>
-                              </div>
-                          `;
-                      }
-                  }
-              });
-
-              // Close the div in the dynamic cell
-              htmlData += `
-                      </div>
-                      <p  data-request-id="${device.id}" data-button-id="viewInfo">
-                          &#128065;
-                      </p>
-                  </td>
-              `;
-
-              // Add other inventory data
-              htmlData += `
-                  <td>${device.inventory?.deliveryMode || "Not Delivered"}</td>
-                  <td>${device.inventory?.inventoryStatus || "N/A"}</td>
-              `;
-
-          // Add new cells for `cooDeliveryAns` and `checkAvailability`
-              htmlData += `
+            htmlData += `
+                    </div>
+                    <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
+                </td>
+                <td>${device.inventory?.deliveryMode || "Not Delivered"}</td>
+                <td>${device.inventory?.inventoryStatus || "N/A"}</td>
                 <td>${device.inventory?.cooDeliveryAns || 'Pending'}</td>
-                  <td>${device.inventory?.inventoryToCustomerCareDeviceSendingStatus || 'Pending'}</td>
-                  <td>
-                      <button class="btn btn-info btn-sm viewAvailability" data-category-id="${categoryName}" data-request-id="${device.id}" data-button-id="viewAlternative" title="View Available Same Accessories Category Devices" >
-                          ${availability}
-                      </button>
-                  </td>
-                   <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
-                    <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
+                <td>${device.inventory?.inventoryToCustomerCareDeviceSendingStatus || 'Pending'}</td>
+                <td>
+                    <button class="btn btn-info btn-sm viewAvailability"
+                        data-category-id="${categoryName}"
+                        data-request-id="${device.id}"
+                        data-button-id="viewAlternative"
+                        title="View Available Same Accessories Category Devices">
+                        ${availability}
+                    </button>
+                </td>
+                <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
+                <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status"
+                    data-request-id="${device.id}"
+                    style="background-color:#007bff;color:#fff;text-align:center;padding:10px;border-radius:5px;cursor:pointer;font-weight:500;font-size:14px;"
+                    onmouseover="this.style.backgroundColor='#0056b3'"
+                    onmouseout="this.style.backgroundColor='#007bff'"
+                    title="View Request data tracking information">View</td>
+                <td>
+                    <div class="d-flex justify-content-center align-items-center action-button-container">
+                        ${device.inventory?.inventoryToCustomerCareDeviceSendingStatus === "Pending" ? `
+                        <button class="btn btn-primary btn-sm text-white approveDeliveryDevice"
+                            data-category-id="${device.allData['category']}"
+                            data-buyingdevice-id="${device.inventory.acceptedId}"
+                            data-request-id="${device.id}"
+                            data-button-id="deliver"
+                            title="Approve device delivery">✔</button>` : ""}
+                    </div>
+                </td>
+            `;
 
-              `;
+            row.innerHTML = htmlData;
+            tableBody.appendChild(row);
+        }
+    });
 
-            // Action buttons column
-                htmlData += `
-                    <td>
-                        <div class="d-flex justify-content-center align-items-center action-button-container">
+    // Step 3: Remove outdated rows
+    currentRowMap.forEach((row, key) => {
+        if (!newRowKeys.has(key)) {
+            row.remove();
+        }
+    });
 
-
-                             ${ device.inventory?.inventoryToCustomerCareDeviceSendingStatus === "Pending" ? `
-                               <button class="btn btn-primary btn-sm text-white fas  approveDeliveryDevice"  data-category-id="${device.allData['category']}" data-alternativedevice-id="${device.inventory.acceptedId}" data-request-id="${device.id}" data-button-id="deliver" title="Approve device delivery">
-                                  ✔
-                               </button>
-                             ` : ""}
-
-
-                        </div>
-                    </td>
-                `;
-
-              // Assign the HTML to the row and append it to the table body
-              row.innerHTML = htmlData;
-              tableBody.appendChild(row);
-            }
-          }
-          );
-          $(document).on('click', '.approveDeliveryDevice', function() {
-              var requestId = $(this).data('request-id');
-              var deviceId = $(this).data('buyingdevice-id');
-              var category = $(this).data('category-id');
-
-              // Add confirmation
-              if (confirm("Are you sure you want to approve delivery for this device?")) {
-                  approveFinalPurchaseDeviceDelivery(requestId, deviceId);
-              }
-          });
-
-
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
+    // Step 4: Attach action listener
+    $(document).off('click', '.approveDeliveryDevice').on('click', '.approveDeliveryDevice', function () {
+        const requestId = $(this).data('request-id');
+        const deviceId = $(this).data('buyingdevice-id');
+        if (confirm("Are you sure you want to approve delivery for this device?")) {
+            approveFinalPurchaseDeviceDelivery(requestId, deviceId);
         }
     });
 };
+

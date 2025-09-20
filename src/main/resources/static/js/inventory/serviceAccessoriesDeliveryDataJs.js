@@ -63,7 +63,7 @@ function addTableInformationOfService1() {
         });
 
 
-window.initServiceAccessoriesDeliveryDataTable = function () {
+window.initServiceAccessoriesDeliveryDataTable = function (allData, allAddData) {
     const tableBody = document.getElementById("serviceAccessoriesDeliveryDataTableBody");
     if (!tableBody) {
         console.error("Table body not found.");
@@ -90,21 +90,8 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
         currentRowMap.set(key, row);
     });
 
-    $.ajax({
-        url: '/superAdmin/allDataRange',
-        type: 'POST',
-        dataType: 'json',
-         data: {
-                                page: pageNumber,
-                                size: localStorage.getItem("pageSize") || 0
-                            },
-         headers: {
-                               'Content-Type': 'application/json',
-                              'Authorization': 'Bearer ' + getAuthToken()
-                          },
-        success: function (data) {
-            const allData = data['serviceRequests'];
-            const allAddData = data['allAddData'];
+          console.log(allData);
+
             const newRowKeys = new Set();
 
             function getAvailability(categoryName) {
@@ -135,7 +122,7 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
                         const isActionAccept = solution.action === 'accept';
                         const isStatusValid = ['Pending', 'Accepted'].includes(solution.inventoryToServiceCenterDeviceStatus);
 
-                        if (!(isAccepted && isActionAccept && isStatusValid)) return;
+                        if (! isStatusValid) return;
 
                         const availability = getAvailability(solution.category);
                         const rowKey = generateRowKeyFromData(sn, bivagName, categoryName, problem.name, solution, time);
@@ -440,9 +427,6 @@ window.initServiceAccessoriesDeliveryDataTable = function () {
                       });
 
 
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching data:', error);
-        }
-    });
+
 };
+

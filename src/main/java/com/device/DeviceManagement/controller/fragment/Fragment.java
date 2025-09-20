@@ -5,6 +5,10 @@ import com.device.DeviceManagement.model.*;
 import com.device.DeviceManagement.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,7 +81,7 @@ public class Fragment {
     private UserService userService;
     @Autowired
     private InternalUserService internalUserService;
-    @GetMapping("/fragment1299/{pageName}")
+   /* @GetMapping("/fragment1299/{pageName}")
     public String loadFragment12(@PathVariable String pageName,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size,
@@ -172,6 +176,142 @@ public class Fragment {
         model.addAttribute("inputTypes", inputTypes);
 
         return folderName+"/" + pageName + " :: " + pageName;
+    }*/
+   @GetMapping("/requestData/{pageName}")
+   public ResponseEntity<List<RequestData>> requestData(
+           @PathVariable String pageName,
+           @RequestParam(defaultValue = "0") int page,
+           @RequestParam(defaultValue = "1") int size,
+           @RequestParam(name = "folder", required = false) String folderName,
+           @RequestParam String departmentName,
+           Model model) {
+
+       if(folderName.equals("purchase")){
+           if(pageName.equals("requestData")){
+               Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
+
+               Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventory("1","Purchased",pageable);
+
+               List<RequestData> requestData=requestDataData.getContent();
+              // System.out.println(size+" "+requestData.size());
+              // requestData.forEach(System.out::println);
+               return ResponseEntity.ok(requestData);
+           }
+           if(pageName.equals("requestDataForPaymentExport")){
+               Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
+
+               Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchase("1","Accepted",pageable);
+
+               List<RequestData> requestData=requestDataData.getContent();
+               // System.out.println(size+" "+requestData.size());
+               // requestData.forEach(System.out::println);
+               return ResponseEntity.ok(requestData);
+           }
+       }
+       if(folderName.equals("superAdmin")) {
+
+           if (pageName.equals("purchaseRequestData")) {
+               Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
+               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
+
+               Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchaseForSuperAdmin("1","Purchased",null,pageable);
+
+               List<RequestData> requestData=requestDataData.getContent();
+               // System.out.println(size+" "+requestData.size());
+               // requestData.forEach(System.out::println);
+               return ResponseEntity.ok(requestData);
+           }
+       }
+     //  System.out.println(folderName+" "+pageName);
+      // Page<AddData> result = addDataService.getPagedAddData(page, size, folderName,departmentName, pageName);
+       Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
+       List<RequestData> requestData=requestDataData.getContent();
+       // System.out.println(size+" "+requestData.size());
+        //requestData.forEach(System.out::println);
+       return ResponseEntity.ok(requestData);
+   }
+    @GetMapping("/requestColumns/{pageName}")
+    public ResponseEntity<List<RequestColumn>> requestColumns(
+            @PathVariable String pageName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size,
+            @RequestParam(name = "folder", required = false) String folderName,
+            @RequestParam String departmentName,
+            Model model) {
+
+        List<RequestColumn> requestColumns = requestColumnService.add();
+        return ResponseEntity.ok(requestColumns);
+    }
+    @GetMapping("/allAddData/{pageName}")
+    public ResponseEntity<List<AddData>> allAddData(
+            @PathVariable String pageName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size,
+            @RequestParam(name = "folder", required = false) String folderName,
+            @RequestParam String departmentName,
+            Model model) {
+
+        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,folderName,departmentName,pageName);
+        List<AddData> allDeviceData = pagedAddData.getContent();
+        return ResponseEntity.ok(allDeviceData);
+    }
+    @GetMapping("/serviceRequests/{pageName}")
+    public ResponseEntity<List<ServiceRequest>> serviceRequests(
+            @PathVariable String pageName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size,
+            @RequestParam(name = "folder", required = false) String folderName,
+            @RequestParam String departmentName,
+            Model model) {
+
+        if(folderName.equals("purchase")){
+
+            if(pageName.equals("requestData")){
+
+                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+                Page<ServiceRequest> requestDataData=serviceRequestRepository.findByStatusAndAccessoriesPurchaseRequestStatus("1","Purchased",pageable);
+                List<ServiceRequest> requestData=requestDataData.getContent();
+                //System.out.println(size+" "+requestData.size());
+                //requestData.forEach(System.out::println);
+                return ResponseEntity.ok(requestData);
+            }
+            if(pageName.equals("requestDataForPaymentExport")){
+
+                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+                Page<ServiceRequest> requestDataData=serviceRequestRepository.findByStatusAndPurchaseProposalToCooAns("1","Accepted",pageable);
+                List<ServiceRequest> requestData=requestDataData.getContent();
+                //System.out.println(size+" "+requestData.size());
+                //requestData.forEach(System.out::println);
+                return ResponseEntity.ok(requestData);
+            }
+        }
+
+        if(folderName.equals("superAdmin")) {
+
+            if (pageName.equals("purchaseRequestData")) {
+
+                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+                Page<ServiceRequest> requestDataData = serviceRequestRepository.findByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending","Accepted"), pageable);
+                List<ServiceRequest> requestData = requestDataData.getContent();
+                System.out.println(size+" "+requestData.size());
+                requestData.forEach(System.out::println);
+                return ResponseEntity.ok(requestData);
+            }
+        }
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
+        List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
+        return ResponseEntity.ok(serviceRequests);
     }
     @GetMapping("/fragment1/{pageName}")
     public String loadFragment1(@PathVariable String pageName,
@@ -186,17 +326,23 @@ public class Fragment {
             internalUsers = internalUserService.add(folderName,departmentName);
             // ✅ Special case: analytic page
             if ("analyticFragment".equals(pageName)) {
-                model.addAttribute("userCount", 4);
-                model.addAttribute("deviceCount", 8);
-                model.addAttribute("servicingCount", 8);
-                model.addAttribute("requestCount", 10);
+                model.addAttribute("userCount", branchUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+                model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
+                model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
+                model.addAttribute("requestCount", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
                 return folderName + "/" + pageName + " :: " + pageName;
             }
         } else {
             model.addAttribute("departmentName", departmentName);
             internalUsers = internalUserService.add(folderName,departmentName);
         }
-
+        if ("analyticFragment".equals(pageName)) {
+            model.addAttribute("userCount", branchUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
+            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
+            model.addAttribute("requestCount", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
+            return folderName + "/" + pageName + " :: " + pageName;
+        }
 
         // Load only required data for this page (optimize later as needed)
         List<Column> universalColumns = universalColumnsService.Universal();
@@ -204,20 +350,30 @@ public class Fragment {
 
         // ✅ Pagination logic for AddData (main scrollable content)
 
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,departmentName);
+        Page<AddData> pagedAddData =
+                addDataService.getPagedAddData(page, size, folderName, departmentName, pageName);
+
         List<AddData> allDeviceData = pagedAddData.getContent();
-        System.out.println(departmentName +" "+allDeviceData.size()+" "+size);
+
+        System.out.println(
+                departmentName + " content=" + allDeviceData.size() +
+                        " pageSize=" + size +
+                        " pageNumber=" + page +
+                        " totalElements=" + pagedAddData.getTotalElements() +
+                        " totalPages=" + pagedAddData.getTotalPages()
+        );
+        //allDeviceData.forEach(System.out::println);
         // ✅ Correct lastPage calculation
         model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
         model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
 
         // Optional debug log
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
+        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
         model.addAttribute("lastPage"+pageName, serviceRequestsData.isLast());
         model.addAttribute("totalPage"+pageName, serviceRequestsData.getTotalPages());
-
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
+         //System.out.println("Page "+pageName);
+        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
         List<RequestData> requestData=requestDataData.getContent();
         model.addAttribute("lastPage"+pageName, requestDataData.isLast());
         model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
@@ -249,7 +405,7 @@ public class Fragment {
         return folderName + "/" + pageName + " :: " + pageName;
     }
 
-    @GetMapping("/fragment99/{pageName}")
+   /* @GetMapping("/fragment99/{pageName}")
     public String loadFragment(@PathVariable String pageName,
                                @RequestParam(name = "folder", required = false) String folderName,
                                @RequestParam String departmentName,
@@ -301,7 +457,7 @@ public class Fragment {
 
         model.addAttribute("inputTypes", inputTypes);
         return folderName+"/" + pageName + " :: " + pageName;
-    }
+    }*/
     @GetMapping("/clearCache")
     public  String clearCache(){
         categoriesService.clearCategoriesCache();

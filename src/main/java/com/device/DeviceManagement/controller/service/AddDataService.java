@@ -21,10 +21,41 @@ public class AddDataService {
     @Autowired
     private AddDataRepository addDataRepository;
     // Check cache first, if not found, load from DB and cache it
-    @Cacheable(value = "AddDataService", key = "#page + '-' + #size")
-    public Page<AddData> getPagedAddData(int page, int size , String userName) {
+    @Cacheable(value = "AddDataService", key = "#folderName + '-' + #pageName + '-' + #page + '-' + #size")
+    public Page<AddData> getPagedAddData(int page, int size , String folderName, String userName,String pageName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        System.out.println(userName);
+        //System.out.println(userName);
+        if(folderName.equals("superAdmin")){
+            if(pageName.equals("unOrderedDevice")){
+                System.out.println(userName+" "+pageName);
+                return addDataRepository.findByStatusAndUnOrderedDeviceListForPurchase("1",
+                        List.of("UnOrdered","Ordered"),
+                        pageable
+                );
+            }
+            return addDataRepository.findByStatus("1",pageable);
+        }
+        if(folderName.equals("inventory")){
+            if(pageName.equals("unOrderedDevice")){
+                System.out.println(userName+" "+pageName);
+                return addDataRepository.findByStatusAndUnOrderedDeviceStatus("1","Pending",pageable);
+            }
+
+
+        }
+        if(folderName.equals("purchase")){
+            if(pageName.equals("unOrderedDevice")){
+                System.out.println(userName+" "+pageName);
+                return addDataRepository.findByStatusAndUnOrderedDeviceListForPurchase("1",
+                        List.of("UnOrdered","Ordered"),
+                        pageable
+                );
+            }
+
+
+        }
+        System.out.println(userName+" "+pageName);
+
         return addDataRepository.findByStatusAndUserName("1",userName ,pageable);
     }
 

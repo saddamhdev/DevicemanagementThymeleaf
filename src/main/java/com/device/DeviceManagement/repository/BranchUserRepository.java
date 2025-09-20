@@ -16,4 +16,6 @@ public interface BranchUserRepository extends MongoRepository<BranchUser, String
     BranchUser findByBranchNameAndUserNameAndStatus(String dept, String userName, String status);
 
     boolean existsByBranchNameAndUserIdAndStatus(String branchName,String userId,String status);
+    long countByStatus(String status);
+    long countByBranchNameAndStatus(String branchName, String status);
 }

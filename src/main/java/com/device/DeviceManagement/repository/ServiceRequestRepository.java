@@ -14,9 +14,100 @@ import java.util.Optional;
 public interface ServiceRequestRepository extends MongoRepository<ServiceRequest, String> {
     List<ServiceRequest> findByStatus(String status);
     Page<ServiceRequest> findByStatus(String status, Pageable pageable);
+
+    Page<ServiceRequest> findByStatusAndServiceReportStatus(String status,String reportStatus, Pageable pageable);
+    Page<ServiceRequest> findByStatusAndServiceCenterToInventorySendDeviceRequestTimeNotNull(String status, Pageable pageable);
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndAccessoriesRequestStatus(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.deviceManageType': ?1 }")
+    Page<ServiceRequest> findByStatusAndAccessoriesPurchaseRequestStatus(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.purchaseProposalToCooAns': ?1 }")
+    Page<ServiceRequest> findByStatusAndPurchaseProposalToCooAns(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.purchaseProposalToCooAns': { $in: ?1 } }")
+    Page<ServiceRequest> findByStatusAndPurchaseProposalToCooAnsEmptyCheck(
+            String rootStatus,
+            List<String> cooStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndAccessoriesAlternativeRequestStatus(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndAccessoriesList(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.cooManInfoOfPriceAcceptanceCommentStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndCOOFeedBackList(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndServiceCenterToInventoryAccessoriesRequestStatusListNot(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, " +
+            " 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': { $ne: ?1 }, " +
+            " 'allProblem.proposalSolution.inventoryForPurchaseRequestStatus': { $ne: ?2 } }")
+    Page<ServiceRequest> findByStatusAndProposalSolutionConditionsForPurchase(
+            String rootStatus,
+            String notEqualDeviceStatus,   // e.g. "Accepted"
+            String notEqualPurchaseStatus, // e.g. null
+            Pageable pageable
+    );
+
+    @Query("{ 'status': ?0, " +
+            " 'allProblem.proposalSolution.name': { $ne: ?1 } }")
+    Page<ServiceRequest> findByStatusAndPriceSettingFromPurchase(
+            String rootStatus,
+            String notEqualNull, // e.g. null
+            Pageable pageable
+    );
+
+
+    Page<ServiceRequest> findByStatusInAndCustomerCareSendDeviceToServiceStatusInAndCustomerCareReceiveDeviceFromServiceStatusNot(
+            String rootStatuses,
+            List<String> careStatuses,
+            String notReceived,
+            Pageable pageable
+    );
+    Page<ServiceRequest> findByStatusInAndCustomerCareSendDeviceToServiceStatusIn(
+            String rootStatuses,
+            List<String> careStatuses,
+            Pageable pageable
+    );
+
     Page<ServiceRequest> findByStatusAndDepartmentName(String status,String userName, Pageable pageable);
     ServiceRequest findByIdAndStatus(String id, String status);
     // Query to find a single record by id and status
     @Query("{ 'id': ?0, 'status': ?1 }")
     Optional<ServiceRequest> findDevicesIDS(String id, String status);
+
+
+    long countByStatusAndDepartmentName(String status,String deptName);
 }

@@ -306,7 +306,7 @@ public class Service {
         // have to change service device owner info
 
 
-
+        System.out.println(status);
         Optional<ServiceRequest> optionalRequestData = serviceRequestRepository.findDevicesIDS(serviceId, "1");
 
         if (optionalRequestData.isPresent()) {
@@ -919,6 +919,7 @@ public class Service {
             if (optionalRequestData.isPresent()) {
                 ServiceRequest requestData = optionalRequestData.get();
                 requestData.setServiceCenterToInventorySendDeviceRequestTime(getCurrentLocalDateTime());
+
                 // Iterate through each problem in the service request
                 requestData.getAllProblem().forEach(problem -> {
                     if (problem.getName().equals(solutionName)) {

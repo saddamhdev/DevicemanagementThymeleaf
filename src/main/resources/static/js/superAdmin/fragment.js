@@ -1,5 +1,5 @@
 
-const pageSize = 10; // size per request
+const pageSize = 3; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -18,7 +18,7 @@ $(function () {
     });
 
 // Main function to load and initialize fragment
-function loadFragment(pageName) {
+async function loadFragment(pageName) {
 localStorage.setItem("pageSize",pageSize);// global
  pageNumber=0;
 
@@ -31,21 +31,268 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
         container.innerHTML = "<p>Loading...</p>";
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
-const token = getAuthToken();
-        fetch(url, {
-               method: 'GET',
-               headers: {
-                    'Content-Type': 'application/json',
-                   'Authorization': 'Bearer ' + token
-               }
-           })
-            .then(response => response.text())
-            .then(html => {
-                container.innerHTML = html;
+     const token = getAuthToken();
 
-               const fragmentInitializers = {
+     if (!localStorage.getItem("firstPageSeen")) {
+          console.log("🚀 First login detected -> loading analytic fragment");
+        const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+       fetch(analyticUrl, {
+           method: "GET",
+           headers: {
+             "Content-Type": "application/json",
+             "Authorization": "Bearer " + token
+           }
+         })
+           .then(response => {
+             console.log("Response status:", response.status);
+             return response.text();
+           })
+           .then(html => {
+             console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
+             container.innerHTML = html;
+             localStorage.setItem("firstPageSeen", "true");
+             console.log("Welcome page injected.");
+           })
+           .catch(error => {
+             console.error("Error loading analytic fragment:", error);
+             container.innerHTML = "<p>Error loading analytics.</p>";
+           });
+
+
+          return; // stop here
+        }
+         try {
+                  const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + token
+                        }
+                    });
+
+                    const html = await response.text();
+                    container.innerHTML = html;
+                  const fragmentInitializers = {
+                           serviceProposalData: [
+
+                               window.initServiceProposalGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           requestDataForPayment: [
+                               window.initRequestForPaymentTable,
+                               window.initRequestForPaymentGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           purchaseRequestData: [
+
+                               window.initRequestPurchaseDataGeneral,
+                               window.initGlobalDivToggle
+
+                           ],
+                           listRequestData: [
+
+                               window.initListRequestInventoryGeneral,
+                               window.initGlobalDivToggle
+
+                           ],
+                           Category: [
+                               window.initAddCategoryGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           AddUser: [
+                               window.initAddUserGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           CustomerCareRequestData: [
+                               window.initCustomerCareRequestDataGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           deliveryPurchaseDevice: [
+
+                               window.initGlobalDivToggle
+                           ],
+                           Designation: [
+                               window.initAddDesignationGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           deviceInformation: [
+                               window.initDeviceInformationGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           // deviceList: [window.initDeviceTable], // Uncomment and add if needed
+                           dropdownList: [
+                               window.initDropDownListGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           individualColumn: [
+                               window.initAddIndividualColumnGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           internalUser: [
+                               window.initInternalUserGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           purchaseDevice: [
+                               window.initPurchaseDeviceGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           requestColumn: [
+                               window.initRequestColumnGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           requestData: [
+                               window.initRequestDataGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           serviceReportData: [
+                               window.initServiceReportDataGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           serviceRequest: [
+                               window.initDeviceTable,
+                               window.initGlobalDivToggle,
+                               window.initServiceProposalGeneral,
+                           ],
+                           universalColumn: [
+                               window.initAddUniversalColumnGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                           unOrderedDevice: [
+                               window.initUnOrderedDeviceGeneral,
+                               window.initGlobalDivToggle
+                           ],
+                            deviceList: [
+                                    window.initDeviceInformationGeneral,
+                                    window.initGlobalDivToggle
+                                 ],
+                           // Add more pageName: [function1, function2, window.initGlobalDivToggle] pairs as needed
+                       };
+
+                    const initFun = fragmentInitializers[pageName];
+                     if (Array.isArray(initFun)) {
+                         initFun.forEach(fn => {
+                             if (typeof fn === "function") {
+                                 fn();
+                             }
+                         });
+                     } else if (typeof initFuncs === "function") {
+                         // For backward compatibility
+                         initFun();
+                     }
+
+
+                      // Optional: General fragment init
+                      if (typeof window.initFragment === "function") {
+                        window.initFragment(pageName);
+                      }
+                     // ✅ Add this line to bind the search input after fragment loads
+                             if (typeof window.setupGlobalFilter === "function") {
+                                 window.setupGlobalFilter();
+                             }
+                       if(pageName==='serviceProposalData'){
+
+                           // ✅ Await all three fetches
+                           const [serviceRequests, allAddData] = await Promise.all([
+                               fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                               fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                           ]);
+
+                           // ✅ Now they are resolved JSON arrays, not promises
+                          // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                           window.window.initServiceProposalTable(serviceRequests, allAddData);
+
+                           return;
+
+                     }
+                    if(pageName==='purchaseRequestData'){
+
+                             // ✅ Await all three fetches
+                             const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                                 fetchDataFromDB(`/serviceRequests/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                 fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                             ]);
+
+                             // ✅ Now they are resolved JSON arrays, not promises
+                            // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                             window.initRequestPurchaseDataTable(serviceRequests, allAddData);
+                             window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
+
+
+                             return;
+
+                    }
+                    if(pageName==='listRequestData'){
+
+                     // ✅ Await all three fetches
+                     const [requestData, requestColumns, allAddData] = await Promise.all([
+                         fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                     ]);
+
+                     // ✅ Now they are resolved JSON arrays, not promises
+                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                     window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
+
+                     return;
+
+                  }
+                  if(pageName==='deliveryPurchaseDevice'){
+
+                       // ✅ Await all three fetches
+                       const [requestData, requestColumns, allAddData] = await Promise.all([
+                           fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                           fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                           fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                       ]);
+
+                       // ✅ Now they are resolved JSON arrays, not promises
+                      // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                       window.initDeliveryPurchaseDeviceGeneral(requestData, requestColumns, allAddData);
+
+                       return;
+
+                    }
+
+                  }catch (error)
+                  {
+                   console.error("❌ Error loading fragment:", error);
+                   container.innerHTML = "<p>Error loading content.</p>";
+                 }
+    }
+// Expose globally for use elsewhere (e.g., in nav click handlers)
+window.toggleListItem = loadFragment;
+window.toggleListItem = async function (item, pageName) {
+localStorage.setItem("pageSize",pageSize);// global
+ pageNumber=0;
+var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
+        var departmentName = departmentElement.data("departmentname");//it
+        localStorage.setItem("lastActivePage", pageName);
+
+        const container = document.getElementById("fragmentContainer");
+        container.innerHTML = "<p>Loading...</p>";
+        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+const token = getAuthToken();
+          try {
+          const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+
+            const html = await response.text();
+            container.innerHTML = html;
+          const fragmentInitializers = {
                    serviceProposalData: [
-                       window.initServiceProposalTable,
+
                        window.initServiceProposalGeneral,
                        window.initGlobalDivToggle
                    ],
@@ -55,16 +302,15 @@ const token = getAuthToken();
                        window.initGlobalDivToggle
                    ],
                    purchaseRequestData: [
-                       window.initRequestPurchaseDataTable,
+
                        window.initRequestPurchaseDataGeneral,
-                       window.initGlobalDivToggle,
-                       window.initRequestDataDirectTable
+                       window.initGlobalDivToggle
                    ],
                    listRequestData: [
-                       window.initListRequestInventoryTable,
+
                        window.initListRequestInventoryGeneral,
-                       window.initGlobalDivToggle,
-                       window.initListRequestInventoryTable
+                       window.initGlobalDivToggle
+
                    ],
                    Category: [
                        window.initAddCategoryGeneral,
@@ -79,7 +325,7 @@ const token = getAuthToken();
                        window.initGlobalDivToggle
                    ],
                    deliveryPurchaseDevice: [
-                       window.initDeliveryPurchaseDeviceGeneral,
+
                        window.initGlobalDivToggle
                    ],
                    Designation: [
@@ -132,189 +378,110 @@ const token = getAuthToken();
                        window.initUnOrderedDeviceGeneral,
                        window.initGlobalDivToggle
                    ],
-                  deviceList: [
-                             window.initDeviceInformationGeneral,
-                             window.initGlobalDivToggle
-                          ],
+                    deviceList: [
+                            window.initDeviceInformationGeneral,
+                            window.initGlobalDivToggle
+                         ],
                    // Add more pageName: [function1, function2, window.initGlobalDivToggle] pairs as needed
                };
 
+            const initFun = fragmentInitializers[pageName];
+             if (Array.isArray(initFun)) {
+                 initFun.forEach(fn => {
+                     if (typeof fn === "function") {
+                         fn();
+                     }
+                 });
+             } else if (typeof initFuncs === "function") {
+                 // For backward compatibility
+                 initFun();
+             }
 
-                const initFun = fragmentInitializers[pageName];
-                 if (Array.isArray(initFun)) {
-                     initFun.forEach(fn => {
-                         if (typeof fn === "function") {
-                             fn();
-                         }
-                     });
-                 } else if (typeof initFuncs === "function") {
-                     // For backward compatibility
-                     initFun();
-                 }
 
+              // Optional: General fragment init
+              if (typeof window.initFragment === "function") {
+                window.initFragment(pageName);
+              }
+             // ✅ Add this line to bind the search input after fragment loads
+                     if (typeof window.setupGlobalFilter === "function") {
+                         window.setupGlobalFilter();
+                     }
+             if(pageName==='serviceProposalData'){
 
-                // Optional: general fragment initialization
-                if (typeof window.initFragment === "function") {
-                    window.initFragment(pageName);
+                         // ✅ Await all three fetches
+                         const [serviceRequests, allAddData] = await Promise.all([
+                             fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                         ]);
+
+                         // ✅ Now they are resolved JSON arrays, not promises
+                        // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                         window.window.initServiceProposalTable(serviceRequests, allAddData);
+
+                         return;
+
                 }
-               // ✅ Add this line to bind the search input after fragment loads
-                       if (typeof window.setupGlobalFilter === "function") {
-                           window.setupGlobalFilter();
-                       }
-            })
-            .catch(error => {
-                console.error("Error loading fragment:", error);
-                container.innerHTML = "<p>Error loading content.</p>";
-            });
-    }
-// Expose globally for use elsewhere (e.g., in nav click handlers)
-window.toggleListItem = loadFragment;
-window.toggleListItem = function (item, pageName) {
-localStorage.setItem("pageSize",pageSize);// global
- pageNumber=0;
-var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
-        var departmentName = departmentElement.data("departmentname");//it
-        localStorage.setItem("lastActivePage", pageName);
+             if(pageName==='purchaseRequestData'){
 
-        const container = document.getElementById("fragmentContainer");
-        container.innerHTML = "<p>Loading...</p>";
-        const url = `/fragment1/${pageName}?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+                         // ✅ Await all three fetches
+                         const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                             fetchDataFromDB(`/serviceRequests/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                         ]);
 
-const token = getAuthToken();
-        fetch(url, {
-               method: 'GET',
-               headers: {
-                    'Content-Type': 'application/json',
-                   'Authorization': 'Bearer ' + token
-               }
-           })
-          .then(response => response.text())
-          .then(html => {
-            container.innerHTML = html;
-
-             const fragmentInitializers = {
-                 serviceProposalData: [
-                     window.initServiceProposalTable,
-                     window.initServiceProposalGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 requestDataForPayment: [
-                     window.initRequestForPaymentTable,
-                     window.initRequestForPaymentGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 purchaseRequestData: [
-                     window.initRequestPurchaseDataTable,
-                     window.initRequestPurchaseDataGeneral,
-                     window.initGlobalDivToggle,
-                     window.initRequestDataDirectTable
-                 ],
-                 listRequestData: [
-                     window.initListRequestInventoryTable,
-                     window.initListRequestInventoryGeneral,
-                     window.initGlobalDivToggle,
-                     window.initListRequestInventoryTable,
-                 ],
-                 Category: [
-                     window.initAddCategoryGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 AddUser: [
-                     window.initAddUserGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 CustomerCareRequestData: [
-                     window.initCustomerCareRequestDataGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 deliveryPurchaseDevice: [
-                     window.initDeliveryPurchaseDeviceGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 Designation: [
-                     window.initAddDesignationGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 deviceInformation: [
-                     window.initDeviceInformationGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 // deviceList: [window.initDeviceTable], // Uncomment and add if needed
-                 dropdownList: [
-                     window.initDropDownListGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 individualColumn: [
-                     window.initAddIndividualColumnGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 internalUser: [
-                     window.initInternalUserGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 purchaseDevice: [
-                     window.initPurchaseDeviceGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 requestColumn: [
-                     window.initRequestColumnGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 requestData: [
-                     window.initRequestDataGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 serviceReportData: [
-                     window.initServiceReportDataGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 serviceRequest: [
-                     window.initDeviceTable,
-                     window.initGlobalDivToggle,
-                     window.initServiceProposalGeneral,
-                 ],
-                 universalColumn: [
-                     window.initAddUniversalColumnGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                 unOrderedDevice: [
-                     window.initUnOrderedDeviceGeneral,
-                     window.initGlobalDivToggle
-                 ],
-                  deviceList: [
-                          window.initDeviceInformationGeneral,
-                          window.initGlobalDivToggle
-                       ],
-                 // Add more pageName: [function1, function2, window.initGlobalDivToggle] pairs as needed
-             };
-
-          const initFun = fragmentInitializers[pageName];
-           if (Array.isArray(initFun)) {
-               initFun.forEach(fn => {
-                   if (typeof fn === "function") {
-                       fn();
-                   }
-               });
-           } else if (typeof initFuncs === "function") {
-               // For backward compatibility
-               initFun();
-           }
+                         // ✅ Now they are resolved JSON arrays, not promises
+                        // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                         window.initRequestPurchaseDataTable(serviceRequests, allAddData);
+                         window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
 
 
-            // Optional: General fragment init
-            if (typeof window.initFragment === "function") {
-              window.initFragment(pageName);
-            }
-           // ✅ Add this line to bind the search input after fragment loads
-                   if (typeof window.setupGlobalFilter === "function") {
-                       window.setupGlobalFilter();
-                   }
+                         return;
 
-          })
-          .catch(error => {
-            console.error("Error loading fragment:", error);
-            container.innerHTML = "<p>Error loading content.</p>";
-          });
+                }
+
+                if(pageName==='listRequestData'){
+
+                     // ✅ Await all three fetches
+                     const [requestData, requestColumns, allAddData] = await Promise.all([
+                         fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                     ]);
+
+                     // ✅ Now they are resolved JSON arrays, not promises
+                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                     window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
+
+                     return;
+
+                  }
+
+          if(pageName==='deliveryPurchaseDevice'){
+
+                 // ✅ Await all three fetches
+                 const [requestData, requestColumns, allAddData] = await Promise.all([
+                     fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                     fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                     fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                 ]);
+
+                 // ✅ Now they are resolved JSON arrays, not promises
+                // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                 window.initDeliveryPurchaseDeviceGeneral(requestData, requestColumns, allAddData);
+
+                 return;
+
+              }
+          }catch (error)
+          {
+           console.error("❌ Error loading fragment:", error);
+           container.innerHTML = "<p>Error loading content.</p>";
+         }
+
 
     };
 
@@ -387,27 +554,104 @@ const token = getAuthToken();
 }
 
 
-function loadByRange(pageNumber, pageSize) {
+async function loadByRange(pageNumber, pageSize) {
     console.log("📦 Loading range with pageSize:", pageSize);
 
     const pageName = localStorage.getItem("lastActivePage");
-    if(pageName==='serviceProposalData'){
-        window.initServiceProposalTable();
-    return;
-    } else if(pageName==='purchaseRequestData'){
-       window.initRequestDataDirectTable();
-       window.initRequestPurchaseDataTable();
-      return;
-   }
-   else if(pageName==='listRequestData'){
-         window.initListRequestInventoryTable();
-         return;
-      }
+
     var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
        var departmentName = departmentElement.data("departmentname");//it
     const url = `/fragment1/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
   const token = getAuthToken();
+      if(pageName==='serviceProposalData'){
+                  try {
+
+                        // ✅ Await all three fetches
+                        const [serviceRequests, allAddData] = await Promise.all([
+                            fetchDataFromDB(`/serviceRequests/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                            fetchDataFromDB(`/allAddData/${pageName}?folder=purchase&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                        ]);
+
+                        // ✅ Now they are resolved JSON arrays, not promises
+                       // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                        window.window.initServiceProposalTable(serviceRequests, allAddData);
+
+                        return;
+                    } catch (e) {
+                        console.error("❌ Error loading requestData:", e);
+                        return;
+                 }
+               }
+               else if(pageName==='purchaseRequestData'){
+
+                       try {
+
+                            // ✅ Await all three fetches
+                            const [serviceRequests,requestData, requestColumns, allAddData] = await Promise.all([
+                                fetchDataFromDB(`/serviceRequests/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                            ]);
+
+                            // ✅ Now they are resolved JSON arrays, not promises
+                           // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                            window.initRequestPurchaseDataTable(serviceRequests, allAddData);
+                            window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
+
+
+                            return;
+                        } catch (e) {
+                            console.error("❌ Error loading requestData:", e);
+                            return;
+                        }
+                   }
+                   else if(pageName==='listRequestData'){
+
+
+                         try {
+
+                                 // ✅ Await all three fetches
+                                 const [requestData, requestColumns, allAddData] = await Promise.all([
+                                     fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                 ]);
+
+                                 // ✅ Now they are resolved JSON arrays, not promises
+                                // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                                 window.initListRequestInventoryTable1(requestData, requestColumns, allAddData);
+
+                                 return;
+                             } catch (e) {
+                                 console.error("❌ Error loading requestData:", e);
+                                 return;
+                             }
+                      }
+                      else if(pageName==='deliveryPurchaseDevice'){
+
+                           try {
+
+                                   // ✅ Await all three fetches
+                                   const [requestData, requestColumns, allAddData] = await Promise.all([
+                                       fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                       fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                       fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                   ]);
+
+                                   // ✅ Now they are resolved JSON arrays, not promises
+                                  // window.initRequestDataTable(requestData, requestColumns, allAddData);
+
+                                   window.initDeliveryPurchaseDeviceGeneral(requestData, requestColumns, allAddData);
+
+                                   return;
+                               } catch (e) {
+                                   console.error("❌ Error loading requestData:", e);
+                                   return;
+                               }
+                        }
           fetch(url, {
                  method: 'GET',
                  headers: {

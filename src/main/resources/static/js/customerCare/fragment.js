@@ -32,6 +32,36 @@ function loadFragment(pageName) {
         const url = `/fragment1/${pageName}?folder=${encodeURIComponent("customerCare")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
         const token = getAuthToken();
+            if (!localStorage.getItem("firstPageSeen")) {
+                      console.log("🚀 First login detected -> loading analytic fragment");
+                    const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("customerCare")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
+
+                   fetch(analyticUrl, {
+                       method: "GET",
+                       headers: {
+                         "Content-Type": "application/json",
+                         "Authorization": "Bearer " + token
+                       }
+                     })
+                       .then(response => {
+                         console.log("Response status:", response.status);
+                         return response.text();
+                       })
+                       .then(html => {
+                         console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
+                         container.innerHTML = html;
+                         localStorage.setItem("firstPageSeen", "true");
+                         console.log("Welcome page injected.");
+                       })
+                       .catch(error => {
+                         console.error("Error loading analytic fragment:", error);
+                         container.innerHTML = "<p>Error loading analytics.</p>";
+                       });
+
+
+                      return; // stop here
+                    }
+
                 fetch(url, {
                        method: 'GET',
                        headers: {

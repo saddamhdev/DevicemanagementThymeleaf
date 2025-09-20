@@ -22,13 +22,42 @@ public class RequestDataService {
     @Autowired
     private RequestDataRepository requestDataRepository;
     // Check cache first, if not found, load from DB and cache it
-    @Cacheable(value = "RequestDataService", key = "#page + '-' + #size")
-    public Page<RequestData> getPagedAddData(int page, int size,String folderName, String userName) {
+    @Cacheable(value = "RequestDataService", key = "#folderName + '-' + #pageName + '-' + #page + '-' + #size")
+    public Page<RequestData> getPagedAddData(int page, int size,String folderName, String userName,String pageName) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        //System.out.println(userName);
+
         if(folderName.equals("departmentUser")){
             return requestDataRepository.findByStatusAndDepartmentName("1",userName,pageable);
         }
+        if(folderName.equals("inventory")){
+            if(pageName.equals("requestData")){
+                return requestDataRepository.findByStatusAndRequestMode("1","Accepted",pageable);
+            }
+            if(pageName.equals("requestDataProposal")){
+                return requestDataRepository.findByStatusAndInventory_InventoryStatus("1","Purchased",pageable);
+            }
+            if(pageName.equals("requestDataAlternative")){
+                return requestDataRepository.findByStatusAndInventory_InventoryStatus("1","Alternative Proposal Accepted",pageable);
+            }
+
+        }
+        if(folderName.equals("purchase")){
+            if(pageName.equals("requestData")){
+                return requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
+            }
+
+
+        }
+        if(folderName.equals("superAdmin")) {
+            if (pageName.equals("listRequestData")) {
+                return requestDataRepository.findByStatusAndAlternativeDeviceRequestForSuperAdmin("1",List.of("Alternative Proposal","Alternative Proposal Accepted"),pageable);
+            }
+            if (pageName.equals("deliveryPurchaseDevice")) {
+
+                return requestDataRepository.findByStatusAndFinalDeliveryDeviceStatus("1","Purchased","Pending",pageable);
+            }
+        }
+
         return requestDataRepository.findByStatus("1",pageable);
 
     }
