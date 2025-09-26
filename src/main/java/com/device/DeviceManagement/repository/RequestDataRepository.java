@@ -3,6 +3,7 @@ package com.device.DeviceManagement.repository;
 import com.device.DeviceManagement.model.RequestData;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -55,6 +56,45 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
     @Query("{ 'status': ?0, 'inventory.inventoryStatus': ?1, 'inventory.inventoryToCustomerCareDeviceSendingStatus': ?2 }")
     Page<RequestData> findByStatusAndFinalDeliveryDeviceStatus(String status, String inv, String purchaseCooStatus, Pageable pageable);
 
+    @Query("{ 'status': ?0,  'inventory.inventoryToCustomerCareDeviceSendingStatus': { $in: ?1 } }")
+    Page<RequestData> findByStatusAndInventoryToCustomerCareDeviceSendingStatus(String status, List<String> invToCustomerStatus, Pageable pageable);
 
     long countByStatusAndRequestMode(String status, String requestMode);
+    long countByStatusAndInventory_InventoryToCustomerCareDeviceSendingStatus(String status,String inventoryToCustomerCareDeviceSendingStatus);
+    long countByStatusAndCustomerCare_CustomerCareToDepartmentDeviceSendingStatus(String status, String customerCareToDepartmentDeviceSendingStatus);
+    long countByStatusAndInventory_InventoryStatus(String status, String invStatus);
+    long countByStatusAndRequestModeAndInventory_InventoryStatus(String rootStatus,String RequestMode,String checkPending);
+    long countByStatus(String status);
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'inventory.inventoryStatus': ?1, 'purchase.cooAns': { $exists: true, $ne: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndPurchaseForSuperAdmin(
+            String status,
+            String inventoryStatus,
+            String purchaseAns
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'inventory.inventoryStatus': ?1, 'purchase.cooAns': { $exists: true, $eq: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndPurchaseForSuperAdminPending(
+            String status,
+            String inventoryStatus,
+            String purchaseAns
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'inventory.inventoryStatus': ?1, 'inventory.inventoryToCustomerCareDeviceSendingStatus': { $exists: true, $eq: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndCooDeliveryAnsAdminPending(
+            String status,
+            String inventoryStatus,
+            String cooAns
+    );
+
+
 }

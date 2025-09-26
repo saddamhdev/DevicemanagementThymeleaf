@@ -15,7 +15,7 @@
     .card {
       border-radius: 15px;
       transition: transform 0.2s ease-in-out;
-      height: 100%; /* Equal height */
+      height: 100%;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -41,6 +41,7 @@
 
     <!-- Stats Cards -->
     <div class="row mt-4 g-4">
+
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
@@ -50,33 +51,117 @@
           </div>
         </div>
       </div>
+
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
-            <i class="fas fa-laptop dashboard-icon text-success mb-2"></i>
+            <i class="fas fa-desktop dashboard-icon text-success mb-2"></i>
             <h5 class="card-title">Total Devices</h5>
-            <span id="deviceCount" class="badge bg-success fs-6 px-3 py-2" th:text="${deviceCount}">0</span>
+            <span id="deviceCountTotal" class="badge bg-success fs-6 px-3 py-2" th:text="${deviceCountTotal}">0</span>
           </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-layer-group dashboard-icon text-info mb-2"></i>
+            <h5 class="card-title">Total Device Category</h5>
+            <span id="deviceCountDeviceCategory" class="badge bg-info fs-6 px-3 py-2" th:text="${deviceCountDeviceCategory}">0</span>
+          </div>
+        </div>
+      </div>
+
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
             <i class="fas fa-tools dashboard-icon text-danger mb-2"></i>
-            <h5 class="card-title">Servicing</h5>
-            <span id="servicingCount" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCount}">0</span>
+            <h5 class="card-title">Total Servicing Accessories Request</h5>
+            <span id="servicingCountTotalAccessories" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCountTotalAccessories}">0</span>
           </div>
         </div>
       </div>
+
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
-            <i class="fas fa-plus-circle dashboard-icon text-warning mb-2"></i>
-            <h5 class="card-title">New Device Requests</h5>
-            <span id="requestCount" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCount}">0</span>
+            <i class="fas fa-clock dashboard-icon text-warning mb-2"></i>
+            <h5 class="card-title">Total Servicing Accessories Request Pending</h5>
+            <span id="servicingCountPendingAccessories" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${servicingCountPendingAccessories}">0</span>
           </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-file-alt dashboard-icon text-warning mb-2"></i>
+            <h5 class="card-title">Total Servicing Report Request Pending</h5>
+            <span id="servicingCountServiceReportPending" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${servicingCountServiceReportPending}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-plus-circle dashboard-icon text-success mb-2"></i>
+            <h5 class="card-title">Total New Device Requests</h5>
+            <span id="requestCountTotal" class="badge bg-success fs-6 px-3 py-2" th:text="${requestCountTotal}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-hourglass-half dashboard-icon text-warning mb-2"></i>
+            <h5 class="card-title">Total New Device Requests Pending</h5>
+            <span id="requestCountPending" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCountPending}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-box-open dashboard-icon text-secondary mb-2"></i>
+            <h5 class="card-title">Total UnOrdered Device Requests Pending</h5>
+            <span id="deviceCountUnOrdered" class="badge bg-secondary fs-6 px-3 py-2" th:text="${deviceCountUnOrdered}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-shopping-cart dashboard-icon text-primary mb-2"></i>
+            <h5 class="card-title">Total Purchase Request</h5>
+            <span id="requestCountTotalPurchaseRequest" class="badge bg-primary fs-6 px-3 py-2" th:text="${requestCountTotalPurchaseRequest}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-shopping-basket dashboard-icon text-warning mb-2"></i>
+            <h5 class="card-title">Total Purchase Request Pending</h5>
+            <span id="requestCountTotalPurchaseRequestPending" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCountTotalPurchaseRequestPending}">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-truck dashboard-icon text-dark mb-2"></i>
+            <h5 class="card-title">Total Final Delivery Device Status Pending</h5>
+            <span id="deviceCountFinalDeliveryDevice" class="badge bg-dark fs-6 px-3 py-2" th:text="${deviceCountFinalDeliveryDevice}">0</span>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>

@@ -27,7 +27,7 @@ public class AddDataService {
         //System.out.println(userName);
         if(folderName.equals("superAdmin")){
             if(pageName.equals("unOrderedDevice")){
-                System.out.println(userName+" "+pageName);
+                //System.out.println(userName+" "+pageName);
                 return addDataRepository.findByStatusAndUnOrderedDeviceListForPurchase("1",
                         List.of("UnOrdered","Ordered"),
                         pageable
@@ -37,7 +37,7 @@ public class AddDataService {
         }
         if(folderName.equals("inventory")){
             if(pageName.equals("unOrderedDevice")){
-                System.out.println(userName+" "+pageName);
+               // System.out.println(userName+" "+pageName);
                 return addDataRepository.findByStatusAndUnOrderedDeviceStatus("1","Pending",pageable);
             }
 
@@ -45,16 +45,26 @@ public class AddDataService {
         }
         if(folderName.equals("purchase")){
             if(pageName.equals("unOrderedDevice")){
-                System.out.println(userName+" "+pageName);
+                //System.out.println(userName+" "+pageName);
                 return addDataRepository.findByStatusAndUnOrderedDeviceListForPurchase("1",
-                        List.of("UnOrdered","Ordered"),
+                        List.of("UnOrdered"),
                         pageable
                 );
+            }
+            if(pageName.equals("deviceInformation")){
+                System.out.println(userName+" & "+pageName);
+                return addDataRepository.findFilteredForPurchase(
+                        userName,
+                        "1",
+                        "UnOrdered",
+                        pageable
+                );
+
             }
 
 
         }
-        System.out.println(userName+" "+pageName);
+        //System.out.println(userName+" "+pageName);
 
         return addDataRepository.findByStatusAndUserName("1",userName ,pageable);
     }

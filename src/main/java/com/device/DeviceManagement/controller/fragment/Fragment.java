@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -81,102 +82,6 @@ public class Fragment {
     private UserService userService;
     @Autowired
     private InternalUserService internalUserService;
-   /* @GetMapping("/fragment1299/{pageName}")
-    public String loadFragment12(@PathVariable String pageName,
-                                @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "10") int size,
-                               @RequestParam(name = "folder", required = false) String folderName,
-                               @RequestParam String departmentName,
-                               Model model) {
-        List<InternalUser> internalUsers=new ArrayList<>();
-        if(folderName.equals("departmentUser")){
-            internalUsers=internalUserService.add(folderName,departmentName);
-            model.addAttribute("departmentUserName", departmentName);
-        }
-        else{
-            model.addAttribute("departmentName", departmentName);
-            internalUsers = internalUserService.add(folderName,departmentName);
-        }
-        // Add any model attributes you want here based on fragmentName
-        Page<Category> categoriesData = categoriesService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<Category> categories=categoriesData.getContent();
-        model.addAttribute("lastPage"+pageName, categoriesData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, categoriesData.getTotalPages());
-
-
-
-        List<Column> universalColumns = universalColumnsService.Universal();
-        List<Column> individualColumns = individualColumnsService.Individual();
-
-        Page<User> allUserData=userService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<User> allUser=userService.add();
-        model.addAttribute("lastPage"+pageName, allUserData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, allUserData.getTotalPages());
-
-        Page<InternalUser> internalUsersData=internalUserService.getPagedAddData(page, size); // ✅ page 0, size 10
-
-        model.addAttribute("lastPage"+pageName, internalUsersData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, internalUsersData.getTotalPages());
-
-        Page<RequestColumn> requestColumnsData=requestColumnService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<RequestColumn> requestColumns=requestColumnService.add();
-        model.addAttribute("lastPage"+pageName, requestColumnsData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, requestColumnsData.getTotalPages());
-
-        Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
-        List<ServiceRequest> serviceRequests = serviceRequestService.add();
-        model.addAttribute("lastPage"+pageName, serviceRequestsData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, serviceRequestsData.getTotalPages());
-
-        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName); // ✅ page 0, size 10
-        List<RequestData> requestData=requestDataService.add();
-        model.addAttribute("lastPage"+pageName, requestDataData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
-
-        Page<DropDownList> dropDownListsData=dropDownListService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<DropDownList> dropDownLists=dropDownListService.add();
-        model.addAttribute("lastPage"+pageName, dropDownListsData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName,dropDownListsData.getTotalPages());
-
-        Page<Designation> designationsData=designationService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<Designation> designations=designationService.add();
-        model.addAttribute("lastPage"+pageName, designationsData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName,designationsData.getTotalPages());
-
-        Page<BranchUser> userAccountDataData=branchUserService.getPagedAddData(page, size); // ✅ page 0, size 10
-        List<BranchUser> userAccountData=branchUserService.add();
-        model.addAttribute("lastPage"+pageName, userAccountDataData.getTotalPages() <=-1);
-        model.addAttribute("totalPage"+pageName,userAccountDataData.getTotalPages());
-
-        // ✅ Pagination logic for AddData (main scrollable content)
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,departmentName);
-        List<AddData> allDeviceData = pagedAddData.getContent();
-
-        // ✅ Correct lastPage calculation
-        boolean isLastPage = page >= pagedAddData.getTotalPages() - 1;
-        model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
-        model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
-
-
-        model.addAttribute("data",categories);
-        model.addAttribute("universalColumns",universalColumns);
-        model.addAttribute("individualColumns",individualColumns);
-        model.addAttribute("individualColumns",individualColumns);
-        model.addAttribute("allDeviceData",allDeviceData);
-        model.addAttribute("allUsers",allUser);
-        model.addAttribute("indoorUsers",internalUsers);
-        model.addAttribute("requestColumns",requestColumns);
-        model.addAttribute("serviceRequests", serviceRequests);
-        model.addAttribute("requestData",requestData);
-        model.addAttribute("dropDownLists",dropDownLists);
-        model.addAttribute("designations",designations);
-        model.addAttribute("userAccountData",userAccountData);
-
-
-        model.addAttribute("inputTypes", inputTypes);
-
-        return folderName+"/" + pageName + " :: " + pageName;
-    }*/
    @GetMapping("/requestData/{pageName}")
    public ResponseEntity<List<RequestData>> requestData(
            @PathVariable String pageName,
@@ -190,8 +95,6 @@ public class Fragment {
            if(pageName.equals("requestData")){
                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
 
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventory("1","Purchased",pageable);
 
@@ -203,14 +106,10 @@ public class Fragment {
            if(pageName.equals("requestDataForPaymentExport")){
                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
-
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchase("1","Accepted",pageable);
 
                List<RequestData> requestData=requestDataData.getContent();
-               // System.out.println(size+" "+requestData.size());
-               // requestData.forEach(System.out::println);
+
                return ResponseEntity.ok(requestData);
            }
        }
@@ -219,8 +118,6 @@ public class Fragment {
            if (pageName.equals("purchaseRequestData")) {
                Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventoryStatusAndPurchaseStatusNot("1","Purchased","Accepted",pageable);
-               //Page<RequestData> requestDataData=requestDataRepository.findByStatusInventoryPurchase("1","Purchased","Accepted",pageable);
 
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchaseForSuperAdmin("1","Purchased",null,pageable);
 
@@ -336,13 +233,67 @@ public class Fragment {
             model.addAttribute("departmentName", departmentName);
             internalUsers = internalUserService.add(folderName,departmentName);
         }
-        if ("analyticFragment".equals(pageName)) {
-            model.addAttribute("userCount", branchUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+        if ("analyticFragment".equals(pageName) && folderName.equals("customerCare")) {
+            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
             model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
-            model.addAttribute("requestCount", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
+            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndCustomerCareServiceRequestStatusAndCustomerCareSendDeviceToServiceStatus("1","Accepted","Device In Pending"));
+            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndInventory_InventoryToCustomerCareDeviceSendingStatus("1","Pending"));
             return folderName + "/" + pageName + " :: " + pageName;
         }
+        if ("analyticFragment".equals(pageName) && folderName.equals("service")) {
+            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
+            model.addAttribute("servicingCountPending", serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatus("1","Device In Pending"));
+            model.addAttribute("servicingCountContinue", serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatusAndServiceCenterToCustomerCareStatusNot("1","Device In Received","Device received"));
+            return folderName + "/" + pageName + " :: " + pageName;
+        }
+        if ("analyticFragment".equals(pageName) && folderName.equals("purchase")) {
+            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
+            model.addAttribute("deviceCountUnOrdered", addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1",departmentName,"UnOrdered"));
+
+            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
+            Long totalPurchased = serviceRequestRepository.countPurchasedOccurrences("1", "Purchased");
+            if (totalPurchased == null) totalPurchased = 0L;
+            System.out.println(totalPurchased);
+            model.addAttribute(
+                    "requestCount",
+                    requestDataRepository.countByStatusAndInventory_InventoryStatus("1", "Purchased")
+                            + totalPurchased
+            );
+
+            return folderName + "/" + pageName + " :: " + pageName;
+        }
+        if ("analyticFragment".equals(pageName) && folderName.equals("inventory")) {
+            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
+            model.addAttribute("servicingCountPending", serviceRequestRepository.countAccessoriesOccurrencesFromServiceToInventory("1","Pending","Accepted"));
+            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndRequestModeAndInventory_InventoryStatus("1","Accepted","Pending"));
+            model.addAttribute("requestCountTotal", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
+
+            return folderName + "/" + pageName + " :: " + pageName;
+        }
+        if ("analyticFragment".equals(pageName) && folderName.equals("superAdmin")) {
+            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
+            model.addAttribute("deviceCountTotal", addDataRepository.countByStatus("1"));
+            model.addAttribute("deviceCountDeviceCategory", categoryRepository.countByStatus("1"));
+            model.addAttribute("deviceCountUnOrdered", addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1","purchase","UnOrdered"));
+            model.addAttribute("deviceCountFinalDeliveryDevice", requestDataRepository.countByStatusAndCooDeliveryAnsAdminPending("1","Purchased","Pending"));
+
+            model.addAttribute("servicingCountTotalAccessories", serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdmin("1",null));
+            model.addAttribute("servicingCountPendingAccessories", serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdminPending("1",null,"Accepted"));
+            model.addAttribute("servicingCountServiceReportPending", serviceRequestRepository.countByStatusAndCooServiceReportAcceptStatus("1","Saved"));
+
+
+            model.addAttribute("requestCountTotalPurchaseRequest", (requestDataRepository.countByStatusAndPurchaseForSuperAdmin("1","Purchased",null)+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending","Accepted"))));
+            model.addAttribute("requestCountTotalPurchaseRequestPending", (requestDataRepository.countByStatusAndPurchaseForSuperAdminPending("1","Purchased","Pending")+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheckPending("1", "Pending")));
+
+            model.addAttribute("requestCountTotal", requestDataRepository.countByStatus("1"));
+            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndRequestMode("1","Pending"));
+
+            return folderName + "/" + pageName + " :: " + pageName;
+        }
+
 
         // Load only required data for this page (optimize later as needed)
         List<Column> universalColumns = universalColumnsService.Universal();
@@ -355,13 +306,7 @@ public class Fragment {
 
         List<AddData> allDeviceData = pagedAddData.getContent();
 
-        System.out.println(
-                departmentName + " content=" + allDeviceData.size() +
-                        " pageSize=" + size +
-                        " pageNumber=" + page +
-                        " totalElements=" + pagedAddData.getTotalElements() +
-                        " totalPages=" + pagedAddData.getTotalPages()
-        );
+
         //allDeviceData.forEach(System.out::println);
         // ✅ Correct lastPage calculation
         model.addAttribute("lastPage" + pageName, pagedAddData.isLast());

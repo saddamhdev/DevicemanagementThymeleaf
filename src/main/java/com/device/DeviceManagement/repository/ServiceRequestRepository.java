@@ -3,6 +3,8 @@ package com.device.DeviceManagement.repository;
 import com.device.DeviceManagement.model.ServiceRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -110,4 +112,96 @@ public interface ServiceRequestRepository extends MongoRepository<ServiceRequest
 
 
     long countByStatusAndDepartmentName(String status,String deptName);
+    long countByStatusAndCustomerCareServiceRequestStatusAndCustomerCareSendDeviceToServiceStatus(String status, String customerCareServiceRequestStatus, String customerCareSendDeviceToServiceStatus);
+    long countByStatusAndCustomerCareSendDeviceToServiceStatus(String status,String requestStatusPending);
+    long countByStatusAndCustomerCareSendDeviceToServiceStatusAndServiceCenterToCustomerCareStatusNot(String status,String requestStatusReceived,String deviceStatusDelivered);
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.deviceManageType': ?1 } }",
+            "{ $count: 'count' }"
+    })
+    Long countPurchasedOccurrences(String status, String deviceManageType);
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': ?1 } }",
+            "{ $match: { 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': { $ne: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countAccessoriesOccurrencesFromServiceToInventory(
+            String status,
+            String serviceCenterToInventoryAccessoriesRequestStatus,
+            String inventoryToServiceCenterDeviceStatus
+    );
+
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.purchaseProposalToCooAns': { $in: ?1 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndPurchaseProposalToCooAnsEmptyCheck(
+            String rootStatus,
+            List<String> cooStatus
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.purchaseProposalToCooAns': ?1 } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndPurchaseProposalToCooAnsEmptyCheckPending(
+            String rootStatus,
+            String cooStatus
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.name': { $ne: ?1} } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndAccessoriesProposalSuperAdmin(
+            String rootStatus,
+            String cooStatus
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.name': { $ne: ?1} } }",
+            "{ $match: { 'allProblem.proposalSolution.cooManInfoOfPriceAcceptanceCommentStatus': { $ne: ?2} } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndAccessoriesProposalSuperAdminPending(
+            String rootStatus,
+            String checkExistence,
+            String cooAns
+    );
+
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'serviceReportStatus': ?1, 'cooServiceReportAcceptStatus': { $exists: false } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndCooServiceReportAcceptStatus(
+            String status,
+            String reportStatus
+    );
+
+
+
+
+
+
 }

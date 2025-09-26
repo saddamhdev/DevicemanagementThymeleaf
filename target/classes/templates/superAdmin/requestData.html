@@ -85,7 +85,7 @@
 
 
                     <tbody id="requestTableBody">
-                    <tr th:each="device, iterStat : ${requestData}"  onclick="printRowDataForCustomerCare(this)">
+                    <tr th:each="device, iterStat : ${requestData}"  >
                         <td  th:text="${device.visibleRequestId}" >1</td>
                         <td  th:text="${device.departmentName}" >1</td>
                         <td  th:text="${device.allData[category]}" >1</td>

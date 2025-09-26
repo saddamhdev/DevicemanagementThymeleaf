@@ -21,5 +21,5 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
     List<Category> findByStatus(String status);
     boolean existsByCategoryName(String categoryName);
     boolean existsByCategoryNameAndStatus(String categoryName, String status);
-
+    long countByStatus(String status);
 }

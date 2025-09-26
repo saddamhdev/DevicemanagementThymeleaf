@@ -1190,7 +1190,7 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                         problem.proposalSolution.forEach(solution => {
 
                            // if (solution.inventoryToServiceCenterDeviceStatus === "Accepted" || !solution.inventoryForPurchaseRequestStatus) return;
-                            // if(solution.inventoryToServiceCenterDeviceStatus !== "Accepted" && solution.inventoryForPurchaseRequestStatus !==null )
+                            if(solution.deviceManageType === "Purchased"  )
                              {
 
                             const value = (solution.value || '').trim().replace(/\n/g, "<br>");

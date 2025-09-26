@@ -62,6 +62,15 @@
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
+            <i class="fas fa-laptop dashboard-icon text-success mb-2"></i>
+            <h5 class="card-title">UnOrdered Devices</h5>
+            <span id="deviceCountUnOrdered" class="badge bg-success fs-6 px-3 py-2" th:text="${deviceCountUnOrdered}">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
             <i class="fas fa-tools dashboard-icon text-danger mb-2"></i>
             <h5 class="card-title">Servicing</h5>
             <span id="servicingCount" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCount}">0</span>
@@ -72,7 +81,7 @@
         <div class="card shadow-sm text-center">
           <div class="card-body">
             <i class="fas fa-plus-circle dashboard-icon text-warning mb-2"></i>
-            <h5 class="card-title">New Device Requests</h5>
+            <h5 class="card-title">Total Purchase Requests</h5>
             <span id="requestCount" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCount}">0</span>
           </div>
         </div>

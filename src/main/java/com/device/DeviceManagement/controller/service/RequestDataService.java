@@ -57,6 +57,12 @@ public class RequestDataService {
                 return requestDataRepository.findByStatusAndFinalDeliveryDeviceStatus("1","Purchased","Pending",pageable);
             }
         }
+        if(folderName.equals("customerCare")) {
+            if (pageName.equals("requestData")) {
+                return requestDataRepository.findByStatusAndInventoryToCustomerCareDeviceSendingStatus("1",List.of("Pending","Accepted"),pageable);
+            }
+
+        }
 
         return requestDataRepository.findByStatus("1",pageable);
 

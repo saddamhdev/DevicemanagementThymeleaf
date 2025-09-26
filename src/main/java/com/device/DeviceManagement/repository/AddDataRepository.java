@@ -39,9 +39,28 @@ public interface AddDataRepository extends MongoRepository<AddData, String> {
             List<String> nestedStatus,
             Pageable pageable
     );
+    @Query("{ 'userName': ?0, 'status': ?1, $or: [ " +
+            "{ 'unOrderedDevice.COOUnOrderedDeviceAcceptedStatus': { $ne: ?2 } }, " +
+            "{ 'unOrderedDevice': { $exists: false } } " +
+            "] }")
+    Page<AddData> findFilteredForPurchase(
+            String userName,
+            String status,
+            String notEqualStatus,
+            Pageable pageable
+    );
 
 
-long countByStatusAndUserName(String status, String BranchName);
+
+
+
+
+
+
+    long countByStatusAndUserName(String status, String BranchName);
+    long countByStatus(String status);
+
+    long countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus(String status, String BranchName,String orderedStatus);
 
 
 

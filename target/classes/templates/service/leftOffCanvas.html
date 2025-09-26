@@ -23,6 +23,9 @@
             </div>
 
             <ul class="list-group">
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'analyticFragment')">
+                    <i class="fas fa-home me-2"></i> Home
+                </li>
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInOutList')">
                     <i class="fas fa-exchange-alt me-2"></i> Device In-Out List
                 </li>
@@ -38,9 +41,9 @@
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">
                     <i class="fas fa-list me-2"></i> Device List
                 </li>
-                <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
+               <!-- <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
-                </li>
+                </li>-->
                 <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </li>

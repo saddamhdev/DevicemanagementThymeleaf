@@ -622,7 +622,7 @@ async function loadByRange(pageNumber, pageSize) {
                                  // ✅ Now they are resolved JSON arrays, not promises
                                 // window.initRequestDataTable(requestData, requestColumns, allAddData);
 
-                                 window.initListRequestInventoryTable1(requestData, requestColumns, allAddData);
+                                 window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
 
                                  return;
                              } catch (e) {

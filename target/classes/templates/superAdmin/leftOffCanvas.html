@@ -24,14 +24,19 @@
             </div>
 
             <ul class="list-group">
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'analyticFragment')">
+                    <i class="fas fa-home me-2"></i> Home
+                </li>
                 <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
                     <i class="fas fa-desktop me-2"></i> Device List
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'deviceList')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'deviceList')">
                             <i class="fas fa-list me-2"></i> Device List
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'deviceInformation')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'deviceInformation')">
                             <i class="fas fa-plus-circle me-2"></i> Add Device
                         </li>
                     </ul>
@@ -41,16 +46,20 @@
                     <i class="fas fa-layer-group me-2"></i>Device Category
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'Category')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'Category')">
                             <i class="fas fa-tag me-2"></i> Category
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'universalColumn')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'universalColumn')">
                             <i class="fas fa-columns me-2"></i> Universal Column
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'individualColumn')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'individualColumn')">
                             <i class="fas fa-th-large me-2"></i> Individual Column
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'dropdownList')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'dropdownList')">
                             <i class="fas fa-caret-square-down me-2"></i> DropDown List
                         </li>
                     </ul>
@@ -60,13 +69,16 @@
                     <i class="fas fa-users me-2"></i> User List
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'AddUser')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'AddUser')">
                             <i class="fas fa-user-plus me-2"></i> Fixed User
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'internalUser')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'internalUser')">
                             <i class="fas fa-user-shield me-2"></i> Internal User
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'Designation')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'Designation')">
                             <i class="fas fa-id-card me-2"></i> User Designation
                         </li>
                     </ul>
@@ -76,25 +88,31 @@
                     <i class="fas fa-paper-plane me-2"></i> Device Request
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'requestColumn')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'requestColumn')">
                             <i class="fas fa-edit me-2"></i> Create Request Form
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'requestData')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'requestData')">
                             <i class="fas fa-inbox me-2"></i> Request Data from User
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'purchaseRequestData')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'purchaseRequestData')">
                             <i class="fas fa-shopping-cart me-2"></i> Purchase Request
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'listRequestData')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'listRequestData')">
                             <i class="fas fa-box-open me-2"></i> Alternative Device Request
                         </li>
-                       <!-- <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'customerCareRequestData')">
-                            <i class="fas fa-headset me-2"></i> CustomerCare RequestList
-                        </li>-->
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'unOrderedDevice')">
+                        <!-- <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'customerCareRequestData')">
+                             <i class="fas fa-headset me-2"></i> CustomerCare RequestList
+                         </li>-->
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'unOrderedDevice')">
                             <i class="fas fa-ban me-2"></i> UnOrdered Device
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'deliveryPurchaseDevice')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'deliveryPurchaseDevice')">
                             <i class="fas fa-truck-loading me-2"></i> Final Deliver Request
                         </li>
                     </ul>
@@ -104,22 +122,25 @@
                     <i class="fas fa-cogs me-2"></i> Service Management
                     <i class="fas fa-chevron-down float-end"></i>
                     <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'serviceRequest')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'serviceRequest')">
                             <i class="fas fa-tools me-2"></i> Dept Service Request
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'serviceProposalData')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'serviceProposalData')">
                             <i class="fas fa-file-signature me-2"></i> Service Accessories Proposal
                         </li>
-                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'serviceReportData')">
+                        <li class="list-group-item leftListBgColor"
+                            onclick="event.stopPropagation(); toggleListItem(this,'serviceReportData')">
                             <i class="fas fa-file-alt me-2"></i> Service Report
                         </li>
                     </ul>
                 </li>
 
-                <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
+                <!--<li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
                 </li>
-
+-->
                 <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </li>

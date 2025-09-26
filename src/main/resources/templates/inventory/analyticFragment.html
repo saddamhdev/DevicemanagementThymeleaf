@@ -63,8 +63,8 @@
         <div class="card shadow-sm text-center">
           <div class="card-body">
             <i class="fas fa-tools dashboard-icon text-danger mb-2"></i>
-            <h5 class="card-title">Servicing</h5>
-            <span id="servicingCount" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCount}">0</span>
+            <h5 class="card-title">Servicing Continues</h5>
+            <span id="servicingCountPending" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCountPending}">0</span>
           </div>
         </div>
       </div>
@@ -72,8 +72,17 @@
         <div class="card shadow-sm text-center">
           <div class="card-body">
             <i class="fas fa-plus-circle dashboard-icon text-warning mb-2"></i>
-            <h5 class="card-title">New Device Requests</h5>
-            <span id="requestCount" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCount}">0</span>
+            <h5 class="card-title">Total New Device Requests</h5>
+            <span id="requestCountTotal" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCountTotal}">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-plus-circle dashboard-icon text-warning mb-2"></i>
+            <h5 class="card-title"> Total New Device Requests Pending</h5>
+            <span id="requestCountPending" class="badge bg-warning text-dark fs-6 px-3 py-2" th:text="${requestCountPending}">0</span>
           </div>
         </div>
       </div>
