@@ -220,73 +220,88 @@ public class Fragment {
         List<InternalUser> internalUsers=new ArrayList<>();
         if ("departmentUser".equals(folderName)) {
             model.addAttribute("departmentUserName", departmentName);
-            internalUsers = internalUserService.add(folderName,departmentName);
-            // ✅ Special case: analytic page
+            internalUsers = internalUserService.add(folderName, departmentName);
+
             if ("analyticFragment".equals(pageName)) {
-                model.addAttribute("userCount", branchUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-                model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-                model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
-                model.addAttribute("requestCount", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
+                model.addAttribute("userCount", safeCount(branchUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+                model.addAttribute("deviceCount", safeCount(addDataRepository.countByStatusAndUserName("1", departmentName)));
+                model.addAttribute("servicingCount", safeCount(serviceRequestRepository.countByStatusAndDepartmentName("1", departmentName)));
+                model.addAttribute("requestCount", safeCount(requestDataRepository.countByStatusAndDepartmentName("1", departmentName)));
                 return folderName + "/" + pageName + " :: " + pageName;
             }
         } else {
             model.addAttribute("departmentName", departmentName);
-            internalUsers = internalUserService.add(folderName,departmentName);
+            internalUsers = internalUserService.add(folderName, departmentName);
         }
+
         if ("analyticFragment".equals(pageName) && folderName.equals("customerCare")) {
-            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndCustomerCareServiceRequestStatusAndCustomerCareSendDeviceToServiceStatus("1","Accepted","Device In Pending"));
-            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndInventory_InventoryToCustomerCareDeviceSendingStatus("1","Pending"));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("deviceCount", safeCount(addDataRepository.countByStatusAndUserName("1", departmentName)));
+            model.addAttribute("servicingCount", safeCount(serviceRequestRepository.countByStatusAndCustomerCareServiceRequestStatusAndCustomerCareSendDeviceToServiceStatus("1", "Accepted", "Device In Pending")));
+            model.addAttribute("requestCountPending", safeCount(requestDataRepository.countByStatusAndInventory_InventoryToCustomerCareDeviceSendingStatus("1", "Pending")));
             return folderName + "/" + pageName + " :: " + pageName;
         }
+
         if ("analyticFragment".equals(pageName) && folderName.equals("service")) {
-            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-            model.addAttribute("servicingCountPending", serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatus("1","Device In Pending"));
-            model.addAttribute("servicingCountContinue", serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatusAndServiceCenterToCustomerCareStatusNot("1","Device In Received","Device received"));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("deviceCount", safeCount(addDataRepository.countByStatusAndUserName("1", departmentName)));
+            model.addAttribute("servicingCountPending", safeCount(serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatus("1", "Device In Pending")));
+            model.addAttribute("servicingCountContinue", safeCount(serviceRequestRepository.countByStatusAndCustomerCareSendDeviceToServiceStatusAndServiceCenterToCustomerCareStatusNot("1", "Device In Received", "Device received")));
             return folderName + "/" + pageName + " :: " + pageName;
         }
+
         if ("analyticFragment".equals(pageName) && folderName.equals("purchase")) {
-            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-            model.addAttribute("deviceCountUnOrdered", addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1",departmentName,"UnOrdered"));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("deviceCount", safeCount(addDataRepository.countByStatusAndUserName("1", departmentName)));
+            model.addAttribute("deviceCountUnOrdered", safeCount(addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1", departmentName, "UnOrdered")));
 
-            model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
-            Long totalPurchased = serviceRequestRepository.countPurchasedOccurrences("1", "Purchased");
-            if (totalPurchased == null) totalPurchased = 0L;
-            model.addAttribute("requestCountTotal", requestDataRepository.countByStatusAndInventory_InventoryStatus("1", "Purchased") + totalPurchased);
-            model.addAttribute("requestCountContinues", requestDataRepository.countByStatusAndPurchaseRequestContinues("1", "Purchased","Accepted") + serviceRequestRepository.countPurchasedOccurrencesPending("1", "Purchased","Accepted"));
+            model.addAttribute("servicingCount", safeCount(serviceRequestRepository.countByStatusAndDepartmentName("1", departmentName)));
+
+            Long totalPurchased = safeCount(serviceRequestRepository.countPurchasedOccurrences("1", "Purchased"));
+            model.addAttribute("requestCountTotal",
+                    safeCount(requestDataRepository.countByStatusAndInventory_InventoryStatus("1", "Purchased")) + totalPurchased);
+
+            model.addAttribute("requestCountContinues",
+                    safeCount(requestDataRepository.countByStatusAndPurchaseRequestContinues("1", "Purchased", "Accepted")) +
+                            safeCount(serviceRequestRepository.countPurchasedOccurrencesPending("1", "Purchased", "Accepted")));
 
             return folderName + "/" + pageName + " :: " + pageName;
         }
+
         if ("analyticFragment".equals(pageName) && folderName.equals("inventory")) {
-            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-            model.addAttribute("deviceCount", addDataRepository.countByStatusAndUserName("1",departmentName));
-            model.addAttribute("servicingCountPending", serviceRequestRepository.countAccessoriesOccurrencesFromServiceToInventory("1","Pending","Accepted"));
-            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndRequestModeAndInventory_InventoryStatus("1","Accepted","Pending"));
-            model.addAttribute("requestCountTotal", requestDataRepository.countByStatusAndRequestMode("1","Accepted"));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("deviceCount", safeCount(addDataRepository.countByStatusAndUserName("1", departmentName)));
+            model.addAttribute("servicingCountPending", safeCount(serviceRequestRepository.countAccessoriesOccurrencesFromServiceToInventory("1", "Pending", "Accepted")));
+            model.addAttribute("requestCountPending", safeCount(requestDataRepository.countByStatusAndRequestModeAndInventory_InventoryStatus("1", "Accepted", "Pending")));
+            model.addAttribute("requestCountTotal", safeCount(requestDataRepository.countByStatusAndRequestMode("1", "Accepted")));
 
             return folderName + "/" + pageName + " :: " + pageName;
         }
+
         if ("analyticFragment".equals(pageName) && folderName.equals("superAdmin")) {
-            model.addAttribute("userCount", internalUserRepository.countByBranchNameAndStatus(departmentName,"1"));
-            model.addAttribute("deviceCountTotal", addDataRepository.countByStatus("1"));
-            model.addAttribute("deviceCountDeviceCategory", categoryRepository.countByStatus("1"));
-            model.addAttribute("deviceCountUnOrdered", addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1","purchase","UnOrdered"));
-            model.addAttribute("deviceCountFinalDeliveryDevice", requestDataRepository.countByStatusAndCooDeliveryAnsAdminPending("1","Purchased","Pending"));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("deviceCountTotal", safeCount(addDataRepository.countByStatus("1")));
+            model.addAttribute("deviceCountDeviceCategory", safeCount(categoryRepository.countByStatus("1")));
+            model.addAttribute("deviceCountUnOrdered", safeCount(addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1", "purchase", "UnOrdered")));
+            model.addAttribute("deviceCountFinalDeliveryDevice", safeCount(requestDataRepository.countByStatusAndCooDeliveryAnsAdminPending("1", "Purchased", "Pending")));
 
-            model.addAttribute("servicingCountTotalAccessories", serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdmin("1",null));
-            model.addAttribute("servicingCountPendingAccessories", serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdminPending("1",null,"Accepted"));
-            model.addAttribute("servicingCountServiceReportPending", serviceRequestRepository.countByStatusAndCooServiceReportAcceptStatus("1","Saved"));
+            model.addAttribute("servicingCountTotalAccessories", safeCount(serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdmin("1", null)));
+            model.addAttribute("servicingCountPendingAccessories", safeCount(serviceRequestRepository.countByStatusAndAccessoriesProposalSuperAdminPending("1", null, "Accepted")));
+            model.addAttribute("servicingCountServiceReportPending", safeCount(serviceRequestRepository.countByStatusAndCooServiceReportAcceptStatus("1", "Saved")));
 
+            model.addAttribute("requestCountTotalPurchaseRequest",
+                    safeCount(requestDataRepository.countByStatusAndPurchaseForSuperAdmin("1", "Purchased", null)) +
+                            safeCount(serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending", "Accepted"))));
 
-            model.addAttribute("requestCountTotalPurchaseRequest", (requestDataRepository.countByStatusAndPurchaseForSuperAdmin("1","Purchased",null)+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending","Accepted"))));
-            model.addAttribute("requestCountTotalPurchaseRequestPending", (requestDataRepository.countByStatusAndPurchaseForSuperAdminPending("1","Purchased","Pending")+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheckPending("1", "Pending")));
-            model.addAttribute("requestCountTotalAlternative", requestDataRepository.countByStatusAndCooAlternativeDevicePending("1",List.of("Alternative Proposal","Alternative Proposal Accepted"),"Pending"));
+            model.addAttribute("requestCountTotalPurchaseRequestPending",
+                    safeCount(requestDataRepository.countByStatusAndPurchaseForSuperAdminPending("1", "Purchased", "Pending")) +
+                            safeCount(serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheckPending("1", "Pending")));
 
-            model.addAttribute("requestCountTotal", requestDataRepository.countByStatus("1"));
-            model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndRequestMode("1","Pending"));
+            model.addAttribute("requestCountTotalAlternative",
+                    safeCount(requestDataRepository.countByStatusAndCooAlternativeDevicePending("1", List.of("Alternative Proposal", "Alternative Proposal Accepted"), "Pending")));
+
+            model.addAttribute("requestCountTotal", safeCount(requestDataRepository.countByStatus("1")));
+            model.addAttribute("requestCountPending", safeCount(requestDataRepository.countByStatusAndRequestMode("1", "Pending")));
 
             return folderName + "/" + pageName + " :: " + pageName;
         }
@@ -347,59 +362,9 @@ public class Fragment {
         return folderName + "/" + pageName + " :: " + pageName;
     }
 
-   /* @GetMapping("/fragment99/{pageName}")
-    public String loadFragment(@PathVariable String pageName,
-                               @RequestParam(name = "folder", required = false) String folderName,
-                               @RequestParam String departmentName,
-                               Model model) {
-        List<InternalUser> internalUsers=new ArrayList<>();
-        if(folderName.equals("departmentUser")){
-            internalUsers=internalUserService.add(folderName,departmentName);
-            model.addAttribute("departmentUserName", departmentName);
-        }
-        else{
-            model.addAttribute("departmentName", departmentName);
-            internalUsers = internalUserService.add(folderName,departmentName);
-        }
-        // Add any model attributes you want here based on fragmentName
-        List<Category> categories = categoriesService.Category();
-        List<Column> universalColumns = universalColumnsService.Universal();
-        List<Column> individualColumns = individualColumnsService.Individual();
-        // List<AddData> allDeviceData=addDataService.add();
-        Page<AddData> pagedAddData = addDataService.getPagedAddData(0, 7,departmentName); // ✅ page 0, size 10
-        List<AddData> allDeviceData = pagedAddData.getContent();
-        boolean lastPage = pagedAddData.getTotalPages() <= 1;
-        model.addAttribute("lastPage", lastPage);
-        model.addAttribute("totalPage", pagedAddData.getTotalPages());
-
-
-        List<User> allUser=userService.add();
-
-        List<RequestColumn> requestColumns=requestColumnService.add();
-        List<ServiceRequest> serviceRequests = serviceRequestService.add();
-        List<RequestData> requestData=requestDataService.add();
-        List<DropDownList> dropDownLists=dropDownListService.add();
-        List<Designation> designations=designationService.add();
-        List<BranchUser> userAccountData=branchUserService.add();
-
-        model.addAttribute("data",categories);
-        model.addAttribute("universalColumns",universalColumns);
-        model.addAttribute("individualColumns",individualColumns);
-        model.addAttribute("individualColumns",individualColumns);
-        model.addAttribute("allDeviceData",allDeviceData);
-        model.addAttribute("allUsers",allUser);
-        model.addAttribute("indoorUsers",internalUsers);
-        model.addAttribute("requestColumns",requestColumns);
-        model.addAttribute("serviceRequests", serviceRequests);
-        model.addAttribute("requestData",requestData);
-        model.addAttribute("dropDownLists",dropDownLists);
-        model.addAttribute("designations",designations);
-        model.addAttribute("userAccountData",userAccountData);
-
-
-        model.addAttribute("inputTypes", inputTypes);
-        return folderName+"/" + pageName + " :: " + pageName;
-    }*/
+    private Long safeCount(Long count) {
+        return count == null ? 0L : count;
+    }
     @GetMapping("/clearCache")
     public  String clearCache(){
         categoriesService.clearCategoriesCache();

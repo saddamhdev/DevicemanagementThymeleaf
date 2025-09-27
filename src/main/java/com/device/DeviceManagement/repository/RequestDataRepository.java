@@ -60,6 +60,7 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
     Page<RequestData> findByStatusAndInventoryToCustomerCareDeviceSendingStatus(String status, List<String> invToCustomerStatus, Pageable pageable);
 
     long countByStatusAndRequestMode(String status, String requestMode);
+
     long countByStatusAndInventory_InventoryToCustomerCareDeviceSendingStatus(String status,String inventoryToCustomerCareDeviceSendingStatus);
     long countByStatusAndCustomerCare_CustomerCareToDepartmentDeviceSendingStatus(String status, String customerCareToDepartmentDeviceSendingStatus);
     long countByStatusAndInventory_InventoryStatus(String status, String invStatus);
@@ -105,6 +106,9 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
             List<String> inventoryStatus,
             String cooAns
     );
+
+   long countByStatusAndDepartmentName(String status,String depName);
+
 
     @Aggregation(pipeline = {
             "{ $match: { status: ?0, 'inventory.inventoryStatus': ?1, 'purchase.purchaseDeviceSenderToInventoryStatus': {  $ne: ?2 } } }",

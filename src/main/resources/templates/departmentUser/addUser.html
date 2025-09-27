@@ -43,14 +43,17 @@
 
     </div>
 
-    <!-- 🔍 Right-aligned search box -->
-    <div class="d-flex justify-content-end mb-2">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <!-- Left: Page Size Selector -->
+        <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+        <!-- Right: Search Box -->
         <div style="width: 250px;">
             <input type="text" class="form-control search-input global-user-search"
                    data-table="branchUserTable" placeholder="Search users...">
         </div>
     </div>
-
 
 
     <div class="responsive-table-wrapper">
