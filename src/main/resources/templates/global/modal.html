@@ -75,9 +75,11 @@
 </div>
 <!-- fragments/pagination.html -->
 <div th:fragment="pageSizeSelector(pageSize)">
-    <div class="d-flex align-items-center gap-2 mb-3">
-        <label for="pageSize" class="me-2 fw-bold">Show:</label>
-        <select id="pageSize" class="form-select form-select-sm w-auto"
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <label for="pageSize" class="fw-bold mb-0">Show:</label>
+
+        <select id="pageSize"
+                class="form-select form-select-sm w-auto"
                 onchange="onPageSizeChange(this.value)">
             <option th:value="2" th:text="2" th:selected="${pageSize == 2}"></option>
             <option th:value="3" th:text="3" th:selected="${pageSize == 3}"></option>
@@ -85,8 +87,12 @@
             <option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option>
             <option th:value="9999999" th:text="'All'" th:selected="${pageSize == 'all'}"></option>
         </select>
+
+        <!-- ✅ Keep on same line -->
+        <span class="totalContent fw-semibold text-muted"></span>
     </div>
 </div>
+
 
 <div th:fragment="publicModalSmall">
     <!-- Modal structure -->

@@ -97,14 +97,23 @@
                             </button>
                         </td>
                         <td th:text="${device.presentTime}">categoryName</td>
-                        <td title="View Device User">
-                            <span th:each="du, iter : ${device.deviceUsers}"
-                                  th:if="${iter.last}"
-                                  th:text="${du.userName}">
-                            </span>
-                            <button class="btn btn-info btn-sm deviceUserHistory" th:data-device-id="${device.id}" th:data-button-id="componentsView" style="margin-left:5px;">
-                                &#128065;
-                            </button>
+                        <td title="View Device User" class="align-middle">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Username -->
+                                <span class="text-truncate" style="max-width: 140px;"
+                                      th:each="du, iter : ${device.deviceUsers}"
+                                      th:if="${iter.last}"
+                                      th:text="${du.userName}">
+                                 </span>
+
+                                <!-- Fixed-size button -->
+                                <button class="btn btn-info btn-sm ms-2 deviceUserHistory"
+                                        th:data-device-id="${device.id}"
+                                        th:data-button-id="componentsView"
+                                        style="flex-shrink: 0; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
+                                    &#128065;
+                                </button>
+                            </div>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">

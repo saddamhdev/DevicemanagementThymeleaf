@@ -319,7 +319,7 @@ function setListRequestStatus(requestId){
     });
 };
 
-window.initListRequestInventoryTable = function (allData,requestColumns,allAddData) {
+window.initListRequestInventoryTable = function (allData,requestColumns,allAddData,allDevice) {
     const tableBody = document.getElementById("listRequestInventoryTableBody");
     if (!tableBody) {
         console.error("Table body element with id 'listRequestInventoryTableBody' not found.");
@@ -339,7 +339,7 @@ window.initListRequestInventoryTable = function (allData,requestColumns,allAddDa
 
                 function getAvailability(categoryName) {
                     let count = 0;
-                    allAddData.forEach(device => {
+                    allDevice.forEach(device => {
                         if (device.categoryName === categoryName && device.userName === 'inventory') {
                             count++;
                         }

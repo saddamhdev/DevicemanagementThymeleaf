@@ -1,6 +1,6 @@
 
-const pageSize = 3; // size per request
-
+const pageSize = 2; // size per request
+const fullPageSize=999999999;
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
 let isLoading = false;
@@ -226,17 +226,18 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
                     }
                     if(pageName==='listRequestData'){
 
-                     // ✅ Await all three fetches
-                     const [requestData, requestColumns, allAddData] = await Promise.all([
-                         fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                         fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                         fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
-                     ]);
+                    // ✅ Await all three fetches
+                         const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
+                             fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
+                         ]);
 
-                     // ✅ Now they are resolved JSON arrays, not promises
-                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                         // ✅ Now they are resolved JSON arrays, not promises
+                        // window.initRequestDataTable(requestData, requestColumns, allAddData);
 
-                     window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
+                         window.initListRequestInventoryTable(requestData, requestColumns, allAddData,allDevice);
 
                      return;
 
@@ -443,17 +444,18 @@ const token = getAuthToken();
 
                 if(pageName==='listRequestData'){
 
-                     // ✅ Await all three fetches
-                     const [requestData, requestColumns, allAddData] = await Promise.all([
-                         fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                         fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                         fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
-                     ]);
+                    // ✅ Await all three fetches
+                         const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
+                             fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                             fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
+                         ]);
 
-                     // ✅ Now they are resolved JSON arrays, not promises
-                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                         // ✅ Now they are resolved JSON arrays, not promises
+                        // window.initRequestDataTable(requestData, requestColumns, allAddData);
 
-                     window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
+                         window.initListRequestInventoryTable(requestData, requestColumns, allAddData,allDevice);
 
                      return;
 
@@ -613,16 +615,17 @@ async function loadByRange(pageNumber, pageSize) {
                          try {
 
                                  // ✅ Await all three fetches
-                                 const [requestData, requestColumns, allAddData] = await Promise.all([
+                                 const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
                                      fetchDataFromDB(`/requestData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
                                      fetchDataFromDB(`/requestColumns/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                                     fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                                     fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                     fetchDataFromDB(`/allAddData/${pageName}?folder=superAdmin&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
                                  ]);
 
                                  // ✅ Now they are resolved JSON arrays, not promises
                                 // window.initRequestDataTable(requestData, requestColumns, allAddData);
 
-                                 window.initListRequestInventoryTable(requestData, requestColumns, allAddData);
+                                 window.initListRequestInventoryTable(requestData, requestColumns, allAddData,allDevice);
 
                                  return;
                              } catch (e) {
@@ -691,7 +694,16 @@ async function loadByRange(pageNumber, pageSize) {
                     row.remove();
                 }
             });
+          // ✅ Count only visible rows
+            const finalRowCount = [...tbody.querySelectorAll("tr")]
+                .filter(row => row.style.display !== "none")
+                .length;
 
+            // ✅ Update <p class="totalContent">
+            const totalContentEl = document.querySelector(".totalContent");
+            if (totalContentEl) {
+                totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+            }
           const fragmentInitializers = {
                       serviceProposalData: [
                           window.initServiceProposalTable,

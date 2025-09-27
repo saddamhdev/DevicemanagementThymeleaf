@@ -99,8 +99,8 @@ public class Fragment {
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndInventory("1","Purchased",pageable);
 
                List<RequestData> requestData=requestDataData.getContent();
-              // System.out.println(size+" "+requestData.size());
-              // requestData.forEach(System.out::println);
+               model.addAttribute(folderName + pageName, requestData.size());
+
                return ResponseEntity.ok(requestData);
            }
            if(pageName.equals("requestDataForPaymentExport")){
@@ -109,6 +109,7 @@ public class Fragment {
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchase("1","Accepted",pageable);
 
                List<RequestData> requestData=requestDataData.getContent();
+               model.addAttribute(folderName + pageName, requestData.size());
 
                return ResponseEntity.ok(requestData);
            }
@@ -122,8 +123,8 @@ public class Fragment {
                Page<RequestData> requestDataData=requestDataRepository.findByStatusAndPurchaseForSuperAdmin("1","Purchased",null,pageable);
 
                List<RequestData> requestData=requestDataData.getContent();
-               // System.out.println(size+" "+requestData.size());
-               // requestData.forEach(System.out::println);
+               model.addAttribute(folderName + pageName, requestData.size());
+
                return ResponseEntity.ok(requestData);
            }
        }
@@ -131,8 +132,8 @@ public class Fragment {
       // Page<AddData> result = addDataService.getPagedAddData(page, size, folderName,departmentName, pageName);
        Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
        List<RequestData> requestData=requestDataData.getContent();
-       // System.out.println(size+" "+requestData.size());
-        //requestData.forEach(System.out::println);
+       model.addAttribute(folderName + pageName, requestData.size());
+
        return ResponseEntity.ok(requestData);
    }
     @GetMapping("/requestColumns/{pageName}")
@@ -158,6 +159,8 @@ public class Fragment {
 
         Page<AddData> pagedAddData = addDataService.getPagedAddData(page, size,folderName,departmentName,pageName);
         List<AddData> allDeviceData = pagedAddData.getContent();
+        model.addAttribute(folderName + pageName, allDeviceData.size());
+
         return ResponseEntity.ok(allDeviceData);
     }
     @GetMapping("/serviceRequests/{pageName}")
@@ -177,8 +180,8 @@ public class Fragment {
 
                 Page<ServiceRequest> requestDataData=serviceRequestRepository.findByStatusAndAccessoriesPurchaseRequestStatus("1","Purchased",pageable);
                 List<ServiceRequest> requestData=requestDataData.getContent();
-                //System.out.println(size+" "+requestData.size());
-                //requestData.forEach(System.out::println);
+                model.addAttribute(folderName + pageName, requestData.size());
+
                 return ResponseEntity.ok(requestData);
             }
             if(pageName.equals("requestDataForPaymentExport")){
@@ -187,8 +190,8 @@ public class Fragment {
 
                 Page<ServiceRequest> requestDataData=serviceRequestRepository.findByStatusAndPurchaseProposalToCooAns("1","Accepted",pageable);
                 List<ServiceRequest> requestData=requestDataData.getContent();
-                //System.out.println(size+" "+requestData.size());
-                //requestData.forEach(System.out::println);
+                model.addAttribute(folderName + pageName, requestData.size());
+
                 return ResponseEntity.ok(requestData);
             }
         }
@@ -201,13 +204,16 @@ public class Fragment {
 
                 Page<ServiceRequest> requestDataData = serviceRequestRepository.findByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending","Accepted"), pageable);
                 List<ServiceRequest> requestData = requestDataData.getContent();
-                System.out.println(size+" "+requestData.size());
-                requestData.forEach(System.out::println);
+                model.addAttribute(folderName + pageName, requestData.size());
+
+
                 return ResponseEntity.ok(requestData);
             }
         }
         Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
+        model.addAttribute(folderName + pageName, serviceRequests.size());
+
         return ResponseEntity.ok(serviceRequests);
     }
     @GetMapping("/fragment1/{pageName}")
@@ -318,22 +324,19 @@ public class Fragment {
 
         List<AddData> allDeviceData = pagedAddData.getContent();
 
+        model.addAttribute(folderName + pageName, allDeviceData.size());
 
-        //allDeviceData.forEach(System.out::println);
-        // ✅ Correct lastPage calculation
-        model.addAttribute("lastPage" + pageName, pagedAddData.isLast());
-        model.addAttribute("totalPage" + pageName, pagedAddData.getTotalPages());
+
 
         // Optional debug log
         Page<ServiceRequest> serviceRequestsData = serviceRequestService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
         List<ServiceRequest> serviceRequests = serviceRequestsData.getContent();
-        model.addAttribute("lastPage"+pageName, serviceRequestsData.isLast());
-        model.addAttribute("totalPage"+pageName, serviceRequestsData.getTotalPages());
-         //System.out.println("Page "+pageName);
+        model.addAttribute(folderName + pageName, serviceRequests.size());
+
+        //System.out.println("Page "+pageName);
         Page<RequestData> requestDataData=requestDataService.getPagedAddData(page, size,folderName,departmentName,pageName); // ✅ page 0, size 10
         List<RequestData> requestData=requestDataData.getContent();
-        model.addAttribute("lastPage"+pageName, requestDataData.isLast());
-        model.addAttribute("totalPage"+pageName, requestDataData.getTotalPages());
+        model.addAttribute(folderName + pageName, requestData.size());
 
         // Inject other required data (non-paginated for now)
         List<Category> categories = categoriesService.Category();

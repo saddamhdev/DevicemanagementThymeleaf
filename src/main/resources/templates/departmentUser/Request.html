@@ -21,7 +21,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <!-- Left: Page Size Selector -->
                     <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
-
+                     <p class="totalContent" ></p>
                     <!-- Right: Search Box -->
                     <div style="width: 250px;">
                         <input type="text" class="form-control search-input global-user-search"
@@ -95,9 +95,9 @@
                         </td>
 
                         <td>
-        <span th:if="${device.requestMode == 'Denied'}">
-            <a href="#" th:data-reject-cause="${device.rejectCause}" onclick="printRejectCause(this)" style="text-decoration:none">Denied</a>
-        </span>
+                            <span th:if="${device.requestMode == 'Denied'}">
+                                <a href="#" th:data-reject-cause="${device.rejectCause}" onclick="printRejectCause(this)" style="text-decoration:none">Denied</a>
+                            </span>
                             <span th:unless="${device.requestMode == 'Denied'}" th:text="${device.requestMode}"></span>
                         </td>
 
@@ -133,6 +133,8 @@
                     </tbody>
 
                 </table>
+                    <p class="totalContent"></p>
+
                 </div>
             </div>
         </div>

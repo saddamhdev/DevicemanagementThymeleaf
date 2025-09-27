@@ -1,4 +1,4 @@
-const pageSize = 3; // size per request
+const pageSize = 2; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -286,6 +286,18 @@ function loadByRange(pageNumber, pageSize) {
                 }
             });
 
+            // ✅ Count only visible rows
+            const finalRowCount = [...tbody.querySelectorAll("tr")]
+                .filter(row => row.style.display !== "none")
+                .length;
+
+            // ✅ Update <p class="totalContent">
+            const totalContentEl = document.querySelector(".totalContent");
+            if (totalContentEl) {
+                totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+            }
+
+
             // Page-specific initializers map
             const fragmentInitializers = {
                 serviceRequest: [window.initServiceRequestGeneral ,window.initGlobalDivToggle],
@@ -316,6 +328,8 @@ function loadByRange(pageNumber, pageSize) {
                    if (typeof window.setupGlobalFilter === "function") {
                        window.setupGlobalFilter();
                    }
+
+
         })
         .catch(error => {
             console.error("❌ Error loading rows:", error);

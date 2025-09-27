@@ -1,5 +1,6 @@
 
-const pageSize = 3; // size per request
+const pageSize = 2; // size per request
+const fullPageSize=999999999;
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -106,13 +107,15 @@ async function loadFragment(pageName) {
         // ✅ Special handling for requestData
         if (pageName === 'requestData') {
             //console.log("Before");
-            const [requestData, requestColumns, allAddData] = await Promise.all([
-                fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
-            ]);
-
-            window.initRequestDataTable(requestData, requestColumns, allAddData);
+           const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
+                            fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                            fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                            fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                            fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
+                        ]);
+                       // console.log("Next");
+                       // console.log("✅ requestData loaded:", requestData);
+                        window.initRequestDataTable(requestData, requestColumns, allAddData,allDevice);
             return ;
         }
          if(pageName==='serviceAccessoriesPendingData'){
@@ -237,14 +240,15 @@ async function loadFragment(pageName) {
          // ✅ Special handling for requestData
          if (pageName === 'requestData') {
             // console.log("Before");
-             const [requestData, requestColumns, allAddData] = await Promise.all([
+             const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
                  fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
                  fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                 fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                 fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                 fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
              ]);
             // console.log("Next");
             // console.log("✅ requestData loaded:", requestData);
-             window.initRequestDataTable(requestData, requestColumns, allAddData);
+             window.initRequestDataTable(requestData, requestColumns, allAddData,allDevice);
              return;
          }
 
@@ -468,15 +472,15 @@ async function loadByRange(pageNumber, pageSize) {
 
                 else if (pageName === 'requestData') {
                              try {
-                                 // ✅ Await all three fetches
-                                 const [requestData, requestColumns, allAddData] = await Promise.all([
-                                     fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                                     fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                                     fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
-                                 ]);
-
-                                 // ✅ Now they are resolved JSON arrays, not promises
-                                 window.initRequestDataTable(requestData, requestColumns, allAddData);
+                                   const [requestData, requestColumns, allAddData,allDevice] = await Promise.all([
+                                                  fetchDataFromDB(`/requestData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                                  fetchDataFromDB(`/requestColumns/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                                  fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                                                  fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
+                                              ]);
+                                             // console.log("Next");
+                                             // console.log("✅ requestData loaded:", requestData);
+                                              window.initRequestDataTable(requestData, requestColumns, allAddData,allDevice);
                                  return;
                              } catch (e) {
                                  console.error("❌ Error loading requestData:", e);
@@ -526,6 +530,17 @@ async function loadByRange(pageNumber, pageSize) {
                     row.remove();
                 }
             });
+
+            // ✅ Count only visible rows
+            const finalRowCount = [...tbody.querySelectorAll("tr")]
+                .filter(row => row.style.display !== "none")
+                .length;
+
+            // ✅ Update <p class="totalContent">
+            const totalContentEl = document.querySelector(".totalContent");
+            if (totalContentEl) {
+                totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+            }
 
              // Page-specific initializers map
                 const fragmentInitializers = {

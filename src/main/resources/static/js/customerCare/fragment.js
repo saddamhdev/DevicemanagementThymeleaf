@@ -1,5 +1,5 @@
 
-const pageSize = 3; // size per request
+const pageSize = 2; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -337,7 +337,16 @@ const token = getAuthToken();
                     row.remove();
                 }
             });
+           // ✅ Count only visible rows
+               const finalRowCount = [...tbody.querySelectorAll("tr")]
+                   .filter(row => row.style.display !== "none")
+                   .length;
 
+               // ✅ Update <p class="totalContent">
+               const totalContentEl = document.querySelector(".totalContent");
+               if (totalContentEl) {
+                   totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+               }
 
           const fragmentInitializers = {
             requestData: [window.initRequestDataTable, window.initRequestDataGeneral ,window.initGlobalDivToggle],

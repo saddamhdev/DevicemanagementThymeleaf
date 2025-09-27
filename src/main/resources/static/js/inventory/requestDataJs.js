@@ -329,7 +329,7 @@ function formatTime(inputDateTime) {
 
                     return formattedTime;
                 }
-window.initRequestDataTable = function (allData,requestColumns,allAddData) {
+window.initRequestDataTable = function (allData,requestColumns,allAddData,allDevice) {
     const tableBody = document.getElementById("requestInventoryTableBody");
     if (!tableBody) return;
 
@@ -345,7 +345,7 @@ window.initRequestDataTable = function (allData,requestColumns,allAddData) {
 
                 function getAvailability(categoryName) {
                     let count = 0;
-                    allAddData.forEach(device => {
+                    allDevice.forEach(device => {
                         if (device.categoryName === categoryName && device.userName === 'inventory') {
                             count++;
                         }
@@ -469,7 +469,7 @@ window.initRequestDataTable = function (allData,requestColumns,allAddData) {
                                                      title="Send Alternative Device Request"
                                                     data-request-id="${device.id}">&#128172;</button>`;
                                         }
-
+                                    if (device.purchase?.purchaseDeviceSenderToInventoryDeviceId !== null) {
                                         htmlData += `
                                             <button class="btn btn-info btn-sm view-button chat"
                                                 data-buyingdevice-id="${device.purchase?.purchaseDeviceSenderToInventoryDeviceId}"
@@ -478,8 +478,10 @@ window.initRequestDataTable = function (allData,requestColumns,allAddData) {
                                                 data-request-id="${device.id}"
                                                 title="View Delivery device">
                                                 &#128065;
-                                            </button>
-                                            </div></td>`;
+                                            </button>`;
+                                            }
+
+                                            htmlData += `  </div></td>`;
 
                                         row.innerHTML = htmlData;
                                         tableBody.appendChild(row);
