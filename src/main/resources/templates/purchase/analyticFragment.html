@@ -68,15 +68,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="card shadow-sm text-center">
-          <div class="card-body">
-            <i class="fas fa-tools dashboard-icon text-danger mb-2"></i>
-            <h5 class="card-title">Servicing</h5>
-            <span id="servicingCount" class="badge bg-danger fs-6 px-3 py-2" th:text="${servicingCount}">0</span>
-          </div>
-        </div>
-      </div>
+
       <div class="col-md-3">
         <div class="card shadow-sm text-center">
           <div class="card-body">
@@ -95,6 +87,19 @@
           </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <i class="fas fa-clipboard-check dashboard-icon text-success mb-2"></i>
+            <h5 class="card-title">Total Purchase Requests Completed</h5>
+            <span id="servicingCountCompleted"
+                  class="badge bg-success fs-6 px-3 py-2"
+                  th:text="${requestCountTotal-requestCountContinues}">0</span>
+          </div>
+        </div>
+      </div>
+
 
     </div>
 

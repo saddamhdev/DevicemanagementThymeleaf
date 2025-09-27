@@ -236,7 +236,7 @@ function sendDeliveryDevice(requestId,deviceId){
              }
          });
 }
-function approveFinalPurchaseDeviceDelivery(requestId,deviceId){
+function approveFinalPurchaseDeviceDelivery1(requestId,deviceId){
  // Define the Service class
 
          var mergedFormData = {}; // Object to hold all form data based on formId
@@ -252,10 +252,11 @@ function approveFinalPurchaseDeviceDelivery(requestId,deviceId){
          $.ajax({
              url: "/superAdmin/approveFinalPurchaseDeviceDelivery",
              type: "POST",
+              contentType: 'application/json', // Ensure content type is JSON
              headers: {
 
-                               'Authorization': 'Bearer ' + getAuthToken()
-                           },
+                       'Authorization': 'Bearer ' + getAuthToken()
+                   },
              data: JSON.stringify({
                   requestId: requestId,
                   deviceId: deviceId ,
@@ -446,7 +447,7 @@ window.initDeliveryPurchaseDeviceGeneral = function (allData, requestColumns, al
         const requestId = $(this).data('request-id');
         const deviceId = $(this).data('buyingdevice-id');
         if (confirm("Are you sure you want to approve delivery for this device?")) {
-            approveFinalPurchaseDeviceDelivery(requestId, deviceId);
+            approveFinalPurchaseDeviceDelivery1(requestId, deviceId);
         }
     });
 };

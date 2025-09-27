@@ -27,19 +27,9 @@
                 <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'analyticFragment')">
                     <i class="fas fa-home me-2"></i> Home
                 </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
-                    <i class="fas fa-desktop me-2"></i> Device List
-                    <i class="fas fa-chevron-down float-end"></i>
-                    <ul class="list-group nested-list">
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation(); toggleListItem(this,'deviceList')">
-                            <i class="fas fa-list me-2"></i> Device List
-                        </li>
-                        <li class="list-group-item leftListBgColor"
-                            onclick="event.stopPropagation(); toggleListItem(this,'deviceInformation')">
-                            <i class="fas fa-plus-circle me-2"></i> Add Device
-                        </li>
-                    </ul>
+
+                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">
+                    <i class="fas fa-plus-circle me-2"></i> Add Device
                 </li>
 
                 <li class="list-group-item leftListBgColor" onclick="toggleList(this)">
@@ -104,9 +94,9 @@
                             onclick="event.stopPropagation(); toggleListItem(this,'listRequestData')">
                             <i class="fas fa-box-open me-2"></i> Alternative Device Request
                         </li>
-                        <!-- <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'customerCareRequestData')">
+                        <li class="list-group-item leftListBgColor" onclick="event.stopPropagation(); toggleListItem(this,'customerCareRequestData')">
                              <i class="fas fa-headset me-2"></i> CustomerCare RequestList
-                         </li>-->
+                         </li>
                         <li class="list-group-item leftListBgColor"
                             onclick="event.stopPropagation(); toggleListItem(this,'unOrderedDevice')">
                             <i class="fas fa-ban me-2"></i> UnOrdered Device
@@ -137,10 +127,10 @@
                     </ul>
                 </li>
 
-                <!--<li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
+                <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
                     <i class="fas fa-broom me-2"></i> Clear Cache
                 </li>
--->
+
                 <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                     <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </li>
