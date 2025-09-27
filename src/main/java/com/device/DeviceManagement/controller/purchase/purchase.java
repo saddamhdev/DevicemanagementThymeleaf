@@ -1125,6 +1125,11 @@ public class purchase {
                     for (String header : filteredHeaders) {
                         String value = row.getOrDefault(header, "");
 
+                        // Special case: Export Status
+                        if (header.toLowerCase().startsWith("export status") && "Not Exported".equalsIgnoreCase(value)) {
+                            value = "First Exported";
+                        }
+
                         // Clean only the "Description" field
                         if ("Description".equalsIgnoreCase(header)) {
                             value = value.replaceAll("\\s+", " ").trim();
