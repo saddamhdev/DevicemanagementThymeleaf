@@ -128,6 +128,16 @@ public interface ServiceRequestRepository extends MongoRepository<ServiceRequest
             "{ $match: { status: ?0 } }",
             "{ $unwind: '$allProblem' }",
             "{ $unwind: '$allProblem.proposalSolution' }",
+            "{ $match: { 'allProblem.proposalSolution.deviceManageType': ?1 } }",
+            "{ $match: { 'allProblem.proposalSolution.purchaseDeviceSenderToInventoryStatus': { $exists: false, $ne: ?2 }} }",
+            "{ $count: 'count' }"
+    })
+    Long countPurchasedOccurrencesPending(String status, String deviceManageType, String purchaseDeviceSenderToInventoryStatus);
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0 } }",
+            "{ $unwind: '$allProblem' }",
+            "{ $unwind: '$allProblem.proposalSolution' }",
             "{ $match: { 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': ?1 } }",
             "{ $match: { 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': { $ne: ?2 } } }",
             "{ $count: 'count' }"

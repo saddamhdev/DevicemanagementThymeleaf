@@ -96,5 +96,25 @@ public interface RequestDataRepository extends MongoRepository<RequestData, Stri
             String cooAns
     );
 
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'inventory.inventoryStatus':{$in: ?1}, 'inventory.inventoryToAlternativeDeviceRequestStatus': { $exists: true, $eq: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndCooAlternativeDevicePending(
+            String status,
+            List<String> inventoryStatus,
+            String cooAns
+    );
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: ?0, 'inventory.inventoryStatus': ?1, 'purchase.purchaseDeviceSenderToInventoryStatus': {  $ne: ?2 } } }",
+            "{ $count: 'count' }"
+    })
+    Long countByStatusAndPurchaseRequestContinues(
+            String status,
+            String inventoryStatus,
+            String cooAns
+    );
+
 
 }

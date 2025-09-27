@@ -255,12 +255,8 @@ public class Fragment {
             model.addAttribute("servicingCount", serviceRequestRepository.countByStatusAndDepartmentName("1",departmentName));
             Long totalPurchased = serviceRequestRepository.countPurchasedOccurrences("1", "Purchased");
             if (totalPurchased == null) totalPurchased = 0L;
-            System.out.println(totalPurchased);
-            model.addAttribute(
-                    "requestCount",
-                    requestDataRepository.countByStatusAndInventory_InventoryStatus("1", "Purchased")
-                            + totalPurchased
-            );
+            model.addAttribute("requestCountTotal", requestDataRepository.countByStatusAndInventory_InventoryStatus("1", "Purchased") + totalPurchased);
+            model.addAttribute("requestCountContinues", requestDataRepository.countByStatusAndPurchaseRequestContinues("1", "Purchased","Accepted") + serviceRequestRepository.countPurchasedOccurrencesPending("1", "Purchased","Accepted"));
 
             return folderName + "/" + pageName + " :: " + pageName;
         }
@@ -287,6 +283,7 @@ public class Fragment {
 
             model.addAttribute("requestCountTotalPurchaseRequest", (requestDataRepository.countByStatusAndPurchaseForSuperAdmin("1","Purchased",null)+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheck("1", List.of("Pending","Accepted"))));
             model.addAttribute("requestCountTotalPurchaseRequestPending", (requestDataRepository.countByStatusAndPurchaseForSuperAdminPending("1","Purchased","Pending")+serviceRequestRepository.countByStatusAndPurchaseProposalToCooAnsEmptyCheckPending("1", "Pending")));
+            model.addAttribute("requestCountTotalAlternative", requestDataRepository.countByStatusAndCooAlternativeDevicePending("1",List.of("Alternative Proposal","Alternative Proposal Accepted"),"Pending"));
 
             model.addAttribute("requestCountTotal", requestDataRepository.countByStatus("1"));
             model.addAttribute("requestCountPending", requestDataRepository.countByStatusAndRequestMode("1","Pending"));
