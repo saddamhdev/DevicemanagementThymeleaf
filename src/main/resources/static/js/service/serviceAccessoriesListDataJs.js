@@ -188,6 +188,16 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
                         row.remove();
                     }
                 });
+                // ✅ After rows are rendered, count only visible rows
+                    const finalRowCount = [...tableBody.querySelectorAll("tr")]
+                        .filter(row => row.style.display !== "none")
+                        .length;
+
+                    // ✅ Update <p class="totalContent">
+                    const totalContentEl = document.querySelector(".totalContent");
+                    if (totalContentEl) {
+                        totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+                    }
 
              sortAndFormatAllTables();
      // Add event listener for the availability button click

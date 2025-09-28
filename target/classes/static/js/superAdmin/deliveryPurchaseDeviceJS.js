@@ -442,6 +442,17 @@ window.initDeliveryPurchaseDeviceGeneral = function (allData, requestColumns, al
         }
     });
 
+    // ✅ After rows are rendered, count only visible rows
+        const finalRowCount = [...tableBody.querySelectorAll("tr")]
+            .filter(row => row.style.display !== "none")
+            .length;
+
+        // ✅ Update <p class="totalContent">
+        const totalContentEl = document.querySelector(".totalContent");
+        if (totalContentEl) {
+            totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+        }
+
     // Step 4: Attach action listener
     $(document).off('click', '.approveDeliveryDevice').on('click', '.approveDeliveryDevice', function () {
         const requestId = $(this).data('request-id');
