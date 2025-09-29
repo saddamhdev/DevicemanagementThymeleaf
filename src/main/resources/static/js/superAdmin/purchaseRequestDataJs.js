@@ -330,12 +330,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
                                                              problem.proposalSolution.forEach(function(solution) {
                                                               if(solutionName===solution.name){
-                                                                  console.log("Name:", solution.name);
-                                                                  console.log("Value:", solution.value);
-                                                                  console.log("Category:", solution.category);
-                                                                  console.log("Price:", solution.price);
-                                                                  console.log("Action:", solution.action);
-                                                                  console.log("Comment:", solution.comment);
+
 
                                                                    $("#detailsId").text("Details: " + solution.purchaseProposalToCooDetails);
                                                                   $("#budgetId").text("Budget: " + solution.purchaseProposalToCooBudget);
@@ -372,7 +367,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
                                                    }
                                                });
-                                               $('#saveEditBtn1').click(function(event) {
+                                   $('#saveEditBtn1').click(function(event) {
                                     event.preventDefault(); // Prevent the default action (form submission)
                                     var serviceId=$(this).data('service-id');
                                     var problemName=$(this).data('problemname-id');
@@ -390,20 +385,15 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                         }
                                     });
 
-                                    if(selectedRows.length==0){
-                                      CustomAlert("Please select a device.");
-                                    }
-                                    else{
-                                      // Show a confirmation alert
-                                       const userConfirmed = confirm("Do you want to proceed with the selected device?");
-                                       if (userConfirmed) {
-                                            hideModal();
-                                           purchaseRequestForService(serviceId,problemName,solutionName,selectedRows);
-                                       } else {
-                                           console.log("User canceled.");
-                                           // Handle the cancel action here
-                                       }
-                                    }
+                                   // Show a confirmation alert
+                                  const userConfirmed = confirm("Do you want to proceed with the selected device?");
+                                  if (userConfirmed) {
+                                       hideModal();
+                                      purchaseRequestForService(serviceId,problemName,solutionName,selectedRows);
+                                  } else {
+                                      console.log("User canceled.");
+                                      // Handle the cancel action here
+                                  }
 
                                 });
 
