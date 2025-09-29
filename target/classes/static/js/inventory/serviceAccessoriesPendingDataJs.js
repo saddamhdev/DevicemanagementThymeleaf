@@ -233,7 +233,6 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , 
 
                                             ${
 
-                                                solution.inventoryForPurchaseRequestStatus === null
                                                 ? `<input type="checkbox"
                                                       data-category="${solution.category}"
                                                       data-solution-name="${solution.name}"
