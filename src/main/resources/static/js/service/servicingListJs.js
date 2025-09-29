@@ -2300,7 +2300,8 @@ window.initServicingListGeneral = function () {
                }
      else if (buttonId === "accessoriesProposal")
      {
-     print('serviceRequests', function(serviceRequests) {
+         print('serviceRequests', function(serviceRequests)
+          {
          if (serviceRequests) {
              const serviceData = serviceRequests.find(item => item.id === serviceId);
 
@@ -2413,7 +2414,7 @@ window.initServicingListGeneral = function () {
 
                  const categoryName   = ($catInput.val() || '').trim();
                  const inputValueList = ($listDiv.find('textarea').val() || '').trim();
-
+                // alert(categoryName);
                  if (!categoryName) { CustomAlert?.('Please select a category.'); return; }
                  if (!inputValueList) { CustomAlert?.('Please enter accessory details.'); return; }
 
@@ -2509,15 +2510,212 @@ window.initServicingListGeneral = function () {
                      accessoriesProposal(serviceId);
                  });
 
-                 $('.remove-problem').click(function () {
-                     $(this).closest('.fieldDiv').remove();
-                 });
+                     $('.remove-problem').click(function () {
+                         $(this).closest('.fieldDiv').remove();
+                     });
 
-                 showModalAccessories();
+                                     showModalAccessories();
+                                 }
+                             }
+          });
+     }
+  else if (buttonId === "accessoriesProposalEdit") {
+         print('serviceRequests', function(serviceRequests) {
+           if (serviceRequests) {
+             const serviceData = serviceRequests.find(item => item.id === serviceId);
+
+             if (serviceData && serviceData.allProblem) {
+               let categoriesHtml = '';
+
+               // Loop problems
+               serviceData.allProblem.forEach((problem, index) => {
+                 const problemId = problem.name.replace(/\s+/g, '-');
+
+                 // --- Preload from DB (proposalSolution) ---
+                 let accessoriesHtml = '';
+                 if (problem.proposalSolution && problem.proposalSolution.length > 0) {
+                   problem.proposalSolution.forEach((acc, i) => {
+                     const uid = `acc-${problemId}-${i}`;
+                     accessoriesHtml += `
+                       <div class="fieldDiv my-2" id="${uid}">
+                         <div class="card shadow-sm">
+                           <div class="card-body p-2">
+                             <div class="d-flex justify-content-between align-items-center mb-1">
+                               <span class="fw-semibold text-muted">${acc.category}</span>
+                               <button class="btn btn-sm btn-outline-danger remove-problem"
+                                       type="button" data-target="${uid}">&times;</button>
+                             </div>
+                             <textarea class="form-control problem-input"
+                                       name="${acc.category}(${acc.name})"
+                                       rows="1">${acc.value || ''}</textarea>
+                           </div>
+                         </div>
+                       </div>
+                     `;
+                   });
+                 }
+
+                 categoriesHtml += `
+                   <form id="${problemId}">
+                     <div class="mb-3">
+                       <label class="form-label fw-bold">
+                         <span style="color: #555;">[${index + 1}]</span> ${problem.name}
+                       </label>
+                     </div>
+                     <div class="row align-items-center mb-1">
+                       <div class="col-sm-4 mb-3">
+                         <div class="dropdown" id="${problemId}-categoryName">
+                           <input type="text" class="form-control dropdown-toggle deviceInputFieldAdd"
+                                  data-bs-toggle="dropdown" placeholder="Select Device Category"
+                                  data-problem-id="${problemId}">
+                           <ul class="dropdown-menu custom-dropdown-menu">
+                             <div class="listItemAddDevice"></div>
+                           </ul>
+                         </div>
+                         <div id="${problemId}-listName"></div>
+                       </div>
+                       <div id="${problemId}-div" class="col-sm-8 mb-1">
+                         ${accessoriesHtml}
+                       </div>
+                     </div>
+                     <div class="mb-1">
+                       <button type="button" class="btn btn-primary add-accessories-btn"
+                               data-problem="${problemId}">Add Accessories</button>
+                     </div>
+                   </form>
+                 `;
+               });
+
+               // --- Modal ---
+               $('#publicModalAccessoriesNvn').html(`
+                 ${categoriesHtml}
+                <div class="mb-3" style="margin-right: 0%; text-align: center;">
+                   <button type="button" class="btn btn-primary" id="AcceptBtn">Save</button>
+                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                 </div>
+               `);
+               $('#publicModalLabelAccessories').text("Add Accessories For Each Problem");
+
+               // --- Load Categories ---
+               print('categories', function(categories) {
+                 if (categories) {
+                   let categoriesHtml = '';
+                   categories.forEach(cat => {
+                     categoriesHtml += `<li><a class="dropdown-item deviceInputEachItem" href="#" data-category="${cat.categoryName}">${cat.categoryName}</a></li>`;
+                   });
+
+                   $('.listItemAddDevice').html(categoriesHtml);
+
+                   $('.deviceInputEachItem').click(function() {
+                     const selectedCategory = $(this).data('category');
+                     const dropdownInputField = $(this).closest('.dropdown').find('.deviceInputFieldAdd');
+                     dropdownInputField.val(selectedCategory);
+
+                     const problemId = dropdownInputField.data('problem-id');
+                     const bodyList = `
+                       <div class="my-3">
+                         <label class="form-label fw-semibold text-primary">Description</label>
+                         <textarea class="form-control deviceInputFieldAddList border-primary"
+                                   placeholder="Describe about accessories..." rows="2"></textarea>
+                       </div>
+                     `;
+                     dropdownInputField.closest('form').find(`#${problemId}-listName`).html(bodyList);
+                   });
+                 }
+               });
+
+               // --- Add accessory ---
+               $(document).on('click', '.add-accessories-btn', function() {
+                 const problemId = $(this).data('problem');
+                 const $problemDiv = $('#' + problemId + '-div');
+                 const $listDiv = $('#' + problemId + '-listName');
+                 const $catInput = $('#' + problemId + '-categoryName input');
+
+                 const categoryName = ($catInput.val() || '').trim();
+                 const inputValueList = ($listDiv.find('textarea').val() || '').trim();
+
+                 if (!categoryName) { CustomAlert?.('Please select a category.'); return; }
+                 if (!inputValueList) { CustomAlert?.('Please enter accessory details.'); return; }
+
+                 addNewAccessoryInput($problemDiv, inputValueList, categoryName);
+
+                 $catInput.val('');
+                 $listDiv.find('textarea').val('');
+               });
+
+               // --- Helpers ---
+               function escapeHtml(str = "") {
+                 return String(str)
+                   .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                   .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+                   .replace(/'/g, "&#039;");
+               }
+
+               function ensureContainerId($el) {
+                 let id = $el.attr('id');
+                 if (!id) {
+                   id = `acc-container-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                   $el.attr('id', id);
+                 }
+                 return id;
+               }
+
+               function addNewAccessoryInput(problemDiv, inputValueList, categoryName) {
+                 const $container = $(problemDiv);
+                 const containerId = ensureContainerId($container);
+
+                 const category = escapeHtml(categoryName);
+                 const value = escapeHtml(inputValueList);
+                 const uid = `acc-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+                 const block = `
+                   <div class="fieldDiv my-3" id="${uid}">
+                     <div class="card border-0 shadow-sm rounded-2">
+                       <div class="card-body p-3">
+                         <div class="d-flex align-items-center mb-2">
+                           <span class="badge text-bg-secondary me-2 serial-number"></span>
+                           <span class="text-muted small me-1">Category:</span>
+                           <span class="fw-semibold">${category}</span>
+                         </div>
+                         <div class="input-group">
+                           <textarea class="form-control problem-input"
+                                     name="${category}(${value})"
+                                     rows="1">${value}</textarea>
+                           <button class="btn btn-outline-danger remove-problem"
+                                   type="button"
+                                   data-target="${uid}"
+                                   data-container-id="${containerId}">&times;</button>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 `;
+                 $container.append(block);
+                 updateSerialNumbers($container);
+               }
+
+               function updateSerialNumbers($container) {
+                 $container.find('.fieldDiv .serial-number').each(function(i) {
+                   $(this).text(i + 1);
+                 });
+               }
+
+               $(document).on('click', '.remove-problem', function() {
+                 const targetId = $(this).data('target');
+                 $('#' + targetId).remove();
+               });
+
+               // --- Save Button ---
+               $('#AcceptBtn').click(function() {
+                 accessoriesProposal(serviceId);
+               });
+
+               showModalAccessories();
              }
-         }
-     });
- }
+           }
+         });
+       }
+
 
      else if (button.hasClass("Delete")) {
       const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
@@ -2562,6 +2760,9 @@ window.initServicingListGeneral = function () {
     }
   });
 };
+
+
+
 
 function showModal(){
 $('#publicModal').modal('show');

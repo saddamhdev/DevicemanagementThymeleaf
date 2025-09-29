@@ -24,9 +24,7 @@
                         <li th:each="category : ${data}"><a class="dropdown-item individualTopSelection" href="#" th:text="${category.categoryName}"></a></li>
                     </ul>
                 </div>
-                <div class="d-flex justify-content-center mb-2">
-                    <button class="btn btn-success btn-sm" onclick="addUerToggle111()" >Add</button>
-                </div>
+
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <!-- Left: Page Size Selector -->
                     <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>

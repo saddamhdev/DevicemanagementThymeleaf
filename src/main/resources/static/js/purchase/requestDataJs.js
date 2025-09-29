@@ -416,7 +416,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
 
                     if (!currentRowMap.has(rowKey)) {
                         const row = document.createElement("tr");
-                        row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
+
 
                         let htmlData = `
                             <td>${sn}</td>
@@ -471,11 +471,18 @@ function saveTableInformationOfDevice(requestId,categoryName){
                                     : ''
                                 }
 
-                                ${device.purchase?.cooAns !== 'Accepted'
+                                ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.purchaseRequestProviderManInfo  === null
                                     ? `<button class="btn btn-secondary btn-sm chat-button"
                                           data-request-id="${device.id}"
                                           data-button-id="sendProposal"
                                           title="Send Proposal to Coo">&#128172;</button>`
+                                    : ''
+                                }
+                                 ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.purchaseRequestProviderManInfo  !== null
+                                    ? `<button class="btn btn-secondary btn-sm chat-buttonEdit"
+                                          data-request-id="${device.id}"
+                                          data-button-id="sendProposalEdit"
+                                          title="Edit Proposal ">&#128172;</button>`
                                     : ''
                                 }
 
@@ -1058,6 +1065,99 @@ function saveTableInformationOfDevice(requestId,categoryName){
 
                showModalMedium();
            }
+             else if (buttonId === "sendProposalEdit") {
+                 // First fetch requestData from backend
+                 print('requestData', function(requestData) {
+                     if (requestData) {
+                         const result = requestData.find(d => d.id === requestId);
+
+                         if (!result || !result.purchase) {
+                             CustomAlert("No purchase data found to edit.");
+                             return;
+                         }
+
+                         // Pre-fill values
+                         const detailsVal = result.purchase.details || "";
+                         const budgetVal = result.purchase.budget || "";
+                         const links = result.purchase.links || [];
+
+                         // Build form
+                         var htmlToAdd = `
+                             <form id="linkForm">
+                                 <div class="mb-3">
+                                     <label for="details" class="form-label">Details</label>
+                                     <textarea class="form-control" id="details" name="details"
+                                         placeholder="Details">${detailsVal}</textarea>
+                                 </div>
+                                 <div class="mb-3">
+                                     <label for="budget" class="form-label">Budget</label>
+                                     <input type="number" class="form-control" name="budget" id="budget"
+                                         placeholder="Budget" value="${budgetVal}">
+                                 </div>
+                                 <div class="mb-3">
+                                     <label class="form-label">Links:</label>
+                                 </div>
+                                 <div id="linkDiv" class="mb-3">
+                         `;
+
+                         // Add existing links
+                         links.forEach((link, i) => {
+                             htmlToAdd += `
+                                 <div class="input-group mb-3">
+                                     <input type="text" class="form-control"
+                                            name="link${i+1}" value="${link}" placeholder="link${i+1}">
+                                     <div class="input-group-append">
+                                         <button class="btn btn-outline-secondary remove-link" type="button">X</button>
+                                     </div>
+                                 </div>
+                             `;
+                         });
+
+                         htmlToAdd += `
+                                 </div>
+                                 <div class="mb-3">
+                                     <button type="button" class="btn btn-primary" id="addLinkBtn">Add Link</button>
+                                 </div>
+                             </form>
+                             <div class="mb-3" style="margin-left: 0%; text-align: center;">
+                                 <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
+                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                             </div>
+                         `;
+
+                         $('.ModalMedium').html(htmlToAdd);
+                         $('#publicModalMediumLabel').text("Edit Purchase Request");
+
+                         // Add new link
+                         $('#addLinkBtn').click(function() {
+                             var linkCount = $('#linkDiv .input-group').length + 1;
+                             var htmlToAppend = `
+                                 <div class="input-group mb-3">
+                                     <input type="text" class="form-control"
+                                            name="link${linkCount}" placeholder="link${linkCount}">
+                                     <div class="input-group-append">
+                                         <button class="btn btn-outline-secondary remove-link" type="button">X</button>
+                                     </div>
+                                 </div>
+                             `;
+                             $('#linkDiv').append(htmlToAppend);
+                         });
+
+                         // Remove link
+                         $('#linkDiv').on('click', '.remove-link', function() {
+                             $(this).closest('.input-group').remove();
+                         });
+
+                         // Save
+                         $('#saveEditBtn').click(function() {
+                             saveFormData(requestId);
+                         });
+
+                         showModalMedium();
+                     }
+                 });
+             }
+
 
          else if (buttonId === "viewLink") {
 
@@ -1246,13 +1346,24 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                                                     data-button-id="accepted"
                                                     style="background-color: green;" title="Add Device Information">✔</button>` : ''}
 
-                                            ${solution.purchaseProposalToCooAns !== 'Accepted' ? `
+                                            ${solution.purchaseProposalToCooAns !== 'Accepted' && solution.purchaseProposalToCooManInfo === null
+                                             ? `
                                                 <button class="btn btn-secondary btn-sm chat-buttonForService"
                                                     data-problemname-id="${problem.name}"
                                                     data-solutionname-id="${solution.name}"
                                                     data-service-id="${device.id}"
                                                     data-button-id="chat"
                                                     title="Send Proposal to Coo">&#128172;</button>` : ''}
+
+                                             ${solution.purchaseProposalToCooAns !== 'Accepted'  && solution.purchaseProposalToCooManInfo !== null
+
+                                              ? `
+                                                <button class="btn btn-secondary btn-sm chat-buttonForServiceEdit"
+                                                    data-problemname-id="${problem.name}"
+                                                    data-solutionname-id="${solution.name}"
+                                                    data-service-id="${device.id}"
+                                                    data-button-id="chatEdit"
+                                                    title="Edit Proposal">&#128172;</button>` : ''}
 
                                             ${solution.purchaseProposalToCooAns === 'Accepted' ? `
                                                 <button class="btn btn-info btn-sm viewAcceptingLink"
@@ -1292,7 +1403,7 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                               }
 
                sortAndFormatAllTables();
-       $(document).on('click', '.deliverForService', function(){
+              $(document).on('click', '.deliverForService', function(){
        var deviceId = $(this).data('buyingdevice-id');
        var category = $(this).data('category-id');
        var serviceId = $(this).data('service-id');
@@ -1825,6 +1936,106 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
 
                          showModalMedium();
                        });
+               $(document).on('click', '.chat-buttonForServiceEdit', function () {
+                   var serviceId = $(this).data('service-id');
+                   var problemName = $(this).data('problemname-id');
+                   var solutionName = $(this).data('solutionname-id');
+
+                   // 🔹 Build form skeleton
+                   var htmlToAdd = `
+                       <form id="linkForm">
+                           <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                               <label for="details" class="form-label">Details</label>
+                               <textarea class="form-control" id="details" name="details" placeholder="Details"></textarea>
+                           </div>
+                           <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                               <label for="budget" class="form-label">Budget</label>
+                               <input type="number" class="form-control" name="budget" id="budget" placeholder="Budget">
+                           </div>
+                           <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                               <label class="form-label">Links:</label>
+                           </div>
+                           <div id="linkDiv" class="mb-3" style="margin-left: 0%; text-align: left;">
+                           </div>
+                           <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                               <button type="button" class="btn btn-primary" id="addLinkBtn">Add Link</button>
+                           </div>
+                       </form>
+                       <div class="mb-3" style="margin-left: 0%; text-align: center;">
+                           <button type="button" class="btn btn-primary" id="saveEditBtnForService">Save</button>
+                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                       </div>
+                   `;
+
+                   $('.ModalMedium').html(htmlToAdd);
+                   $('#publicModalMediumLabel').text("Edit Proposal");
+
+                   // 🔹 Fill from backend cache (serviceRequests)
+                   print('serviceRequests', function (requestData) {
+                       if (!requestData) return;
+
+                       const service = requestData.find(s => s.id === serviceId);
+                       if (!service || !service.allProblem) return;
+
+                       service.allProblem.forEach(function (problem) {
+                           if (problem.name === problemName && Array.isArray(problem.proposalSolution)) {
+                               problem.proposalSolution.forEach(function (solution) {
+                                   if (solution.name === solutionName) {
+                                       // ✅ Fill Details & Budget
+                                       $('#details').val(solution.purchaseProposalToCooDetails || "");
+                                       $('#budget').val(solution.purchaseProposalToCooBudget || "");
+
+                                       // ✅ Fill Links
+                                       if (Array.isArray(solution.purchaseProposalToCooLinks)) {
+                                           solution.purchaseProposalToCooLinks.forEach(function (link, i) {
+                                               var htmlToAppend = `
+                                                   <div class="input-group mb-3">
+                                                       <input type="text" class="form-control"
+                                                              name="link${i + 1}"
+                                                              value="${link}"
+                                                              placeholder="link${i + 1}"
+                                                              aria-label="link${i + 1}">
+                                                       <div class="input-group-append">
+                                                           <button class="btn btn-outline-secondary remove-link" type="button">X</button>
+                                                       </div>
+                                                   </div>`;
+                                               $('#linkDiv').append(htmlToAppend);
+                                           });
+                                       }
+                                   }
+                               });
+                           }
+                       });
+                   });
+
+                   // 🔹 Add link dynamically
+                   $('#addLinkBtn').click(function () {
+                       var linkCount = $('#linkDiv .input-group').length + 1;
+                       var linkName = 'link' + linkCount;
+                       var htmlToAppend = `
+                           <div class="input-group mb-3">
+                               <input type="text" class="form-control" name="${linkName}" placeholder="link${linkCount}">
+                               <div class="input-group-append">
+                                   <button class="btn btn-outline-secondary remove-link" type="button">X</button>
+                               </div>
+                           </div>`;
+                       $('#linkDiv').append(htmlToAppend);
+                   });
+
+                   // 🔹 Remove link
+                   $('#linkDiv').on('click', '.remove-link', function () {
+                       $(this).closest('.input-group').remove();
+                   });
+
+                   // 🔹 Save button
+                   $('#saveEditBtnForService').click(function () {
+                       saveFormDataForService(serviceId, problemName, solutionName);
+                   });
+
+                   // Show modal
+                   showModalMedium();
+               });
+
      // Add event listener for the availability button click
                 $(document).on('click', '.view-button-selected-device', function() {
                                     var category = $(this).data('category');

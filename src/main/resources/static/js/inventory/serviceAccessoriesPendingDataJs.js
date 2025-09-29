@@ -77,7 +77,7 @@ function addTableInformationOfServiceCheckBox() {
        });
 }
 
-window.initServiceAccessoriesPendingDataTable = function (allData, allAddData) {
+window.initServiceAccessoriesPendingDataTable = function (allData, allAddData,allDevice) {
     const tableBody = document.getElementById("serviceAccessoriesPendingDataTableBody");
     if (!tableBody) {
         console.error("Table body not found.");
@@ -119,7 +119,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData) {
 
                 function getAvailability(categoryName) {
                     let count = 0;
-                    allAddData.forEach(device => {
+                    allDevice.forEach(device => {
                         if (device.categoryName === categoryName && device.userName === departmentName) {
                             count++;
                         }
@@ -205,7 +205,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData) {
                                             }
 
                                             ${
-                                                availability === "Unavailable" &&
+
                                                 solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
                                                 ? `<button class="btn btn-sm text-white clock-button"
                                                       data-date="${solution.deliveryDate}"
@@ -231,19 +231,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData) {
                                                 : ''
                                             }
 
-                                            ${
-                                                availability === "Unavailable" &&
-                                                solution.inventoryToServiceCenterDeviceStatus !== 'Accepted'
-                                                ? `<input type="checkbox"
-                                                      data-category="${solution.category}"
-                                                      data-solution-name="${solution.name}"
-                                                      data-problem-name="${problem.name}"
-                                                      data-service-id="${device.id}"
 
-                                                      style="background-color:green; transform: scale(1.5); width: 12px; height: 12px;"
-                                                      title="Purchase Device">`
-                                                : ''
-                                            }
                                         </div>
                                     </td>
                                 `;

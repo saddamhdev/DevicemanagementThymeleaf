@@ -993,6 +993,7 @@ window.initCooFeedbackTable = function (allData, allAddData) {
                                     <td>${solution.price || ''}</td>
                                     <td>${displayAction}</td>
                                     <td>${solution.serviceCenterToCOOAccessoriesReRequestStatus || ''}</td>
+                                    <td>${solution.serviceCenterToInventoryAccessoriesRequestStatus || ''}</td>
                                     <td>${solution.comment || ''}</td>
                                     <td>${presentTime}</td>
                                     <td>
@@ -1026,15 +1027,7 @@ window.initCooFeedbackTable = function (allData, allAddData) {
                                                             ✔
                                                         </button>` : ''}
 
-                                            ${availability === "Unavailable" ? `
-                                                <button class="btn btn-sm text-white clock-button"
-                                                        data-date="${solution.deliveryDate}"
-                                                        data-solution-name="${solution.name}"
-                                                        data-problem-name="${problem.name}"
-                                                        data-service-id="${device.id}"
-                                                        style="background-color:#f44336;" title="Edit delivery date">
-                                                    <i class="fas fa-clock"></i>
-                                                </button>` : ''}
+
 
 
                                         </div>

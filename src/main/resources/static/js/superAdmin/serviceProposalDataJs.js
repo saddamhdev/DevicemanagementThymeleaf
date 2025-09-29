@@ -470,6 +470,452 @@ window.initServiceProposalGeneral = function () {
 
 
             }
+       if(buttonId==="viewServiceReport"){
+                 var htmlToAdd = `
+                                  <div class="mb-3" style="margin-right: 0%; text-align: center;">
+
+                                    <div class="text-center" style="background-color:#D2E8E3; padding: 10px; border-radius: 5px; margin-bottom:1px">
+                                        <h4>Service Solution</h4>
+
+                                    </div>
+                                    <div id="requestInfo"></div>
+                                    <div id="actions"></div>
+                                    <div id="extractComponents"></div>
+                                    <div id="needAccessories"></div>
+                                  </div>
+
+                              `;
+                              $('.modal-body').html(htmlToAdd);
+                               // $('#publicModalLabel').text("Service Report");
+                               requestInfo();
+                              function requestInfo() {
+                                  // Get the current date
+                                  const currentDate = new Date();
+
+                                  // Format the date as YYYY-MM-DD
+                                  const formattedDate = currentDate.toISOString().split('T')[0];
+
+                                  // Simulating data fetch
+                                  print('serviceRequests', function (serviceRequests) {
+                                      if (serviceRequests) {
+                                          // Find the matching service data by serviceId
+                                          const serviceData = serviceRequests.find(item => item.id === serviceId);
+
+                                          // Debugging: Log serviceData to ensure it contains the required fields
+                                          console.log(serviceData);
+
+                                          if (serviceData) {
+                                              const tableHtml = `
+                                                  <table class="table table-bordered">
+                                                      <tbody>
+                                                          <tr>
+                                                              <th style="width: 20%;">Device Category</th>
+                                                              <td style="width: 30%;">${serviceData.categoryName}</td>
+                                                              <th style="width: 20%;">Description</th>
+                                                              <td style="width: 30%;">
+                                                                  <button class="btn btn-info btn-sm viewDevice"
+                                                                          data-device-id="${serviceData.deviceId || 'N/A'}"
+                                                                          data-button-id="viewDevice">
+                                                                      View &#128065;
+                                                                  </button>
+                                                              </td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th>Receive Date</th>
+                                                              <td>${serviceData.serviceCenterServiceRequestAcceptedTime || 'N/A'}</td>
+                                                              <th>Dept. Name</th>
+                                                              <td>${serviceData.departmentName || 'N/A'}</td>
+                                                          </tr>
+                                                          <tr>
+                                                              <th>Delivery Date</th>
+                                                              <td>${getCurrentDateTime()}</td>
+                                                              <th>Serial No.</th>
+                                                              <td>240001</td>
+                                                          </tr>
+                                                      </tbody>
+                                                  </table>
+                                              `;
+
+                                              // Insert the table into the element with ID "requestInfo"
+                                              $('#requestInfo').html(tableHtml);
+
+                                              // Add click event listener for "viewDevice" buttons
+                                              $('.viewDevice').on('click', function () {
+                                                  const deviceId = $(this).data('device-id');
+                                                     var selectedDevices = [];
+                                                       print('universalColumns', function(universalColumns) {
+                                                      var categoriesHtml = '';
+                                                      if (universalColumns) {
+                                                          universalColumns.forEach(function(category) {
+                                                              categoriesHtml += `<th scope="col" style="background-color: gray;">${category.columnName}</th>`;
+                                                          });
+                                                      }
+
+                                                      var htmlToAdd = `
+                                                          <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                                              <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
+                                                                  <thead>
+                                                                      <tr>
+                                                                          <th scope="col" style="background-color: gray;">SN</th>
+                                                                           <th scope="col" style="background-color: gray;display: none;">Device Id</th>
+                                                                          <th scope="col" style="background-color: gray;">Category Name</th>
+                                                                          ${categoriesHtml}
+                                                                          <th scope="col" style="background-color: gray;">Description</th>
+
+                                                                      </tr>
+                                                                  </thead>
+                                                                  <tbody id="listDeviceInformationBody">
+
+                                                                  </tbody>
+                                                              </table>
+                                                          </div>
+
+                                                      `;
+                                                      $('.modal-bodyView').html(htmlToAdd);
+
+                                                      $('#publicModalLabelView').text("Device Information");
+                                                      colorChange();
+                                                       function  colorChange(){
+                                                                   // When the second modal is shown, add a blur effect to the first modal
+                                                                    $('#publicModalView').on('show.bs.modal', function () {
+                                                                      $('#publicModal .modal-content').css('filter', 'blur(200px)'); // Apply blur effect
+                                                                    });
+
+                                                                    // When the second modal is hidden, remove the blur effect from the first modal
+                                                                    $('#publicModalView').on('hidden.bs.modal', function () {
+                                                                      $('#publicModal .modal-content').css('filter', ''); // Remove blur effect
+                                                                    });
+                                                                  }
+
+
+
+                                                                   var rowsHtml = '';
+                                                                      // Corrected the for loop syntax to iterate over the deviceIds array
+                                                                         // alert(result.inventory.deviceIds[i]);
+                                                                          print('allAddData', function(allAddData) {
+                                                                              if (allAddData) {
+                                                                                  // First, fetch individual columns
+                                                                                  print('individualColumns', function(individualColumns) {
+
+                                                                                      allAddData.forEach(function(data, index) {
+                                                                                       if (data.id=== deviceId) {
+                                                                                          rowsHtml += `<tr>
+                                                                                              <td>${data.visibleId}</td>
+                                                                                               <td style="display: none;">${data.id}</td>
+                                                                                              <td>${data.categoryName}</td>`;
+                                                                                          universalColumns.forEach(function(column) {
+                                                                                              rowsHtml += `<td >${data.allData[column.columnName]}</td>`;
+                                                                                          });
+
+                                                                                          rowsHtml += `<td>
+                                                                                              <ul style="list-style: none; padding-left: 0; text-align: center;">`;
+
+                                                                                          if (individualColumns) {
+                                                                                              individualColumns.forEach(function(individualColumn) {
+                                                                                                 if (individualColumn.categoryName=== categoryName) {
+
+                                                                                                  rowsHtml += `<li>${individualColumn.columnName} : ${data.allData[individualColumn.columnName]}</li>`;
+                                                                                                  }
+                                                                                              });
+                                                                                          }
+
+
+                                                                                           }
+                                                                                      });
+
+                                                                                      $('#listDeviceInformationBody').html(rowsHtml);
+                                                                                  });
+                                                                              }
+                                                                          });
+
+
+                                                      showModalView();
+                                                  });
+
+                                              });
+                                          } else {
+                                              console.error('No matching service data found.');
+                                          }
+                                      } else {
+                                          console.error('No service requests available.');
+                                      }
+                                  });
+                              }
+
+                                actions();
+                                // Function to dynamically create a table inside #actions div
+                                 function actions() {
+                                   // Generate the initial table structure
+                                   const tableHtml = `
+                                     <table class="table table-bordered">
+                                       <thead>
+                                         <tr>
+                                            <th scope="col" style="background-color: gray; text-align: center;" colspan="${ 2}">
+                                             Taken   Actions
+                                            </th>
+                                      </tr>
+                                         <tr>
+                                           <th>Problems</th>
+                                           <th>Actions</th>
+                                         </tr>
+                                       </thead>
+                                       <tbody id="actionBody">
+                                         <!-- Dynamic rows will be appended here -->
+                                       </tbody>
+                                     </table>
+                                   `;
+                                   $('#actions').html(tableHtml);
+
+                                   // Fetch and process serviceRequests data
+                                   print('serviceRequests', function (serviceRequests) {
+                                     if (serviceRequests) {
+                                       // Find the matching service data by serviceId
+                                       const serviceData = serviceRequests.find(item => item.id === serviceId);
+
+                                       if (serviceData && serviceData.allProblem) {
+                                         // Clear the table body before appending new rows
+                                         const actionBody = $('#actionBody');
+                                         actionBody.empty();
+
+                             // Iterate through all problems and populate rows
+                                    serviceData.allProblem.forEach(problem => {
+                                      const actionsList = problem.proposalSolution
+                                        .map((solution, index) => `${index + 1}. ${solution.value}`) // Add serial number
+                                        .join('<br>'); // Combine actions as a list with line breaks
+
+                                           const rowHtml = `
+                                             <tr>
+                                               <td>${problem.name}</td>
+                                               <td style="text-align: center;">${actionsList}</td> <!-- Left-align actions -->
+                                             </tr>
+                                           `;
+                                           actionBody.append(rowHtml); // Append the generated row
+                                         });
+                                       }
+                                     }
+                                   });
+                                 }
+                                 extractComponents();
+                                 function extractComponents(){
+                                     var selectedDevices = [];
+                                      print('universalColumns', function(universalColumns) {
+                                     var categoriesHtmlAccessories = '';
+                                     if (universalColumns) {
+                                         universalColumns.forEach(function(category) {
+                                             categoriesHtmlAccessories += `<th scope="col" style="background-color: gray;">${category.columnName}</th>`;
+                                         });
+                                     }
+
+                                     var htmlToAddAccessories = `
+                                     <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                         <table id="deviceInformationTableAccessories" class="table table-gray table-bordered table-hover">
+                                             <thead>
+                                                 <tr>
+                                                     <th scope="col" style="background-color: gray; text-align: center;" colspan="${universalColumns.length + 4}">
+                                                        Extract Components
+                                                     </th>
+                                               </tr>
+                                                 <tr>
+                                                     <th scope="col" style="background-color: gray;">SN</th>
+                                                      <th scope="col" style="background-color: gray;display: none;">Device Id</th>
+                                                     <th scope="col" style="background-color: gray;">Category Name</th>
+                                                     ${categoriesHtmlAccessories}
+                                                     <th scope="col" style="background-color: gray;">Description</th>
+
+                                                 </tr>
+                                             </thead>
+                                             <tbody id="listDeviceExtract">
+
+                                             </tbody>
+                                         </table>
+                                     </div>
+
+                                 `;
+                                 $('#extractComponents').html(htmlToAddAccessories);
+                                  var rowsHtmlAccessories = '';
+                                     print('allAddData', function(allAddData) {
+                                              if (allAddData) {
+                                                 // First, fetch individual columns
+                                                  print('individualColumns', function(individualColumns) {
+                                                    // store all
+                                                   print('serviceRequests', function (serviceRequests) {
+                                                           if (serviceRequests) {
+                                                             // Find the matching service data by serviceId
+                                                            const serviceData = serviceRequests.find(item => item.id === serviceId);
+                                                            const listedExtractsNewComponents=serviceData.extractsNewComponents;
+
+                                                                if (listedExtractsNewComponents && listedExtractsNewComponents.length > 0) {
+
+                                                                     listedExtractsNewComponents.forEach((accessory, index) => {
+
+                                                                        allAddData.forEach(function(data, index) {
+
+                                                                             if (data.id=== accessory) {
+                                                                                 rowsHtmlAccessories += `<tr>
+                                                                                     <td>${data.visibleId}</td>
+                                                                                      <td style="display: none;">${data.id}</td>
+                                                                                     <td>${data.categoryName}</td>`;
+                                                                                 universalColumns.forEach(function(column) {
+                                                                                     rowsHtmlAccessories += `<td >${data.allData[column.columnName]}</td>`;
+                                                                                 });
+
+                                                                                 rowsHtmlAccessories += `<td>
+                                                                                     <ul style="list-style: none; padding-left: 0; text-align: center;">`;
+
+                                                                                 if (individualColumns) {
+                                                                                     individualColumns.forEach(function(individualColumn) {
+                                                                                        if (individualColumn.categoryName=== data.categoryName) {
+
+                                                                                         rowsHtmlAccessories += `<li>${individualColumn.columnName} : ${data.allData[individualColumn.columnName]}</li>`;
+                                                                                         }
+                                                                                     });
+                                                                                 }
+                                                                               rowsHtmlAccessories += `</ul>
+                                                                                       </td>` ;
+                                                                                // Add another <td> for the checkbox
+                                                                                   rowsHtmlAccessories += `
+
+                                                                                   </tr>`;
+
+                                                                                  }
+                                                                             });
+
+                                                                       });
+                                                                }
+                                                            $('#listDeviceExtract').html(rowsHtmlAccessories);
+                                                           // console.log('Generated rowsHtmlAccessories:', rowsHtmlAccessories);
+                                                           }
+                                                          });
+
+                                                  });
+
+
+
+
+                                              }
+                                          });
+
+
+                                 });
+
+                              }
+                              needAccessories();
+                              function needAccessories(){
+
+                                     var selectedDevices = [];
+                                      print('universalColumns', function(universalColumns) {
+                                     var categoriesHtmlAccessories = '';
+                                     if (universalColumns) {
+                                         universalColumns.forEach(function(category) {
+                                             categoriesHtmlAccessories += `<th scope="col" style="background-color: gray;">${category.columnName}</th>`;
+                                         });
+                                     }
+
+                                     var htmlToAddAccessories = `
+                                     <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                         <table id="deviceInformationTableAccessories" class="table table-gray table-bordered table-hover">
+                                             <thead>
+                                                 <tr>
+                                                        <th scope="col" style="background-color: gray; text-align: center;" colspan="${universalColumns.length + 4}">
+                                                           Accessories/Components
+                                                        </th>
+                                                  </tr>
+                                                 <tr>
+                                                      <th scope="col" style="background-color: gray;">SN</th>
+                                                       <th scope="col" style="background-color: gray;display: none;">Device Id</th>
+                                                      <th scope="col" style="background-color: gray;">Category Name</th>
+                                                      ${categoriesHtmlAccessories}
+                                                      <th scope="col" style="background-color: gray;">Description</th>
+
+                                                  </tr>
+                                             </thead>
+                                             <tbody id="listDeviceAccessories">
+
+                                             </tbody>
+                                         </table>
+                                     </div>
+
+                                 `;
+                                 $('#needAccessories').html(htmlToAddAccessories);
+                                  var rowsHtmlAccessories = '';
+                                     print('allAddData', function(allAddData) {
+                                              if (allAddData) {
+                                                 // First, fetch individual columns
+                                                  print('individualColumns', function(individualColumns) {
+                                                    // store all
+                                                   print('serviceRequests', function (serviceRequests) {
+                                                           if (serviceRequests) {
+                                                             // Find the matching service data by serviceId
+                                                            const serviceData = serviceRequests.find(item => item.id === serviceId);
+                                                            const listedAddAccessories=serviceData.addAccessories;
+
+                                                                if (listedAddAccessories && listedAddAccessories.length > 0) {
+
+                                                                     listedAddAccessories.forEach((accessory, index) => {
+
+                                                                        allAddData.forEach(function(data, index) {
+
+                                                                             if (data.id=== accessory) {
+                                                                                 rowsHtmlAccessories += `<tr>
+                                                                                     <td>${data.visibleId}</td>
+                                                                                      <td style="display: none;">${data.id}</td>
+                                                                                     <td>${data.categoryName}</td>`;
+                                                                                 universalColumns.forEach(function(column) {
+                                                                                     rowsHtmlAccessories += `<td >${data.allData[column.columnName]}</td>`;
+                                                                                 });
+
+                                                                                 rowsHtmlAccessories += `<td>
+                                                                                     <ul style="list-style: none; padding-left: 0; text-align: center;">`;
+
+                                                                                 if (individualColumns) {
+                                                                                     individualColumns.forEach(function(individualColumn) {
+                                                                                        if (individualColumn.categoryName=== data.categoryName) {
+
+                                                                                         rowsHtmlAccessories += `<li>${individualColumn.columnName} : ${data.allData[individualColumn.columnName]}</li>`;
+                                                                                         }
+                                                                                     });
+                                                                                 }
+                                                                               rowsHtmlAccessories += `</ul>
+                                                                                       </td>` ;
+             // Add another <td> for the checkbox
+                                                                                   rowsHtmlAccessories += `
+
+                                                                                   </tr>`;
+
+                                                                                  }
+                                                                             });
+
+                                                                       });
+                                                                }
+                                                            $('#listDeviceAccessories').html(rowsHtmlAccessories);
+                                                           // console.log('Generated rowsHtmlAccessories:', rowsHtmlAccessories);
+                                                           }
+                                                          });
+
+                                                  });
+
+
+
+
+                                              }
+                                          });
+
+
+                                 });
+                              }
+
+
+
+                              $('#AcceptBtn').click(function() {
+                              var comment=$('#comment').val();
+                                  setServiceReportAccept(serviceId, "Accepted",comment);
+                              });
+                              $('#rejectBtn').click(function() {
+                                                var comment=$('#comment').val();
+                                                    setServiceReportAccept(serviceId, "Rejected",comment);
+                                                });
+                              showModal();
+                }
 
       });
 };
@@ -588,10 +1034,10 @@ window.initServiceProposalTable = function (allData, allAddData) {
                             if (solution.name !== null ) {
                             const status = solution.cooManInfoOfPriceAcceptanceCommentStatus || "";
                               let statusResubmission = null;
-                              if (solution.serviceCenterToCOOAccessoriesReRequestStatus !== "Yes") {
+                              if (solution.serviceCenterToCOOAccessoriesReRequestStatus === "Yes" && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !=='Pending') {
                                 statusResubmission = "Good";
                               }
-                             if (solution.serviceCenterToCOOAccessoriesReRequestStatusChecking === "Done") {
+                             if (solution.serviceCenterToCOOAccessoriesReRequestStatusChecking === "Done" && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !=='Pending') {
                                  statusResubmission = "Good";
                                }
 
@@ -601,6 +1047,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                             newRowKeys.add(rowKey);
 
                             if (!currentRowMap.has(rowKey)) {
+                              console.log(statusResubmission);
                                 const row = document.createElement("tr");
                                 row.innerHTML = `
                                     <td>${sn}</td>
@@ -627,7 +1074,8 @@ window.initServiceProposalTable = function (allData, allAddData) {
                                         `
                                     }
                                     </td>
-                                     <td>${solution.serviceCenterToCOOAccessoriesReRequestStatus || ''}</td>
+
+                                     <td>${solution.serviceCenterToCOOAccessoriesReRequestStatusChecking || ''}</td>
 
                                     <td><input type="text" class="form-control" value="${solution.comment || ''}"></td>
                                      <td>
@@ -646,7 +1094,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                                                  ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted"  ? `
                                                      <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on accessories (accept or reject)">✔</button>
                                                  ` : ""}
-                                                ${solution.serviceCenterToCOOAccessoriesReRequestStatusChecking === "Pending"  ? `
+                                                ${solution.cooManInfoOfPriceAcceptanceCommentStatus === "Accepted"  && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !=='Done' ? `
                                                      <button class="btn btn-sm text-white setAcceptanceCommentBtnResubmission" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on Resubmission accessories (accept or reject)">✔</button>
                                                  ` : ""}
 

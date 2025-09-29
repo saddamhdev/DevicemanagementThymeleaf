@@ -55,21 +55,26 @@
 
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('serviceInformationTable', 5, this)|">
-                                Request Status <span class="sort-icon">⇅</span>
+                                Solution <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('serviceInformationTable', 6, this)|">
-                                Device Receiving Date <span class="sort-icon">⇅</span>
+                                Request Status <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('serviceInformationTable', 7, this)|">
+                                Device Receiving Date <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('serviceInformationTable', 8, this)|">
                                 Create Time <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white;">
-                                Action
+                                Tracking
                             </th>
 
 
@@ -91,6 +96,13 @@
                             <td >
 
                                 <button class="btn btn-info btn-sm view-button" th:data-device-id="${device.deviceId}" th:data-button-id="viewAlternative">
+                                    View   &#128065;
+                                </button>
+
+                            </td>
+                            <td >
+
+                                <button class="btn btn-success btn-sm view-button" th:data-device-id="${device.deviceId}"  th:data-button-id="viewServiceReport"  th:data-service-id="${device.id}" th:if="${device.serviceReportStatus =='Saved'  }">
                                     View   &#128065;
                                 </button>
 

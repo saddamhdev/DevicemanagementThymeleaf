@@ -120,14 +120,15 @@ async function loadFragment(pageName) {
         }
          if(pageName==='serviceAccessoriesPendingData'){
 
-              // ✅ Await all three fetches
-              const [serviceRequests, allAddData] = await Promise.all([
+              const [serviceRequests, allAddData,allDevice] = await Promise.all([
                   fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                  fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                  fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                   fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
               ]);
 
               // ✅ Now they are resolved JSON arrays, not promises
-              window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+             // window.initRequestDataTable(requestData, requestColumns, allAddData);
+              window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData,allDevice);
               return;
 
         }
@@ -254,15 +255,15 @@ async function loadFragment(pageName) {
 
           if(pageName==='serviceAccessoriesPendingData'){
 
-                      // ✅ Await all three fetches
-                      const [serviceRequests, allAddData] = await Promise.all([
-                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                          fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
-                      ]);
+                     const [serviceRequests, allAddData,allDevice] = await Promise.all([
+                         fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
+                     ]);
 
-                      // ✅ Now they are resolved JSON arrays, not promises
-                     // window.initRequestDataTable(requestData, requestColumns, allAddData);
-                      window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+                     // ✅ Now they are resolved JSON arrays, not promises
+                    // window.initRequestDataTable(requestData, requestColumns, allAddData);
+                     window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData,allDevice);
                       return;
 
              }
@@ -401,14 +402,15 @@ async function loadByRange(pageNumber, pageSize) {
 
                 try {
                      // ✅ Await all three fetches
-                     const [serviceRequests, allAddData] = await Promise.all([
+                     const [serviceRequests, allAddData,allDevice] = await Promise.all([
                          fetchDataFromDB(`/serviceRequests/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
-                         fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token)
+                         fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`, token),
+                          fetchDataFromDB(`/allAddData/${pageName}?folder=inventory&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${fullPageSize}`, token)
                      ]);
 
                      // ✅ Now they are resolved JSON arrays, not promises
                     // window.initRequestDataTable(requestData, requestColumns, allAddData);
-                     window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData);
+                     window.initServiceAccessoriesPendingDataTable(serviceRequests, allAddData,allDevice);
                      return;
                  } catch (e) {
                      console.error("❌ Error loading requestData:", e);
