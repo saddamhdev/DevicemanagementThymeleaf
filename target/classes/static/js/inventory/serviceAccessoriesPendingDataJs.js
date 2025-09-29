@@ -77,7 +77,7 @@ function addTableInformationOfServiceCheckBox() {
        });
 }
 
-window.initServiceAccessoriesPendingDataTable = function (allData, allAddData,allDevice) {
+window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , allDevice) {
     const tableBody = document.getElementById("serviceAccessoriesPendingDataTableBody");
     if (!tableBody) {
         console.error("Table body not found.");
@@ -231,7 +231,19 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData,al
                                                 : ''
                                             }
 
+                                            ${
 
+                                                solution.inventoryForPurchaseRequestStatus === null
+                                                ? `<input type="checkbox"
+                                                      data-category="${solution.category}"
+                                                      data-solution-name="${solution.name}"
+                                                      data-problem-name="${problem.name}"
+                                                      data-service-id="${device.id}"
+
+                                                      style="background-color:green; transform: scale(1.5); width: 12px; height: 12px;"
+                                                      title="Purchase Device">`
+                                                : ''
+                                            }
                                         </div>
                                     </td>
                                 `;
