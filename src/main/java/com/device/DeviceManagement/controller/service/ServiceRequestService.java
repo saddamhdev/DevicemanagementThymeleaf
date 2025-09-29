@@ -48,7 +48,7 @@ public class ServiceRequestService {
                 return serviceRequestRepository
                         .findByStatusAndAccessoriesAlternativeRequestStatus("1","Accepted" ,pageable);
             }
-            if (pageName.equals("inventoryToServiceCenterDeviceStatus")) {
+            if (pageName.equals("serviceAccessoriesDeliveryData")) {
                 System.out.println(folderName+pageName);
                 return serviceRequestRepository
                         .findByStatusAndAccessoriesList("1","Accepted" ,pageable);

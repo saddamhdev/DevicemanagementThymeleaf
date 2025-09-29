@@ -61,7 +61,7 @@ function addTableInformationOfService() {
             });
         });
 
-window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
+window.initServiceAccessoriesListDataTable = function (allData, allAddData ,allInventoryDevice) {
     const tableBody = document.getElementById("serviceAccessoriesListDataTableBody");
     if (!tableBody) {
         console.error("Table body not found.");
@@ -98,7 +98,7 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
 
                 function getAvailability(categoryName) {
                     let count = 0;
-                    allAddData.forEach(device => {
+                    allInventoryDevice.forEach(device => {
                         if (device.categoryName === categoryName && device.userName === 'inventory') {
                             count++;
                         }
@@ -163,7 +163,7 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
                                                         title="Receive Device">✔</button>
                                             ` : ""}
 
-                                            ${availability !== "Unavailable" ? `
+                                            ${   solution.inventoryToServiceCenterDeviceId !==null ? `
                                                 <button class="btn btn-info btn-sm view-button-selected-device"
                                                         data-category="${solution.category}"
                                                         data-service-id="${device.id}"
@@ -283,8 +283,8 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
                             </div>
                         `;
 
-                        $('.modal-body').html(htmlToAdd);
-                        $('#publicModalLabel').text("Device Information");
+                        $('.ModalExtraLarge').html(htmlToAdd);
+                        $('#publicModalExtraLargeLabel').text("Device Information");
 
                         var rowsHtml = '';
 
@@ -322,7 +322,7 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
                                         $('#listDeviceInformationBody').html(rowsHtml);
 
                                         // Show modal only if rows were added
-                                        showModal();
+                                        showModalExtraLarge();
                                     } else {
                                         CustomAlert("No data found to display in the modal.");
                                     }
@@ -366,20 +366,22 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
                                         </div>
 
                                     `;
-                                    $('.modal-body').html(htmlToAdd);
+                                    $('.ModalExtraLarge').html(htmlToAdd);
 
-                                    $('#publicModalLabel').text("Device Information");
+                                    $('#publicModalExtraLargeLabel').text("Device Information");
 
                                                  var rowsHtml = '';
                                                     // Corrected the for loop syntax to iterate over the deviceIds array
                                                        // alert(result.inventory.deviceIds[i]);
                                                         print('allAddData', function(allAddData) {
+
                                                             if (allAddData) {
+
                                                                 // First, fetch individual columns
                                                                 print('individualColumns', function(individualColumns) {
-
                                                                     allAddData.forEach(function(data, index) {
                                                                      if (data.id=== deviceId) {
+                                                                        // alert(deviceId);
                                                                         rowsHtml += `<tr>
                                                                             <td>${data.visibleId}</td>
                                                                              <td style="display: none;">${data.id}</td>
@@ -403,14 +405,14 @@ window.initServiceAccessoriesListDataTable = function (allData, allAddData) {
 
                                                                          }
                                                                     });
-
+                                                                    console.log(rowsHtml);
                                                                     $('#listDeviceInformationBody').html(rowsHtml);
                                                                 });
                                                             }
                                                         });
 
 
-                                    showModal();
+                                    showModalExtraLarge();
                                 });
 
 

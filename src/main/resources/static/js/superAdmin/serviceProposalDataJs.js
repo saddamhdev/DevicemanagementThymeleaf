@@ -1032,7 +1032,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                         problem.proposalSolution.forEach(solution => {
                            // if (solution.name == null) return;
                             if (solution.name !== null ) {
-                            const status = solution.cooManInfoOfPriceAcceptanceCommentStatus || "";
+                            const status = solution.action || "";
                               let statusResubmission = null;
                               if (solution.serviceCenterToCOOAccessoriesReRequestStatus === "Yes" && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !=='Pending') {
                                 statusResubmission = "Good";
@@ -1063,16 +1063,11 @@ window.initServiceProposalTable = function (allData, allAddData) {
                                     <td><input type="text" class="form-control" value="${solution.price || ''}"></td>
 
                                     <td>
-                                    ${statusResubmission
-                                        ? status
-                                        : `
-                                            <select class="form-select form-select-sm">
-                                                <option value="" disabled ${solution.action == null ? 'selected' : ''}>Select</option>
-                                                <option value="accept" ${solution.action == 'accept' ? 'selected' : ''}>Accept</option>
-                                                <option value="reject" ${solution.action == 'reject' ? 'selected' : ''}>Reject</option>
-                                            </select>
-                                        `
-                                    }
+                                    <select class="form-select form-select-sm">
+                                           <option value="" disabled ${solution.action == null ? 'selected' : ''}>Select</option>
+                                           <option value="accept" ${solution.action == 'accept' ? 'selected' : ''}>Accept</option>
+                                           <option value="reject" ${solution.action == 'reject' ? 'selected' : ''}>Reject</option>
+                                       </select>
                                     </td>
 
                                      <td>${solution.serviceCenterToCOOAccessoriesReRequestStatusChecking || ''}</td>
@@ -1094,7 +1089,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                                                  ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== "Accepted"  ? `
                                                      <button class="btn btn-sm text-white setAcceptanceCommentBtn" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on accessories (accept or reject)">✔</button>
                                                  ` : ""}
-                                                ${solution.cooManInfoOfPriceAcceptanceCommentStatus === "Accepted"  && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !=='Done' ? `
+                                                ${solution.cooManInfoOfPriceAcceptanceCommentStatus !== null  && solution.serviceCenterToCOOAccessoriesReRequestStatusChecking !==null ? `
                                                      <button class="btn btn-sm text-white setAcceptanceCommentBtnResubmission" data-category="${solution.category}" data-solution-name="${solution.name}" data-problem-name="${problem.name}" data-service-id="${device.id}" data-button-id="accepted" style="background-color:green;" title="Give feedback on Resubmission accessories (accept or reject)">✔</button>
                                                  ` : ""}
 

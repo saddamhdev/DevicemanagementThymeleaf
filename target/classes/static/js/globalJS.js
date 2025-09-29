@@ -225,7 +225,7 @@ function print(dataType, callback) {
           console.error('Callback is not a function');
           return;
       }
-const token = getAuthToken();
+   const token = getAuthToken();
 //alert(dataType+" "+ token);
       $.ajax({
           url: '/superAdmin/allData1',

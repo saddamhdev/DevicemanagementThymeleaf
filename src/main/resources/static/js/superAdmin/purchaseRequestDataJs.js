@@ -921,20 +921,15 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                        }
                                    });
 
-                                   if(selectedRows.length==0){
-                                     CustomAlert("Please select a device.");
-                                   }
-                                   else{
-                                     // Show a confirmation alert
-                                      const userConfirmed = confirm("Do you want to proceed with the selected device?");
-                                      if (userConfirmed) {
-                                           hideModal();
-                                          purchaseRequest1(requestId,selectedRows);
-                                      } else {
-                                          console.log("User canceled.");
-                                          // Handle the cancel action here
-                                      }
-                                   }
+                                   // Show a confirmation alert
+                                    const userConfirmed = confirm("Do you want to proceed with the selected device?");
+                                    if (userConfirmed) {
+                                         hideModal();
+                                        purchaseRequest1(requestId,selectedRows);
+                                    } else {
+                                        console.log("User canceled.");
+                                        // Handle the cancel action here
+                                    }
 
                                });
 

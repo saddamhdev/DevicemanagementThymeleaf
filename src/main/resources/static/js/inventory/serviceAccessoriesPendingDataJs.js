@@ -220,10 +220,11 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , 
                                             }
 
                                             ${
-                                                availability !== "Unavailable"
+                                                availability !== "Unavailable" &&  solution.inventoryToServiceCenterDeviceId !==null
                                                 ? `<button class="btn btn-info btn-sm view-button-selected-device"
                                                       data-category="${solution.category}"
                                                       data-service-id="${device.id}"
+                                                      title="View Delevered Device to Service Center"
                                                       data-button-id="view"
                                                       data-device-id="${solution.inventoryToServiceCenterDeviceId}">
                                                       &#128065;
@@ -233,7 +234,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , 
 
                                             ${
 
-                                                solution.inventoryForPurchaseRequestStatus !== null
+                                                solution.inventoryToServiceCenterDeviceStatus === null
                                                 ? `<input type="checkbox"
                                                       data-category="${solution.category}"
                                                       data-solution-name="${solution.name}"
