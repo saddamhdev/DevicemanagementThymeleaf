@@ -41,7 +41,7 @@ public class ServiceRequestService {
             if (pageName.equals("serviceAccessoriesPendingPurchaseData")) {
                 System.out.println(folderName+pageName);
                 return serviceRequestRepository
-                        .findByStatusAndAccessoriesAlternativeRequestStatus("1","Pending" ,pageable);
+                        .findByStatusAndAccessoriesPurchaseToInventoryRequestStatus("1","Pending" ,pageable);
             }
             if (pageName.equals("serviceAccessoriesPendingAlternativeData")) {
                 System.out.println(folderName+pageName);

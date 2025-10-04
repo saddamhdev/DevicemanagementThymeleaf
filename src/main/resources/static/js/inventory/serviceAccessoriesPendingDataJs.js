@@ -234,7 +234,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , 
 
                                             ${
 
-                                                solution.inventoryToServiceCenterDeviceStatus === null
+                                                solution.inventoryToServiceCenterDeviceStatus === null && solution.inventoryForPurchaseRequestStatus === null
                                                 ? `<input type="checkbox"
                                                       data-category="${solution.category}"
                                                       data-solution-name="${solution.name}"
@@ -463,7 +463,7 @@ window.initServiceAccessoriesPendingDataTable = function (allData, allAddData , 
                                             </table>
                                         </div>
                                         <div class="mb-9" style="margin-left: 0%; text-align: center;">
-                                                <button type="button" class="btn btn-primary" id="selectBtn">Select</button>
+                                                <button type="button" class="btn btn-primary" id="selectBtn">Send</button>
                                         </div>
 
 

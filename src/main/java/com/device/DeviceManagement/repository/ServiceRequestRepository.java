@@ -54,6 +54,13 @@ public interface ServiceRequestRepository extends MongoRepository<ServiceRequest
             Pageable pageable
     );
 
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.purchaseDeviceSenderToInventoryStatus': ?1 }")
+    Page<ServiceRequest> findByStatusAndAccessoriesPurchaseToInventoryRequestStatus(
+            String rootStatus,
+            String nestedStatus,
+            Pageable pageable
+    );
+
     @Query("{ 'status': ?0, 'allProblem.proposalSolution.inventoryToServiceCenterDeviceStatus': ?1 }")
     Page<ServiceRequest> findByStatusAndAccessoriesList(
             String rootStatus,
@@ -66,7 +73,7 @@ public interface ServiceRequestRepository extends MongoRepository<ServiceRequest
             String nestedStatus,
             Pageable pageable
     );
-    @Query("{ 'status': ?0, 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': ?1 }")
+    @Query("{ 'status': ?0, 'allProblem.proposalSolution.serviceCenterToInventoryAccessoriesRequestStatus': { $ne: ?1 } }")
     Page<ServiceRequest> findByStatusAndServiceCenterToInventoryAccessoriesRequestStatusListNot(
             String rootStatus,
             String nestedStatus,

@@ -187,7 +187,7 @@ window.initServiceAccessoriesPendingPurchaseDataTable = function (allData, allAd
                    });
                    return count === 0 ? "Unavailable" : `Available(${count})`;
                }
-
+               console.log(allData);
                allData.forEach(device => {
                    const bivagName = device.departmentName || "N/A";
                    const categoryName = device.categoryName || "N/A";

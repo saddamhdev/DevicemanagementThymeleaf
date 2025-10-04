@@ -75,7 +75,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 };
 
-   window.initRequestPurchaseDataTable = function (allData, allAddData) {
+   window.initRequestPurchaseDataTable = function (allData, allAddData,pageSize) {
        const tableBody = document.getElementById("requestPurchaseDataTableBody");
        if (!tableBody) {
            console.error("Table body element with id 'requestPurchaseDataTableBody' not found.");
@@ -180,19 +180,13 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                }
                            });
 
-                            // ✅ After rows are rendered, count only visible rows
-                                const finalRowCount = [...tableBody.querySelectorAll("tr")]
-                                    .filter(row => row.style.display !== "none")
-                                    .length;
 
-                                // ✅ Update <p class="totalContent">
-                                const totalContentEl = document.querySelector(".totalContent");
-                                if (totalContentEl) {
-                                    totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
-                                }
 
                        const myTable = document.querySelector("table");  // or more specific selector if you want
                        sortAndFormatTable(myTable);
+
+
+
                        $(document).on('click', '.view-selectedLinkPurchase', function() {
                                    var details = $(this).data('details-id');
                                    var budget = $(this).data('budget-id');
@@ -616,7 +610,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
 
 
      };
-   window.initRequestDataDirectTable = function (allData,requestColumns,allAddData) {
+   window.initRequestDataDirectTable = function (allData,requestColumns,allAddData,pageSize) {
          const tableBody = document.getElementById("requestPurchaseDataTableBody");
          if (!tableBody) return;
 
@@ -730,20 +724,40 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                  row.remove();
                              }
                          });
-                        // ✅ After rows are rendered, count only visible rows
-                            const finalRowCount = [...tableBody.querySelectorAll("tr")]
-                                .filter(row => row.style.display !== "none")
-                                .length;
 
-                            // ✅ Update <p class="totalContent">
-                            const totalContentEl = document.querySelector(".totalContent");
-                            if (totalContentEl) {
-                                totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
-                            }
 
                        //const myTable = document.getElementById("requestInventoryTable");  // or more specific selector if you want
                        const myTable = document.querySelector("table");  // or more specific selector if you want
                        sortAndFormatTable(myTable);
+
+                     console.log("✅ Page Size from localStorage:", pageSize);
+
+                     const allRows = Array.from(tableBody.querySelectorAll("tr"));
+                     console.log("📋 Total Rows Before Trim:", allRows.length);
+
+                     // Show each row’s first cell (for clarity)
+                     allRows.forEach((row, i) => {
+                         console.log(`#${i + 1}:`, row.cells[0]?.textContent.trim());
+                     });
+
+                     // ✅ Remove extra rows from the BOTTOM
+                     if (allRows.length > pageSize) {
+                         const rowsToRemove = allRows.slice(pageSize); // keep first N rows, remove bottom extras
+                         console.log("🗑️ Rows to remove (from bottom):", rowsToRemove.length);
+                         rowsToRemove.forEach(row => row.remove());
+                     }
+
+                     const remainingRows = Array.from(tableBody.querySelectorAll("tr"));
+                     console.log("✅ Total Rows After Trim:", remainingRows.length);
+
+                     // ✅ After rows are rendered, count only visible rows
+                     const finalRowCount = remainingRows.filter(row => row.style.display !== "none").length;
+
+                     // ✅ Update <p class="totalContent">
+                     const totalContentEl = document.querySelector(".totalContent");
+                     if (totalContentEl) {
+                         totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+                     }
 
 
                       $('#requestPurchaseDataTable tbody tr').click(function(event) {

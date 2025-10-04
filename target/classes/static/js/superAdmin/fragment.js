@@ -217,8 +217,8 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
 
                              // ✅ Now they are resolved JSON arrays, not promises
                             // window.initRequestDataTable(requestData, requestColumns, allAddData);
-                             window.initRequestPurchaseDataTable(serviceRequests, allAddData);
-                             window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
+                             window.initRequestPurchaseDataTable(serviceRequests, allAddData,pageSize);
+                             window.initRequestDataDirectTable(requestData, requestColumns, allAddData,pageSize);
 
 
                              return;
@@ -434,8 +434,8 @@ const token = getAuthToken();
 
                          // ✅ Now they are resolved JSON arrays, not promises
                         // window.initRequestDataTable(requestData, requestColumns, allAddData);
-                         window.initRequestPurchaseDataTable(serviceRequests, allAddData);
-                         window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
+                         window.initRequestPurchaseDataTable(serviceRequests, allAddData,pageSize);
+                         window.initRequestDataDirectTable(requestData, requestColumns, allAddData,pageSize);
 
 
                          return;
@@ -599,8 +599,8 @@ async function loadByRange(pageNumber, pageSize) {
 
                             // ✅ Now they are resolved JSON arrays, not promises
                            // window.initRequestDataTable(requestData, requestColumns, allAddData);
-                            window.initRequestPurchaseDataTable(serviceRequests, allAddData);
-                            window.initRequestDataDirectTable(requestData, requestColumns, allAddData);
+                            window.initRequestPurchaseDataTable(serviceRequests, allAddData,pageSize);
+                            window.initRequestDataDirectTable(requestData, requestColumns, allAddData,pageSize);
 
 
                             return;

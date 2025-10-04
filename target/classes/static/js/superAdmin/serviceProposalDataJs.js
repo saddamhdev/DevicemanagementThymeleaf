@@ -1078,7 +1078,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                                                ${availability}
                                            </button>
                                        </td>
-                                   <td>${status ? "Done" : "Pending"}</td>
+                                   <td>${solution.cooManInfoOfPriceAcceptanceCommentStatus ? "Done" : "Pending"}</td>
                                     <td>${presentTime}</td>
 
                                      <td>
@@ -1277,7 +1277,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
                   const problemName = $row.find('td:nth-child(5)').text();
                   const price = $row.find('td:nth-child(6) input').val();
                   const action = $row.find('td:nth-child(7) select').val();
-                  const comment = $row.find('td:nth-child(8) input').val();
+                  const comment = $row.find('td:nth-child(9) input').val();
 
 
 
@@ -1305,6 +1305,7 @@ window.initServiceProposalTable = function (allData, allAddData) {
 
                   if (confirmation) {
                      // console.log("Row Data:", rowData);
+
                       setAcceptanceOfAccessoriesProposal(rowData);
                   } else {
                       console.log("Submission cancelled.");

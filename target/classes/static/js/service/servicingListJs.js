@@ -816,7 +816,48 @@ window.initServicingListGeneral = function () {
                       showModalExtraLarge();
     }
     else if(buttonId==="editServiceReport"){
+           function sortAndFormatAllTables() {
+                                      const tables = [
+                                          '#deviceInformationTableAccessories',
+                                          '#deviceInformationTableExtraComponents'
+                                      ];
 
+                                      tables.forEach(function (selector) {
+                                          const tbody = $(selector).find('tbody');
+                                          const rows = tbody.find('tr').get();
+
+                                        //  console.log("Sorting table:", selector, "rows found:", rows.length);
+
+                                          if (rows.length === 0) return; // nothing to sort yet
+
+                                          rows.sort(function (a, b) {
+                                              const tdsA = $(a).find('td');
+                                              const tdsB = $(b).find('td');
+
+                                              const dateTextA = tdsA.eq(tdsA.length - 2).text().trim(); // ✅ last second col
+                                              const dateTextB = tdsB.eq(tdsB.length - 2).text().trim();
+
+                                              function parseDate(str) {
+                                                  if (!str) return new Date(0); // fallback
+                                                  const [datePart, timePart] = str.split(" ");
+                                                  const [y, m, d] = datePart.split("-").map(Number);
+                                                  const [hh, mm, ss] = timePart.split(":").map(Number);
+                                                  return new Date(y, m - 1, d, hh, mm, ss);
+                                              }
+
+                                              const dateA = parseDate(dateTextA);
+                                              const dateB = parseDate(dateTextB);
+
+                                             // console.log("Compare:", dateTextA, "->", dateA, "VS", dateTextB, "->", dateB);
+
+                                              return dateB - dateA;
+                                          });
+
+                                          $.each(rows, function (_, row) {
+                                              tbody.append(row);
+                                          });
+                                      });
+                                  }
     var htmlToAdd = `
                  <div class="container mt-0">
                      <!-- Tab navigation -->
@@ -1013,6 +1054,7 @@ window.initServicingListGeneral = function () {
                                                <th scope="col" style="background-color: gray;">Category Name</th>
                                                ${categoriesHtmlExtraComponents}
                                                <th scope="col" style="background-color: gray;">Description</th>
+                                               <th scope="col" style="background-color: gray;">Created Time</th>
                                                <th scope="col" style="background-color: gray;">Action</th>
 
                                            </tr>
@@ -1219,7 +1261,7 @@ window.initServicingListGeneral = function () {
 
                                                   // remove service center device
 
-                                                   console.log("Updated components:", Array.from(listedComponentsDevices));
+                                                  // console.log("Updated components:", Array.from(listedComponentsDevices));
 
                                                    if (listedComponentsDevices && listedComponentsDevices.size > 0) {
                                                        listedComponentsDevices.forEach((accessory) => {
@@ -1252,6 +1294,7 @@ window.initServicingListGeneral = function () {
                                                                    const isChecked = serviceData.extractsNewComponents?.includes(accessory);
 
                                                                    rowsHtmlExtraComponents += `
+                                                                   <td>${data.presentTime}</td>
                                                                        <td>
                                                                            <input type="checkbox" class="form-check-input" name="deviceCheckbox"
                                                                                value="${data.id}" ${isChecked ? "checked" : ""}
@@ -1268,6 +1311,7 @@ window.initServicingListGeneral = function () {
 
 
                                                         $('#listDeviceInformationBodyExtraComponents').html(rowsHtmlExtraComponents);
+                                                         sortAndFormatAllTables();
                                                     });
                                                 }
                                             });
@@ -1279,6 +1323,48 @@ window.initServicingListGeneral = function () {
                         problemNeedAccessories();
                       function problemNeedAccessories(){
 
+                            function sortAndFormatAllTables() {
+                                      const tables = [
+                                          '#deviceInformationTableAccessories',
+                                          '#deviceInformationTableExtraComponents'
+                                      ];
+
+                                      tables.forEach(function (selector) {
+                                          const tbody = $(selector).find('tbody');
+                                          const rows = tbody.find('tr').get();
+
+                                        //  console.log("Sorting table:", selector, "rows found:", rows.length);
+
+                                          if (rows.length === 0) return; // nothing to sort yet
+
+                                          rows.sort(function (a, b) {
+                                              const tdsA = $(a).find('td');
+                                              const tdsB = $(b).find('td');
+
+                                              const dateTextA = tdsA.eq(tdsA.length - 2).text().trim(); // ✅ last second col
+                                              const dateTextB = tdsB.eq(tdsB.length - 2).text().trim();
+
+                                              function parseDate(str) {
+                                                  if (!str) return new Date(0); // fallback
+                                                  const [datePart, timePart] = str.split(" ");
+                                                  const [y, m, d] = datePart.split("-").map(Number);
+                                                  const [hh, mm, ss] = timePart.split(":").map(Number);
+                                                  return new Date(y, m - 1, d, hh, mm, ss);
+                                              }
+
+                                              const dateA = parseDate(dateTextA);
+                                              const dateB = parseDate(dateTextB);
+
+                                             // console.log("Compare:", dateTextA, "->", dateA, "VS", dateTextB, "->", dateB);
+
+                                              return dateB - dateA;
+                                          });
+
+                                          $.each(rows, function (_, row) {
+                                              tbody.append(row);
+                                          });
+                                      });
+                                  }
                            var selectedDevices = [];
                               print('universalColumns', function(universalColumns) {
                              var categoriesHtmlAccessories = '';
@@ -1298,6 +1384,7 @@ window.initServicingListGeneral = function () {
                                                  <th scope="col" style="background-color: gray;">Category Name</th>
                                                  ${categoriesHtmlAccessories}
                                                  <th scope="col" style="background-color: gray;">Description</th>
+                                                 <th scope="col" style="background-color: gray;">Created Time</th>
                                                  <th scope="col" style="background-color: gray;">Action</th>
 
                                              </tr>
@@ -1389,6 +1476,7 @@ window.initServicingListGeneral = function () {
                                                                                 if (boolean) {
                                                                                     // Checkbox selected
                                                                                     rowsHtmlAccessories += `
+                                                                                         <td>${data.presentTime}</td>
                                                                                         <td>
                                                                                             <input type="checkbox" class="form-check-input" name="deviceCheckbox"
                                                                                                value="${data.id}" checked
@@ -1398,6 +1486,7 @@ window.initServicingListGeneral = function () {
                                                                                 } else {
                                                                                     // Checkbox not selected
                                                                                     rowsHtmlAccessories += `
+                                                                                    <td>${data.presentTime}</td>
                                                                                         <td>
                                                                                             <input type="checkbox" class="form-check-input" name="deviceCheckbox"
                                                                                                value="${data.id}"
@@ -1417,6 +1506,7 @@ window.initServicingListGeneral = function () {
                                                         });
 
                                                         $('#listDeviceInformationBodyAccessories').html(rowsHtmlAccessories);
+                                                         sortAndFormatAllTables();
                                                     });
                                                 }
                                             });
@@ -1487,6 +1577,53 @@ window.initServicingListGeneral = function () {
 
    else  if(buttonId==="serviceReport"){
 
+                     // 👉 define helper before using
+                       function sortAndFormatAllTables() {
+                                                            const tables = [
+                                                                '#deviceInformationTableAccessories',
+                                                                '#deviceInformationTableExtraComponents'
+                                                            ];
+
+                                                            tables.forEach(function (selector) {
+                                                                const tbody = $(selector).find('tbody');
+                                                                const rows = tbody.find('tr').get();
+
+                                                              //  console.log("Sorting table:", selector, "rows found:", rows.length);
+
+                                                                if (rows.length === 0) return; // nothing to sort yet
+
+                                                                rows.sort(function (a, b) {
+                                                                    const tdsA = $(a).find('td');
+                                                                    const tdsB = $(b).find('td');
+
+                                                                    const dateTextA = tdsA.eq(tdsA.length - 2).text().trim(); // ✅ last second col
+                                                                    const dateTextB = tdsB.eq(tdsB.length - 2).text().trim();
+
+                                                                    function parseDate(str) {
+                                                                        if (!str) return new Date(0); // fallback
+                                                                        const [datePart, timePart] = str.split(" ");
+                                                                        const [y, m, d] = datePart.split("-").map(Number);
+                                                                        const [hh, mm, ss] = timePart.split(":").map(Number);
+                                                                        return new Date(y, m - 1, d, hh, mm, ss);
+                                                                    }
+
+                                                                    const dateA = parseDate(dateTextA);
+                                                                    const dateB = parseDate(dateTextB);
+
+                                                                   // console.log("Compare:", dateTextA, "->", dateA, "VS", dateTextB, "->", dateB);
+
+                                                                    return dateB - dateA;
+                                                                });
+
+                                                                $.each(rows, function (_, row) {
+                                                                    tbody.append(row);
+                                                                });
+                                                            });
+                                                        }
+
+
+
+
                        var htmlToAdd = `
                                  <div class="container mt-0">
                                      <!-- Tab navigation -->
@@ -1543,6 +1680,8 @@ window.initServicingListGeneral = function () {
                                  </div>
 
                        `;
+
+
 
                           // Add the HTML code to the modal body using jQuery
                           $('.ModalExtraLarge').html(htmlToAdd);
@@ -1650,6 +1789,7 @@ window.initServicingListGeneral = function () {
                                                               <th scope="col" style="background-color: gray;">Category Name</th>
                                                               ${categoriesHtmlExtraComponents}
                                                               <th scope="col" style="background-color: gray;">Description</th>
+                                                               <th scope="col" style="background-color: gray;">Created Time</th>
                                                               <th scope="col" style="background-color: gray;">Action</th>
 
                                                           </tr>
@@ -1871,6 +2011,7 @@ window.initServicingListGeneral = function () {
 
                                                                     // Add another <td> for the checkbox
                                                                     rowsHtmlExtraComponents += `
+                                                                    <td>${data.presentTime}</td>
                                                                         <td>
                                                                           <input type="checkbox" class="form-check-input" name="deviceCheckbox"
                                                                              value="${data.id}"
@@ -1890,6 +2031,7 @@ window.initServicingListGeneral = function () {
 
 
                                                               $('#listDeviceInformationBodyExtraComponents').html(rowsHtmlExtraComponents);
+                                                               sortAndFormatAllTables();
                                                           });
                                                       }
                                                   });
@@ -1924,6 +2066,7 @@ window.initServicingListGeneral = function () {
                                                                         <th scope="col" style="background-color: gray;">Category Name</th>
                                                                         ${categoriesHtmlAccessories}
                                                                         <th scope="col" style="background-color: gray;">Description</th>
+                                                                        <th scope="col" style="background-color: gray;">Create Time</th>
                                                                         <th scope="col" style="background-color: gray;">Action</th>
 
                                                                     </tr>
@@ -1990,6 +2133,7 @@ window.initServicingListGeneral = function () {
 
                                                                                           // Add another <td> for the checkbox
                                                                                           rowsHtmlAccessories += `
+                                                                                          <td>${data.presentTime}</td>
                                                                                               <td>
                                                                                                 <input type="checkbox" class="form-check-input" name="deviceCheckbox"
                                                                                                    value="${data.id}"
@@ -2001,17 +2145,16 @@ window.initServicingListGeneral = function () {
                                                                                     });
 
                                                                                     $('#listDeviceInformationBodyAccessories').html(rowsHtmlAccessories);
+                                                                                    sortAndFormatAllTables();
                                                                                 });
                                                                             }
                                                                         });
 
-
-
-
-
-
                                                 });
+
+
                            }
+
 
 
                         $('#saveEditBtn').click(function () {
@@ -2069,6 +2212,9 @@ window.initServicingListGeneral = function () {
 
 
                      showModalExtraLarge();
+
+
+
 
      }
 
@@ -3125,3 +3271,36 @@ function getCurrentDateTime() {
     // Combine date and time
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+function sortAndFormatAllTables() {
+
+    const tables = [
+        '#deviceInformationTableAccessories',
+        '#deviceInformationTableExtraComponents'
+    ];
+
+    tables.forEach(function (selector) {
+        const tbody = $(selector).find('tbody');
+        const rows = tbody.find('tr').get();
+
+        rows.sort(function (a, b) {
+            // Find the column index of "Create Time"
+            // In your screenshot it's the second-to-last column
+            const dateTextA = $(a).find('td').eq(-2).text().trim();
+            const dateTextB = $(b).find('td').eq(-2).text().trim();
+
+            // Replace space with T for safe parsing
+            const dateA = new Date(dateTextA.replace(' ', 'T'));
+            const dateB = new Date(dateTextB.replace(' ', 'T'));
+
+            // Newest first
+            return dateB - dateA;
+        });
+
+        // Append back in sorted order
+        $.each(rows, function (_, row) {
+            tbody.append(row);
+        });
+    });
+}
+

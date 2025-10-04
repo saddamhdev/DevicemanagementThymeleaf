@@ -117,7 +117,7 @@ localStorage.setItem("pageSize",pageSize);// global
                    // ✅ Now they are resolved JSON arrays, not promises
                   // window.initRequestDataTable(requestData, requestColumns, allAddData);
                    window.initRequestDataPurchaseTable(serviceRequests, allAddData);
-                   window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                   window.initRequestDataGeneral( requestData, requestColumns, allAddData,pageSize);
                    return;
 
           }
@@ -135,7 +135,7 @@ localStorage.setItem("pageSize",pageSize);// global
                  // ✅ Now they are resolved JSON arrays, not promises
                 // window.initRequestDataTable(requestData, requestColumns, allAddData);
                  window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
-                 window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+                 window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData,pageSize);
                  return;
 
 
@@ -239,7 +239,7 @@ localStorage.setItem("pageSize",pageSize);// global
                              // ✅ Now they are resolved JSON arrays, not promises
                             // window.initRequestDataTable(requestData, requestColumns, allAddData);
                              window.initRequestDataPurchaseTable(serviceRequests, allAddData);
-                             window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                             window.initRequestDataGeneral( requestData, requestColumns, allAddData,pageSize);
                              return;
 
                     }
@@ -257,7 +257,7 @@ localStorage.setItem("pageSize",pageSize);// global
                            // ✅ Now they are resolved JSON arrays, not promises
                           // window.initRequestDataTable(requestData, requestColumns, allAddData);
                            window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
-                           window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+                           window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData,pageSize);
                            return;
 
 
@@ -399,7 +399,7 @@ async function loadByRange(pageNumber, pageSize) {
                       // ✅ Now they are resolved JSON arrays, not promises
                      // window.initRequestDataTable(requestData, requestColumns, allAddData);
                       window.initRequestDataPurchaseTable(serviceRequests, allAddData);
-                      window.initRequestDataGeneral( requestData, requestColumns, allAddData);
+                      window.initRequestDataGeneral( requestData, requestColumns, allAddData,pageSize);
                       return;
                   } catch (e) {
                       console.error("❌ Error loading requestData:", e);
@@ -420,7 +420,7 @@ async function loadByRange(pageNumber, pageSize) {
                // ✅ Now they are resolved JSON arrays, not promises
               // window.initRequestDataTable(requestData, requestColumns, allAddData);
                window.initRequestDataForPaymentExportTable(serviceRequests, allAddData);
-               window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData);
+               window.initRequestDataDirectExportTable( requestData, requestColumns, allAddData,pageSize);
                return;
            } catch (e) {
                console.error("❌ Error loading requestData:", e);

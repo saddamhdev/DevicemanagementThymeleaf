@@ -431,16 +431,7 @@ window.initRequestDataForPaymentExportTable = function (allData, allAddData) {
                          row.remove();
                      }
                  });
-                 // ✅ After rows are rendered, count only visible rows
-                     const finalRowCount = [...tableBody.querySelectorAll("tr")]
-                         .filter(row => row.style.display !== "none")
-                         .length;
 
-                     // ✅ Update <p class="totalContent">
-                     const totalContentEl = document.querySelector(".totalContent");
-                     if (totalContentEl) {
-                         totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
-                     }
 
 
                 sortAndFormatAllTables();
@@ -728,7 +719,7 @@ window.initRequestDataForPaymentExportTable = function (allData, allAddData) {
 
 };
 
-window.initRequestDataDirectExportTable = function (allData,requestColumns,allAddData) {
+window.initRequestDataDirectExportTable = function (allData,requestColumns,allAddData,pageSize) {
     const tableBody = document.getElementById("requestForPaymentExportTableBody");
     if (!tableBody) return;
 
@@ -838,21 +829,40 @@ window.initRequestDataDirectExportTable = function (allData,requestColumns,allAd
                         }
                     });
 
-                    // ✅ After rows are rendered, count only visible rows
-                        const finalRowCount = [...tableBody.querySelectorAll("tr")]
-                            .filter(row => row.style.display !== "none")
-                            .length;
 
-                        // ✅ Update <p class="totalContent">
-                        const totalContentEl = document.querySelector(".totalContent");
-                        if (totalContentEl) {
-                            totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
-                        }
 
 
               //const myTable = document.getElementById("requestInventoryTable");  // or more specific selector if you want
               const myTable = document.querySelector("table");  // or more specific selector if you want
               sortAndFormatTable(myTable);
+              console.log("✅ Page Size from localStorage:", pageSize);
+
+               const allRows = Array.from(tableBody.querySelectorAll("tr"));
+               console.log("📋 Total Rows Before Trim:", allRows.length);
+
+               // Show each row’s first cell (for clarity)
+               allRows.forEach((row, i) => {
+                   console.log(`#${i + 1}:`, row.cells[0]?.textContent.trim());
+               });
+
+               // ✅ Remove extra rows from the BOTTOM
+               if (allRows.length > pageSize) {
+                   const rowsToRemove = allRows.slice(pageSize); // keep first N rows, remove bottom extras
+                   console.log("🗑️ Rows to remove (from bottom):", rowsToRemove.length);
+                   rowsToRemove.forEach(row => row.remove());
+               }
+
+               const remainingRows = Array.from(tableBody.querySelectorAll("tr"));
+               console.log("✅ Total Rows After Trim:", remainingRows.length);
+
+               // ✅ After rows are rendered, count only visible rows
+               const finalRowCount = remainingRows.filter(row => row.style.display !== "none").length;
+
+               // ✅ Update <p class="totalContent">
+               const totalContentEl = document.querySelector(".totalContent");
+               if (totalContentEl) {
+                   totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+               }
 
 
            $('#requestForPaymentExportTable tbody tr').click(function(event) {

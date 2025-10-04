@@ -93,7 +93,7 @@ function addTableInformationOfDeviceForService(categoryName,serviceId,problemNam
      formData += '&solutionName=' + encodeURIComponent(solutionName);
 
      // Debugging: Print the collected data
-     console.log("Form Data:", formData);
+    // console.log("Form Data:", formData);
 
      // AJAX call to save data
      $.ajax({
@@ -140,7 +140,7 @@ function addTableInformationOfDevice(categoryName,requestId) {
      formData += '&requestId=' + encodeURIComponent(requestId);
 
      // Debugging: Print the collected data
-     console.log("Form Data:", formData);
+  //   console.log("Form Data:", formData);
 
      // AJAX call to save data
      $.ajax({
@@ -187,7 +187,7 @@ function addTableInformationOfDevice(categoryName,requestId) {
       formData += '&requestId=' + encodeURIComponent(requestId);
 
       // Debugging: Print the collected data
-      console.log("Form Data:", formData);
+     // console.log("Form Data:", formData);
 
       // AJAX call to save data
       $.ajax({
@@ -221,7 +221,7 @@ function listRequest(requestId,deviceIds) {
                                'Authorization': 'Bearer ' + getAuthToken()
                            },
         success: function(response) {
-            console.log("AJAX request successful:", response);
+          //  console.log("AJAX request successful:", response);
             // Handle success response
         },
         error: function(error) {
@@ -366,7 +366,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
              });
  }
 
- window.initRequestDataGeneral= function (allData,requestColumns,allAddData) {
+ window.initRequestDataGeneral= function (allData,requestColumns,allAddData,pageSize) {
 
     const tableBody = document.getElementById("requestPurchaseTableBody");
     if (!tableBody) return;
@@ -392,7 +392,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
                     return count === 0 ? "Unavailable" : `Available(${count})`;
                 }
                 allData.forEach(device => {
-                     console.log(device);
+                    // console.log(device);
                     if (device.requestMode === "Denied") return;
                    // if(device.inventory?.inventoryStatus ==='Purchased' && device.purchase?.purchaseDeviceSenderToInventoryStatus !=='Accepted' )
                     {
@@ -448,17 +448,23 @@ function saveTableInformationOfDevice(requestId,categoryName){
                         htmlData += `
                            <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                ${device.purchase?.deviceBuyingStatus === 'Bought' &&
-                                  device.purchase?.purchaseDeviceSenderToInventoryStatus !== 'Accepted' &&
-                                  device.purchase?.purchaseDeviceExportStatus === 'Exported'
-                                    ? `<button class="btn btn-primary btn-sm text-white fas deliverPurchase"
-                                          data-category-id="${device.allData['category']}"
-                                          data-request-id="${device.id}"
-                                          data-buyingdevice-id="${device.purchase.buyingDeviceId}"
-                                          data-button-id="deliverPurchase"
-                                          title="Deliver Device">&#xf0d1;</button>`
-                                    : ''
-                                }
+                              ${
+                                device.purchase?.deviceBuyingStatus === 'Bought' &&
+                                device.purchase?.purchaseDeviceSenderToInventoryStatus == null &&
+                                device.purchase?.purchaseDeviceExportStatus === 'Exported'
+                                  ? `<button
+                                       class="btn btn-primary btn-sm text-white deliverPurchase"
+                                       data-category-id="${device.allData?.category ?? ''}"
+                                       data-request-id="${device.id}"
+                                       data-buyingdevice-id="${device.purchase?.buyingDeviceId ?? ''}"
+                                       data-button-id="deliverPurchase"
+                                       title="Deliver Device"
+                                       aria-label="Deliver Device"
+                                       style="font-family: 'Font Awesome 5 Free'; font-weight: 900;"
+                                     >&#xf0d1;</button>`
+                                  : ''
+                              }
+
 
                                 ${device.purchase?.deviceBuyingStatus !== 'Bought' &&
                                   device.purchase?.cooAns === 'Accepted' &&
@@ -479,7 +485,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
                                     : ''
                                 }
                                  ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.purchaseRequestProviderManInfo  !== null
-                                    ? `<button class="btn btn-secondary btn-sm chat-buttonEdit"
+                                    ? `<button class="btn btn-info btn-sm chat-buttonEdit"
                                           data-request-id="${device.id}"
                                           data-button-id="sendProposalEdit"
                                           title="Edit Proposal ">&#128172;</button>`
@@ -514,21 +520,40 @@ function saveTableInformationOfDevice(requestId,categoryName){
                         row.remove();
                     }
                 });
-                // ✅ After rows are rendered, count only visible rows
-                    const finalRowCount = [...tableBody.querySelectorAll("tr")]
-                        .filter(row => row.style.display !== "none")
-                        .length;
-
-                    // ✅ Update <p class="totalContent">
-                    const totalContentEl = document.querySelector(".totalContent");
-                    if (totalContentEl) {
-                        totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
-                    }
 
 
               //const myTable = document.getElementById("requestInventoryTable");  // or more specific selector if you want
               const myTable = document.querySelector("table");  // or more specific selector if you want
               sortAndFormatTable(myTable);
+
+              console.log("✅ Page Size from localStorage:", pageSize);
+
+               const allRows = Array.from(tableBody.querySelectorAll("tr"));
+               console.log("📋 Total Rows Before Trim:", allRows.length);
+
+               // Show each row’s first cell (for clarity)
+               allRows.forEach((row, i) => {
+                   console.log(`#${i + 1}:`, row.cells[0]?.textContent.trim());
+               });
+
+               // ✅ Remove extra rows from the BOTTOM
+               if (allRows.length > pageSize) {
+                   const rowsToRemove = allRows.slice(pageSize); // keep first N rows, remove bottom extras
+                   console.log("🗑️ Rows to remove (from bottom):", rowsToRemove.length);
+                   rowsToRemove.forEach(row => row.remove());
+               }
+
+               const remainingRows = Array.from(tableBody.querySelectorAll("tr"));
+               console.log("✅ Total Rows After Trim:", remainingRows.length);
+
+               // ✅ After rows are rendered, count only visible rows
+               const finalRowCount = remainingRows.filter(row => row.style.display !== "none").length;
+
+               // ✅ Update <p class="totalContent">
+               const totalContentEl = document.querySelector(".totalContent");
+               if (totalContentEl) {
+                   totalContentEl.innerHTML = `📊 Total Rows: <strong>${finalRowCount}</strong>`;
+               }
 
 
              $('#requestPurchaseTable tbody tr').click(function(event) {
@@ -819,7 +844,7 @@ function saveTableInformationOfDevice(requestId,categoryName){
                        // Generate HTML for categories
                             var categoriesHtml = '';
                        universalColumns.forEach(function(column) {
-                           console.log(column.dataType);
+                         //  console.log(column.dataType);
 
                             switch (column.dataType) {
                                 case 'text':
@@ -1285,7 +1310,7 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                     });
                     return count === 0 ? "Unavailable" : `Available(${count})`;
                 }
-                console.log(allData);
+               // console.log(allData);
 
                 allData.forEach(device => {
                     const bivagName = device.departmentName;
@@ -1328,7 +1353,7 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                                     <td>${inventoryTime}</td>
                                     <td>
                                         <div class="d-flex justify-content-center align-items-center action-button-container">
-                                            ${solution.deviceBuyingStatus === 'Bought' && solution.purchaseDeviceSenderToInventoryStatus !== 'Accepted' && solution.purchaseDeviceExportStatus === 'Exported' ? `
+                                            ${solution.deviceBuyingStatus === 'Bought' && solution.purchaseDeviceSenderToInventoryStatus === null  && solution.purchaseDeviceExportStatus === 'Exported' ? `
                                                 <button class="btn btn-primary btn-sm text-white fas deliverForService"
                                                     data-service-id="${device.id}"
                                                     data-category-id="${solution.category}"
@@ -1358,7 +1383,7 @@ window.initRequestDataPurchaseTable = function (allData, allAddData) {
                                              ${solution.purchaseProposalToCooAns !== 'Accepted'  && solution.purchaseProposalToCooManInfo !== null
 
                                               ? `
-                                                <button class="btn btn-secondary btn-sm chat-buttonForServiceEdit"
+                                                <button class="btn btn-info btn-sm chat-buttonForServiceEdit"
                                                     data-problemname-id="${problem.name}"
                                                     data-solutionname-id="${solution.name}"
                                                     data-service-id="${device.id}"
@@ -2306,7 +2331,7 @@ function myFunctionThatHandlesCase(column, text,formId) {
                        $(formSelector).on('click', `.${column.columnName}-customDropDownClick`, function() {
 
                             const selectedValue = $(this).text(); // Get selected value
-                            console.log("Dropdown item clicked:", selectedValue); // Print the selected value
+                           // console.log("Dropdown item clicked:", selectedValue); // Print the selected value
 
                             // Set the selected value in the input field
                             $(this).closest('.dropdown').find(`.${column.columnName}-input`).val(selectedValue);
