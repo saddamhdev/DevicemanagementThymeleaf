@@ -629,15 +629,17 @@ window.initDeviceInformationGeneral = function () {
                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
                                       break;
                                 case 'customDropDownList':
-                                    // Call the custom dropdown function and handle it as a promise
-                                    myFunctionThatHandlesCase(column, text,'dynamicFormEditDevice').then(function(dropDownHtml) {
-                                        categoriesHtml += dropDownHtml; // Append the dropdown HTML
-                                        $('#deviceDivEdit').append(categoriesHtml); // Update the deviceDiv with new HTML
-                                    }).catch(function(error) {
-                                        console.error("Error:", error);
-                                    });
-                                    console.log(" last")
-                                    return; // Prevent further execution in this case
+                                    // Handle custom dropdown asynchronously without duplicating
+                                    myFunctionThatHandlesCase(column, text, 'dynamicFormEditDevice')
+                                        .then(function (dropDownHtml) {
+                                            // Append only this dropdown’s HTML once
+                                            $('#deviceDivEdit').append(dropDownHtml);
+                                        })
+                                        .catch(function (error) {
+                                            console.error("Error generating dropdown:", error);
+                                        });
+                                    return; // Stop further synchronous processing for this column
+
 
                             }
 
@@ -875,116 +877,98 @@ function selectionAndInputDeviceEdit(deviceId){
 
 }
 function selectionAndInputDeviceInfo() {
-    // Event delegation for dynamically added items
-    $(document).on('click', '.deviceInputEachItem', function(event) {
-        var text = $(this).text();
-        $('#deviceInputFieldAdd').val(text);
-        var categoriesHtml = '';
 
+    // 🔹 Remove any old event listeners first (avoid duplicate triggers)
+    $(document).off('click', '.deviceInputEachItem');
+    $(document).off('keyup', '#deviceInputFieldAdd');
+
+    // 🔹 Handle category selection click
+    $(document).on('click', '.deviceInputEachItem', function (event) {
+        const text = $(this).text().trim();
+        $('#deviceInputFieldAdd').val(text);
         $('#universalDiv').show();
 
-        // do previous data empty
+        // Clear previous data before adding new fields
         $('#deviceDiv').empty();
 
-        // Show all Individual column according to category
-        print('individualColumns', function(individualColumns) {
-            if (individualColumns) {
-                individualColumns.forEach(function(column) {
-                    if (text === column.categoryName) {
-                        console.log(column.columnName);
-                        switch (column.dataType) {
-                              case 'text':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'password':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'email':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'url':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'search':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'tel':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'number':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'range':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'date':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'month':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'week':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'time':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'datetime-local':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'color':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'file':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'checkbox':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'radio':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'button':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'submit':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
-                                  break;
-                              case 'reset':
-                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
-                                  break;
-                            case 'customDropDownList':
-                                // Call the custom dropdown function and handle it as a promise
-                                myFunctionThatHandlesCase(column, text,'dynamicFormAddDevice').then(function(dropDownHtml) {
-                                    categoriesHtml += dropDownHtml; // Append the dropdown HTML
-                                    $('#deviceDiv').append(categoriesHtml); // Update the deviceDiv with new HTML
-                                }).catch(function(error) {
-                                    console.error("Error:", error);
-                                });
-                                console.log(" last")
-                                return; // Prevent further execution in this case
+        // Fetch and render individual columns dynamically
+        print('individualColumns', function (individualColumns) {
+            if (!individualColumns) return;
 
-                        }
-                    }
-                });
-                if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
-                    // Only update if there's no custom dropdown list pending
-                    $('#deviceDiv').html(categoriesHtml);
+            let html = '';
+
+            individualColumns.forEach(function (column) {
+                if (column.categoryName !== text) return;
+
+                const type = column.dataType;
+                const name = column.columnName;
+                const label = `${name} (${type})`;
+
+                switch (type) {
+                    case 'text':
+                    case 'password':
+                    case 'email':
+                    case 'url':
+                    case 'search':
+                    case 'tel':
+                    case 'number':
+                    case 'date':
+                    case 'month':
+                    case 'week':
+                    case 'time':
+                    case 'datetime-local':
+                    case 'color':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="${type}" class="form-control" name="${name}">
+                                 </div>`;
+                        break;
+
+                    case 'file':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="file" class="form-control" name="${name}">
+                                 </div>`;
+                        break;
+
+                    case 'checkbox':
+                    case 'radio':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="${type}" class="form-check-input" name="${name}">
+                                 </div>`;
+                        break;
+
+                    case 'customDropDownList':
+                        // Handle async dropdown
+                        myFunctionThatHandlesCase(column, text, 'dynamicFormAddDevice')
+                            .then(function (dropDownHtml) {
+                                $('#deviceDiv').append(dropDownHtml);
+                            })
+                            .catch(console.error);
+                        return; // Exit switch for async handling
+
+                    default:
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="text" class="form-control" name="${name}">
+                                 </div>`;
                 }
+            });
+
+            // Append all synchronous inputs once
+            if (html.trim() !== '') {
+                $('#deviceDiv').append(html);
             }
         });
     });
 
-    // Filter items based on input
-    $(document).on('keyup', '#deviceInputFieldAdd', function() {
-        var filter = $(this).val().toUpperCase();
-        $('#deviceInputAddUlList li').each(function() {
-            var text = $(this).text().toUpperCase();
-            if (text.indexOf(filter) > -1) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
+    // 🔹 Handle filtering (live search in category list)
+    $(document).on('keyup', '#deviceInputFieldAdd', function () {
+        const filter = $(this).val().toUpperCase();
+        $('#deviceInputAddUlList li').each(function () {
+            const text = $(this).text().toUpperCase();
+            $(this).toggle(text.indexOf(filter) > -1);
         });
     });
 }

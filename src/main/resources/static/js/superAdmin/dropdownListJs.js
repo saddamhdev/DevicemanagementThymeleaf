@@ -276,7 +276,12 @@ else if (button.hasClass("Delete")) {
                 data: {
                    listId:listId
 
-                }, // Send category name as data
+                },
+                headers: {
+
+                     'Authorization': 'Bearer ' + getAuthToken()
+                 },
+                 // Send category name as data
                 success: function(result) {
                               CustomAlert(result);
                                 $('#globalCustomAlertModal').on('hidden.bs.modal', function () {

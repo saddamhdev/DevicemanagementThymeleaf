@@ -219,7 +219,7 @@ function addIndividualColumn(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.ModalMedium').html(htmlToAdd);
+            $('.ModalLarge').html(htmlToAdd);
              print('categories', function(categories) {
                    if (categories) {
                        // Generate HTML for categories
@@ -235,6 +235,10 @@ function addIndividualColumn(){
               $.ajax({
                       type: "POST",
                       url: "/superAdmin/inputTypes",
+                      headers: {
+
+                             'Authorization': 'Bearer ' + getAuthToken()
+                         },
                       success: function(response) {
                           const $inputTypeSelect = $('#inputTypeIndividual');
                           response.forEach(type => {
@@ -247,7 +251,7 @@ function addIndividualColumn(){
                   });
 
             // selection and input handler.
-            selectionAndInputHandlerForAddColumn();
+            selectionAndInputHandlerForAddColumn99();
 
 
              $('#saveEditBtn').click(function() {
@@ -258,7 +262,7 @@ function addIndividualColumn(){
                     saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType);
                 });
 
-                showModalMedium();
+                showModalLarge();
 
 }
 function selectionAndInputHandler(){
@@ -283,7 +287,7 @@ function selectionAndInputHandler(){
 
 
 }
-function selectionAndInputHandlerForAddColumn(){
+function selectionAndInputHandlerForAddColumn99(){
 // Event delegation for dynamically added items
         $(document).on('click', '.individualEachItem', function(event) {
                 var text = $(this).text();
@@ -357,7 +361,7 @@ function selectionAndInputHandlerForAddColumn(){
                 url: "/superAdmin/inputTypes",
                 headers: {
 
-                                  'Authorization': 'Bearer ' + getAuthToken()
+                            'Authorization': 'Bearer ' + getAuthToken()
                               },
                 success: function(response) {
                     const $inputTypeSelect = $('#inputTypeIndividual');

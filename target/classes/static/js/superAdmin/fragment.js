@@ -1,5 +1,5 @@
 
-const pageSize = 2; // size per request
+const pageSize = 10; // size per request
 const fullPageSize=999999999;
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;
@@ -34,7 +34,6 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
      const token = getAuthToken();
 
      if (!localStorage.getItem("firstPageSeen")) {
-          console.log("🚀 First login detected -> loading analytic fragment");
         const analyticUrl = `/fragment1/analyticFragment?folder=${encodeURIComponent("superAdmin")}&departmentName=${encodeURIComponent(departmentName)}&page=${pageNumber}&size=${pageSize}`;
 
        fetch(analyticUrl, {
@@ -45,14 +44,11 @@ var departmentElement = $(".departmentName"); // Assuming you set a unique ID fo
            }
          })
            .then(response => {
-             console.log("Response status:", response.status);
              return response.text();
            })
            .then(html => {
-             console.log("Analytic fragment HTML:", html.substring(0, 100)); // log first 100 chars
              container.innerHTML = html;
              localStorage.setItem("firstPageSeen", "true");
-             console.log("Welcome page injected.");
            })
            .catch(error => {
              console.error("Error loading analytic fragment:", error);
@@ -500,7 +496,6 @@ function loadMoreDevices(direction = "down") {
     const totalPage = $('.last-page-flag').last().data('totalpage' + pageName);
 
     if (pageNumber >= totalPage) {
-        console.log("Reached last page. No more data to load.");
         return;
     }
 
@@ -557,7 +552,6 @@ const token = getAuthToken();
 
 
 async function loadByRange(pageNumber, pageSize) {
-    console.log("📦 Loading range with pageSize:", pageSize);
 
     const pageName = localStorage.getItem("lastActivePage");
 

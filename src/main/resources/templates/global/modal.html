@@ -81,10 +81,10 @@
         <select id="pageSize"
                 class="form-select form-select-sm w-auto"
                 onchange="onPageSizeChange(this.value)">
-            <option th:value="2" th:text="2" th:selected="${pageSize == 2}"></option>
-            <option th:value="3" th:text="3" th:selected="${pageSize == 3}"></option>
-            <option th:value="4" th:text="4" th:selected="${pageSize == 4}"></option>
             <option th:value="10" th:text="10" th:selected="${pageSize == 10}"></option>
+            <option th:value="25" th:text="25" th:selected="${pageSize == 25}"></option>
+            <option th:value=50 th:text="50" th:selected="${pageSize == 50}"></option>
+            <option th:value="100" th:text="100" th:selected="${pageSize == 100}"></option>
             <option th:value="9999999" th:text="'All'" th:selected="${pageSize == 'all'}"></option>
         </select>
 

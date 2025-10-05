@@ -1,5 +1,5 @@
 
-const pageSize = 2; // size per request
+const pageSize = 10; // size per request
 const fullPageSize=999999999;
 
 let pageNumber = 0;  // start from 0

@@ -121,13 +121,13 @@ table td {
 
 table th {
     background-color: #1d4961 !important; /* Background color for header cells */
-    color: white; /* Text color for header cells set to deep white */
-     font-size: 14px; /* Set font size for table cells */
+    color: #fff; /* Text color for header cells set to deep white */
+     font-size: 19px; /* Set font size for table cells */
 }
 
 table td {
     color: #000; /* Text color for body cells set to black */
-     font-size: 12px; /* Set font size for table cells */
+     font-size: 17px; /* Set font size for table cells */
 }
 
 /* Alternating row colors */

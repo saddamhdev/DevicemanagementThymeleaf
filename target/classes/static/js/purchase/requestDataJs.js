@@ -477,14 +477,14 @@ function saveTableInformationOfDevice(requestId,categoryName){
                                     : ''
                                 }
 
-                                ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.purchaseRequestProviderManInfo  === null
+                                ${device.purchase?.cooAns !== 'Accepted' && device.inventory?.inventoryToPurchaseRequestStatus  === 'Pending'
                                     ? `<button class="btn btn-secondary btn-sm chat-button"
                                           data-request-id="${device.id}"
                                           data-button-id="sendProposal"
                                           title="Send Proposal to Coo">&#128172;</button>`
                                     : ''
                                 }
-                                 ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.purchaseRequestProviderManInfo  !== null
+                                 ${device.purchase?.cooAns !== 'Accepted' && device.purchase?.cooAns === 'Pending'
                                     ? `<button class="btn btn-info btn-sm chat-buttonEdit"
                                           data-request-id="${device.id}"
                                           data-button-id="sendProposalEdit"
@@ -1001,15 +1001,12 @@ function saveTableInformationOfDevice(requestId,categoryName){
                                                  categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
                                                  break;
                                            case 'customDropDownList':
-                                               // Call the custom dropdown function and handle it as a promise
-                                               myFunctionThatHandlesCase(column, text,'dynamicFormAddDevice').then(function(dropDownHtml) {
-                                                   categoriesHtml += dropDownHtml; // Append the dropdown HTML
-                                                   $('#deviceDiv').append(categoriesHtml); // Update the deviceDiv with new HTML
-                                               }).catch(function(error) {
-                                                   console.error("Error:", error);
-                                               });
-                                               console.log(" last")
-                                               return; // Prevent further execution in this case
+                                                   myFunctionThatHandlesCase(column, text, 'dynamicFormAddDevice')
+                                                       .then(function(dropDownHtml) {
+                                                           $('#deviceDiv').append(dropDownHtml);
+                                                       })
+                                                       .catch(console.error);
+                                                   return; // prevent appending other items in same iteration
 
                                        }
                                    }

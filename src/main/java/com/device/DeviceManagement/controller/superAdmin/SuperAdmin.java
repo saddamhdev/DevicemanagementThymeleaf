@@ -442,6 +442,7 @@ public class SuperAdmin {
             );
             individualColumnsService.updateUniversalColumn();
             columnRepository.save(newColumn);
+            individualColumnsService.clearUniversalColumnCache();
             // Save the Category object
 
             // move to return "user/Home";

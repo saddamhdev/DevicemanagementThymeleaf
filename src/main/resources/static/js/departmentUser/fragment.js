@@ -1,4 +1,4 @@
-const pageSize = 2; // size per request
+const pageSize = 10; // size per request
 
 let pageNumber = 0;  // start from 0
 let lastScrollTop = 0;

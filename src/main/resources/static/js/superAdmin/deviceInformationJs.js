@@ -32,7 +32,6 @@ function saveTableInformationOfDeviceSuperAdmin(categoryName) {
      formData += '&deviceType=' + encodeURIComponent(deviceType);
 
      // Debugging: Print the collected data
-     console.log("Form Data:", formData);
 
      // AJAX call to save data
      $.ajax({
@@ -68,7 +67,6 @@ function editTableInformationOfDevice(deviceId,categoryName){
          var departmentName = departmentElement.data("departmentname"); // e.g., "it"
          var departmentUserName = departmentElement.data("departmentuser-name"); // e.g., "saho"
          var departmentUserId = departmentElement.data("departmentuser-id"); // e.g., "sahoid"
-           console.log(departmentName); // Prints the department name to the console
              // Append the deviceId and category name to the form data
              formData += '&deviceId=' + encodeURIComponent(deviceId);
              formData += '&categoryName=' + encodeURIComponent(categoryName);
@@ -96,6 +94,7 @@ function editTableInformationOfDevice(deviceId,categoryName){
              });
  }
 function addDeviceInformation(){
+
   var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
   var departmentName = departmentElement.data("departmentuser-name");
 
@@ -110,7 +109,7 @@ function addDeviceInformation(){
                     </div>
                 </div>
                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                   <label for="calendar"  class="form-label dropdown-toggle custom-width">Using starting Date:</label>
+                   <label for="calendar"  class="form-label  custom-width">Using starting Date </label>
                    <input type="datetime-local" id="calendar" name="calendar" class="form-control" style="width: 100%;"  th:data-user-id=" ">
                </div>
 
@@ -140,8 +139,8 @@ function addDeviceInformation(){
             `;
 
             // Add the HTML code to the modal body using jQuery
-            $('.modal-body').html(htmlToAdd);
-            $('#publicModalLabel').text("Add Old Device Information")
+            $('.ModalMedium').empty().html(htmlToAdd);
+            $('#publicModalMediumLabel').text("Add Old Device Information")
 
              print('categories', function(categories) {
                    if (categories) {
@@ -160,7 +159,6 @@ function addDeviceInformation(){
                    // Generate HTML for categories
                         var categoriesHtml = '';
                    universalColumns.forEach(function(column) {
-                       console.log(column.dataType);
 
                         switch (column.dataType) {
                             case 'text':
@@ -239,7 +237,7 @@ function addDeviceInformation(){
                                                  );
                                              }
 
-                                             console.log("DropdownList: ", dropDownData); // Debugging
+
                                              let columnClass = column.columnName.replace(/\s+/g, '-');
 
                                              if (dropDownData && dropDownData.allData) {
@@ -258,7 +256,7 @@ function addDeviceInformation(){
 
                                                  categoriesHtml11 += `</ul></div></div>`;
 
-                                                 console.log(categoriesHtml11); // Debugging
+
 
                                                  if ($('#deviceDiv').length > 0) {
                                                      $('#deviceDiv').append(categoriesHtml11);
@@ -270,7 +268,7 @@ function addDeviceInformation(){
                                                  $(formSelector).off('click', `.${columnClass}-customDropDownClick`); // Prevent duplicate events
                                                  $(formSelector).on('click', `.${columnClass}-customDropDownClick`, function() {
                                                      const selectedValue = $(this).text();
-                                                     console.log("Dropdown item clicked:", selectedValue);
+
                                                      $(this).closest('.dropdown').find(`.${columnClass}-input`).val(selectedValue);
                                                  });
                                              } else {
@@ -295,14 +293,14 @@ function addDeviceInformation(){
 
                   if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
                       // Only update if there's no custom dropdown list pending
-                        console.log(" check "+categoriesHtml);
+
                       $('#universalDiv').html(categoriesHtml);
                   }
                }
            });
 
             // selection and input handler.
-            selectionAndInputDeviceInfo();
+            selectionAndInputDeviceInfo992();
            // selectionAndInputUserInfo();
 
 
@@ -311,7 +309,7 @@ function addDeviceInformation(){
                   saveTableInformationOfDeviceSuperAdmin(categoryName);
                 });
 
-          showModal();
+          showModalMedium();
 
 }
  window.initDeviceInformationGeneral = function () {
@@ -331,7 +329,7 @@ function addDeviceInformation(){
 
     if (button.hasClass("Edit")) {
       // Handle edit button click (add your logic here)
-           console.log("Edit button clicked!");
+
            const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
             if (!deviceId) {
@@ -381,7 +379,7 @@ function addDeviceInformation(){
                                // Generate HTML for categories
                                     var categoriesHtml = '';
                                universalColumns.forEach(function(column) {
-                                   console.log(column.dataType);
+
 
                                     switch (column.dataType) {
                                         case 'text':
@@ -460,7 +458,7 @@ function addDeviceInformation(){
                                                             );
                                                         }
 
-                                                        console.log("DropdownList: ", dropDownData); // Debugging
+
                                                         let columnClass = column.columnName.replace(/\s+/g, '-');
 
                                                         if (dropDownData && dropDownData.allData) {
@@ -479,7 +477,7 @@ function addDeviceInformation(){
 
                                                             categoriesHtml11 += `</ul></div></div>`;
 
-                                                            console.log(categoriesHtml11); // Debugging
+
 
                                                             if ($('#universalDivEdit').length > 0) {
                                                                 $('#universalDivEdit').append(categoriesHtml11);
@@ -491,7 +489,7 @@ function addDeviceInformation(){
                                                             $(formSelector).off('click', `.${columnClass}-customDropDownClick`); // Prevent duplicate events
                                                             $(formSelector).on('click', `.${columnClass}-customDropDownClick`, function() {
                                                                 const selectedValue = $(this).text();
-                                                                console.log("Dropdown item clicked:", selectedValue);
+
                                                                 $(this).closest('.dropdown').find(`.${columnClass}-input`).val(selectedValue);
                                                             });
                                                         } else {
@@ -515,7 +513,7 @@ function addDeviceInformation(){
 
                               if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
                                   // Only update if there's no custom dropdown list pending
-                                    console.log(" check "+categoriesHtml);
+
                                   $('#universalDivEdit').html(categoriesHtml);
                               }
                            }
@@ -531,7 +529,7 @@ function addDeviceInformation(){
                       var categoriesHtml = '';
                          individualColumns.forEach(function(column) {
                              if (text === column.categoryName) {
-                                 console.log(column.columnName);
+
                                  switch (column.dataType) {
                                        case 'text':
                                            categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
@@ -609,7 +607,7 @@ function addDeviceInformation(){
                                                           );
                                                       }
 
-                                                      console.log("DropdownList: ", dropDownData); // Debugging
+
                                                       let columnClass = column.columnName.replace(/\s+/g, '-');
 
                                                       if (dropDownData && dropDownData.allData) {
@@ -628,7 +626,7 @@ function addDeviceInformation(){
 
                                                           categoriesHtml11 += `</ul></div></div>`;
 
-                                                          console.log(categoriesHtml11); // Debugging
+
 
                                                           if ($('#deviceDivEdit').length > 0) {
                                                               $('#deviceDivEdit').append(categoriesHtml11);
@@ -640,7 +638,7 @@ function addDeviceInformation(){
                                                           $(formSelector).off('click', `.${columnClass}-customDropDownClick`); // Prevent duplicate events
                                                           $(formSelector).on('click', `.${columnClass}-customDropDownClick`, function() {
                                                               const selectedValue = $(this).text();
-                                                              console.log("Dropdown item clicked:", selectedValue);
+
                                                               $(this).closest('.dropdown').find(`.${columnClass}-input`).val(selectedValue);
                                                           });
                                                       } else {
@@ -682,7 +680,7 @@ function addDeviceInformation(){
 
                // update field value so that  ui rendering become good
              print('universalColumns', function(universalColumns) {
-               console.log('universalColumns', universalColumns);
+
                if (universalColumns) {
                    // Iterate over universalColumns array
                    universalColumns.forEach(function(column) {
@@ -837,6 +835,104 @@ function addDeviceInformation(){
     });
 
 };
+function selectionAndInputDeviceInfo992() {
+
+    // 🔹 Remove old listeners before re-binding
+    $(document).off('click', '.deviceInputEachItem');
+    $(document).off('keyup', '#deviceInputFieldAdd');
+
+    // 🔹 Category click
+    $(document).on('click', '.deviceInputEachItem', function (event) {
+        const text = $(this).text().trim();
+        $('#deviceInputFieldAdd').val(text);
+        $('#universalDiv').show();
+
+        // Clear previous device fields before adding new ones
+        $('#deviceDiv').empty();
+
+        // Fetch and render individual columns for the selected category
+        print('individualColumns', function (individualColumns) {
+            if (!individualColumns) return;
+
+            let html = '';
+
+            // Build HTML for all matching category columns
+            individualColumns.forEach(function (column) {
+                if (column.categoryName !== text) return;
+
+                const type = column.dataType;
+                const label = column.columnName + " (" + type + ")";
+                const name = column.columnName;
+
+                switch (type) {
+                    case 'text':
+                    case 'password':
+                    case 'email':
+                    case 'url':
+                    case 'search':
+                    case 'tel':
+                    case 'number':
+                    case 'date':
+                    case 'month':
+                    case 'week':
+                    case 'time':
+                    case 'datetime-local':
+                    case 'color':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="${type}" class="form-control" name="${name}">
+                                </div>`;
+                        break;
+
+                    case 'file':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="file" class="form-control" name="${name}">
+                                 </div>`;
+                        break;
+
+                    case 'checkbox':
+                    case 'radio':
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="${type}" class="form-check-input" name="${name}">
+                                 </div>`;
+                        break;
+
+                    case 'customDropDownList':
+                        // Handle custom dropdown separately (async)
+                        myFunctionThatHandlesCase(column, text, 'dynamicFormAddDevice')
+                            .then(function (dropDownHtml) {
+                                $('#deviceDiv').append(dropDownHtml);
+                            })
+                            .catch(console.error);
+                        break;
+
+                    default:
+                        html += `<div class="mb-3">
+                                  <label>${label}</label>
+                                  <input type="text" class="form-control" name="${name}">
+                                 </div>`;
+                }
+            });
+
+            // Append only once for synchronous fields
+            if (html.trim() !== '') {
+                $('#deviceDiv').append(html);
+            }
+        });
+    });
+
+    // 🔹 Filter categories as user types
+    $(document).on('keyup', '#deviceInputFieldAdd', function () {
+        const filter = $(this).val().toUpperCase();
+        $('#deviceInputAddUlList li').each(function () {
+            const text = $(this).text().toUpperCase();
+            $(this).toggle(text.indexOf(filter) > -1);
+        });
+    });
+}
+
 // The function to handle the custom dropdown case
 
 
