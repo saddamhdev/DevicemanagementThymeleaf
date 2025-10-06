@@ -29,7 +29,10 @@
                         </li>
                         <li class="dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
-                                <img th:src="@{'/img/' + ${imgName}}" class="profile" th:alt="@{/img/manLogo.png}">
+                                <img th:src="@{'/img/' + ${imgName}}"
+                                     onerror="this.onerror=null;this.src='/img/manLogo.png';"
+                                     class="profile"
+                                     alt="Profile Photo">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdown">
                                 <li style="display:none">

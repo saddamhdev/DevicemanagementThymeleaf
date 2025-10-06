@@ -9,13 +9,13 @@ function getAuthToken() {
     return token;
 }
 document.addEventListener("DOMContentLoaded", function () {
-    const savedPhoto = localStorage.getItem("profilePhoto");
-    if (savedPhoto) {
-        document.querySelectorAll(".profile").forEach(img => {
-            img.src = savedPhoto;
-        });
+    const profileImg = document.getElementById("profilePhoto");
+    if (profileImg && profileImg.src) {
+        // Force browser to reload the image
+        profileImg.src = profileImg.src.split("?")[0] + "?v=" + new Date().getTime();
     }
 });
+
 
 $(document).ready(function () {
     function applyMobileStyles() {

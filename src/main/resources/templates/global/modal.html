@@ -209,8 +209,9 @@
                     <div class="position-relative d-inline-block mb-4">
                         <img id="profilePhotoPreview"
                              th:src="@{'/img/' + ${imgName}}"
-                             alt="@{/img/manLogo.png}"
-                             class="rounded-circle border border-4 border-light shadow-lg img-fluid"
+                             onerror="this.onerror=null;this.src='/img/manLogo.png';"
+                             alt="Profile Photo"
+                             class=" rounded-circle border border-4 border-light shadow-lg img-fluid"
                              style="max-width: 230px; height: auto;">
 
                     </div>
