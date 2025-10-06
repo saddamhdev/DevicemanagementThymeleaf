@@ -193,7 +193,48 @@
         </div>
     </div>
 </div>
+<div th:fragment="globalChangePhotoModal">
+    <div class="modal fade" id="changePhotoModal" tabindex="-1" aria-labelledby="changePhotoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 bg-light">
+                    <h5 class="modal-title fw-semibold text-dark" id="changePhotoLabel">
+                        <i class="fas fa-user-circle me-2 text-primary"></i> Change Profile Photo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body text-center py-4">
+                    <!-- Single Dynamic Photo Area -->
+                    <div class="position-relative d-inline-block mb-4">
+                        <img id="profilePhotoPreview"
+                             th:src="@{'/img/' + ${imgName}}"
+                             alt="@{/img/manLogo.png}"
+                             class="rounded-circle border border-4 border-light shadow-lg img-fluid"
+                             style="max-width: 230px; height: auto;">
+
+                    </div>
+
+                    <!-- File Upload Form -->
+                    <form id="photoUploadForm" enctype="multipart/form-data" class="d-flex flex-column align-items-center gap-3">
+                        <div class="input-group w-75">
+                            <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary px-4 mt-2">
+                            <i class="fas fa-upload me-1"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+
+
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>

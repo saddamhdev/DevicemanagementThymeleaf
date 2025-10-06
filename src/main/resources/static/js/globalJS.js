@@ -8,6 +8,14 @@ function getAuthToken() {
     }
     return token;
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const savedPhoto = localStorage.getItem("profilePhoto");
+    if (savedPhoto) {
+        document.querySelectorAll(".profile").forEach(img => {
+            img.src = savedPhoto;
+        });
+    }
+});
 
 $(document).ready(function () {
     function applyMobileStyles() {
@@ -1511,3 +1519,101 @@ async function fetchDataFromDB(url, token) {
         throw error;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const modalEl = document.getElementById("changePhotoModal");
+    const fileInput = document.getElementById("photoFile");
+    const previewImg = document.getElementById("profilePhotoPreview");
+    const formEl = document.getElementById("photoUploadForm");
+
+    // Show modal on click
+    document.querySelectorAll(".changePhotoBtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+            e.preventDefault();
+            if (!modalEl) return;
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        });
+    });
+
+    // Live replace photo when selecting new file
+    if (fileInput && previewImg) {
+        fileInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                // Smooth transition
+                previewImg.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+                previewImg.style.opacity = 0.3;
+                setTimeout(() => {
+                    previewImg.src = e.target.result;
+                    previewImg.style.opacity = 1;
+                    previewImg.style.transform = "scale(1.05)";
+                    setTimeout(() => (previewImg.style.transform = "scale(1)"), 200);
+                }, 150);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Handle Upload
+    // Handle Upload
+    if (formEl) {
+        formEl.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(formEl);
+
+            // ✅ Get token
+            const token = getAuthToken();
+            if (!token) return;
+
+
+            // ✅ Get imagename from the "Change Photo" button (the one user clicked)
+            const clickedBtn = document.querySelector(".changePhotoBtn[data-imagename-id]");
+            const imageName = clickedBtn ? clickedBtn.getAttribute("data-imagename-id") : null;
+
+            if (imageName) {
+                formData.append("imageName", imageName);
+                console.log("🟢 Sending imageName:", imageName);
+            } else {
+                console.warn("⚠️ No data-imagename-id found in .changePhotoBtn");
+            }
+
+            fetch("/departmentUser/user/upload-photo", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                body: formData
+            })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.photoUrl) {
+                    // Add cache-busting timestamp to force browser to load fresh image
+                    const newUrl = `${data.photoUrl}?v=${new Date().getTime()}`;
+
+                    // Update preview in modal
+                    previewImg.src = newUrl;
+
+                    // Update top navbar photo instantly
+                    document.querySelectorAll(".profile").forEach(img => {
+                        img.src = newUrl;
+                    });
+
+                    // Optional: persist for reloads
+                    localStorage.setItem("profilePhoto", newUrl);
+                }
+
+                CustomAlert("✅ Profile photo updated successfully!");
+            })
+
+            .catch(err => {
+                console.error("Upload failed:", err);
+                CustomAlert("❌ Upload failed. Try again.");
+            });
+        });
+    }
+
+});

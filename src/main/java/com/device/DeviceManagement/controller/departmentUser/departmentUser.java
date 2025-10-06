@@ -9,6 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -722,6 +729,40 @@ public class departmentUser {
 
         return ResponseEntity.ok("Selected rows processed successfully");
     }
+    @PostMapping("/user/upload-photo")
+    public ResponseEntity<Map<String, String>> uploadPhoto(
+            @RequestParam("photoFile") MultipartFile file,
+            @RequestParam(value = "imageName", required = false) String imageName,
+            Principal principal) throws IOException {
+
+        String username = principal.getName();
+        Path uploadDir = Paths.get("src/main/resources/static/img");  // ✅ store inside static folder
+        Files.createDirectories(uploadDir);
+
+        // ✅ Clean filename
+        String cleanFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9._-]", "_");
+
+        // ✅ Use provided image name if exists, else generate one
+        String fileName = (imageName != null && !imageName.isBlank())
+                ? imageName
+                : username + "_" + cleanFileName;
+
+        Path filePath = uploadDir.resolve(fileName);
+
+        // ✅ Replace existing file safely
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // ✅ Build correct relative URL for browser
+        String photoUrl = "/img/" + fileName;
+
+        Map<String, String> response = new HashMap<>();
+        response.put("photoUrl", photoUrl);
+        response.put("savedAs", fileName);
+
+        return ResponseEntity.ok(response);
+    }
+
+
     public String generateNewVisibleIdForOldDevice() {
         String prefix = "1";
 

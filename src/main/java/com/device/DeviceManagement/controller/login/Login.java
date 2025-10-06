@@ -205,6 +205,7 @@ public class Login {
             model.addAttribute("result", "Authenticated");
             model.addAttribute("token",token);
             model.addAttribute("firstPageStatus",true);
+            model.addAttribute("imgName",userType+"_"+userId+"_"+username+".png");
 
             if(userType.equals("Department")){
                // model.addAttribute("lastPage", lastPage);
@@ -215,7 +216,6 @@ public class Login {
                 model.addAttribute("departmentUserName",username);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
-
 
                 model.addAttribute("inputTypes", inputTypes);
                 model.addAttribute("data",categories);

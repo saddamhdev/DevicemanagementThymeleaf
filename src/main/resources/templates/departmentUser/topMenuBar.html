@@ -30,13 +30,13 @@
                         </li>
                         <li class="dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: black;">
-                                <img th:src="@{/img/manLogo.png}" class="profile" alt="Uploaded Image">
+                                <img th:src="@{'/img/' + ${imgName}}" class="profile" th:alt="@{/img/manLogo.png}">
                             </a>
                             <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="navbarDropdown">
-                                <li >
+                                <li style="display:none;" >
                                     <a  class="dropdown-item departmentName" href="#" th:text="${departmentName} + ' -> ' + ${departmentUserName}" th:data-departmentname="${departmentName}" th:data-departmentuser-name="${departmentUserName}" id="myPageStatus" th:data-departmentuser-Id="${userId}" th:data-firstpagestatus-id="${firstPageStatus}"></a>
                                 </li>
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item changePhotoBtn" th:data-imagename-id="${imgName}" href="#">Change Photo</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li class="list-group-item " data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
                                     <i style="margin-left:10px" class="fas fa-sign-out-alt me-2"></i> Logout
