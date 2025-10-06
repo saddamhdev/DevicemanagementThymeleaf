@@ -753,15 +753,12 @@ window.initDeviceInformationGeneral = function () {
                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
                                       break;
                                 case 'customDropDownList':
-                                    // Call the custom dropdown function and handle it as a promise
-                                    myFunctionThatHandlesCase(column, text,'dynamicFormEditDevice').then(function(dropDownHtml) {
-                                        categoriesHtml += dropDownHtml; // Append the dropdown HTML
-                                        $('#deviceDivEdit').append(categoriesHtml); // Update the deviceDiv with new HTML
-                                    }).catch(function(error) {
-                                        console.error("Error:", error);
-                                    });
-                                    console.log(" last")
-                                    return; // Prevent further execution in this case
+                                       myFunctionThatHandlesCase(column, text, 'dynamicFormEditDevice')
+                                           .then(function(dropDownHtml) {
+                                               $('#deviceDivEdit').append(dropDownHtml);
+                                           })
+                                           .catch(console.error);
+                                       return; // prevent appending other items in same iteration
 
                             }
 

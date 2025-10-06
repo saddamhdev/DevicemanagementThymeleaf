@@ -487,387 +487,257 @@ window.initDeviceInformationGeneral = function () {
 
                  }
    else if (button.hasClass("Edit")) {
-      // Handle edit button click (add your logic here)
-      console.log("Edit button clicked!");
-      const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
+              // Handle edit button click (add your logic here)
+             // console.log("Edit button clicked!");
+              const deviceId = button.data('deviceId'); // Get device ID from data-device-id attribute
 
-       if (!deviceId) {
-              console.error("Missing data-device-id attribute on delete button!");
-              return; // Handle potential missing attribute error gracefully
-            }
-       var htmlToAdd = `
-            <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                <input type="text" class="form-control  custom-width" id="deviceInputFieldEdit" value="${categoryName}" placeholder="Category" readonly >
-            </div>
-           <form   id="dynamicFormEditDevice">
-         <div id="universalDivEdit" >
+               if (!deviceId) {
+                      console.error("Missing data-device-id attribute on delete button!");
+                      return; // Handle potential missing attribute error gracefully
+                    }
+               var htmlToAdd = `
+                    <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                        <input type="text" class="form-control  custom-width" id="deviceInputFieldEdit" value="${categoryName}" placeholder="Category" readonly >
+                    </div>
+                   <form   id="dynamicFormEditDevice">
+                 <div id="universalDivEdit" >
 
-          </div>
-          <div id="deviceDivEdit">
+                  </div>
+                  <div id="deviceDivEdit">
 
-          </div>
+                  </div>
 
-           </form>
-            <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        `;
+                   </form>
+                    <div class="mb-3" style="margin-left: 0%; text-align: left;">
+                        <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                `;
 
-        // Add the HTML code to the modal body using jQuery
-        $('.ModalMedium').html(htmlToAdd);
-          $('#publicModalMediumLabel').text("Edit Device Information")
-         print('categories', function(categories) {
-               if (categories) {
-                   // Generate HTML for categories
-                   var categoriesHtml = '';
-                   categories.forEach(function(category) {
-                       categoriesHtml += `<li><a class="dropdown-item deviceInputEachItemEdit" href="#" th:text="${category.categoryName}">${category.categoryName}</a></li>`;
+                // Add the HTML code to the modal body using jQuery
+                $('.ModalMedium').html(htmlToAdd);
+                  $('#publicModalMediumLabel').text("Edit Device Information")
+                 print('categories', function(categories) {
+                       if (categories) {
+                           // Generate HTML for categories
+                           var categoriesHtml = '';
+                           categories.forEach(function(category) {
+                               categoriesHtml += `<li><a class="dropdown-item deviceInputEachItemEdit" href="#" th:text="${category.categoryName}">${category.categoryName}</a></li>`;
+                           });
+
+                           // Insert evaluated Thymeleaf expression
+                           $('#listItemEditDevice').html(categoriesHtml);
+                       }
                    });
 
-                   // Insert evaluated Thymeleaf expression
-                   $('#listItemEditDevice').html(categoriesHtml);
-               }
-           });
+
+               $('#universalDivEdit').empty();
+
+               print('universalColumns', function(universalColumns) {
+                              if (universalColumns) {
+                                  // Generate HTML for categories
+                                       var categoriesHtml = '';
+                                  universalColumns.forEach(function(column) {
+                                      console.log(column.dataType);
+
+                                       switch (column.dataType) {
+                                           case 'text':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'password':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'email':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'url':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'search':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'tel':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'number':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'range':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'date':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'month':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'week':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'time':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'datetime-local':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'color':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'file':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'checkbox':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'radio':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'button':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'submit':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'reset':
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
+                                               break;
+                                           case 'customDropDownList':
+                                                   // Call the custom dropdown function and handle it as a promise
+                                                   myFunctionThatHandlesCase(column,null,'dynamicFormEditDevice').then(function(dropDownHtml) {
+                                                       //categoriesHtml += dropDownHtml; // Append the dropdown HTML
+                                                       $('#universalDivEdit').append(dropDownHtml); // Update the deviceDiv with new HTML
+                                                   }).catch(function(error) {
+                                                       console.error("Error:", error);
+                                                   });
+                                                   break;
+                                           default:
+                                               categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label></div>`;
+                                               break;
+                                       }
 
 
-       $('#universalDivEdit').empty();
+                                  });
 
-       print('universalColumns', function(universalColumns) {
-                      if (universalColumns) {
-                          // Generate HTML for categories
-                               var categoriesHtml = '';
-                          universalColumns.forEach(function(column) {
-                              console.log(column.dataType);
-
-                               switch (column.dataType) {
-                                   case 'text':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'password':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'email':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'url':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'search':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'tel':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'number':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'range':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'date':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'month':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'week':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'time':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'datetime-local':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'color':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'file':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'checkbox':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'radio':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'button':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'submit':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'reset':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
-                                       break;
-                                   case 'customDropDownList':
-                                          var text1=null;
-                                       print1('dropDownLists')
-                                           .then(function(dropDownLists) {
-                                               if (dropDownLists) {
-                                                   let dropDownData = null;
-                                                   if (text1 === null || text1 === '') {
-                                                       dropDownData = dropDownLists.find(item =>
-                                                           item.dropDownListName === column.columnName
-                                                       );
-                                                   } else {
-                                                       dropDownData = dropDownLists.find(item =>
-                                                           item.dropDownListName === column.columnName && item.categoryName === text
-                                                       );
-                                                   }
-
-                                                   console.log("DropdownList: ", dropDownData); // Debugging
-                                                   let columnClass = column.columnName.replace(/\s+/g, '-');
-
-                                                   if (dropDownData && dropDownData.allData) {
-                                                       var categoriesHtml11 = `
-                                                           <div class="mb-3">
-                                                               <label>${column.columnName}</label>
-                                                               <div class="dropdown">
-                                                                   <input type="text" class="form-control dropdown-toggle ${columnClass}-input"
-                                                                          data-bs-toggle="dropdown" placeholder="Select DropDownList Value"
-                                                                          aria-expanded="false" data-problem-id="${columnClass}" name="${columnClass}">
-                                                                   <ul class="dropdown-menu ${columnClass}-ul">`;
-
-                                                       dropDownData.allData.forEach(function(option) {
-                                                           categoriesHtml11 += `<li class="dropdown-item ${columnClass}-customDropDownClick">${option}</li>`;
-                                                       });
-
-                                                       categoriesHtml11 += `</ul></div></div>`;
-
-                                                       console.log(categoriesHtml11); // Debugging
-
-                                                       if ($('#universalDivEdit').length > 0) {
-                                                           $('#universalDivEdit').append(categoriesHtml11);
-                                                       } else {
-                                                           console.error("#deviceDivEdit not found in the DOM.");
-                                                       }
-
-                                                       const formSelector = `#dynamicFormEditDevice`;
-                                                       $(formSelector).off('click', `.${columnClass}-customDropDownClick`); // Prevent duplicate events
-                                                       $(formSelector).on('click', `.${columnClass}-customDropDownClick`, function() {
-                                                           const selectedValue = $(this).text();
-                                                           console.log("Dropdown item clicked:", selectedValue);
-                                                           $(this).closest('.dropdown').find(`.${columnClass}-input`).val(selectedValue);
-                                                       });
-                                                   } else {
-                                                       console.log("Sorry, Not Found");
-                                                   }
-                                               } else {
-                                                   console.error("dropDownLists data is null or undefined");
-                                               }
-                                           })
-                                           .catch(function(error) {
-                                               console.error("An error occurred: ", error);
-                                           });
-                                        break;
-                                      default:
-                                     categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label></div>`;
-                                     break;
-                               }
-
-
+                                 if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
+                                     // Only update if there's no custom dropdown list pending
+                                       console.log(" check "+categoriesHtml);
+                                     $('#universalDivEdit').html(categoriesHtml);
+                                 }
+                              }
                           });
 
-                         if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
-                             // Only update if there's no custom dropdown list pending
-                               console.log(" check "+categoriesHtml);
-                             $('#universalDivEdit').html(categoriesHtml);
-                         }
-                      }
-                  });
 
+              // add individual column
+               $('#deviceDivEdit').empty();
 
-      // add individual column
-       $('#deviceDivEdit').empty();
+                // show all Individual column according to category
+             print('individualColumns', function(individualColumns) {
+                        if (individualColumns) {
+                         var categoriesHtml = '';
+                            individualColumns.forEach(function(column) {
+                                if (text === column.categoryName) {
+                                    console.log(column.columnName);
+                                    switch (column.dataType) {
+                                          case 'text':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'password':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'email':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'url':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'search':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'tel':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'number':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'range':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'date':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'month':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'week':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'time':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'datetime-local':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'color':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'file':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'checkbox':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'radio':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'button':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'submit':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
+                                              break;
+                                          case 'reset':
+                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
+                                              break;
+                                        case 'customDropDownList':
+                                               myFunctionThatHandlesCase(column, text, 'dynamicFormEditDevice')
+                                                   .then(function(dropDownHtml) {
+                                                       $('#deviceDivEdit').append(dropDownHtml);
+                                                   })
+                                                   .catch(console.error);
+                                               return; // prevent appending other items in same iteration
 
-        // show all Individual column according to category
-     print('individualColumns', function(individualColumns) {
-                if (individualColumns) {
-                 var categoriesHtml = '';
-                    individualColumns.forEach(function(column) {
-                        if (text === column.categoryName) {
-                            console.log(column.columnName);
-                            switch (column.dataType) {
-                                  case 'text':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="text" class="form-control" placeholder="Text" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'password':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="password" class="form-control" placeholder="Password" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'email':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="email" class="form-control" placeholder="Email" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'url':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="url" class="form-control" placeholder="URL" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'search':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="search" class="form-control" placeholder="Search" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'tel':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="tel" class="form-control" placeholder="Telephone" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'number':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="number" class="form-control" placeholder="Number" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'range':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="range" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'date':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'month':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="month" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'week':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="week" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'time':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'datetime-local':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'color':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'file':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="file" class="form-control" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'checkbox':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="checkbox" class="form-check-input" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'radio':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="radio" class="form-check-input" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'button':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="button" class="btn btn-secondary" value="Click me" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'submit':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="submit" class="btn btn-primary" value="Submit" name="${column.columnName}"></div>`;
-                                      break;
-                                  case 'reset':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="reset" class="btn btn-danger" value="Reset" name="${column.columnName}"></div>`;
-                                      break;
-                                 case 'customDropDownList':
-                                       // var text=null;
-                                     print1('dropDownLists')
-                                         .then(function(dropDownLists) {
-                                             if (dropDownLists) {
-                                                 let dropDownData = null;
-                                                 if (text === null || text === '') {
-                                                     dropDownData = dropDownLists.find(item =>
-                                                         item.dropDownListName === column.columnName
-                                                     );
-                                                 } else {
-                                                     dropDownData = dropDownLists.find(item =>
-                                                         item.dropDownListName === column.columnName && item.categoryName === text
-                                                     );
-                                                 }
+                                    }
 
-                                                 console.log("DropdownList: ", dropDownData); // Debugging
-                                                 let columnClass = column.columnName.replace(/\s+/g, '-');
-
-                                                 if (dropDownData && dropDownData.allData) {
-                                                     var categoriesHtml11 = `
-                                                         <div class="mb-3">
-                                                             <label>${column.columnName}</label>
-                                                             <div class="dropdown">
-                                                                 <input type="text" class="form-control dropdown-toggle ${columnClass}-input"
-                                                                        data-bs-toggle="dropdown" placeholder="Select DropDownList Value"
-                                                                        aria-expanded="false" data-problem-id="${columnClass}" name="${columnClass}">
-                                                                 <ul class="dropdown-menu ${columnClass}-ul">`;
-
-                                                     dropDownData.allData.forEach(function(option) {
-                                                         categoriesHtml11 += `<li class="dropdown-item ${columnClass}-customDropDownClick">${option}</li>`;
-                                                     });
-
-                                                     categoriesHtml11 += `</ul></div></div>`;
-
-                                                     console.log(categoriesHtml11); // Debugging
-
-                                                     if ($('#deviceDivEdit').length > 0) {
-                                                         $('#deviceDivEdit').append(categoriesHtml11);
-                                                     } else {
-                                                         console.error("#deviceDivEdit not found in the DOM.");
-                                                     }
-
-                                                     const formSelector = `#dynamicFormEditDevice`;
-                                                     $(formSelector).off('click', `.${columnClass}-customDropDownClick`); // Prevent duplicate events
-                                                     $(formSelector).on('click', `.${columnClass}-customDropDownClick`, function() {
-                                                         const selectedValue = $(this).text();
-                                                         console.log("Dropdown item clicked:", selectedValue);
-                                                         $(this).closest('.dropdown').find(`.${columnClass}-input`).val(selectedValue);
-                                                     });
-                                                 } else {
-                                                     console.log("Sorry, Not Found");
-                                                 }
-                                             } else {
-                                                 console.error("dropDownLists data is null or undefined");
-                                             }
-                                         })
-                                         .catch(function(error) {
-                                             console.error("An error occurred: ", error);
-                                         });
-                                      break;
-                                    default:
-                                   categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label></div>`;
-                                   break;
-
+                                }
+                            });
+                            if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
+                                // Only update if there's no custom dropdown list pending
+                                $('#deviceDivEdit').html(categoriesHtml);
                             }
-
                         }
                     });
-                    if (categoriesHtml && !categoriesHtml.includes('customDropDownList')) {
-                        // Only update if there's no custom dropdown list pending
-                        $('#deviceDivEdit').html(categoriesHtml);
-                    }
-                }
-            });
 
 
-          $('#saveEditBtn').click(function() {
-              editTableInformationOfDevice(deviceId,categoryName);
-            });
+                  $('#saveEditBtn').click(function() {
+                      editTableInformationOfDevice(deviceId,categoryName);
+                    });
 
-          showModalMedium();
+                  showModalMedium();
 
-      // Adding a delay of 500ms before populating a section
-      setTimeout(() => {
+              // Adding a delay of 500ms before populating a section
+              setTimeout(() => {
 
 
-          // update field value so that  ui rendering become good
-        print('universalColumns', function(universalColumns) {
-          console.log('universalColumns', universalColumns);
-          if (universalColumns) {
-              // Iterate over universalColumns array
-              universalColumns.forEach(function(column) {
-                  // Fetch and set value asynchronously
-                  columnValue1(deviceId, column.columnName, function(value) {
-                      // Locate input element by its name attribute
-                      let columnClass = column.columnName.replace(/\s+/g, '-');
-                      var inputElement = $('input[name="' + columnClass + '"]');
-                      if (inputElement.length) {
-                          inputElement.val(value); // Set the value
-                      } else {
-                          console.warn('Input element not found for column:', column.columnName);
-                      }
-                  });
-              });
-          }
-
-        });
-         print('individualColumns', function(individualColumns) {
-                  console.log('individualColumns', individualColumns);
-                  if (individualColumns) {
+                  // update field value so that  ui rendering become good
+                print('universalColumns', function(universalColumns) {
+                  console.log('universalColumns', universalColumns);
+                  if (universalColumns) {
                       // Iterate over universalColumns array
-                      individualColumns.forEach(function(column) {
+                      universalColumns.forEach(function(column) {
                           // Fetch and set value asynchronously
                           columnValue1(deviceId, column.columnName, function(value) {
                               // Locate input element by its name attribute
-                             let columnClass = column.columnName.replace(/\s+/g, '-');
-                             var inputElement = $('input[name="' + columnClass + '"]');
+                              var inputElement = $('input[name="' + column.columnName + '"]');
                               if (inputElement.length) {
                                   inputElement.val(value); // Set the value
                               } else {
@@ -878,16 +748,35 @@ window.initDeviceInformationGeneral = function () {
                   }
 
                 });
+                 print('individualColumns', function(individualColumns) {
+                          console.log('individualColumns', individualColumns);
+                          if (individualColumns) {
+                              // Iterate over universalColumns array
+                              individualColumns.forEach(function(column) {
+                                  // Fetch and set value asynchronously
+                                  columnValue1(deviceId, column.columnName, function(value) {
+                                      // Locate input element by its name attribute
+                                      var inputElement = $('input[name="' + column.columnName + '"]');
+                                      if (inputElement.length) {
+                                          inputElement.val(value); // Set the value
+                                      } else {
+                                          console.warn('Input element not found for column:', column.columnName);
+                                      }
+                                  });
+                              });
+                          }
 
-                 }, 500); // 500 milliseconds delay
+                        });
 
-         /*if (confirm(`Are you sure you want to edit device ${deviceId}?`)) {
-             console.log("edited done.");
-         }else{
-         console.log("edit canceled.");
-         }*/
+                         }, 500); // 500 milliseconds delay
 
-    }
+                 /*if (confirm(`Are you sure you want to edit device ${deviceId}?`)) {
+                     console.log("edited done.");
+                 }else{
+                 console.log("edit canceled.");
+                 }*/
+
+            }
     else  if (button.hasClass("Service")) {
                // Handle edit button click (add your logic here)
 
