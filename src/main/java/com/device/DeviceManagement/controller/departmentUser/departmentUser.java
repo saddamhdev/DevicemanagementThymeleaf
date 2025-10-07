@@ -748,9 +748,9 @@ public class departmentUser {
             Principal principal) throws IOException {
 
 
-       // String activeProfile = Arrays.toString(env.getActiveProfiles());
-       // System.out.println("ACTIVE PROFILE = " + activeProfile);
-       // System.out.println("UPLOAD DIR = " + uploadDir);
+        String activeProfile = Arrays.toString(env.getActiveProfiles());
+        System.out.println("ACTIVE PROFILE = " + activeProfile);
+        System.out.println("UPLOAD DIR = " + uploadDir);
 
         String username = principal.getName();
 
