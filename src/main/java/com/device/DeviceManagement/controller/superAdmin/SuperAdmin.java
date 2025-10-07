@@ -637,6 +637,7 @@ public class SuperAdmin {
 
             // Save the Category object
             internalUserRepository.save(new InternalUser(branchName,userName,userId,userPassword,currentDate,formattedDateTime,"1"));
+
             internalUserService.clearCache();
             // move to return "user/Home";
             return ResponseEntity.ok("Successfully added user");

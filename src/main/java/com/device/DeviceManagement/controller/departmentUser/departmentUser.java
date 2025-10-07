@@ -4,6 +4,9 @@ import com.device.DeviceManagement.controller.service.*;
 import com.device.DeviceManagement.model.*;
 import com.device.DeviceManagement.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +42,15 @@ import java.util.Map;
 @Controller
 @RequestMapping("/departmentUser")
 public class departmentUser {
+    @Autowired
+    private Environment env;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+    @Value("${file.base-url}")
+    private String baseUrl;
+
     @Autowired
     private  RequestDataRepository requestDataRepository;
     @Autowired
@@ -735,32 +747,39 @@ public class departmentUser {
             @RequestParam(value = "imageName", required = false) String imageName,
             Principal principal) throws IOException {
 
+
+       // String activeProfile = Arrays.toString(env.getActiveProfiles());
+       // System.out.println("ACTIVE PROFILE = " + activeProfile);
+       // System.out.println("UPLOAD DIR = " + uploadDir);
+
         String username = principal.getName();
-        Path uploadDir = Paths.get("src/main/resources/static/img");  // ✅ store inside static folder
-        Files.createDirectories(uploadDir);
 
-        // ✅ Clean filename
+        // ✅ Create folder (uploads/img)
+        Path uploadPath = Paths.get(uploadDir);
+        Files.createDirectories(uploadPath);
+
+        // ✅ Clean & generate filename
         String cleanFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9._-]", "_");
-
-        // ✅ Use provided image name if exists, else generate one
         String fileName = (imageName != null && !imageName.isBlank())
                 ? imageName
                 : username + "_" + cleanFileName;
 
-        Path filePath = uploadDir.resolve(fileName);
+        Path filePath = uploadPath.resolve(fileName);
 
-        // ✅ Replace existing file safely
+        // ✅ Save file
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // ✅ Build correct relative URL for browser
-        String photoUrl = "/img/" + fileName;
+        String photoUrl = baseUrl + fileName;
 
         Map<String, String> response = new HashMap<>();
         response.put("photoUrl", photoUrl);
         response.put("savedAs", fileName);
+        response.put("absolutePath", filePath.toString());
 
         return ResponseEntity.ok(response);
     }
+
+
 
 
     public String generateNewVisibleIdForOldDevice() {

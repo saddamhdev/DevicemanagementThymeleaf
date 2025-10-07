@@ -1,5 +1,4 @@
 function saveUserBtn(Id) {
-
    var departmentElement = $(".departmentName"); // Assuming you set a unique ID for the `<a>` element
    //var departmentUserName = departmentElement.data("department_name"); // Fetch data-department_name
    var departmentUserName = departmentElement.data("departmentuser-name"); // Fetch data-departmentuser-name

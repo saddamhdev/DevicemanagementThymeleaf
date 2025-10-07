@@ -3,6 +3,7 @@ package com.device.DeviceManagement.Config;
 import com.device.DeviceManagement.security.JwtFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -24,11 +25,14 @@ import java.io.IOException;
 public class SecurityConfig implements WebMvcConfigurer {
     private final JwtFilter jwtFilter;
     // ✅ This will now actually execute
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Serve all /img/** URLs from the file system
         registry.addResourceHandler("/img/**")
-                .addResourceLocations("file:./img/")   // serve files from ./img folder
-                .setCacheControl(CacheControl.noStore()); // disable browser caching
+                .addResourceLocations("file:" + uploadDir + "/");
     }
     @Bean
     public WebMvcConfigurer corsConfigurer() {
