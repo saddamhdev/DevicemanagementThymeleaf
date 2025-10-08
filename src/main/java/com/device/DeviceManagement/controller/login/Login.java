@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ public class Login {
     public Login(KafkaProducer kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
     }*/
+    @Autowired
+    private Environment env;
     @Autowired
     private RequestColumnRepository requestColumnRepository;
 
@@ -205,7 +208,14 @@ public class Login {
             model.addAttribute("result", "Authenticated");
             model.addAttribute("token",token);
             model.addAttribute("firstPageStatus",true);
-            model.addAttribute("imgName",userType+"_"+userId+"_"+username+".png");
+            String activeProfile = Arrays.toString(env.getActiveProfiles());
+            if(activeProfile.equals("prod")){
+                model.addAttribute("imgName","https://snvn.deepseahost.com/"+userType+"_"+userId+"_"+username+".png");
+            }
+            else{
+                model.addAttribute("imgName",userType+"_"+userId+"_"+username+".png");
+
+            }
 
             if(userType.equals("Department")){
                // model.addAttribute("lastPage", lastPage);
