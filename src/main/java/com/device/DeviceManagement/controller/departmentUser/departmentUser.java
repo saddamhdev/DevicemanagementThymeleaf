@@ -746,44 +746,25 @@ public class departmentUser {
     public ResponseEntity<Map<String, String>> uploadPhoto(
             @RequestParam("photoFile") MultipartFile file,
             @RequestParam(value = "imageName", required = false) String imageName,
-            Principal principal, HttpServletRequest request) {
+            Principal principal) {
 
         System.out.println("📸 uploadPhoto() called");
 
         Map<String, String> response = new HashMap<>();
 
         try {
-            // ✅ Active profile check
+            // ✅ Active profile
             String activeProfile = Arrays.toString(env.getActiveProfiles());
             System.out.println("ACTIVE PROFILE = " + activeProfile);
 
             String username = (principal != null) ? principal.getName() : "guest";
 
-            // ✅ Dynamic directory setup
-            String uploadDir;
-            String baseUrl;
-            if (activeProfile.contains("prod")) {
-                System.out.println(request);
-                String host = request.getHeader("X-Forwarded-Host");
-                if (host == null || host.isBlank()) {
-                    host = request.getHeader("Host");
-                }
-                System.out.println("🌐 Detected Host = " + host);
+            // ✅ Always save to both directories
+            String snvnDir = "/www/wwwroot/snvn.deepseahost.com/img/";
+            String icsDir  = "/www/wwwroot/icsdevicemanagement.com/img/";
 
-                if (host.contains("icsdevicemanagement.com")) {
-                    uploadDir = "/www/wwwroot/icsdevicemanagement.com/img/";
-                    baseUrl = "https://icsdevicemanagement.com/img/";
-                } else {
-                    uploadDir = "/www/wwwroot/snvn.deepseahost.com/img/";
-                    baseUrl = "https://snvn.deepseahost.com/img/";
-                }
-
-            } else {
-                uploadDir = "src/main/resources/static/img/";
-                baseUrl = "/img/";
-            }
-
-            System.out.println("UPLOAD DIR = " + uploadDir);
+            // ✅ Always use icsdevicemanagement.com for returned image URL
+            String baseUrl = "https://icsdevicemanagement.com/img/";
 
             // ✅ Validate file
             if (file == null || file.isEmpty()) {
@@ -792,37 +773,40 @@ public class departmentUser {
             }
             System.out.println("✅ File received: " + file.getOriginalFilename());
 
-            // ✅ Ensure upload directory exists
-            Path uploadPath = Paths.get(uploadDir);
-            Files.createDirectories(uploadPath);
-            System.out.println("✅ Directory ready: " + uploadPath);
+            // ✅ Ensure directories exist
+            Files.createDirectories(Paths.get(snvnDir));
+            Files.createDirectories(Paths.get(icsDir));
+            System.out.println("✅ Both directories ready");
 
-            // ✅ Clean filename and prevent path traversal
-            String cleanFileName = file.getOriginalFilename()
-                    .replaceAll("[^a-zA-Z0-9._-]", "_");
-
+            // ✅ Clean filename
+            String cleanFileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9._-]", "_");
             String fileName = (imageName != null && !imageName.isBlank())
                     ? imageName
                     : username + "_" + cleanFileName;
 
-            // 🚨 Strip any accidental leading slashes
             fileName = fileName.replace("\\", "").replace("/", "");
 
-            Path filePath = uploadPath.resolve(fileName);
-            System.out.println("✅ Final save path: " + filePath.toAbsolutePath());
+            // ✅ Create paths
+            Path snvnPath = Paths.get(snvnDir, fileName);
+            Path icsPath = Paths.get(icsDir, fileName);
 
-            // ✅ Save file (overwrite if exists)
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("✅ File saved successfully");
+            // ✅ Save bytes to both locations
+            byte[] fileBytes = file.getBytes();
+            Files.write(snvnPath, fileBytes);
+            Files.write(icsPath, fileBytes);
 
-            // ✅ Build response URL
+            System.out.println("✅ File saved successfully to:");
+            System.out.println("   → " + snvnPath);
+            System.out.println("   → " + icsPath);
+
+            // ✅ Build response URL (always ics domain)
             String photoUrl = baseUrl + fileName;
-            System.out.println("✅ photo url = " + photoUrl);
-
             response.put("photoUrl", photoUrl);
             response.put("savedAs", fileName);
-            response.put("absolutePath", filePath.toString());
+            response.put("snvnPath", snvnPath.toString());
+            response.put("icsPath", icsPath.toString());
 
+            System.out.println("✅ photo url = " + photoUrl);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
@@ -831,6 +815,7 @@ public class departmentUser {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
 
 
 
