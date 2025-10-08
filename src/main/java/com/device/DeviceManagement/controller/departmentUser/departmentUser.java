@@ -763,8 +763,13 @@ public class departmentUser {
             String uploadDir;
             String baseUrl;
             if (activeProfile.contains("prod")) {
-                String host = request.getHeader("Host");
-                System.out.println(host);
+                System.out.println(request);
+                String host = request.getHeader("X-Forwarded-Host");
+                if (host == null || host.isBlank()) {
+                    host = request.getHeader("Host");
+                }
+                System.out.println("🌐 Detected Host = " + host);
+
                 if (host.contains("icsdevicemanagement.com")) {
                     uploadDir = "/www/wwwroot/icsdevicemanagement.com/img/";
                     baseUrl = "https://icsdevicemanagement.com/img/";
