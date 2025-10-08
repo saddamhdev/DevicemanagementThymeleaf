@@ -210,10 +210,10 @@ public class Login {
             model.addAttribute("firstPageStatus",true);
             String activeProfile = Arrays.toString(env.getActiveProfiles());
             if(activeProfile.equals("prod")){
-                model.addAttribute("imgName","https://snvn.deepseahost.com/"+userType+"_"+userId+"_"+username+".png");
+                model.addAttribute("imgName","https://snvn.deepseahost.com/img/"+userType+"_"+userId+"_"+username+".png");
             }
             else{
-                model.addAttribute("imgName",userType+"_"+userId+"_"+username+".png");
+                model.addAttribute("imgName","/img/"+userType+"_"+userId+"_"+username+".png");
 
             }
 
