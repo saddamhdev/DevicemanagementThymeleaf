@@ -762,8 +762,9 @@ public class departmentUser {
             String uploadDir;
             String baseUrl;
             if (activeProfile.contains("prod")) {
-                uploadDir = "/www/wwwroot/CITSNVN/devicemanagement/src/main/resources/static/img/";
+                uploadDir = "/www/wwwroot/snvn.deepseahost.com/img/";
                 baseUrl = "https://snvn.deepseahost.com/img/";
+
             } else {
                 uploadDir = "src/main/resources/static/img/";
                 baseUrl = "/img/";
