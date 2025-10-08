@@ -3,6 +3,7 @@ package com.device.DeviceManagement.controller.departmentUser;
 import com.device.DeviceManagement.controller.service.*;
 import com.device.DeviceManagement.model.*;
 import com.device.DeviceManagement.repository.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -745,7 +746,7 @@ public class departmentUser {
     public ResponseEntity<Map<String, String>> uploadPhoto(
             @RequestParam("photoFile") MultipartFile file,
             @RequestParam(value = "imageName", required = false) String imageName,
-            Principal principal) {
+            Principal principal, HttpServletRequest request) {
 
         System.out.println("📸 uploadPhoto() called");
 
@@ -762,8 +763,15 @@ public class departmentUser {
             String uploadDir;
             String baseUrl;
             if (activeProfile.contains("prod")) {
-                uploadDir = "/www/wwwroot/snvn.deepseahost.com/img/";
-                baseUrl = "https://snvn.deepseahost.com/img/";
+                String host = request.getHeader("Host");
+                System.out.println(host);
+                if (host.contains("icsdevicemanagement.com")) {
+                    uploadDir = "/www/wwwroot/icsdevicemanagement.com/img/";
+                    baseUrl = "https://icsdevicemanagement.com/img/";
+                } else {
+                    uploadDir = "/www/wwwroot/snvn.deepseahost.com/img/";
+                    baseUrl = "https://snvn.deepseahost.com/img/";
+                }
 
             } else {
                 uploadDir = "src/main/resources/static/img/";
