@@ -10,11 +10,12 @@ function getAuthToken() {
 }
 document.addEventListener("DOMContentLoaded", function () {
     const profileImg = document.getElementById("profilePhoto");
-    if (profileImg && profileImg.src) {
-        // Force browser to reload the image
-        profileImg.src = profileImg.src.split("?")[0] + "?v=" + new Date().getTime();
+    if (profileImg) {
+        const src = profileImg.src.split("?")[0];
+        profileImg.src = `${src}?v=${new Date().getTime()}`;
     }
 });
+
 
 
 $(document).ready(function () {
@@ -1542,6 +1543,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const file = this.files[0];
             if (!file) return;
 
+            if (file.size > 300 * 1024) {
+                CustomAlert("⚠️ Image must be less than 300 KB.");
+                this.value = ""; // clear file input
+                return; // 🟢 keep previous preview unchanged
+            }
+
+
             const reader = new FileReader();
             reader.onload = e => {
                 // Smooth transition
@@ -1558,62 +1566,124 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Handle Upload
-    // Handle Upload
-    if (formEl) {
-        formEl.addEventListener("submit", function (e) {
-            e.preventDefault();
-            const formData = new FormData(formEl);
+   if (formEl) {
+       formEl.addEventListener("submit", function (e) {
+           e.preventDefault();
+           const formData = new FormData(formEl);
+           const token = getAuthToken();
+           if (!token) return;
 
-            // ✅ Get token
-            const token = getAuthToken();
-            if (!token) return;
+           // get image name
+           const clickedBtn = document.querySelector(".changePhotoBtn[data-imagename-id]");
+           const imageName = clickedBtn ? clickedBtn.getAttribute("data-imagename-id") : null;
 
+           if (imageName) formData.append("imageName", imageName);
 
-            // ✅ Get imagename from the "Change Photo" button (the one user clicked)
-            const clickedBtn = document.querySelector(".changePhotoBtn[data-imagename-id]");
-            const imageName = clickedBtn ? clickedBtn.getAttribute("data-imagename-id") : null;
+           fetch("/departmentUser/user/upload-photo", {
+               method: "POST",
+               headers: { "Authorization": "Bearer " + token },
+               body: formData
+           })
+           .then(resp => resp.json())
+           .then(data => {
+               if (data.photoUrl) {
+                   // 🔁 Add version control
+                   const version = new Date().getTime();
+                   const newUrl = `${data.photoUrl}?v=${version}`;
 
-            if (imageName) {
-                formData.append("imageName", imageName);
-                console.log("🟢 Sending imageName:", imageName);
-            } else {
-                console.warn("⚠️ No data-imagename-id found in .changePhotoBtn");
-            }
+                   // Update preview and top bar photos
+                   const previewImg = document.getElementById("profilePhotoPreview");
+                   previewImg.src = newUrl;
 
-            fetch("/departmentUser/user/upload-photo", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
-                body: formData
-            })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data.photoUrl) {
-                    // Add cache-busting timestamp to force browser to load fresh image
-                    const newUrl = `${data.photoUrl}?v=${new Date().getTime()}`;
+                   document.querySelectorAll(".profile").forEach(img => {
+                       img.src = newUrl;
+                   });
 
-                    // Update preview in modal
-                    previewImg.src = newUrl;
+                   // Save latest version to localStorage
+                   localStorage.setItem("profilePhoto", newUrl);
 
-                    // Update top navbar photo instantly
-                    document.querySelectorAll(".profile").forEach(img => {
-                        img.src = newUrl;
-                    });
-
-                    // Optional: persist for reloads
-                    localStorage.setItem("profilePhoto", newUrl);
-                }
-
-                CustomAlert("✅ Profile photo updated successfully!");
-            })
-
-            .catch(err => {
-                console.error("Upload failed:", err);
-                CustomAlert("❌ Upload failed. Try again.");
-            });
-        });
-    }
+                   CustomAlert("✅ Profile photo updated successfully! and Wait few moment image will update");
+                   hideChangePhotoModal();
+               } else {
+                   CustomAlert("❌ Please Insert Image.");
+               }
+           })
+           .catch(err => {
+               console.error("Upload failed:", err);
+               CustomAlert("❌ Upload failed. Try again.");
+           });
+       });
+   }
 
 });
+
+document.addEventListener("click", function (e) {
+    if (e.target && e.target.id === "removeImageBtn") {
+        e.preventDefault();
+
+        const token = getAuthToken();
+        if (!token) return;
+
+        const clickedBtn = document.querySelector(".changePhotoBtn[data-imagename-id]");
+        const imageName = clickedBtn ? clickedBtn.getAttribute("data-imagename-id") : null;
+        if (!imageName) {
+            CustomAlert("⚠️ No image name found.");
+            return;
+        }
+
+        if (!confirm("Are you sure you want to remove this image?")) return;
+
+        fetch("/departmentUser/user/remove-photo", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({ imageName })
+        })
+        .then(resp => resp.json())
+        .then(data => {
+            if (data.success === "true") {
+                // ✅ version-controlled image refresh
+                const version = new Date().getTime();
+                const defaultImage = `/img/manLogo.png?v=${version}`;
+
+                const previewImg = document.getElementById("profilePhotoPreview");
+                previewImg.src = defaultImage;
+
+                document.querySelectorAll(".profile").forEach(img => (img.src = defaultImage));
+
+                localStorage.setItem("profilePhoto", defaultImage);
+
+                CustomAlert("🗑️ Image removed successfully! and Wait few moment image will update");
+                hideChangePhotoModal();
+            } else {
+                CustomAlert("❌ Failed to remove image: " + (data.error || ""));
+            }
+        })
+        .catch(err => {
+            console.error("Delete failed:", err);
+            CustomAlert("❌ Remove failed. Try again.");
+        });
+    }
+});
+
+function hideChangePhotoModal() {
+    const modalEl = document.getElementById("changePhotoModal");
+    if (!modalEl) return;
+
+    const modalInstance = bootstrap.Modal.getInstance(modalEl)
+        || bootstrap.Modal.getOrCreateInstance(modalEl);
+
+    modalInstance.hide();
+
+    // Optional: clear file input and keep current preview
+    const fileInput = document.getElementById("photoFile");
+    if (fileInput) fileInput.value = "";
+
+    // Remove leftover backdrop
+    setTimeout(() => {
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+    }, 300);
+}
+

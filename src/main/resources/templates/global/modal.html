@@ -211,10 +211,10 @@
                              th:src="@{'/img/' + ${imgName}}"
                              onerror="this.onerror=null;this.src='/img/manLogo.png';"
                              alt="Profile Photo"
-                             class=" rounded-circle border border-4 border-light shadow-lg img-fluid"
-                             style="max-width: 230px; height: auto;">
-
+                             class="rounded-circle border border-4 border-light shadow-lg img-fluid object-fit-cover"
+                             style="width: 230px; height: 230px; object-fit: cover; border-radius: 50%;">
                     </div>
+
 
                     <!-- File Upload Form -->
                     <form id="photoUploadForm" enctype="multipart/form-data" class="d-flex flex-column align-items-center gap-3">
@@ -222,16 +222,24 @@
                             <input type="file" class="form-control" id="photoFile" name="photoFile" accept="image/*">
                         </div>
 
-                        <button type="submit" class="btn btn-primary px-4 mt-2">
-                            <i class="fas fa-upload me-1"></i> Save Changes
-                        </button>
+                        <div class="d-flex gap-2 mt-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-upload me-1"></i> Save Changes
+                            </button>
+
+                            <!-- 🗑 Remove Image Button -->
+                            <button type="button" id="removeImageBtn" class="btn btn-danger px-4">
+                                <i class="fas fa-trash me-1"></i> Remove Image
+                            </button>
+                        </div>
                     </form>
                 </div>
 
 
                 <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary px-4" onclick="hideChangePhotoModal()">Close</button>
                 </div>
+
             </div>
         </div>
     </div>

@@ -820,8 +820,43 @@ public class departmentUser {
         }
     }
 
+    @PostMapping("/user/remove-photo")
+    public ResponseEntity<Map<String, String>> removePhoto(@RequestParam String imageName) {
+        Map<String, String> response = new HashMap<>();
 
+        try {
+            if ("manLogo.png".equalsIgnoreCase(imageName)) {
+                response.put("success", "false");
+                response.put("error", "Cannot delete default logo.");
+                return ResponseEntity.badRequest().body(response);
+            }
 
+            String activeProfile = Arrays.toString(env.getActiveProfiles());
+            String uploadDir = activeProfile.contains("prod")
+                    ? "/www/wwwroot/icsdevicemanagement.com/img/"
+                    : "src/main/resources/static/img/";
+
+            Path filePath = Paths.get(uploadDir + imageName);
+
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                response.put("success", "true");
+                response.put("message", "File deleted successfully");
+                System.out.println("🗑️ Removed: " + filePath);
+            } else {
+                response.put("success", "false");
+                response.put("error", "File not found: " + imageName);
+            }
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", "false");
+            response.put("error", e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 
 
     public String generateNewVisibleIdForOldDevice() {

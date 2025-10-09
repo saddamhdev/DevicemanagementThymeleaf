@@ -30,10 +30,25 @@ public class SecurityConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Serve all /img/** URLs from the file system
-        registry.addResourceHandler("/img/**")
-                .addResourceLocations("file:" + uploadDir + "/");
+        // Detect environment
+        String activeProfile = System.getProperty("spring.profiles.active", "dev");
+
+        if ("prod".equalsIgnoreCase(activeProfile)) {
+            // 🚀 Production: serve from file system (uploadDir)
+            registry.addResourceHandler("/img/**")
+                    .addResourceLocations("file:" + uploadDir + "/")
+                    .setCacheControl(CacheControl.maxAge(3600, java.util.concurrent.TimeUnit.SECONDS).cachePublic());
+        } else {
+            // 🧑‍💻 Development: serve both from src folder and compiled classpath
+            registry.addResourceHandler("/img/**")
+                    .addResourceLocations(
+                            "classpath:/static/img/",
+                            "file:src/main/resources/static/img/"
+                    )
+                    .setCacheControl(CacheControl.noCache().mustRevalidate());
+        }
     }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
