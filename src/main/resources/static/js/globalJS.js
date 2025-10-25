@@ -9,11 +9,15 @@ function getAuthToken() {
     return token;
 }
 document.addEventListener("DOMContentLoaded", function () {
-    const profileImg = document.getElementById("profilePhoto");
-    if (profileImg) {
-        const src = profileImg.src.split("?")[0];
-        profileImg.src = `${src}?v=${new Date().getTime()}`;
-    }
+    // Select all profile images you want to refresh
+    const profileImgs = document.querySelectorAll(".profile, #profilePhoto, #navbarProfilePhoto");
+
+    profileImgs.forEach(img => {
+        if (img && img.src) {
+            const cleanSrc = img.src.split("?")[0]; // remove old cache param
+            img.src = `${cleanSrc}?v=${Date.now()}`; // add fresh timestamp
+        }
+    });
 });
 
 
@@ -835,7 +839,7 @@ window.trackDeviceRequestData = function (row, clickedElement) {
                 htmlToAdd += createTimelineEntry({
                     dateTime: result.purchase.cooAcceptedTime,
                     entity: 'COO',
-                    action: 'Accepted Proposal'
+                    action: 'Accepted Purchase Proposal'
                 });
             }
            else{
@@ -1603,7 +1607,7 @@ document.addEventListener("DOMContentLoaded", function () {
                    localStorage.setItem("profilePhoto", newUrl);
 
                    CustomAlert("✅ Profile photo updated successfully! and Wait few moment image will update");
-                   hideChangePhotoModal();
+                   //hideChangePhotoModal();
                } else {
                    CustomAlert("❌ Please Insert Image.");
                }
@@ -1656,7 +1660,7 @@ document.addEventListener("click", function (e) {
                 localStorage.setItem("profilePhoto", defaultImage);
 
                 CustomAlert("🗑️ Image removed successfully! and Wait few moment image will update");
-                hideChangePhotoModal();
+               // hideChangePhotoModal();
             } else {
                 CustomAlert("❌ Failed to remove image: " + (data.error || ""));
             }

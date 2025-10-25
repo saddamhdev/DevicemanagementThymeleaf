@@ -15,7 +15,7 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <div class="d-flex justify-content-center mb-2">
-                    <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 10%;">Add</button>
+                    <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 10%;">Add Request</button>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -54,12 +54,12 @@
                             <!-- Static columns after dynamic ones -->
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 2}, this)|">
-                                Request Status in COO <span class="sort-icon">⇅</span>
+                                Request Status <br> in COO <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestTable', ${requestColumns.size() + 3}, this)|">
-                                Device Received Status <span class="sort-icon">⇅</span>
+                                Device Received <br> Status <span class="sort-icon">⇅</span>
                             </th>
 
                             <th scope="col" style="background-color: gray; color:white"
