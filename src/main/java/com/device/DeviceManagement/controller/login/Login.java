@@ -469,9 +469,9 @@ public class Login {
             System.out.println(username+" "+password);
             logger.warn("User '{}' wrong user tried ", username);
 
-            // If login fails, you can add an error message to be displayed on the login page
             model.addAttribute("error", "Invalid username or password");
-            return "Login"; // This will render login.html again, not redirect
+            return "Login";
+
         }
     }
 
