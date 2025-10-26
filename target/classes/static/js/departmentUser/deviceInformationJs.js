@@ -205,7 +205,7 @@ function addDeviceInformation(){
 
             // Add the HTML code to the modal body using jQuery
             $('.ModalMedium').html(htmlToAdd);
-            $('#publicModalMediumLabel').text("Add Old Device Information1")
+            $('#publicModalMediumLabel').text("Add Old Device Information")
 
              print('userAccountData', function(userAccountData) {
                        if (userAccountData) {

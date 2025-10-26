@@ -17,6 +17,23 @@
             ডানদিকে <em>Search</em> এবং টেবিল হেডারের <span class="sort-icon">⇅</span> দিয়ে দ্রুত খোঁজা/সাজানো যায়;
             বামদিকে <em>Page Size</em> দিয়ে প্রতি পেজে আইটেম সংখ্যা নিয়ন্ত্রণ করুন।
         </p>
+        <!-- Overview video (ONLY here) -->
+        <div class="doc-video mb-3">
+            <div class="ratio ratio-16x9">
+                <video controls preload="metadata" playsinline
+                       th:poster="@{/img/deviceListImageImage.png}"
+                       style="border-radius:.75rem;outline:none">
+                    <source th:src="@{/doc/deviceList.mp4}" type="video/mp4"/>
+                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
+                </video>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <span class="text-muted">ভিডিও: Device List Module Overview</span>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/deviceList.mp4}" download>
+                    <i class="fa-solid fa-download me-1"></i> Download
+                </a>
+            </div>
+        </div>
 
         <div class="row g-3">
             <div class="col-md-6">
@@ -69,23 +86,6 @@
         <h2 class="h5 mb-3"><i class="fa-solid fa-user-plus text-primary me-2"></i> Add Old Device</h2>
 
         <!-- Video -->
-        <div class="mb-3">
-            <div class="ratio ratio-16x9">
-                <video controls preload="metadata" playsinline
-                       th:poster="@{/img/add-user-poster.png}"
-                       style="border-radius:.75rem;outline:none">
-                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
-                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
-                </video>
-
-            </div>
-            <div class="d-flex align-items-center justify-content-between mt-2">
-                <span class="text-muted">ভিডিও: Add Old Device ডেমো</span>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
-                    <i class="fa-solid fa-download me-1"></i> Download
-                </a>
-            </div>
-        </div>
 
         <!-- Steps & Tips -->
         <div class="row g-3">
@@ -136,22 +136,6 @@
         <h2 class="h5 mb-3"><i class="fa-solid fa-user-pen text-primary me-2"></i> Edit Old Device</h2>
 
         <!-- Video -->
-        <div class="mb-3">
-            <div class="ratio ratio-16x9">
-                <video controls preload="metadata" playsinline
-                       th:poster="@{/img/add-user-poster.png}"
-                       style="border-radius:.75rem;outline:none">
-                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
-                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
-                </video>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mt-2">
-                <span class="text-muted">ভিডিও: Edit Old Device ডেমো</span>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
-                    <i class="fa-solid fa-download me-1"></i> Download
-                </a>
-            </div>
-        </div>
 
         <!-- Steps & Tips -->
         <div class="row g-3">
@@ -192,22 +176,6 @@
         <h2 class="h5 mb-3"><i class="fas fa-tools"></i> Add Service Request</h2>
 
         <!-- Video -->
-        <div class="mb-3">
-            <div class="ratio ratio-16x9">
-                <video controls preload="metadata" playsinline
-                       th:poster="@{/img/add-user-poster.png}"
-                       style="border-radius:.75rem;outline:none">
-                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
-                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
-                </video>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mt-2">
-                <span class="text-muted">ভিডিও: Add Service Request ডেমো</span>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
-                    <i class="fa-solid fa-download me-1"></i> Download
-                </a>
-            </div>
-        </div>
 
         <!-- Steps & Tips -->
         <div class="row g-3">
@@ -249,22 +217,6 @@
         <h2 class="h5 mb-3"><i class="fa-solid fa-user-xmark text-danger me-2"></i> Delete Old Device</h2>
 
         <!-- Video -->
-        <div class="mb-3">
-            <div class="ratio ratio-16x9">
-                <video controls preload="metadata" playsinline
-                       th:poster="@{/img/add-user-poster.png}"
-                       style="border-radius:.75rem;outline:none">
-                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
-                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
-                </video>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mt-2">
-                <span class="text-muted">ভিডিও: Delete Old Device ডেমো</span>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
-                    <i class="fa-solid fa-download me-1"></i> Download
-                </a>
-            </div>
-        </div>
 
         <!-- Steps & Tips -->
         <div class="row g-3">
@@ -297,22 +249,6 @@
         <h2 class="h5 mb-3"> ✔ Distribute Device</h2>
 
         <!-- Video -->
-        <div class="mb-3">
-            <div class="ratio ratio-16x9">
-                <video controls preload="metadata" playsinline
-                       th:poster="@{/img/add-user-poster.png}"
-                       style="border-radius:.75rem;outline:none">
-                    <source th:src="@{/doc/DocUser.mp4}" type="video/mp4"/>
-                    আপনার ব্রাউজার ভিডিও ট্যাগ সাপোর্ট করে না।
-                </video>
-            </div>
-            <div class="d-flex align-items-center justify-content-between mt-2">
-                <span class="text-muted">ভিডিও: Distribute Device ডেমো</span>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{/doc/DocUser.mp4}" download>
-                    <i class="fa-solid fa-download me-1"></i> Download
-                </a>
-            </div>
-        </div>
 
         <!-- Steps & Tips -->
         <div class="row g-3">
@@ -358,6 +294,19 @@
         /* Fallback collapse behavior if Bootstrap CSS isn’t present */
         .collapse { display: none; }
         .collapse.show { display: block; }
+
+        /* Centered Overview video */
+    .doc-video {
+      width: 50%;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .doc-video {
+        width: 100%;
+      }
+    }
     </style>
 </div>
 
