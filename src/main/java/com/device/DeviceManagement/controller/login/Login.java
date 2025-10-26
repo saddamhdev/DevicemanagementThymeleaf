@@ -471,7 +471,7 @@ public class Login {
 
             // If login fails, you can add an error message to be displayed on the login page
             model.addAttribute("error", "Invalid username or password");
-            return "redirect:/";
+            return "Login"; // This will render login.html again, not redirect
         }
     }
 
