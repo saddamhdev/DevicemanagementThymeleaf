@@ -15,7 +15,7 @@
         <div class="col-sm-12 firstDiv" >
             <div  class="leftDiv" >
                 <div class="d-flex justify-content-center mb-2">
-                    <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 10%;">Add Request</button>
+                    <button class="btn btn-success btn-sm" onclick="addRequest()" style="width: 15%;">Add Device Request</button>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -109,11 +109,11 @@
                             <div class="d-flex justify-content-center align-items-center action-button-container">
                                 <button class="btn btn-sm fas fa-pencil-alt text-primary small-button Edit ms-2"
                                         th:data-request-id="${device.id}"
-                                        th:if="${device.requestMode != 'Accepted' && device.requestMode !='Denied'}">
+                                        th:if="${device.requestMode != 'Accepted' && device.requestMode !='Denied'}" title="Edit Device Request">
                                 </button>
                                 <button class="btn btn-sm fas fa-trash text-danger small-button Delete ms-2"
                                         th:data-request-id="${device.id}"
-                                        th:if="${device.requestMode != 'Accepted'  && device.requestMode !='Denied'}">
+                                        th:if="${device.requestMode != 'Accepted'  && device.requestMode !='Denied'}" title="Delete Device Request">
                                 </button>
                                 <button class="btn fas fa-check-circle btn btn-info btn-sm receiveButton"
                                         th:data-request-id="${device.id}"

@@ -12,7 +12,7 @@
     </div>
     <!-- Toggle Content Button -->
     <div class="d-flex justify-content-center mb-2">
-        <button class="btn btn-success btn-sm" onclick="addUerToggle()" style="width: 10%;">Add</button>
+        <button class="btn btn-success btn-sm" onclick="addUerToggle()" style="width: 10%;">Add User</button>
     </div>
     <div id="userForm" style="display: none; " class="  mb-2">
         <div class="mb-3" style="margin-left: 0%;text-align:left;">
@@ -77,8 +77,8 @@
             <td th:text="${user.presentTime}">userPassword</td>
             <td>
                 <div class="d-flex justify-content-center align-items-center action-button-container">
-                    <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-user-Id="${user.id}" th:data-button-id="Edit"></button>
-                    <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-user-Id="${user.id}" th:data-button-id="Delete"></button>
+                    <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-user-Id="${user.id}" th:data-button-id="Edit" title="Edit User"></button>
+                    <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-user-Id="${user.id}" th:data-button-id="Delete" title="Delete User"></button>
                 </div>
             </td>
         </tr>

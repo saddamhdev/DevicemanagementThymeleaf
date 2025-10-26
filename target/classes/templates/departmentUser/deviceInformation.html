@@ -114,7 +114,7 @@
 
                         <td>
                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}" title="Edit Device Information"  th:if="${device.bookingStatus !='Booked'}"></button>
+                                <button class="btn btn-sm  fas fa-pencil-alt text-primary small-button Edit ms-2" th:data-device-id="${device.id}" title="Edit Device Information"  th:if="${device.bookingStatus !='Booked' && device.deviceUsers.size() <=1}"></button>
                                 <button class="btn btn-sm  fas fa-tools text-primary small-button Service ms-2" th:data-device-id="${device.id}" title="Create Device Service Request"></button>
                                 <button class="btn btn-sm  fas fa-trash text-danger small-button Delete ms-2" th:data-device-id="${device.id}" title="Delete Device information" th:if="${device.bookingStatus !='Booked' && device.deviceUsers.size() <=1}"></button>
                                 <button  class="btn  btn-sm text-white distributeDevice" th:data-device-id="${device.id}" th:data-button-id="distributeDevice" style="background-color:green;" title="Distribute Device to Specific User">✔</button>
