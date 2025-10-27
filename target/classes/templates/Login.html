@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<!-- 🚨 Error Modal -->
+<!-- Error Modal -->
 <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content border-danger">
@@ -85,13 +85,14 @@
       formData.append("username", username);
       formData.append("password", password);
 
-     // console.log("🟡 Sending login request…", username);
+      console.log("🟡 Sending login request…", username);
 
       try {
         const response = await fetch("/login/home", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formData
+          body: formData,
+          credentials: "include"   // ✅ crucial: allow cookies/session persistence
         });
 
         const html = await response.text();
@@ -99,19 +100,18 @@
         const doc = parser.parseFromString(html, "text/html");
         const pageTitle = doc.querySelector("title")?.textContent?.trim() || "";
 
-       // console.log("🟢 Status:", response.status);
-        //console.log("🟢 Title:", pageTitle);
+        console.log("🟢 Status:", response.status);
+        console.log("🟢 Title:", pageTitle);
 
-        // ✅ Case 1: Redirected or Dashboard content (success)
+        // ✅ Success if redirected or title is not 'Login'
         if (response.redirected || !pageTitle.toLowerCase().includes("login")) {
-          //console.log("✅ Login success → rendering full page");
           document.open();
           document.write(html);
           document.close();
           return;
         }
 
-        // ❌ Case 2: Still Login page (failure)
+        // ❌ Still login page = invalid credentials
         console.log("❌ Login failed — showing modal");
         showError("Invalid username or password.");
       } catch (err) {
@@ -130,6 +130,5 @@
       }, 2500);
     }
 </script>
-
 </body>
 </html>

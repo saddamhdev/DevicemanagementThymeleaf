@@ -109,7 +109,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
 
     private void handleForbiddenRedirect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String loginPage = "/login/login"; // Change this to your actual login page URL
+        String loginPage = "/"; // Change this to your actual login page URL
         response.sendRedirect(loginPage);
     }
 }
