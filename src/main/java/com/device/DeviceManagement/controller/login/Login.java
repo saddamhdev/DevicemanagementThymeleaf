@@ -45,6 +45,7 @@ public class Login {
     public Login(KafkaProducer kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
     }*/
+    String userName="";
     @Autowired
     private Environment env;
     @Autowired
@@ -118,12 +119,10 @@ public class Login {
     }
 
     @PostMapping("/home")
-    public String login(@RequestParam String username, @RequestParam String password, Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-
-       System.out.println("Login Bro");
+    public String login(@RequestParam String userId, @RequestParam String password, Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 
         String ipAddress = request.getRemoteAddr(); // get client IP address        // Here you can implement your login logic
-        logger.info("User '{}' logged in from IP [{}]", username, ipAddress);
+        logger.info("User '{}' logged in from IP [{}]", userId, ipAddress);
 
         // For demonstration purposes, let's just check if the username and password are "admin"
         session.setMaxInactiveInterval(120); // 120 seconds (2 minutes)
@@ -134,8 +133,9 @@ public class Login {
             // return "login";
         }
 
-        if (authenticate(username,password)) {
-            logger.info("User '{}' Authenticated user logged", username);
+        if (authenticate(userId,password)) {
+            userName=getUserName(userId,password);
+            logger.info("User '{}' Authenticated user logged", userId);
 
 
             List<Category> categories = categoriesService.Category();
@@ -165,42 +165,27 @@ public class Login {
             List<BranchUser> userAccountData=branchUserService.add();
 
             model.addAttribute("userAccountData",userAccountData);
-            if (rateLimiter.isBlocked(username)) {
+            if (rateLimiter.isBlocked(userId)) {
                 model.addAttribute("error", "Too many failed attempts. Try again later.");
                 return "/"; // return the login.html view
             }
 
 
             // If login successful, you can redirect to a success page
-            String[] parts = userType(username,password).trim().split("_");
+            String[] parts = userType(userId,password).trim().split("_");
             String userType = parts[0]; // The part before the underscore
-            String userId = parts[1];    // The part after the underscore
+            String userIdd = parts[1];    // The part after the underscore
 
             // Store user session
-            session.setAttribute("loggedInUser", username);
-            session.setAttribute("loggedInUserId", userId);
+            session.setAttribute("loggedInUser", userName);
+            session.setAttribute("loggedInUserId", userIdd);
             session.setMaxInactiveInterval(120); // 120 seconds (2 minutes)
 
 
-            // Create cookies for username and userId
-            Cookie usernameCookie = new Cookie("username", username);
-            usernameCookie.setMaxAge(1); // Expires in 2 minutes
-            usernameCookie.setHttpOnly(true); // Prevents JavaScript access (security)
-            usernameCookie.setPath("/");
-
-            Cookie userIdCookie = new Cookie("userId", userId);
-            userIdCookie.setMaxAge(1);
-            userIdCookie.setHttpOnly(true);
-            userIdCookie.setPath("/");
-
-            // Add cookies to response
-            response.addCookie(usernameCookie);
-            response.addCookie(userIdCookie);
 
 
-
-            String token = jwtGenerator.generateToken(username);
-            String refreshToken = jwtGenerator.generateRefreshToken(username);
+            String token = jwtGenerator.generateToken(userId);
+            String refreshToken = jwtGenerator.generateRefreshToken(userId);
 
             // Successful authentication response
 
@@ -209,7 +194,7 @@ public class Login {
             model.addAttribute("token",token);
             model.addAttribute("firstPageStatus",true);
             String activeProfile = Arrays.toString(env.getActiveProfiles());
-            model.addAttribute("imgName",userType+"_"+userId+"_"+username+".png");
+            model.addAttribute("imgName",userType+"_"+userId+"_"+userName+".png");
 
             if(userType.equals("Department")){
                // model.addAttribute("lastPage", lastPage);
@@ -217,7 +202,7 @@ public class Login {
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
 
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -242,7 +227,7 @@ public class Login {
 
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -263,7 +248,7 @@ public class Login {
             else if(userType.equals("service")){
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -285,7 +270,7 @@ public class Login {
             else if(userType.equals("purchase")){
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -307,7 +292,7 @@ public class Login {
             else if(userType.equals("inventory")){
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -329,7 +314,7 @@ public class Login {
             else if(userType.equals("Coo")){
                 model.addAttribute("departmentName",userType);
                 model.addAttribute("userId",userId);
-                model.addAttribute("departmentUserName",username);
+                model.addAttribute("departmentUserName",userName);
                 model.addAttribute("departmentPassword",password);
                 //add needed data
 
@@ -355,119 +340,11 @@ public class Login {
                 return "superAdmin/home"; // This will return the index.html Thymeleaf template
 
             }
-            else{
-                if(username.equals("coo")&& password.equals("coo")){
 
-
-                    model.addAttribute("departmentUserName",username);
-                    model.addAttribute("departmentPassword",password);
-
-
-                    model.addAttribute("inputTypes", inputTypes);
-                    model.addAttribute("data",categories);
-                    model.addAttribute("universalColumns",universalColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("allDeviceData",allDeviceData);
-                    model.addAttribute("allUsers",allUser);
-                    model.addAttribute("indoorUsers",internalUsers);
-                    model.addAttribute("requestColumns",requestColumns);
-                    model.addAttribute("serviceRequests", serviceRequests);
-                    model.addAttribute("requestData",requestData);
-                    model.addAttribute("designations",designations);
-
-
-                    return "coo/home";
-                }
-                else if(username.equals("inventory")&& password.equals("inventory")){
-
-
-                    model.addAttribute("departmentUserName",username);
-                    model.addAttribute("departmentPassword",password);
-
-
-                    model.addAttribute("inputTypes", inputTypes);
-                    model.addAttribute("data",categories);
-                    model.addAttribute("universalColumns",universalColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("allDeviceData",allDeviceData);
-                    model.addAttribute("allUsers",allUser);
-                    model.addAttribute("indoorUsers",internalUsers);
-                    model.addAttribute("requestColumns",requestColumns);
-                    model.addAttribute("serviceRequests", serviceRequests);
-                    model.addAttribute("requestData",requestData);
-                    model.addAttribute("designations",designations);
-
-
-                    return "inventory/home";
-                }
-                else if(username.equals("customerCare")&& password.equals("customerCare")){
-
-
-                    model.addAttribute("departmentUserName",username);
-                    model.addAttribute("departmentPassword",password);
-                    //add needed data
-
-                    model.addAttribute("inputTypes", inputTypes);
-                    model.addAttribute("data",categories);
-                    model.addAttribute("universalColumns",universalColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("allDeviceData",allDeviceData);
-                    model.addAttribute("allUsers",allUser);
-                    model.addAttribute("indoorUsers",internalUsers);
-                    model.addAttribute("requestColumns",requestColumns);
-                    model.addAttribute("serviceRequests", serviceRequests);
-                    model.addAttribute("requestData",requestData);
-                    model.addAttribute("designations",designations);
-                    return "customerCare/home";
-                }
-                else if(username.equals("purchase")&& password.equals("purchase")){
-
-                    model.addAttribute("departmentUserName",username);
-                    model.addAttribute("departmentPassword",password);
-                    //add needed data
-
-
-                    model.addAttribute("inputTypes", inputTypes);
-                    model.addAttribute("data",categories);
-                    model.addAttribute("universalColumns",universalColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("allDeviceData",allDeviceData);
-                    model.addAttribute("allUsers",allUser);
-                    model.addAttribute("indoorUsers",internalUsers);
-                    model.addAttribute("requestColumns",requestColumns);
-                    model.addAttribute("serviceRequests", serviceRequests);
-                    model.addAttribute("requestData",requestData);
-                    model.addAttribute("designations",designations);
-                    return "purchase/home";
-                }
-                else if(username.equals("service")&& password.equals("service")){
-
-                    model.addAttribute("departmentUserName",username);
-                    model.addAttribute("departmentPassword",password);
-
-                    model.addAttribute("inputTypes", inputTypes);
-                    model.addAttribute("data",categories);
-                    model.addAttribute("universalColumns",universalColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("individualColumns",individualColumns);
-                    model.addAttribute("allDeviceData",allDeviceData);
-                    model.addAttribute("allUsers",allUser);
-                    model.addAttribute("indoorUsers",internalUsers);
-                    model.addAttribute("requestColumns",requestColumns);
-                    model.addAttribute("serviceRequests", serviceRequests);
-                    model.addAttribute("requestData",requestData);
-                    model.addAttribute("designations",designations);
-                    return "service/home";
-                }
-            }
             return "redirect:/success";
         } else {
-            System.out.println(username+" "+password);
-            logger.warn("User '{}' wrong user tried ", username);
+            System.out.println(userName+" "+password);
+            logger.warn("User '{}' wrong user tried ", userName);
 
             model.addAttribute("error", "Invalid username or password");
             return "Login";
@@ -480,29 +357,44 @@ public class Login {
         return "success";
     }
 
-    public boolean authenticate(String userName,String userPassword){
+    public boolean authenticate(String userId,String userPassword){
 
         boolean result=false;
-        if(internalUserRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
+        if(internalUserRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
             result= true;// exist
         }
 
-        if(userRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
+        if(userRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
             result= true; // exist
         }
 
         return result;
 
     }
-    public String userType(String userName,String userPassword){
+    public String userType(String userId,String userPassword){
 
         String result=null;
-        if(internalUserRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
-            InternalUser user=internalUserRepository.findByUserNameAndUserPasswordAndStatus(userName,userPassword,"1");
+        if(internalUserRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
+            InternalUser user=internalUserRepository.findByUserIdAndUserPasswordAndStatus(userId,userPassword,"1");
             result=user.getBranchName()+"_"+user.getUserId();// exist
         }
-        else if(userRepository.existsByUserNameAndUserPasswordAndStatus(userName,userPassword,"1")){
+        else if(userRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
             result="user";// exist
+        }
+
+        return result;
+
+    }
+    public String getUserName(String userId,String userPassword){
+
+        String result=null;
+        if(internalUserRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
+            InternalUser user=internalUserRepository.findByUserIdAndUserPasswordAndStatus(userId,userPassword,"1");
+            result=user.getUserName();
+        }
+        else if(userRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
+           User data=userRepository.findByUserIdAndUserPasswordAndStatus(userId,userPassword,"1");
+            result=data.getUserName();
         }
 
         return result;

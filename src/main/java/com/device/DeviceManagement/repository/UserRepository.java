@@ -13,7 +13,12 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<User> findByStatus(String status);
     Page<User> findByStatus(String status, Pageable pageable);
     User findByUserNameAndUserIdAndUserPasswordAndStatus(String userName,String userId,String userPassword,String status);
+    User findByUserIdAndUserPasswordAndStatus(String userId,String userPassword,String status);
+
     boolean existsByUserNameAndUserIdAndStatus(String userName,String userId,String status);
     boolean existsByUserNameAndUserPasswordAndStatus(String userName,String userPassword,String status);
+    boolean existsByUserIdAndUserPasswordAndStatus(String userId,String userPassword,String status);
     boolean existsByUserNameAndStatus(String userName,String status);
+    boolean existsByUserIdAndStatus(String userId,String status);
+
 }

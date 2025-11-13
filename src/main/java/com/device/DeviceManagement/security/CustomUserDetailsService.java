@@ -25,12 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         String password;
         boolean result=false;
-        if(internalUserRepository.existsByUserNameAndStatus(username,"1")){
+        if(internalUserRepository.existsByUserIdAndStatus(username,"1")){
             result= true;// exist
 
         }
 
-        if(userRepository.existsByUserNameAndStatus(username,"1")){
+        if(userRepository.existsByUserIdAndStatus(username,"1")){
             result= true; // exist
         }
 

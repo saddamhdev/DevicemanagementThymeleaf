@@ -6,6 +6,7 @@ import com.device.DeviceManagement.model.Designation;
 
 import com.device.DeviceManagement.model.*;
 import com.device.DeviceManagement.repository.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,8 +26,7 @@ import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import java.util.stream.Collectors;
 
 @Controller
@@ -647,6 +646,92 @@ public class SuperAdmin {
 
 
     }
+    @PostMapping("/importInternalUsersCsv")
+    @ResponseBody
+    public ResponseEntity<?> importInternalUsersCsv(@RequestParam("file") MultipartFile file) {
+
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("CSV file is empty!");
+        }
+
+        int successCount = 0;
+        int duplicateCount = 0;
+        int invalidRowCount = 0;
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+
+            String line;
+            int row = 0;
+
+            while ((line = br.readLine()) != null) {
+
+                row++;
+
+                // Skip header row if present
+                if (row == 1 && line.toLowerCase().contains("name")) continue;
+
+                String[] tokens = line.split(",");
+
+                if (tokens.length < 3) {
+                    invalidRowCount++;
+                    continue;
+                }
+
+                String userName = tokens[0].trim();
+                String userId = tokens[1].trim();
+                String password = tokens[2].trim();
+                String branchName = "Department";
+
+                if (userName.isEmpty() || userId.isEmpty() || password.isEmpty()) {
+                    invalidRowCount++;
+                    continue;
+                }
+
+                // Duplicate check
+                if (internalUserRepository.existsByUserNameAndUserPasswordAndStatus(userName, password, "1")) {
+                    duplicateCount++;
+                    continue;
+                }
+
+                // Prepare date/time
+                LocalDate today = LocalDate.now();
+                String currentDate = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                LocalDateTime now = LocalDateTime.now();
+                String formattedDateTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+                // Save user
+                InternalUser newUser = new InternalUser(
+                        branchName,
+                        userName,
+                        userId,
+                        password,
+                        currentDate,
+                        formattedDateTime,
+                        "1"
+                );
+
+                internalUserRepository.save(newUser);
+                successCount++;
+            }
+
+            internalUserService.clearCache();
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Import failed: " + e.getMessage());
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("imported", successCount);
+        response.put("duplicates", duplicateCount);
+        response.put("invalidRows", invalidRowCount);
+        response.put("status", "completed");
+
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/editInternalUser")
     @ResponseBody
     public ResponseEntity<String> editInternalUser(@RequestParam String oldBranchName,@RequestParam String oldUserName,@RequestParam String oldUserId,@RequestParam String oldUserPassword,@RequestParam String newBranchName,@RequestParam String newUserName,@RequestParam String newUserId,@RequestParam String newUserPassword) {

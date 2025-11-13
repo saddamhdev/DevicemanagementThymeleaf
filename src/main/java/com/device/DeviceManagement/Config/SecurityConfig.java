@@ -93,6 +93,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 "/fonts/**",
                                 "/favicon.ico",
                                 "/clearCache"
+                               // , "/superAdmin/importInternalUsersCsv"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

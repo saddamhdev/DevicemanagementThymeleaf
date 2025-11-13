@@ -15,8 +15,8 @@ public class RedisRateLimiter {
     private final int MAX_ATTEMPTS = 5;
     private final int BLOCK_SECONDS = 60;
 
-    public boolean isBlocked(String username) {
-        String key = "login:attempts:" + username;
+    public boolean isBlocked(String userId) {
+        String key = "login:attempts:" + userId;
 
         String value = redisTemplate.opsForValue().get(key);
         if (value != null && Integer.parseInt(value) >= MAX_ATTEMPTS) {
