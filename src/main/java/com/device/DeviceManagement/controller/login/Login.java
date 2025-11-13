@@ -203,7 +203,7 @@ public class Login {
                 model.addAttribute("userId",userId);
 
                 model.addAttribute("departmentUserName",userName);
-                model.addAttribute("departmentPassword",password);
+                //model.addAttribute("departmentPassword",password);
                 //add needed data
 
                 model.addAttribute("inputTypes", inputTypes);

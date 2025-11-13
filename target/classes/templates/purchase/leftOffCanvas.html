@@ -13,13 +13,9 @@
                 <img th:src="@{/img/sn.png}" alt="User Image"
                      class="rounded-circle"
                      style="width: 80px; height: 80px; object-fit: cover; border: 3px solid white;">
-                <div class="text-white mt-2 fw-bold">
-                    <i class="fas fa-user-tie me-1"></i>
-                    <span th:text="${departmentName}">COO</span>
-                </div>
                 <div class="text-white mt-2 mb-2 fw-bold">
-                    <i class="fas fa-id-badge me-1"></i>
-                    <span th:text="${userId}">User ID</span>
+                    <i class="fas fa-user-tie me-1"></i>
+                    <span th:text="${#strings.replace(departmentUserName, 'Department', '').trim()}"></span>
                 </div>
             </div>
 
