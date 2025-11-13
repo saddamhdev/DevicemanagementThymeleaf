@@ -46,6 +46,7 @@ public class Login {
         this.kafkaProducer = kafkaProducer;
     }*/
     String userName="";
+    String viewName="No";
     @Autowired
     private Environment env;
     @Autowired
@@ -136,6 +137,7 @@ public class Login {
         if (authenticate(userId,password)) {
             userName=getUserName(userId,password);
             logger.info("User '{}' Authenticated user logged", userId);
+            model.addAttribute("viewStatus", viewName);
 
 
             List<Category> categories = categoriesService.Category();
@@ -390,6 +392,7 @@ public class Login {
         String result=null;
         if(internalUserRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){
             InternalUser user=internalUserRepository.findByUserIdAndUserPasswordAndStatus(userId,userPassword,"1");
+            viewName=user.getViewedStatus();
             result=user.getUserName();
         }
         else if(userRepository.existsByUserIdAndUserPasswordAndStatus(userId,userPassword,"1")){

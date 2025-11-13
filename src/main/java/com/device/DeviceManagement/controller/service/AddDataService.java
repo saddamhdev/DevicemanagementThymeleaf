@@ -64,6 +64,16 @@ public class AddDataService {
 
 
         }
+        if(folderName.equals("departmentUser")) {
+            if (pageName.equals("AllCentralDeviceInformation")) {
+                //System.out.println(userName+" "+pageName);
+                return addDataRepository.findByStatus(
+                        "1",
+                        pageable
+                );
+
+            }
+        }
         //System.out.println(userName+" "+pageName);
 
         return addDataRepository.findByStatusAndUserName("1",userName ,pageable);

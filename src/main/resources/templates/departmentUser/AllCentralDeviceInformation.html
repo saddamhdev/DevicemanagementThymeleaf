@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="AllCentralDeviceInformation">
+    <div class="highlight-box">
+        <p>  Central Device List</p>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 firstDiv" >
+            <div  class="leftDiv" >
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Left: Page Size Selector -->
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+
+                    <!-- Right: Search Box -->
+                    <div style="width: 250px;">
+                        <input type="text" class="form-control search-input global-user-search"
+                               data-table="deviceInformationCentralTable" placeholder="Search ...">
+                    </div>
+                </div>
+                <div class="responsive-table-wrapper">
+                    <table id="deviceInformationCentralTable" class="table table-bordered table-hover customTh">
+                        <thead id="tableHeaderAddData">
+                        <tr>
+                            <!-- SN -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('deviceInformationCentralTable', 0, this)">
+                                SN <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Category Name -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('deviceInformationCentralTable', 1, this)">
+                                Category Name <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Dynamic Columns -->
+                            <th th:each="column, iter : ${universalColumns}"
+                                th:onclick="|window.sortTable('deviceInformationCentralTable', ${2 + iter.index}, this)|"
+                                style="background-color: gray; color:white;">
+                                <span th:text="${column.columnName}"></span>
+                                <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Description -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceInformationCentralTable', ${2 + universalColumns.size()}, this)|">
+                                Description <span class="sort-icon">⇅</span>
+                            </th>
+                            <th scope="col" style="background-color: gray; color:white"
+                                th:onclick="|window.sortTable('deviceInformationCentralTable', ${universalColumns.size()+3}, this)|">
+                                Components <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Create Time -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceInformationCentralTable', ${4 + universalColumns.size()}, this)|">
+                                Create Time <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- Device User -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                th:onclick="|window.sortTable('deviceInformationCentralTable', ${5 + universalColumns.size()}, this)|">
+                                Device User <span class="sort-icon">⇅</span>
+                            </th>
+
+
+                        </tr>
+                        </thead>
+
+
+                    <tbody id="deviceInformationCentralBody">
+                    <tr th:each="device, iterStat : ${allDeviceData}">
+                        <td scope="row" th:text="${device.visibleId}">1</td>
+                        <td th:text="${device.categoryName}">categoryName</td>
+                        <td th:each="universalColumn : ${universalColumns}" th:text="${device.allData[universalColumn.columnName]}"></td>
+                        <td>
+                            <ul style="list-style: none; padding-left: 0;text-align: center;" >
+                                <li th:each="individualColumn : ${individualColumns}"
+                                    th:if="${device.categoryName == individualColumn.categoryName}"
+                                    th:text="${individualColumn.columnName+' :'+device.allData[individualColumn.columnName]}">1</li>
+                            </ul>
+
+                        </td>
+
+                        <td>
+                            <button class="btn btn-info btn-sm componentsView" th:data-device-id="${device.id}" th:data-button-id="componentsView" title="View child">
+                                View   &#128065;
+                            </button>
+                        </td>
+                        <td th:text="${device.presentTime}">userPassword</td>
+                        <td title="View Device User" class="align-middle">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Username -->
+                                <span class="text-truncate" style="max-width: 140px;"
+                                      th:each="du, iter : ${device.deviceUsers}"
+                                      th:if="${iter.last}"
+                                      th:text="${du.userName}">
+                                 </span>
+
+                                <!-- Fixed-size button -->
+                                <button class="btn btn-info btn-sm ms-2 deviceUserHistory2"
+                                        th:data-device-id="${device.id}"
+                                        style="flex-shrink: 0; width:32px; height:32px; display:flex; align-items:center; justify-content:center;">
+                                    &#128065;
+                                </button>
+                            </div>
+                        </td>
+
+
+
+                    </tr>
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

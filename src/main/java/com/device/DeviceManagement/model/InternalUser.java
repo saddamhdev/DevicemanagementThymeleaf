@@ -18,13 +18,13 @@ public class InternalUser implements Serializable {
     private String date;
     private String presentTime;
     private String status;
-
+    private String viewedStatus;
     // Default constructor
     public InternalUser() {
     }
 
     // Parameterized constructor
-    public InternalUser(String branchName,String userName, String userId, String userPassword, String date, String presentTime, String status) {
+    public InternalUser(String branchName,String userName, String userId, String userPassword, String date, String presentTime, String status,String viewedStatus) {
         this.branchName=branchName;
         this.userName = userName;
         this.userId = userId;
@@ -32,6 +32,7 @@ public class InternalUser implements Serializable {
         this.date = date;
         this.presentTime = presentTime;
         this.status = status;
+        this.viewedStatus=viewedStatus;
     }
 
     // Getters and Setters
@@ -97,6 +98,12 @@ public class InternalUser implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    public String getViewedStatus() {
+        return viewedStatus;
+    }
+    public void setViewedStatus(String viewedStatus) {
+        this.viewedStatus = viewedStatus;
     }
 
     // Overriding toString method

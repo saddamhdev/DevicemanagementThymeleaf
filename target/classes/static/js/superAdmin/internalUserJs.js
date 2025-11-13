@@ -1,5 +1,5 @@
 
-function saveInternalUserBtn(branchName,userName,userId,userPassword) {
+function saveInternalUserBtn(branchName,userName,userId,userPassword,nameAccess) {
 
           var internalUserTableBody = $('#internalUserTableBody');
           var totalRows = internalUserTableBody.children('tr').length+1;
@@ -14,7 +14,8 @@ function saveInternalUserBtn(branchName,userName,userId,userPassword) {
                  branchName:branchName,
                  userName:userName,
                  userId:userId,
-                 userPassword:userPassword
+                 userPassword:userPassword,
+                   viewedStatus:nameAccess
               },
               headers: {
 
@@ -37,7 +38,9 @@ function editInternalUserBtn($row) {
        var branchName = $row.find('td:nth-child(2)').text();
        var userName = $row.find('td:nth-child(3)').text();
        var userId = $row.find('td:nth-child(4)').text();
-       var userPassword = $row.find('td:nth-child(5)').text();
+       var oldViewedStatus = $row.find('td:nth-child(5)').text();
+       var userPassword = $row.find('td:nth-child(6)').text();
+
 
           var internalUserTableBody = $('#internalUserTableBody');
           var totalRows = internalUserTableBody.children('tr').length+1;
@@ -47,6 +50,7 @@ function editInternalUserBtn($row) {
             var newBranchName=$('#internalUserBranchNameEdit').val();
             var newUserName=$('#internalUserNameEdit').val();
             var newUserId=$('#internalUserIdEdit').val();
+            var newViewedStatus=$('#internalUserNameAccessEdit').val();
             var newUserPassword=$('#internalUserPasswordEdit').val();
 
           // Send AJAX request to add category
@@ -61,7 +65,9 @@ function editInternalUserBtn($row) {
                  newBranchName:newBranchName,
                  newUserName:newUserName,
                  newUserId:newUserId,
-                 newUserPassword:newUserPassword
+                 newUserPassword:newUserPassword,
+                    oldViewedStatus:oldViewedStatus,
+                    newViewedStatus:newViewedStatus
               },
               headers: {
 
@@ -85,56 +91,71 @@ function editInternalUserBtn($row) {
         var branchName = $row.find('td:nth-child(2)').text();
          var userName = $row.find('td:nth-child(3)').text();
           var userId = $row.find('td:nth-child(4)').text();
-           var userPassword = $row.find('td:nth-child(5)').text();
+          var nameAccess = $row.find('td:nth-child(5)').text();
+           var userPassword = $row.find('td:nth-child(6)').text();
 
        var buttonPressed = $(event.target).closest('button');
 
         var rowIndex = $(this).index();
 
         if (buttonPressed.hasClass('Edit')) {
+
             var htmlToAdd = `
-               <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                   <div class="dropdown">
-                       <label for="internalUserBranchNameEdit" class="form-label">Branch Name</label>
-                       <input type="text" class="form-control dropdown-toggle custom-width" id="internalUserBranchNameEdit" data-bs-toggle="dropdown" placeholder="Branch Name" aria-expanded="false" value="${branchName}" readonly>
+        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+            <div class="dropdown">
+                <label for="internalUserBranchNameEdit" class="form-label">Branch Name</label>
+                <input type="text" class="form-control dropdown-toggle custom-width"
+                       id="internalUserBranchNameEdit" data-bs-toggle="dropdown"
+                       placeholder="Branch Name" aria-expanded="false"
+                       value="${branchName}" readonly>
+            </div>
+        </div>
 
-                   </div>
-               </div>
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserNameEdit" class="form-label">User Name</label>
+            <input type="text" class="form-control" id="internalUserNameEdit"
+                   placeholder="Enter user name" value="${userName}">
+        </div>
 
-                <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                     <label for="internalUserNameEdit" class="form-label">User Name</label>
-                     <input type="text" class="form-control" id="internalUserNameEdit" placeholder="Enter user name" value="${userName}" >
-                 </div>
-                 <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                     <label for="internalUserIdEdit" class="form-label">User Id </label>
-                     <input type="text" class="form-control" id="internalUserIdEdit" placeholder="Enter Id name" value="${userId}" >
-                 </div>
-                 <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                     <label for="internalUserPasswordEdit" class="form-label">User Password</label>
-                     <input type="text" class="form-control" id="internalUserPasswordEdit" placeholder="Enter Password" value="${userPassword}" >
-                 </div>
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                    <button type="button" class="btn btn-primary" id="EditBtn">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            `;
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserIdEdit" class="form-label">User Id</label>
+            <input type="text" class="form-control" id="internalUserIdEdit"
+                   placeholder="Enter Id name" value="${userId}">
+        </div>
 
-            // Add the HTML code to the modal body using jQuery
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserPasswordEdit" class="form-label">User Password</label>
+            <input type="text" class="form-control" id="internalUserPasswordEdit"
+                   placeholder="Enter Password" value="${userPassword}">
+        </div>
+
+        <!-- ✅ NEW FIELD: Viewed Access -->
+        <div class="mb-3" style="margin-left: 0%; text-align:left;">
+            <label for="internalUserNameAccessEdit" class="form-label">Viewed Access</label>
+            <select class="form-control" id="internalUserNameAccessEdit">
+                <option value="Yes" ${nameAccess === 'Yes' ? 'selected' : ''}>Yes</option>
+                <option value="No" ${nameAccess === 'No' ? 'selected' : ''}>No</option>
+            </select>
+        </div>
+
+        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+            <button type="button" class="btn btn-primary" id="EditBtn">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    `;
+
             $('.ModalMedium').html(htmlToAdd);
-            // edit individual column header
-             $('#publicModalMediumLabel').text("Edit Individual Column")
+            $('#publicModalMediumLabel').text("Edit Internal User");
 
-              showModalMedium();
-         // Bind the click event to the Save button inside the modal
-                $('#EditBtn').click(function() {
-                    editInternalUserBtn($row);
-                });
-            // method to list item add
+            showModalMedium();
 
-             addListItem();
+            $('#EditBtn').click(function() {
+                editInternalUserBtn($row);   // <-- Add inside your save logic
+            });
 
-
-        } else if (buttonPressed.hasClass('Delete')) {
+            addListItem();
+        }
+        else if (buttonPressed.hasClass('Delete')) {
             $.ajax({
                 url: '/superAdmin/deleteInternalUser', // URL to your delete endpoint
                 type: 'POST',
@@ -166,54 +187,67 @@ function editInternalUserBtn($row) {
 
 
 };
-function addInternalUser(){
-               var htmlToAdd = `
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                    <div class="dropdown">
-                        <label for="internalUserBranchName" class="form-label">Branch Name</label>
-                        <input type="text" class="form-control dropdown-toggle custom-width" id="internalUserBranchName" data-bs-toggle="dropdown" placeholder="Branch Name" aria-expanded="false">
-                        <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="internalUserBranchIdUlList" id="internalUserBranchIdUlList">
-                           <div id="categoriesPlaceholder"></div>
-                        </ul>
-                    </div>
-                </div>
+function addInternalUser() {
+    var htmlToAdd = `
+        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+            <div class="dropdown">
+                <label for="internalUserBranchName" class="form-label">Branch Name</label>
+                <input type="text" class="form-control dropdown-toggle custom-width" id="internalUserBranchName" data-bs-toggle="dropdown" placeholder="Branch Name" aria-expanded="false">
+                <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="internalUserBranchIdUlList" id="internalUserBranchIdUlList">
+                    <div id="categoriesPlaceholder"></div>
+                </ul>
+            </div>
+        </div>
 
-                 <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                      <label for="internalUserName" class="form-label">User Name</label>
-                      <input type="text" class="form-control" id="internalUserName" placeholder="Enter user name" >
-                  </div>
-                  <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                      <label for="internalUserId" class="form-label">User Id </label>
-                      <input type="text" class="form-control" id="internalUserId" placeholder="Enter Id name" >
-                  </div>
-                  <div class="mb-3" style="margin-left: 0%;text-align:left;">
-                      <label for="internalUserPassword" class="form-label">User Password</label>
-                      <input type="password" class="form-control" id="internalUserPassword" placeholder="Enter Password" >
-                  </div>
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserName" class="form-label">User Name</label>
+            <input type="text" class="form-control" id="internalUserName" placeholder="Enter user name" >
+        </div>
 
-                <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                    <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            `;
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserId" class="form-label">User Id</label>
+            <input type="text" class="form-control" id="internalUserId" placeholder="Enter Id name" >
+        </div>
 
-            // Add the HTML code to the modal body using jQuery
-            $('.ModalMedium').html(htmlToAdd);
-            $('#publicModalMediumLabel').text("Add Internal User")
-             addListItem();
-            // selection and input handler.
-            selectionAndInputHandler();
-             $('#saveEditBtn').click(function() {
-             var branchName=$('#internalUserBranchName').val();
-             var userName=$('#internalUserName').val();
-             var userId=$('#internalUserId').val();
-             var userPassword=$('#internalUserPassword').val();
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserPassword" class="form-label">User Password</label>
+            <input type="password" class="form-control" id="internalUserPassword" placeholder="Enter Password" >
+        </div>
 
-                  saveInternalUserBtn(branchName,userName,userId,userPassword);
-                });
+        <!-- NEW FIELD HERE -->
+        <div class="mb-3" style="margin-left: 0%;text-align:left;">
+            <label for="internalUserNameAccess" class="form-label">Name Viewed Access</label>
+            <select class="form-control" id="internalUserNameAccess">
+                <option value="Yes">Yes</option>
+                <option value="No" selected>No</option>
+            </select>
+        </div>
 
-            showModalMedium();
+        <div class="mb-3" style="margin-left: 0%; text-align: left;">
+            <button type="button" class="btn btn-primary" id="saveEditBtn">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    `;
+
+    $('.ModalMedium').html(htmlToAdd);
+    $('#publicModalMediumLabel').text("Add Internal User");
+
+    addListItem();
+    selectionAndInputHandler();
+
+    $('#saveEditBtn').click(function() {
+        var branchName = $('#internalUserBranchName').val();
+        var userName = $('#internalUserName').val();
+        var userId = $('#internalUserId').val();
+        var userPassword = $('#internalUserPassword').val();
+        var nameAccess = $('#internalUserNameAccess').val();  // NEW FIELD
+
+        saveInternalUserBtn(branchName, userName, userId, userPassword, nameAccess);
+    });
+
+    showModalMedium();
 }
+
 function selectionAndInputHandler(){
 // Event delegation for dynamically added items
         $(document).on('click', '.internalUserEachItem', function(event) {

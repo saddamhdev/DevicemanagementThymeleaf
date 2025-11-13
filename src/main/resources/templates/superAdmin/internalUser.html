@@ -57,15 +57,21 @@
                                 User Id <span class="sort-icon">⇅</span>
                             </th>
 
-                            <!-- User Password -->
+                            <!-- Viewed Status -->
                             <th scope="col" style="background-color: gray; color:white;"
                                 onclick="window.sortTable('internalUserTable', 4, this)">
+                                Viewed Status <span class="sort-icon">⇅</span>
+                            </th>
+
+                            <!-- User Password -->
+                            <th scope="col" style="background-color: gray; color:white;"
+                                onclick="window.sortTable('internalUserTable', 5, this)">
                                 User Password <span class="sort-icon">⇅</span>
                             </th>
 
                             <!-- Create Time -->
                             <th scope="col" style="background-color: gray; color:white;"
-                                onclick="window.sortTable('internalUserTable', 5, this)">
+                                onclick="window.sortTable('internalUserTable', 6, this)">
                                 Create Time <span class="sort-icon">⇅</span>
                             </th>
 
@@ -83,6 +89,7 @@
                         <td th:text="${indoorUser.branchName}"> branchId</td>
                         <td th:text="${indoorUser.userName}"> userName</td>
                         <td th:text="${indoorUser.userId}">userId</td>
+                        <td th:text="${indoorUser.viewedStatus}">userId</td>
                         <td th:text="${indoorUser.userPassword}">userPassword</td>
                         <td th:text="${indoorUser.presentTime}">userPassword</td>
                         <td>

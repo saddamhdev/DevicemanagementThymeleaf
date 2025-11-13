@@ -346,6 +346,7 @@ function addDeviceInformation(){
 
 window.initDeviceInformationGeneral = function () {
   $('#deviceInformationTable tbody tr').click(function(event) {
+      alert("nn");
     $(document).off('click', '.action-button-container .Edit');
          $(document).off('click', '.action-button-container .Delete');
     const $row = $(this); // Store the clicked row element
@@ -980,39 +981,146 @@ window.initDeviceInformationGeneral = function () {
        });
 
   });
-};
 
 
-function selectionAndInputDeviceEdit(deviceId){
+    $(document).on('click', '#deviceInformationCentralTable tbody tr', function(event) {
+        const $row = $(this); // Store the clicked row element
+        var categoryName = $row.find('td:nth-child(2)').text();
+        var text=categoryName;
+        // Target the button itself for better accuracy
+        const button = $(event.target).closest('button');
+        var deviceId = button.data('deviceId');
+        // Check if a button was clicked (prevents accidental clicks on other elements)
+        if (!button.length) {
+            return; // Do nothing if not a button click
+        }
+        const buttonText = button.text().trim(); // Get button text (trimming leading/trailing spaces
+         if(button.hasClass("componentsView")){
 
-// Event delegation for dynamically added items
-       $(document).on('click', '.deviceInputEachItemEdit', function(event) {
-           var text = $(this).text();
-           $('#deviceInputFieldEdit').val(text);
-            var categoriesHtml = '';
+            var selectedDevices = [];
+            print('universalColumns', function(universalColumns) {
+                var categoriesHtml = '';
+                if (universalColumns) {
+                    universalColumns.forEach(function(category) {
+                        categoriesHtml += `<th scope="col" style="background-color: gray;color:white">${category.columnName}</th>`;
+                    });
+                }
+
+                var htmlToAdd = `
+                             <div class="mb-9" style="margin-left: 0%; text-align: left;">
+                                 <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
+                                     <thead>
+                                         <tr>
+                                             <th scope="col" style="background-color: gray;color:white ">SN</th>
+                                              <th scope="col" style="background-color: gray;display: none;">Device Id</th>
+                                             <th scope="col" style="background-color: gray;color:white">Category Name</th>
+                                             ${categoriesHtml}
+                                             <th scope="col" style="background-color: gray;color:white">Description</th>
+
+                                         </tr>
+                                     </thead>
+                                     <tbody id="listDeviceInformationBody">
+
+                                     </tbody>
+                                 </table>
+                             </div>
+
+                         `;
+                $('.modal-body').html(htmlToAdd);
+
+                $('#publicModalLabel').text("Device Information");
+
+                var rowsHtml = '';
+                // Corrected the for loop syntax to iterate over the deviceIds array
+                // alert(result.inventory.deviceIds[i]);
+                print('allAddData', function(allAddData) {
+                    if (allAddData) {
+                        // First, fetch individual columns
+                        print('individualColumns', function(individualColumns) {
+
+                            // extract child
+                            // Find the device data by deviceId
+                            const deviceData = allAddData.find(item => item.id === deviceId);
+
+                            // Initialize an array to hold selected device IDs
+                            let selectedDevices = [];
+
+                            // Check if deviceData exists and has child devices
+                            if (deviceData && Array.isArray(deviceData.childDevices)) {
+                                // Filter and map child devices based on the condition
+                                selectedDevices = deviceData.childDevices
+                                    .filter(data =>
+                                        data.usingTimeOfChildDevices.some(check => check.status === "1")
+                                    )
+                                    .map(data => data.deviceId);
+                            }
+
+                            // Log the resulting selected devices
+                            console.log(selectedDevices);
+
+                            if(selectedDevices.length>0){
+                                selectedDevices.forEach( function(ek){
+                                    const deviceInfo = allAddData.find(item => item.id === ek);
+                                    var categoryName=deviceInfo.categoryName;
+                                    allAddData.forEach(function(data, index) {
+                                        if (data.id=== ek) {
+                                            rowsHtml += `<tr>
+                                                                     <td>${data.visibleId}</td>
+                                                                      <td style="display: none;">${data.id}</td>
+                                                                     <td>${data.categoryName}</td>`;
+                                            universalColumns.forEach(function(column) {
+                                                rowsHtml += `<td >${data.allData[column.columnName]}</td>`;
+                                            });
+
+                                            rowsHtml += `<td>
+                                                                     <ul style="list-style: none; padding-left: 0; text-align: center;">`;
+
+                                            if (individualColumns) {
+                                                individualColumns.forEach(function(individualColumn) {
+                                                    if (individualColumn.categoryName=== categoryName) {
+
+                                                        rowsHtml += `<li>${individualColumn.columnName} : ${data.allData[individualColumn.columnName]}</li>`;
+                                                    }
+                                                });
+                                            }
 
 
-            $('#universalDivEdit').show();
+                                        }
+                                    });
+                                } )
 
-       });
+                                $('#listDeviceInformationBody').html(rowsHtml);
 
+                                showModal();
+                            }
+                            else{
+                                CustomAlert("No child device Found.");
 
+                            }
 
-        // Filter items based on input
-            $(document).on('keyup', '#deviceInputFieldEdit', function() {
-                var filter = $(this).val().toUpperCase();
-                $('#deviceInputEditUlList li').each(function() {
-                    var text = $(this).text().toUpperCase();
-                    if (text.indexOf(filter) > -1) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
+                        });
                     }
                 });
+
+
+
+
             });
 
 
-}
+
+        }
+        else if(button.hasClass("deviceUserHistory2")){
+            showDeviceUserHistory(deviceId,categoryName);
+
+        }
+
+
+
+    });
+};
+
+
 function selectionAndInputDeviceInfo() {
 
     // 🔹 Remove any old event listeners first (avoid duplicate triggers)

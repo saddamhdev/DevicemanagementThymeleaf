@@ -624,7 +624,7 @@ public class SuperAdmin {
     }
     @PostMapping("/addInternalUser")
     @ResponseBody
-    public ResponseEntity<String>addInternalUser(@RequestParam String branchName,@RequestParam String userName,@RequestParam String userId,@RequestParam String userPassword, Model model) {
+    public ResponseEntity<String>addInternalUser(@RequestParam String branchName,@RequestParam String userName,@RequestParam String userId,@RequestParam String userPassword,String viewedStatus, Model model) {
 
         if(! authenticate(userName,userPassword)){
             // Get the current localDate time and date
@@ -635,7 +635,7 @@ public class SuperAdmin {
 
 
             // Save the Category object
-            internalUserRepository.save(new InternalUser(branchName,userName,userId,userPassword,currentDate,formattedDateTime,"1"));
+            internalUserRepository.save(new InternalUser(branchName,userName,userId,userPassword,currentDate,formattedDateTime,"1",viewedStatus));
 
             internalUserService.clearCache();
             // move to return "user/Home";
@@ -708,7 +708,8 @@ public class SuperAdmin {
                         password,
                         currentDate,
                         formattedDateTime,
-                        "1"
+                        "1",
+                        "Not"
                 );
 
                 internalUserRepository.save(newUser);
@@ -734,7 +735,7 @@ public class SuperAdmin {
 
     @PostMapping("/editInternalUser")
     @ResponseBody
-    public ResponseEntity<String> editInternalUser(@RequestParam String oldBranchName,@RequestParam String oldUserName,@RequestParam String oldUserId,@RequestParam String oldUserPassword,@RequestParam String newBranchName,@RequestParam String newUserName,@RequestParam String newUserId,@RequestParam String newUserPassword) {
+    public ResponseEntity<String> editInternalUser(@RequestParam String oldBranchName,@RequestParam String oldUserName,@RequestParam String oldUserId,@RequestParam String oldUserPassword,@RequestParam String newBranchName,@RequestParam String newUserName,@RequestParam String newUserId,@RequestParam String newUserPassword,String oldViewedStatus,String newViewedStatus) {
        // System.out.println("Received request for /editInternalUser with method: " + RequestMethod.POST);
        // System.out.println("Parameters: " + newBranchName + ", " + oldBranchName + ", ...");
         try {
@@ -749,7 +750,7 @@ public class SuperAdmin {
                 String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
                 if(! authenticate(newUserName,newUserPassword)){
-                    internalUserRepository.save(new InternalUser(newBranchName,newUserName,newUserId,newUserPassword,currentDate,formattedDateTime,"1"));
+                    internalUserRepository.save(new InternalUser(newBranchName,newUserName,newUserId,newUserPassword,currentDate,formattedDateTime,"1",newViewedStatus));
                     user.setStatus("0");
 
                     internalUserRepository.save(user); // Save the updated category
@@ -757,7 +758,7 @@ public class SuperAdmin {
                     // update requestData
                     List<RequestData> data=requestDataRepository.findByDepartmentNameAndStatus(oldUserName,"1");
                     data.forEach(e->{
-                        System.out.println(oldUserName+" gg" + e.getDepartmentName());
+                       // System.out.println(oldUserName+" gg" + e.getDepartmentName());
                         if(oldUserName.equals(e.getDepartmentName())){
                             e.setDepartmentName(newUserName);
                             requestDataRepository.save(e);
@@ -770,7 +771,16 @@ public class SuperAdmin {
                     return ResponseEntity.ok("User updated successfully");
                 }
                 else {
-                    return ResponseEntity.ok("Sorry, Already this user exist");
+                    if(oldViewedStatus.equals(newViewedStatus)){
+                        return ResponseEntity.ok("Sorry, Already this user exist");
+                    }
+                    else{
+                        // just update viewed status
+                        user.setViewedStatus(newViewedStatus);
+                        internalUserRepository.save(user); // Save the updated category
+                        internalUserService.clearCache();
+                        return ResponseEntity.ok("User viewed status updated successfully");
+                    }
                 }
                 // Save the Category object
 
