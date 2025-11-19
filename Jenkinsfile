@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                      bat 'mvn clean install -DskipTests'
+                bat 'mvn clean install -DskipTests'
             }
         }
 
@@ -29,10 +29,8 @@ pipeline {
                     string(credentialsId: 'DO_USER', variable: 'USER')
                 ]) {
                     bat """
-                    "C:/Program Files/Git/bin/bash.exe" -c "
-                        scp -o StrictHostKeyChecking=no -i $SSH_KEY target/${JAR_NAME} $USER@$HOST:${DEPLOY_DIR}/${JAR_NAME}
-                    "
-                    """
+"C:/Program Files/Git/bin/bash.exe" -c 'scp -o StrictHostKeyChecking=no -i "$SSH_KEY" target/${JAR_NAME} "$USER@$HOST:${DEPLOY_DIR}/${JAR_NAME}"'
+"""
                 }
             }
         }
@@ -45,22 +43,24 @@ pipeline {
                     string(credentialsId: 'DO_USER', variable: 'USER')
                 ]) {
                     bat """
-                    "C:/Program Files/Git/bin/bash.exe" -c "
-                        ssh -o StrictHostKeyChecking=no -i $SSH_KEY $USER@$HOST '
-                            cd ${DEPLOY_DIR};
-                            PID=\$(lsof -t -i:${PORT});
-                            if [ ! -z \$PID ]; then kill -9 \$PID; fi;
-                            nohup java -Xms64m -Xmx128m -jar ${JAR_NAME} --server.port=${PORT} > app.log 2>&1 &
-                        '
-                    "
-                    """
+"C:/Program Files/Git/bin/bash.exe" -c 'ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" "$USER@$HOST" "
+    cd ${DEPLOY_DIR};
+    PID=\\\$(lsof -t -i:${PORT});
+    if [ ! -z \\\$PID ]; then kill -9 \\\$PID; fi;
+    nohup java -Xms64m -Xmx128m -jar ${JAR_NAME} --server.port=${PORT} > app.log 2>&1 &
+"'
+"""
                 }
             }
         }
     }
 
     post {
-        failure { echo "❌ Spring Boot deployment failed." }
-        success { echo "✅ Spring Boot deployed successfully." }
+        failure {
+            echo "❌ Spring Boot deployment failed."
+        }
+        success {
+            echo "✅ Spring Boot deployed successfully."
+        }
     }
 }
