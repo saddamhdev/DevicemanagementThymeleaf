@@ -346,7 +346,6 @@ function addDeviceInformation(){
 
 window.initDeviceInformationGeneral = function () {
   $('#deviceInformationTable tbody tr').click(function(event) {
-      alert("nn");
     $(document).off('click', '.action-button-container .Edit');
          $(document).off('click', '.action-button-container .Delete');
     const $row = $(this); // Store the clicked row element
