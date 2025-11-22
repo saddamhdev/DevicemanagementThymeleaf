@@ -16,9 +16,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class DeviceManagementApplication {
 	private static final Logger logger = LogManager.getLogger(DeviceManagementApplication.class);
 	public static void main(String[] args) {
-		//System.out.println("=== Application Starting ===");
+       // System.out.println(System.getenv("OPENAI_API_KEY"));
 		SpringApplication.run(DeviceManagementApplication.class, args);
 		logger.info("DeviceManagementApp started successfully");
 		System.out.println("Program Are started");
-	}
+
+
+    }
 }
