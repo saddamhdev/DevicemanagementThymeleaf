@@ -10,7 +10,6 @@ pipeline {
         GLOBAL_ENV = '/www/wwwroot/CITSNVN/global.env'
          DEPLOY_DIR = '/www/wwwroot/CITSNVN/devicemanagement'
          PORT = '3079'
-
     }
 
     stages {
@@ -36,7 +35,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-              git branch: 'main', url: 'https://github.com/Saddam-Hossen/DevicemanagementThymeleaf'
+               git branch: 'main', url: 'https://github.com/Saddam-Hossen/DevicemanagementThymeleaf'
             }
         }
 
@@ -77,6 +76,31 @@ pipeline {
            }
        }
 
+        stage('Check Database Status') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'DO_SSH_PASSWORD',
+                                                usernameVariable: 'SSH_USER',
+                                                passwordVariable: 'SSH_PASS')]) {
+
+                    sh '''
+                        echo "🗄️  Checking database connectivity..."
+
+                        # Try to connect to database (adjust host/port as needed)
+                        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_HOST} \
+                        "if nc -z localhost 5432 2>/dev/null; then echo '✅ PostgreSQL is running on port 5432'; \
+                        elif nc -z localhost 3306 2>/dev/null; then echo '✅ MySQL is running on port 3306'; \
+                        elif nc -z localhost 27017 2>/dev/null; then echo '✅ MongoDB is running on port 27017'; \
+                        else echo '⚠️  Database port not responding - check configuration'; fi"
+
+                        echo ""
+                        echo "🔍 Testing port response with timeout..."
+                        sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_HOST} \
+                        "timeout 3 bash -c 'echo > /dev/tcp/localhost/5432' 2>/dev/null && echo '✅ Port 5432 accepts connections' || echo '⚠️  Port 5432 not responding to TCP connection'"
+                    '''
+                }
+            }
+        }
+
             stage('Restart App on VPS') {
                 steps {
                     withCredentials([
@@ -89,10 +113,10 @@ pipeline {
 
                         sh 'echo "Restarting app on VPS..."'
 
-                        // 1. Kill old process
+                        // 1. Kill old process on port
                         sh '''
                             sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_HOST} \
-                            pkill -f "icsQuizUserService" || echo no-process
+                            "lsof -ti:${PORT} | xargs -r kill -9 || echo no-process"
                         '''
 
                         // 2. Fix directory permissions BEFORE starting app
@@ -134,7 +158,7 @@ SCRIPT
                         // 5. Confirm running
                         sh '''
                             sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no ${PROD_USER}@${PROD_HOST} \
-                            pgrep -f "icsQuizUserService" && echo started || echo failed
+                            "lsof -ti:${PORT} && echo '✅ Process started on port ${PORT}' || echo '❌ No process on port ${PORT}'"
                         '''
 
                         // 6. Display last lines of log

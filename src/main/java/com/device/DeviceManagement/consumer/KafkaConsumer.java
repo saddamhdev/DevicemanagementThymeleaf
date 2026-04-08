@@ -18,5 +18,7 @@ public class KafkaConsumer {
         // Process message normally if no error condition met
         System.out.println("✅ Message processed successfully!");
     }
+
+
 }
 */
