@@ -685,62 +685,84 @@ public class departmentUser {
     @ResponseBody
     public ResponseEntity<String> acceptDeliveryDeviceCustomerCareToDepartment(@RequestBody Map<String, Object> payload) {
 
-        // Extract requestId and deviceIds from the payload
-        String requestId = (String) payload.get("requestId");
-        List<String> deviceIds = (List<String>) payload.get("deviceId");
-        String deviceId=deviceIds.getFirst();
-        String departmentName = (String) payload.get("departmentName");
-        String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        try {
+            // Extract and safely convert all fields (handle Integer/Long/String types)
+            String requestId = String.valueOf(payload.get("requestId"));
+            String deviceId = String.valueOf(payload.get("deviceId"));
+            String departmentName = String.valueOf(payload.get("departmentName"));
+            String departmentUserName = String.valueOf(payload.get("departmentUserName"));
+            String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
-        System.out.println("Received requestId: " + requestId);
+            System.out.println("Received requestId: " + requestId);
+            System.out.println("Received deviceId: " + deviceId);
+            System.out.println("Received departmentUserId: " + departmentUserId + " (type: " + (payload.get("departmentUserId") != null ? payload.get("departmentUserId").getClass().getSimpleName() : "null") + ")");
 
-        // Generate current date and time
-        String presentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println("Generated presentDateTime: " + presentDateTime);
-
-        // Find the RequestData document by requestId and status
-        Optional<RequestData> optionalRequestData = requestDataRepository.findDevicesIDS(requestId, "1");
-
-        if (optionalRequestData.isPresent()) {
-            RequestData requestData = optionalRequestData.get();
-// Ensure CustomerCare is initialized
-            if (requestData.getCustomerCare() == null) {
-                requestData.setCustomerCare(new RequestData.CustomerCare());
+            // Validate required fields
+            if (requestId == null || requestId.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("requestId is required");
             }
-            requestData.getCustomerCare().setDepartmentDeviceReceiverManInfo(departmentName+"_"+departmentUserName+"_"+departmentUserId);
-            requestData.getCustomerCare().setCustomerCareToDepartmentDeviceSendingStatus("Accepted");
-            requestData.getCustomerCare().setDepartmentDeviceReceiverTime(getCurrentLocalDateTime());
-            requestData.setCustomerCare(requestData.getCustomerCare());
+            if (deviceId == null || deviceId.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("deviceId is required");
+            }
 
-            // Save the updated RequestData document
-            requestDataRepository.save(requestData);
+            // Generate current date and time
+            String presentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            System.out.println("Generated presentDateTime: " + presentDateTime);
 
-            AddData deviceRequestData = addDataRepository.findByIdAndStatus(deviceId, "1");
-            deviceRequestData.setBookingStatus("Booked");
-            deviceRequestData.setUserName(departmentUserName);
-            List<AddData.DeviceUser> list=deviceRequestData.getDeviceUsers();
-            list.forEach(e->{
-                System.out.println(e.toString());
-                if(e.getStatus().equals("1")){
-                    // update EndingDate
-                    e.setEndingDate(getCurrentDateTime());
-                    e.setStatus("0");
+            // Find the RequestData document by requestId and status
+            Optional<RequestData> optionalRequestData = requestDataRepository.findDevicesIDS(requestId, "1");
+
+            if (optionalRequestData.isPresent()) {
+                RequestData requestData = optionalRequestData.get();
+
+                // Ensure CustomerCare is initialized
+                if (requestData.getCustomerCare() == null) {
+                    requestData.setCustomerCare(new RequestData.CustomerCare());
+                }
+                requestData.getCustomerCare().setDepartmentDeviceReceiverManInfo(departmentName+"_"+departmentUserName+"_"+departmentUserId);
+                requestData.getCustomerCare().setCustomerCareToDepartmentDeviceSendingStatus("Accepted");
+                requestData.getCustomerCare().setDepartmentDeviceReceiverTime(getCurrentLocalDateTime());
+                requestData.setCustomerCare(requestData.getCustomerCare());
+
+                // Save the updated RequestData document
+                requestDataRepository.save(requestData);
+
+                // Find and update device
+                AddData deviceRequestData = addDataRepository.findByIdAndStatus(deviceId, "1");
+                if (deviceRequestData == null) {
+                    return ResponseEntity.status(404).body("Device with ID " + deviceId + " not found");
                 }
 
-            });
-            // add new device user
-            list.add(new AddData.DeviceUser(departmentName,departmentUserName,departmentUserId,getCurrentDateTime(),"1"));
+                deviceRequestData.setBookingStatus("Booked");
+                deviceRequestData.setUserName(departmentUserName);
+                List<AddData.DeviceUser> list = deviceRequestData.getDeviceUsers();
 
-            addDataRepository.save(deviceRequestData);
-            requestDataService.clearCache();
-            addDataService.clearCache();
+                list.forEach(e -> {
+                    System.out.println(e.toString());
+                    if (e.getStatus().equals("1")) {
+                        // update EndingDate
+                        e.setEndingDate(getCurrentDateTime());
+                        e.setStatus("0");
+                    }
+                });
 
-        } else {
-            return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
+                // add new device user
+                list.add(new AddData.DeviceUser(departmentName, departmentUserName, departmentUserId, getCurrentDateTime(), "1"));
+
+                addDataRepository.save(deviceRequestData);
+                requestDataService.clearCache();
+                addDataService.clearCache();
+
+            } else {
+                return ResponseEntity.status(404).body("RequestData with requestId " + requestId + " not found.");
+            }
+
+            return ResponseEntity.ok("Selected rows processed successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error processing delivery: " + e.getMessage());
         }
-
-        return ResponseEntity.ok("Selected rows processed successfully");
     }
     @PostMapping("/user/upload-photo")
     public ResponseEntity<Map<String, String>> uploadPhoto(

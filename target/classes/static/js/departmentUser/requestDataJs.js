@@ -274,6 +274,10 @@ function acceptDeliveryDevice(requestId,deviceId){
           var departmentUserName = departmentElement.data("departmentuser-name");//saho
           var departmentUserId = departmentElement.data("departmentuser-id");//s
 
+          // Backend expects a single scalar ID, not an array.
+          var normalizedDeviceId = Array.isArray(deviceId) ? deviceId[0] : deviceId;
+          normalizedDeviceId = normalizedDeviceId != null ? String(normalizedDeviceId) : "";
+
 
          // Send AJAX request to backend
          $.ajax({
@@ -282,7 +286,7 @@ function acceptDeliveryDevice(requestId,deviceId){
              contentType: "application/json",
              data: JSON.stringify({
                   requestId: requestId,
-                  deviceId: deviceId ,
+                  deviceId: normalizedDeviceId,
                   departmentName:departmentName,
                   departmentUserName:departmentUserName,
                   departmentUserId:departmentUserId
@@ -298,8 +302,21 @@ function acceptDeliveryDevice(requestId,deviceId){
                            });
              },
              error: function (xhr, status, error) {
-                 CustomAlert("Error: " + error); // Display error response
-                 console.error("Error:", error);
+                 var backendMessage = (xhr && xhr.responseJSON && (xhr.responseJSON.message || xhr.responseJSON.error))
+                     || (xhr && xhr.responseText)
+                     || error
+                     || "Failed to accept delivery device.";
+
+                 console.error("acceptDeliveryDevice failed", {
+                     requestId: requestId,
+                     deviceId: normalizedDeviceId,
+                     httpStatus: xhr ? xhr.status : null,
+                     status: status,
+                     error: error,
+                     response: xhr ? xhr.responseText : null
+                 });
+
+                 CustomAlert(backendMessage);
              }
          });
 }
@@ -619,7 +636,7 @@ window.initRequestDataGeneral = function () {
                                       const userConfirmed = confirm("Do you want to proceed with the selected device?");
                                       if (userConfirmed) {
                                            hideModal();
-                                           acceptDeliveryDevice(requestId,selectedRows);
+                                             acceptDeliveryDevice(requestId, selectedRows[0]);
                                       } else {
                                           console.log("User canceled.");
                                           // Handle the cancel action here
