@@ -520,6 +520,7 @@ public class SuperAdmin {
                     individualColumnsService.updateUniversalColumn();
                     updateColumnDataInAllTable(oldIndividualColumnName,newIndividualColumnName);
                     columnRepository.save(newColumn);
+                    individualColumnsService.clearUniversalColumnCache();
                 }
 
                 return ResponseEntity.ok("Column updated successfully");

@@ -285,7 +285,7 @@ public class Fragment {
         }
 
         if ("analyticFragment".equals(pageName) && folderName.equals("superAdmin")) {
-            model.addAttribute("userCount", safeCount(internalUserRepository.countByBranchNameAndStatus(departmentName, "1")));
+            model.addAttribute("userCount", safeCount(internalUserRepository.countByStatus("1")));
             model.addAttribute("deviceCountTotal", safeCount(addDataRepository.countByStatus("1")));
             model.addAttribute("deviceCountDeviceCategory", safeCount(categoryRepository.countByStatus("1")));
             model.addAttribute("deviceCountUnOrdered", safeCount(addDataRepository.countByStatusAndUserNameAndUnOrderedDevice_COOUnOrderedDeviceAcceptedStatus("1", "purchase", "UnOrdered")));

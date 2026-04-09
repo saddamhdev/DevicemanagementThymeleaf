@@ -18,7 +18,7 @@
                 <!-- Toggle Content Button -->
                 <div class="d-flex justify-content-center mb-2">
                     <!--        <button class="btn btn-success btn-sm" onclick="addIndividualColumnToggle()" style="width: 10%;">Add</button>-->
-                    <button class="btn btn-success btn-sm" onclick="addInternalUser()" >Add</button>
+                    <button type="button" class="btn btn-success btn-sm" onclick="addInternalUser2()">Add</button>
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-2">
 
@@ -58,7 +58,7 @@
                             </th>
 
                             <!-- Viewed Status -->
-                            <th scope="col" style="background-color: gray; color:white;"
+                            <th scope="col" style="background-color: gray; color:white; display:none"
                                 onclick="window.sortTable('internalUserTable', 4, this)">
                                 Viewed Status <span class="sort-icon">⇅</span>
                             </th>
@@ -89,7 +89,7 @@
                         <td th:text="${indoorUser.branchName}"> branchId</td>
                         <td th:text="${indoorUser.userName}"> userName</td>
                         <td th:text="${indoorUser.userId}">userId</td>
-                        <td th:text="${indoorUser.viewedStatus}">userId</td>
+                        <td th:text="${indoorUser.viewedStatus}  " style="display:none">userId</td>
                         <td th:text="${indoorUser.userPassword}">userPassword</td>
                         <td th:text="${indoorUser.presentTime}">userPassword</td>
                         <td>

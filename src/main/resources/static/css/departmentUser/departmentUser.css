@@ -240,7 +240,7 @@ img {
 .profile {
     display: inline-block; /* Ensure it behaves like an inline-block element */
     height: 25px; /* Adjust size as needed */
-    width: auto;   /* Maintain aspect ratio */
+    width: 25px;   /* Maintain aspect ratio */
     border-radius: 50%; /* Make the element circular */
 
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for effects */
