@@ -514,8 +514,9 @@ public class SuperAdmin {
                             "1",
                             "individual",
                             newIndividualCategoryName,
-                            newDataType,
-                            newRequiredType
+                            newRequiredType,
+                            newDataType
+
                     );
                     individualColumnsService.updateUniversalColumn();
                     updateColumnDataInAllTable(oldIndividualColumnName,newIndividualColumnName);

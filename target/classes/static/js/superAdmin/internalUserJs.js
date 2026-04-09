@@ -188,7 +188,6 @@ function editInternalUserBtn($row) {
 
 };
 function addInternalUser2() {
-alert("check");
     var htmlToAdd = `
         <div class="mb-3" style="margin-left: 0%; text-align: left;">
             <div class="dropdown">
