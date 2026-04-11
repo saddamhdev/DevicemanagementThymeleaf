@@ -526,14 +526,14 @@ window.initRequestDataGeneral = function () {
                           <div class="mb-9" style="margin-left: 0%; text-align: left;">
                               <table id="deviceInformationTable" class="table table-gray table-bordered table-hover">
                                   <thead>
-                                      <tr>
-                                          <th scope="col" style="background-color: gray;">SN</th>
-                                          <th scope="col" style="background-color: gray; display: none;">Device Id</th>
-                                          <th scope="col" style="background-color: gray;">Category Name</th>
-                                          ${categoriesHtml}
-                                          <th scope="col" style="background-color: gray;">Description</th>
-                                            <th scope="col" style="background-color: gray;">Action</th>
-                                      </tr>
+                                     <tr>
+                                         <th scope="col" style="background-color: gray; color: white;">SN</th>
+                                         <th scope="col" style="background-color: gray; color: white; display: none;">Device Id</th>
+                                         <th scope="col" style="background-color: gray; color: white;">Category Name</th>
+                                         ${categoriesHtml}
+                                         <th scope="col" style="background-color: gray; color: white;">Description</th>
+                                         <th scope="col" style="background-color: gray; color: white;">Action</th>
+                                     </tr>
                                   </thead>
                                   <tbody id="listDeviceInformationBody"></tbody>
                               </table>

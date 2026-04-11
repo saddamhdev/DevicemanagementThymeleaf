@@ -96,4 +96,18 @@ public class RequestColumn  implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "RequestColumn{" +
+                "id='" + id + '\'' +
+                ", columnName='" + columnName + '\'' +
+                ", dataType='" + dataType + '\'' +
+                ", requiredType='" + requiredType + '\'' +
+                ", presentTime='" + presentTime + '\'' +
+                ", date='" + date + '\'' +
+                ", status='" + status + '\'' +
+                ", visibleType='" + visibleType + '\'' +
+                '}';
+    }
 }

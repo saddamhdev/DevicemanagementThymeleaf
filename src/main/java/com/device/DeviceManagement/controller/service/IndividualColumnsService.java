@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -18,7 +19,11 @@ public class IndividualColumnsService {
     @Cacheable(value = "IndividualColumnService")
     public List<Column> Individual() {
         System.out.println("Fetching user from DB...");
-        return columnRepository.findByColumnTypeAndStatus("individual", "1");
+        return columnRepository.findByColumnTypeAndStatus(
+                "individual",
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Use this to update the cache when data is modified
@@ -26,7 +31,11 @@ public class IndividualColumnsService {
     public List<Column> updateUniversalColumn() {
         // also updates the cache
         System.out.println("Cache Updated!");
-        return columnRepository.findByColumnTypeAndStatus("individual", "1");
+        return columnRepository.findByColumnTypeAndStatus(
+                "individual",
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Optional: Evict cache

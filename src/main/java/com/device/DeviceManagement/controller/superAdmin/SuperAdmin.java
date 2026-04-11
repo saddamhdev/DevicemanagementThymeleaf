@@ -378,7 +378,7 @@ public class SuperAdmin {
 
 
                 // Save the Category object
-                columnRepository.save(new Column(newColumnName,formattedDateTime,currentDate,"1","universal","universal",newRequiredType,newDataType));
+                columnRepository.save(new Column(newColumnName, column.getPresentTime(),column.getDate(),"1","universal","universal",newRequiredType,newDataType));
                 updateColumnDataInAllTable(oldColumnName,newColumnName);
                 universalColumnsService.updateUniversalColumn();
                 return ResponseEntity.ok("Column updated successfully");
@@ -509,8 +509,8 @@ public class SuperAdmin {
                     // Save the new column object
                     Column newColumn = new Column(
                             newIndividualColumnName,
-                            formattedDateTime,
-                            currentDate,
+                            oldColumn.getPresentTime(),
+                            oldColumn.getDate(),
                             "1",
                             "individual",
                             newIndividualCategoryName,

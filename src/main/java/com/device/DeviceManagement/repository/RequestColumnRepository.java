@@ -14,4 +14,5 @@ public interface RequestColumnRepository extends MongoRepository<RequestColumn, 
     List<RequestColumn> findByStatus(String status);
     Page<RequestColumn> findByStatus(String status, Pageable pageable);
     RequestColumn findByIdAndStatus(String id,String status);
+    List<RequestColumn> findByStatusOrderByPresentTimeDesc(String status);
 }

@@ -32,10 +32,11 @@ function saveIndividualColumnBtn(categoryName,columnName,dataType,requiredType) 
 
 }
 function editIndividualColumnBtn($row) {
-        var categoryName = $row.find('td:nth-child(2)').text();
-        var columnName = $row.find('td:nth-child(3)').text();
-        var dataType = $row.find('td:nth-child(4)').text();
-         var requiredType = $row.find('td:nth-child(5)').text();
+            var categoryName = $row.find('td:nth-child(2)').text().trim();
+            var columnName = $row.find('td:nth-child(3)').text().trim();
+            var dataType = $row.find('td:nth-child(4)').text().trim();
+            var requiredType = $row.find('td:nth-child(5)').text().trim();
+
           var individualColumnTableBody = $('#individualColumnTableBody');
           var totalRows = individualColumnTableBody.children('tr').length+1;
 

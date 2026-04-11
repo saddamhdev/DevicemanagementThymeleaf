@@ -44,37 +44,51 @@ $(document).ready(function () {
     // Offcanvas event handling
     var offcanvas = document.querySelector('.sideoffcanvus');
     var mainBody = document.querySelector('.mainBody');
-    const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
+
+    if (mainBody) {
+        mainBody.style.transition = "margin-left 0.3s ease";
+    }
+
 // Function to hide offcanvas when mainBody is clicked
     $(mainBody).click(function () {
-        if ($(window).width() <= 768) { // Check if it's a mobile view
+        if ($(window).width() <= 768 && offcanvas) { // Check if it's a mobile view
             $(offcanvas).offcanvas('hide'); // Hide the offcanvas
         }
     });
     function adjustMainBodyMargin() {
-        if ($(window).width() > 768) { // Laptop/Desktop
-            $(".mainBody").css("margin-left", "0px"); // Adjust for larger screens
-        } else { // Android/Mobile
-            $(".mainBody").css("margin-left", "0"); // Keep default for mobile
+        if (!mainBody || !offcanvas) return;
+
+        if ($(window).width() > 768 && offcanvas.classList.contains('show')) { // Laptop/Desktop
+            const shiftWidth = offcanvas.offsetWidth || 0;
+            mainBody.style.marginLeft = `${shiftWidth}px`;
+        } else { // Android/Mobile or closed state
+            mainBody.style.marginLeft = "0";
         }
     }
 
-    $(offcanvas).on('shown.bs.offcanvas', function () {
-        adjustMainBodyMargin();
-    });
+    if (offcanvas) {
+        const bsOffcanvas = bootstrap.Offcanvas.getOrCreateInstance(offcanvas);
 
-    $(offcanvas).on('hidden.bs.offcanvas', function () {
-        $(".mainBody").css("margin-left", "0"); // Reset for all screen sizes
-    });
+        $(offcanvas).on('shown.bs.offcanvas', function () {
+            adjustMainBodyMargin();
+        });
+
+        $(offcanvas).on('hidden.bs.offcanvas', function () {
+            adjustMainBodyMargin();
+        });
+
  // Click outside offcanvas to close it
-    document.addEventListener('click', function (event) {
-        const isClickInside = offcanvas.contains(event.target);
-        const isToggler = event.target.closest('[data-bs-toggle="offcanvas"]');
+        document.addEventListener('click', function (event) {
+            const isClickInside = offcanvas.contains(event.target);
+            const isToggler = event.target.closest('[data-bs-toggle="offcanvas"]');
 
-        if (!isClickInside && !isToggler && offcanvas.classList.contains('show')) {
-            bsOffcanvas.hide();
-        }
-    });
+            if (!isClickInside && !isToggler && offcanvas.classList.contains('show')) {
+                bsOffcanvas.hide();
+            }
+        });
+
+        adjustMainBodyMargin();
+    }
 
 window.toggleList = function (item) {
            const $nested = $(item).find(".nested-list");
@@ -170,6 +184,10 @@ function formatDateTimeToAmPm(datetimeStr) {
   function globallyFormatAndSortTables() {
     const tables = document.querySelectorAll("table");
     tables.forEach(table => {
+      // Keep certain tables in the order they come from the database.
+      // They may still use manual click-to-sort handlers if needed.
+
+
       const tbody = table.querySelector("tbody");
       if (!tbody) return;
 

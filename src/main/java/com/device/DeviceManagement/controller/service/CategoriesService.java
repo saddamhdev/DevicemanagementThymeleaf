@@ -1,6 +1,5 @@
 package com.device.DeviceManagement.controller.service;
 
-import com.device.DeviceManagement.model.AddData;
 import com.device.DeviceManagement.model.Category;
 import com.device.DeviceManagement.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,10 @@ public class CategoriesService {
     @Cacheable(value = "CategoriesService")
     public List<Category> Category() {
         System.out.println("Fetching user from DB...");
-        return categoryRepository.findByStatus("1");
+        return categoryRepository.findByStatus(
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Use this to update the cache when data is modified
@@ -37,7 +39,10 @@ public class CategoriesService {
     public List<Category> updateCategories() {
         // also updates the cache
         System.out.println("Cache Updated!");
-        return categoryRepository.findByStatus("1");
+        return categoryRepository.findByStatus(
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Optional: Evict cache

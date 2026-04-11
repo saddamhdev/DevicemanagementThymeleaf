@@ -30,8 +30,9 @@ public class RequestColumnService {
     @Cacheable(value = "RequestColumnService")
     public List<RequestColumn> add() {
         System.out.println("Fetching user from DB...");
-        return requestColumnRepository.findByStatus("1");
+        return requestColumnRepository.findByStatusOrderByPresentTimeDesc("1");
     }
+
 
     // Use this to update the cache when data is modified
     @CachePut(value = "RequestColumnService")

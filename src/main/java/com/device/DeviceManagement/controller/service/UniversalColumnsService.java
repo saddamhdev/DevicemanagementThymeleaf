@@ -1,13 +1,12 @@
 package com.device.DeviceManagement.controller.service;
 
-import com.device.DeviceManagement.model.Category;
 import com.device.DeviceManagement.model.Column;
-import com.device.DeviceManagement.repository.CategoryRepository;
 import com.device.DeviceManagement.repository.ColumnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,11 @@ public class UniversalColumnsService {
     @Cacheable(value = "UniversalColumnService")
     public List<Column> Universal() {
         System.out.println("Fetching user from DB...");
-        return columnRepository.findByColumnTypeAndStatus("universal", "1");
+        return columnRepository.findByColumnTypeAndStatus(
+                "universal",
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Use this to update the cache when data is modified
@@ -28,7 +31,11 @@ public class UniversalColumnsService {
     public List<Column> updateUniversalColumn() {
         // also updates the cache
         System.out.println("Cache Updated!");
-        return columnRepository.findByColumnTypeAndStatus("universal", "1");
+        return columnRepository.findByColumnTypeAndStatus(
+                "universal",
+                "1",
+                Sort.by(Sort.Direction.DESC, "presentTime", "id")
+        );
     }
 
     // Optional: Evict cache

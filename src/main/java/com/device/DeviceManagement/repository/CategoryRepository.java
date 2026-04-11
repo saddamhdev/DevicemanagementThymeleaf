@@ -1,9 +1,9 @@
 package com.device.DeviceManagement.repository;
 
 
-import com.device.DeviceManagement.model.AddData;
 import com.device.DeviceManagement.model.Category;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -19,6 +19,7 @@ public interface CategoryRepository extends MongoRepository<Category, String> {
     Optional<Category> findByCategoryNameAndStatus(String categoryName, String status);
     // update categoryName according to categoryName
     List<Category> findByStatus(String status);
+    List<Category> findByStatus(String status, Sort sort);
     boolean existsByCategoryName(String categoryName);
     boolean existsByCategoryNameAndStatus(String categoryName, String status);
     long countByStatus(String status);

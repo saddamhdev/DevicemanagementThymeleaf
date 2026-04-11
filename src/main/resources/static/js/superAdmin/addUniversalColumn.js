@@ -116,6 +116,10 @@ function  editUniversalColumnBtn($row){
                      $.ajax({
                             type: "POST",
                             url: "/superAdmin/inputTypes",
+                            headers: {
+
+                               'Authorization': 'Bearer ' + getAuthToken()
+                           },
                             success: function(response) {
                                 const $inputTypeSelect = $('#inputTypeUniversalEdit');
                                 response.forEach(type => {

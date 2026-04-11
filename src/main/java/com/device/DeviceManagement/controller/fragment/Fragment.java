@@ -343,6 +343,7 @@ public class Fragment {
         List<User> allUser = userService.add();
 
         List<RequestColumn> requestColumns = requestColumnService.add();
+       // requestColumns.forEach(System.out::println);
 
         List<DropDownList> dropDownLists = dropDownListService.add();
         List<Designation> designations = designationService.add();
