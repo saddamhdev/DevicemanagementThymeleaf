@@ -696,24 +696,16 @@ window.trackDeviceRequestData = function (row, clickedElement) {
        let htmlToAdd = categoryName && categoryName.trim()
            ? `
                <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
-                   <h6 class="fw-semibold text-info">
-                       🏢 Department: <span class="text-dark">${biVagName}</span>
-                   </h6>
-
+                  
                    <h6 class="fw-semibold text-primary mb-2">
                        📌 Serial Number: <span class="text-dark">${sn}</span>
                    </h6>
 
-                   <h6 class="fw-semibold text-success mb-2">
-                       📁 Category: <span class="text-dark">${categoryName}</span>
-                   </h6>
                </div>
            `
            : `
                <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
-                    <h6 class="fw-semibold text-success mb-2">
-                      📁 Category: <span class="text-dark">${biVagName}</span>
-                  </h6>
+
 
                    <h6 class="fw-semibold text-primary mb-2">
                        📌 Serial Number: <span class="text-dark">${sn}</span>

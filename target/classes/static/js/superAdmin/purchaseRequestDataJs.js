@@ -724,7 +724,7 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                                            htmlData += `
                                                <div class="description-item description-textarea-item">
 
-                                               
+
                                                    <div class="expandable-text"
                                                         data-full-text="${safeValue}">
                                                        ${safeValue}
