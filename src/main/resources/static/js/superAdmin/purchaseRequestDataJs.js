@@ -635,87 +635,199 @@ function purchaseRequestForService(serviceId,problemName,solutionName,links) {
                              return count === 0 ? "Unavailable" : `Available(${count})`;
                          }
                         console.log(allData);
-                         allData.forEach(device => {
-                            if (device.requestMode === "Denied") return;
+                       allData.forEach(device => {
+                           if (device.requestMode === "Denied") return;
 
-                             const bivagName = device.departmentName || "N/A";
-                             const categoryName = device.allData["category"] || "N/A";
-                             const sn = device.visibleRequestId || "N/A";
-                             const availability = getAvailability(categoryName);
+                           const bivagName =
+                               device.departmentName || "N/A";
 
-                             // Generate row key for comparison
-                             let rowKeyParts = [
-                                 sn, bivagName, categoryName,
-                                 device.inventory?.deliveryMode || "Not Delivered",
-                                 device.inventory?.inventoryStatus || "N/A",
-                                 device.inventory?.cooDeliveryAns || 'Pending',
-                                 device.inventory?.inventoryToCustomerCareDeviceSendingStatus || 'Pending',
-                                 device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"
-                             ];
-                             const rowKey = rowKeyParts.join('|');
-                             newRowKeys.add(rowKey);
+                           const categoryName =
+                               device.allData["category"] || "N/A";
 
-                             if (!currentRowMap.has(rowKey)) {
-                                 const row = document.createElement("tr");
-                                 row.setAttribute("onclick", "printRowDataForCustomerCare(this)");
+                           const sn =
+                               device.visibleRequestId || "N/A";
 
-                                 let htmlData = `
-                                     <td>${sn}</td>
-                                     <td>${bivagName}</td>
-                                     <td>${categoryName}</td>
-                                     <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
-                                         <div>
-                                 `;
+                           const availability =
+                               getAvailability(categoryName);
 
-                                 requestColumns.forEach(column => {
-                                     if (column.visibleType === "yes") {
-                                         const columnName = column.columnName || "N/A";
-                                         const value = device.allData[columnName] || "N/A";
-                                         htmlData += column.dataType === "textarea" ? `
-                                             <div><textarea class="plain-textarea">${value}</textarea></div>` : `
-                                             <div><span>${columnName}</span>: <span>${value}</span></div>`;
-                                     }
-                                 });
+                           const escapeHtml = function (value) {
+                               return String(value ?? "")
+                                   .replace(/&/g, "&amp;")
+                                   .replace(/</g, "&lt;")
+                                   .replace(/>/g, "&gt;")
+                                   .replace(/"/g, "&quot;")
+                                   .replace(/'/g, "&#039;");
+                           };
 
-                                 htmlData += `
-                                         </div>
-                                         <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
-                                     </td>
-                                     <td>${device.purchase?.cooAns || "Pending"}</td>
-                                    <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)" class="view-device-status" data-request-id="${device.id}" style="background-color: #007bff; color: #ffffff; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: 500; transition: background-color 0.3s ease; font-size: 14px;" onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'" title="View Request data tracking information">View</td>
+                           // Generate row key for comparison
+                           let rowKeyParts = [
+                               sn,
+                               bivagName,
+                               categoryName,
+                               device.inventory?.deliveryMode || "Not Delivered",
+                               device.inventory?.inventoryStatus || "N/A",
+                               device.inventory?.cooDeliveryAns || "Pending",
+                               device.inventory
+                                   ?.inventoryToCustomerCareDeviceSendingStatus || "Pending",
+                               device.presentTime
+                                   ? formatDateTimeToAmPm(device.presentTime)
+                                   : "N/A"
+                           ];
 
-                                     <td>${device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"}</td>
-                                 `;
-                                  htmlData += `
-                                         <td>
-                                             <div class="d-flex justify-content-center align-items-center action-button-container">
-                                                 ${device.purchase?.cooAns !== 'Accepted'
-                                                     ? `<button class="btn btn-secondary btn-sm chat-button"
-                                                           data-request-id="${device.id}"
-                                                           data-button-id="chat"
-                                                           title="Accept Proposal">&#128172;</button>`
-                                                     : ''
-                                                 }
-                                                 ${device.purchase?.cooAns === 'Accepted'
-                                                     ? `<button class="btn btn-info btn-sm view-button"
-                                                           data-request-id="${device.id}"
-                                                           data-button-id="view"
-                                                           title="View Accepted Link">&#128065;</button>`
-                                                     : ''
-                                                 }
-                                             </div>
-                                         </td>
-                                     `;
+                           const rowKey =
+                               rowKeyParts.join("|");
+
+                           newRowKeys.add(rowKey);
+
+                           if (!currentRowMap.has(rowKey)) {
+                               const row =
+                                   document.createElement("tr");
+
+                               row.setAttribute(
+                                   "onclick",
+                                   "printRowDataForCustomerCare(this)"
+                               );
+
+                               let htmlData = `
+                                   <td>${escapeHtml(sn)}</td>
+
+                                   <td>${escapeHtml(bivagName)}</td>
+
+                                   <td>${escapeHtml(categoryName)}</td>
+
+                                   <td style="text-align: left;"
+                                       data-request-id="${escapeHtml(device.id)}"
+                                       class="viewInfo description-cell">
+
+                                       <div>
+                               `;
+
+                               requestColumns.forEach(column => {
+                                   if (column.visibleType === "yes") {
+                                       const columnName =
+                                           column.columnName || "N/A";
+
+                                       const value =
+                                           device.allData[columnName] !== null &&
+                                           device.allData[columnName] !== undefined &&
+                                           device.allData[columnName] !== ""
+                                               ? device.allData[columnName]
+                                               : "N/A";
+
+                                       const safeColumnName =
+                                           escapeHtml(columnName);
+
+                                       const safeValue =
+                                           escapeHtml(value);
+
+                                       if (column.dataType === "textarea") {
+                                           htmlData += `
+                                               <div class="description-item description-textarea-item">
+
+                                               
+                                                   <div class="expandable-text"
+                                                        data-full-text="${safeValue}">
+                                                       ${safeValue}
+                                                   </div>
+                                               </div>
+                                           `;
+                                       } else {
+                                           htmlData += `
+                                               <div class="description-item description-normal-item">
+
+                                                   <span class="description-label">
+                                                       ${safeColumnName}
+                                                   </span>:
+
+                                                   <span>${safeValue}</span>
+                                               </div>
+                                           `;
+                                       }
+                                   }
+                               });
+
+                               htmlData += `
+                                       </div>
 
 
+                                   </td>
 
+                                   <td>
+                                       ${escapeHtml(device.purchase?.cooAns || "Pending")}
+                                   </td>
 
+                                   <td onclick="window.trackDeviceRequestData(this.closest('tr'), this)"
+                                       class="view-device-status"
+                                       data-request-id="${escapeHtml(device.id)}"
+                                       style="
+                                           background-color: #007bff;
+                                           color: #ffffff;
+                                           text-align: center;
+                                           padding: 10px;
+                                           border-radius: 5px;
+                                           cursor: pointer;
+                                           font-weight: 500;
+                                           transition: background-color 0.3s ease;
+                                           font-size: 14px;
+                                       "
+                                       onmouseover="this.style.backgroundColor='#0056b3'"
+                                       onmouseout="this.style.backgroundColor='#007bff'"
+                                       title="View Request data tracking information">
+                                       View
+                                   </td>
 
-                                 row.innerHTML = htmlData;
-                                 tableBody.appendChild(row);
-                             }
+                                   <td>
+                                       ${
+                                           device.presentTime
+                                               ? escapeHtml(
+                                                   formatDateTimeToAmPm(
+                                                       device.presentTime
+                                                   )
+                                               )
+                                               : "N/A"
+                                       }
+                                   </td>
 
-                         });
+                                   <td>
+                                       <div class="d-flex justify-content-center align-items-center action-button-container">
+
+                                           ${
+                                               device.purchase?.cooAns !== "Accepted"
+                                                   ? `
+                                                       <button class="btn btn-secondary btn-sm chat-button"
+                                                               data-request-id="${escapeHtml(device.id)}"
+                                                               data-button-id="chat"
+                                                               title="Accept Proposal">
+                                                           &#128172;
+                                                       </button>
+                                                   `
+                                                   : ""
+                                           }
+
+                                           ${
+                                               device.purchase?.cooAns === "Accepted"
+                                                   ? `
+                                                       <button class="btn btn-info btn-sm view-button"
+                                                               data-request-id="${escapeHtml(device.id)}"
+                                                               data-button-id="view"
+                                                               title="View Accepted Link">
+                                                           &#128065;
+                                                       </button>
+                                                   `
+                                                   : ""
+                                           }
+                                       </div>
+                                   </td>
+                               `;
+
+                               row.innerHTML = htmlData;
+                               tableBody.appendChild(row);
+
+                               if (window.initializeExpandableText) {
+                                   window.initializeExpandableText(row);
+                               }
+                           }
+                       });
 
                          // Step 3: Remove outdated rows
                          currentRowMap.forEach((row, key) => {

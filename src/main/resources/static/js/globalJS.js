@@ -693,16 +693,33 @@ window.trackDeviceRequestData = function (row, clickedElement) {
 
 
         // Generate header with sn, categoryName, biVagName
-        let htmlToAdd = `
-           <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
-            <h6 class="fw-semibold text-info">🏢 Department: <span class="text-dark">${biVagName}</span></h6>
-             <h6 class="fw-semibold text-primary mb-2">📌 Serial Number: <span class="text-dark">${sn}</span></h6>
-             <h6 class="fw-semibold text-success mb-2">📁 Category: <span class="text-dark">${ categoryName}</span></h6>
+       let htmlToAdd = categoryName && categoryName.trim()
+           ? `
+               <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+                   <h6 class="fw-semibold text-info">
+                       🏢 Department: <span class="text-dark">${biVagName}</span>
+                   </h6>
 
-           </div>
+                   <h6 class="fw-semibold text-primary mb-2">
+                       📌 Serial Number: <span class="text-dark">${sn}</span>
+                   </h6>
 
-        `;
+                   <h6 class="fw-semibold text-success mb-2">
+                       📁 Category: <span class="text-dark">${categoryName}</span>
+                   </h6>
+               </div>
+           `
+           : `
+               <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
+                    <h6 class="fw-semibold text-success mb-2">
+                      📁 Category: <span class="text-dark">${biVagName}</span>
+                  </h6>
 
+                   <h6 class="fw-semibold text-primary mb-2">
+                       📌 Serial Number: <span class="text-dark">${sn}</span>
+                   </h6>
+               </div>
+           `;
         // Generate HTML for initial entry without separator
         htmlToAdd += createTimelineEntry({
             dateTime: result.presentTime,
@@ -732,20 +749,19 @@ window.trackDeviceRequestData = function (row, clickedElement) {
         // Proposal Accepted or Direct Delivery specific entries
         if (isProposalOrDirect) {
         // my
-                 if (result.inventory?.inventoryToAlternativeDeviceRequestTime) {
-                        htmlToAdd += createTimelineEntry({
-                            dateTime: result.inventory?.inventoryToAlternativeDeviceRequestTime,
-                            entity: 'Inventory',
-                            action: `Alternative Device Request To COO`
-                        });
-                    }
-                    else{
-                          htmlToAdd += createTimelineEntry({
-                                dateTime: null,
-                                entity: 'Inventory',
-                                action: `Pending`
-                            });
-                    }
+                if (result.inventory?.inventoryToAlternativeDeviceRequestTime) {
+                    htmlToAdd += createTimelineEntry({
+                        dateTime: result.inventory.inventoryToAlternativeDeviceRequestTime,
+                        entity: 'Inventory',
+                        action: 'Alternative Device Request To COO'
+                    });
+                } else if (result.inventory.inventoryStatus !== 'Pending') {
+                    htmlToAdd += createTimelineEntry({
+                        dateTime: null,
+                        entity: 'Inventory',
+                        action: 'Pending'
+                    });
+                }
                     if (result.inventory?.inventoryToAlternativeDeviceRequestAcceptingTime) {
                         htmlToAdd += createTimelineEntry({
                             dateTime: result.inventory?.inventoryToAlternativeDeviceRequestAcceptingTime,
@@ -1708,4 +1724,220 @@ function hideChangePhotoModal() {
         document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     }, 300);
 }
+(function () {
+    var visibleWordCount = 5;
+
+    window.initializeExpandableText = function (container) {
+        var parentContainer = container || document;
+
+        var elements =
+            parentContainer.querySelectorAll(".expandable-text");
+
+        Array.prototype.forEach.call(elements, function (element) {
+            if (
+                element.getAttribute("data-expandable-initialized") === "true"
+            ) {
+                return;
+            }
+
+            /*
+             * Read the original text without changing its internal
+             * line breaks or spacing.
+             */
+            var fullText = (
+                element.getAttribute("data-full-text") ||
+                element.textContent ||
+                ""
+            ).trim();
+
+            /*
+             * Find words while keeping their positions in the
+             * original text.
+             */
+            var wordMatches = [];
+            var wordPattern = /\S+/g;
+            var currentMatch;
+
+            while (
+                (currentMatch = wordPattern.exec(fullText)) !== null
+            ) {
+                wordMatches.push({
+                    value: currentMatch[0],
+                    index: currentMatch.index
+                });
+            }
+
+            element.setAttribute(
+                "data-expandable-initialized",
+                "true"
+            );
+
+            element.setAttribute(
+                "data-expanded",
+                "false"
+            );
+
+            if (!fullText) {
+                element.textContent = "";
+                return;
+            }
+
+            /*
+             * Five words or fewer: show the complete text and
+             * preserve the original textarea formatting.
+             */
+            if (wordMatches.length <= visibleWordCount) {
+                element.textContent = fullText;
+                return;
+            }
+
+            /*
+             * Find the exact ending position of the fifth word.
+             * This preserves line breaks and spacing between words.
+             */
+            var lastVisibleWord =
+                wordMatches[visibleWordCount - 1];
+
+            var lastVisiblePosition =
+                lastVisibleWord.index +
+                lastVisibleWord.value.length;
+
+            var shortText =
+                fullText.substring(0, lastVisiblePosition) + "...";
+
+            var textSpan =
+                document.createElement("span");
+
+            textSpan.className =
+                "expandable-text-content";
+
+            textSpan.textContent =
+                shortText;
+
+            var toggleButton =
+                document.createElement("button");
+
+            toggleButton.type =
+                "button";
+
+            toggleButton.className =
+                "text-toggle-button";
+
+            toggleButton.textContent =
+                "Show more";
+
+            toggleButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            toggleButton.addEventListener(
+                "click",
+                function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    var expanded =
+                        element.getAttribute("data-expanded") ===
+                        "true";
+
+                    if (expanded) {
+                        textSpan.textContent =
+                            shortText;
+
+                        toggleButton.textContent =
+                            "Show more";
+
+                        toggleButton.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                        element.setAttribute(
+                            "data-expanded",
+                            "false"
+                        );
+                    } else {
+                        /*
+                         * Show the original text exactly as it
+                         * was written in the textarea.
+                         */
+                        textSpan.textContent =
+                            fullText;
+
+                        toggleButton.textContent =
+                            "Show less";
+
+                        toggleButton.setAttribute(
+                            "aria-expanded",
+                            "true"
+                        );
+
+                        element.setAttribute(
+                            "data-expanded",
+                            "true"
+                        );
+                    }
+                }
+            );
+
+            element.textContent = "";
+            element.appendChild(textSpan);
+            element.appendChild(toggleButton);
+        });
+    };
+
+    function startExpandableTextObserver() {
+        window.initializeExpandableText(document);
+
+        var observer =
+            new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    Array.prototype.forEach.call(
+                        mutation.addedNodes,
+                        function (addedNode) {
+                            if (addedNode.nodeType !== 1) {
+                                return;
+                            }
+
+                            if (
+                                addedNode.classList &&
+                                addedNode.classList.contains(
+                                    "expandable-text"
+                                )
+                            ) {
+                                window.initializeExpandableText(
+                                    addedNode.parentElement ||
+                                    document
+                                );
+                            } else if (
+                                addedNode.querySelector &&
+                                addedNode.querySelector(
+                                    ".expandable-text"
+                                )
+                            ) {
+                                window.initializeExpandableText(
+                                    addedNode
+                                );
+                            }
+                        }
+                    );
+                });
+            });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener(
+            "DOMContentLoaded",
+            startExpandableTextObserver
+        );
+    } else {
+        startExpandableTextObserver();
+    }
+})();
 

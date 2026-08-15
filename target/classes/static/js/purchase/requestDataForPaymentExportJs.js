@@ -745,82 +745,180 @@ window.initRequestDataDirectExportTable = function (allData,requestColumns,allAd
                     return count === 0 ? "Unavailable" : `Available(${count})`;
                 }
 
-                allData.forEach(device => {
-                   // if (device.requestMode === "Denied") return;
-                   if(device.purchase !== null && device.purchase.cooAns === 'Accepted'){
+allData.forEach(device => {
+    if (
+        device.purchase !== null &&
+        device.purchase.cooAns === "Accepted"
+    ) {
+        const bivagName =
+            device.departmentName || "N/A";
 
-                    const bivagName = device.departmentName || "N/A";
-                    const categoryName = device.allData["category"] || "N/A";
-                    const sn = device.visibleRequestId || "N/A";
-                    const availability = getAvailability(categoryName);
+        const categoryName =
+            device.allData["category"] || "N/A";
 
-                    // Generate row key for comparison
-                    let rowKeyParts = [
-                        sn, bivagName, categoryName,
-                        device.inventory?.deliveryMode || "Not Delivered",
-                        device.inventory?.inventoryStatus || "N/A",
-                        device.inventory?.cooDeliveryAns || 'Pending',
-                        device.inventory?.inventoryToCustomerCareDeviceSendingStatus || 'Pending',
-                        device.presentTime ? formatDateTimeToAmPm(device.presentTime) : "N/A"
-                    ];
-                    const rowKey = rowKeyParts.join('|');
-                    newRowKeys.add(rowKey);
+        const sn =
+            device.visibleRequestId || "N/A";
 
-                    if (!currentRowMap.has(rowKey)) {
-                        const row = document.createElement("tr");
+        const availability =
+            getAvailability(categoryName);
 
+        const escapeHtml = function (value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
 
-                        let htmlData = `
-                            <td>${sn}</td>
-                            <td>${bivagName}</td>
-                            <td>${categoryName}</td>
-                            <td style="text-align: left;" data-request-id="${device.id}" class="viewInfo">
-                                <div>
-                        `;
+        // Generate row key for comparison
+        let rowKeyParts = [
+            sn,
+            bivagName,
+            categoryName,
+            device.inventory?.deliveryMode || "Not Delivered",
+            device.inventory?.inventoryStatus || "N/A",
+            device.inventory?.cooDeliveryAns || "Pending",
+            device.inventory
+                ?.inventoryToCustomerCareDeviceSendingStatus || "Pending",
+            device.presentTime
+                ? formatDateTimeToAmPm(device.presentTime)
+                : "N/A"
+        ];
 
-                        requestColumns.forEach(column => {
-                            if (column.visibleType === "yes") {
-                                const columnName = column.columnName || "N/A";
-                                const value = device.allData[columnName] || "N/A";
-                                htmlData += column.dataType === "textarea" ? `
-                                    <div><textarea class="plain-textarea">${value}</textarea></div>` : `
-                                    <div><span>${columnName}</span>: <span>${value}</span></div>`;
-                            }
-                        });
+        const rowKey =
+            rowKeyParts.join("|");
 
+        newRowKeys.add(rowKey);
+
+        if (!currentRowMap.has(rowKey)) {
+            const row =
+                document.createElement("tr");
+
+            let htmlData = `
+                <td>${escapeHtml(sn)}</td>
+
+                <td>${escapeHtml(bivagName)}</td>
+
+                <td>${escapeHtml(categoryName)}</td>
+
+                <td style="text-align: left;"
+                    data-request-id="${escapeHtml(device.id)}"
+                    class="viewInfo description-cell">
+
+                    <div>
+            `;
+
+            requestColumns.forEach(column => {
+                if (column.visibleType === "yes") {
+                    const columnName =
+                        column.columnName || "N/A";
+
+                    const value =
+                        device.allData[columnName] !== null &&
+                        device.allData[columnName] !== undefined &&
+                        device.allData[columnName] !== ""
+                            ? device.allData[columnName]
+                            : "N/A";
+
+                    const safeColumnName =
+                        escapeHtml(columnName);
+
+                    const safeValue =
+                        escapeHtml(value);
+
+                    if (column.dataType === "textarea") {
                         htmlData += `
+                            <div class="description-item description-textarea-item">
+
+
+
+                                <div class="expandable-text"
+                                     data-full-text="${safeValue}">
+                                    ${safeValue}
                                 </div>
-                                <p data-request-id="${device.id}" data-button-id="viewInfo">&#128065;</p>
-                            </td>
-                            <td>${device.purchase?.budget || " "}</td>
-                            <td>${device.purchase?.cooAns || " "}</td>
-                            <td>${device.purchase?.purchaseDeviceExportStatus || 'Not Exported'}</td>
-                            <td>${device.purchase?.requestTime ? formatDateTimeToAmPm(device.purchase?.requestTime) : "N/A"}</td>
-                        `;
-                        htmlData += `
-                           <td>
-                           <div class="d-flex justify-content-center align-items-center action-button-container">
-                                ${device.purchase?.cooAns ==='Accepted'
-                                    ? ` <input type="checkbox"  data-request-id="${device.id}" data-button-id="accepted" style="background-color: green; transform: scale(1.5); width: 12px; height: 12px;"  title="Select For Payment" >
-                                    `
-                                    : ''
-                                }
-
-
                             </div>
-                        </td>
-                    `;
+                        `;
+                    } else {
+                        htmlData += `
+                            <div class="description-item description-normal-item">
 
+                                <span class="description-label">
+                                    ${safeColumnName}
+                                </span>:
 
-
-
-
-                        row.innerHTML = htmlData;
-                        tableBody.appendChild(row);
+                                <span>${safeValue}</span>
+                            </div>
+                        `;
                     }
-                    }
-                });
+                }
+            });
 
+            htmlData += `
+                    </div>
+
+
+                </td>
+
+                <td>
+                    ${escapeHtml(device.purchase?.budget || " ")}
+                </td>
+
+                <td>
+                    ${escapeHtml(device.purchase?.cooAns || " ")}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        device.purchase?.purchaseDeviceExportStatus ||
+                        "Not Exported"
+                    )}
+                </td>
+
+                <td>
+                    ${
+                        device.purchase?.requestTime
+                            ? escapeHtml(
+                                formatDateTimeToAmPm(
+                                    device.purchase.requestTime
+                                )
+                            )
+                            : "N/A"
+                    }
+                </td>
+
+                <td>
+                    <div class="d-flex justify-content-center align-items-center action-button-container">
+
+                        ${
+                            device.purchase?.cooAns === "Accepted"
+                                ? `
+                                    <input type="checkbox"
+                                           data-request-id="${escapeHtml(device.id)}"
+                                           data-button-id="accepted"
+                                           style="
+                                               background-color: green;
+                                               transform: scale(1.5);
+                                               width: 12px;
+                                               height: 12px;
+                                           "
+                                           title="Select For Payment">
+                                `
+                                : ""
+                        }
+                    </div>
+                </td>
+            `;
+
+            row.innerHTML = htmlData;
+            tableBody.appendChild(row);
+
+            if (window.initializeExpandableText) {
+                window.initializeExpandableText(row);
+            }
+        }
+    }
+});
                  // Step 3: Remove outdated rows
                     currentRowMap.forEach((row, key) => {
                         const firstCellText = row.cells[0]?.textContent.trim();

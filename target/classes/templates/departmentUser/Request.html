@@ -85,15 +85,22 @@
                         <td th:text="${device.visibleRequestId}">1</td>
                         <td th:text="${device.allData[category]}">1</td>
 
-                        <td th:each="individualColumn : ${requestColumns}">
-                            <div th:if="${individualColumn.dataType == 'textarea'}">
-                                <textarea class="plain-textarea" th:text="${device.allData[individualColumn.columnName]}"></textarea>
+                        <td th:each="individualColumn : ${requestColumns}"
+                            th:classappend="${individualColumn.dataType == 'textarea'}
+        ? 'compact-textarea-cell' : ''">
+
+                            <!-- Textarea dynamic column -->
+                            <div th:if="${individualColumn.dataType == 'textarea'}"
+                                 class="expandable-text"
+                                 th:data-full-text="${device.allData[individualColumn.columnName]}"
+                                 th:text="${device.allData[individualColumn.columnName] ?: 'N/A'}">
                             </div>
+
+                            <!-- Other dynamic columns -->
                             <div th:unless="${individualColumn.dataType == 'textarea'}"
-                                 th:text="${device.allData[individualColumn.columnName]}">
+                                 th:text="${device.allData[individualColumn.columnName] ?: 'N/A'}">
                             </div>
                         </td>
-
                         <td>
                             <span th:if="${device.requestMode == 'Denied'}">
                                 <a href="#" th:data-reject-cause="${device.rejectCause}" onclick="printRejectCause(this)" style="text-decoration:none">Denied</a>

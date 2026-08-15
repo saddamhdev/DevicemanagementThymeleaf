@@ -6,140 +6,219 @@
 </head>
 
 <body>
+
 <div th:fragment="requestDataProposal">
+
     <div class="highlight-box">
-        <p>  Request data List</p>
+        <p>Request data List</p>
     </div>
+
     <div class="row">
-        <div class="col-sm-12 firstDiv" >
-            <div  class="leftDiv" >
+        <div class="col-sm-12 firstDiv">
+
+            <div class="leftDiv">
+
                 <div style="text-align: right;">
-                    <button class="btn btn-sm text-black small-button showButton"  style="display:none;"> < </button>
+                    <button class="btn btn-sm text-black small-button showButton"
+                            style="display:none;">
+                        &lt;
+                    </button>
                 </div>
 
-
-                <!-- Toggle Content Button -->
-                <!-- Category Table -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
+
                     <!-- Left: Page Size Selector -->
-                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})"></div>
+                    <div th:replace="global/modal :: pageSizeSelector(${pageSize})">
+                    </div>
 
                     <!-- Right: Search Box -->
                     <div style="width: 250px;">
-                        <input type="text" class="form-control search-input global-user-search"
-                               data-table="requestInventoryProposalTable" placeholder="Search ...">
+                        <input type="text"
+                               class="form-control search-input global-user-search"
+                               data-table="requestInventoryProposalTable"
+                               placeholder="Search ...">
                     </div>
                 </div>
+
                 <div class="responsive-table-wrapper">
-                    <table id="requestInventoryProposalTable" class="table table-bordered table-hover customTh">
+
+                    <table id="requestInventoryProposalTable"
+                           class="table table-bordered table-hover customTh">
+
                         <thead>
                         <tr>
                             <!-- SN -->
-                            <th scope="col" style="background-color: gray; color:white"
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', 0, this)|">
-                                SN <span class="sort-icon">⇅</span>
+                                SN
+                                <span class="sort-icon">⇅</span>
                             </th>
 
-                            <!-- Bivag Name -->
-                            <th scope="col" style="background-color: gray; color:white"
+                            <!-- Department Name -->
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', 1, this)|">
-                                Dept Name <span class="sort-icon">⇅</span>
+                                Dept Name
+                                <span class="sort-icon">⇅</span>
                             </th>
 
                             <!-- Category Name -->
-                            <th scope="col" style="background-color: gray; color:white"
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', 2, this)|">
-                                Category Name <span class="sort-icon">⇅</span>
+                                Category Name
+                                <span class="sort-icon">⇅</span>
                             </th>
 
                             <!-- Dynamic Columns -->
                             <th th:each="column, iter : ${requestColumns}"
-                                th:if="${column.visibleType} == 'yes'"
+                                th:if="${column.visibleType == 'yes'}"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', ${3 + iter.index}, this)|"
                                 style="background-color: gray; color:white">
-                                <span th:text="${column.columnName}"></span>
+
+                                <span th:text="${column.columnName}">
+                                </span>
+
                                 <span class="sort-icon">⇅</span>
                             </th>
 
-                            <!-- Static Columns After Dynamic -->
-                            <th scope="col" style="background-color: gray; color:white"
+                            <!-- Static Columns After Dynamic Columns -->
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', ${3 + requestColumns.size()}, this)|">
-                                Status In  <br> Purchase <span class="sort-icon">⇅</span>
+                                Status In <br> Purchase
+                                <span class="sort-icon">⇅</span>
                             </th>
 
-                            <th scope="col" style="background-color: gray; color:white"
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', ${4 + requestColumns.size()}, this)|">
-                                Status In <br> COO <span class="sort-icon">⇅</span>
+                                Status In <br> COO
+                                <span class="sort-icon">⇅</span>
                             </th>
 
-                            <th scope="col" style="background-color: gray; color:white"
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', ${5 + requestColumns.size()}, this)|">
-                                Purchase Device <br> Delivery Status <span class="sort-icon">⇅</span>
+                                Purchase Device <br> Delivery Status
+                                <span class="sort-icon">⇅</span>
                             </th>
 
-                            <th scope="col" style="background-color: gray; color:white"
+                            <th scope="col"
+                                style="background-color: gray; color:white"
                                 th:onclick="|window.sortTable('requestInventoryProposalTable', ${6 + requestColumns.size()}, this)|">
-                                Request Time <span class="sort-icon">⇅</span>
+                                Request Time
+                                <span class="sort-icon">⇅</span>
                             </th>
 
-                            <!-- Action column (no sort) -->
-                            <th scope="col" style="background-color: gray; color:white">
+                            <!-- Action column -->
+                            <th scope="col"
+                                style="background-color: gray; color:white">
                                 Action
                             </th>
                         </tr>
                         </thead>
 
+                        <tbody id="requestInventoryProposalTableBody">
 
-                    <tbody id="requestInventoryProposalTableBody">
-                    <tr th:each="device, iterStat : ${requestData}" th:if="${device.requestMode == 'Accepted' && device.inventory?.inventoryStatus=='Purchased' }" onclick="printRowDataForCustomerCare(this)">
-                        <td  th:text="${device.visibleRequestId}" >1</td>
-                        <td  th:text="${device.departmentName}" >1</td>
-                        <td  th:text="${device.allData[category]}" >1</td>
-                        <td th:each="individualColumn : ${requestColumns}"
-                            th:if="${individualColumn.visibleType == 'yes' }">
+                        <tr th:each="device, iterStat : ${requestData}"
+                            th:if="${device.requestMode == 'Accepted'
+                                && device.inventory?.inventoryStatus == 'Purchased'}"
+                            onclick="printRowDataForCustomerCare(this)">
 
-                            <!-- Check if the column data type is 'textarea' -->
-                            <div th:if="${individualColumn.dataType == 'textarea'}">
-                                <textarea class="plain-textarea" th:text="${device.allData[individualColumn.columnName]}"></textarea>
-                            </div>
+                            <td th:text="${device.visibleRequestId}">
+                                1
+                            </td>
 
-                            <!-- For any other data type -->
-                            <div th:unless="${individualColumn.dataType == 'textarea'}"
-                                 th:text="${device.allData[individualColumn.columnName]}">
-                            </div>
-                        </td>
+                            <td th:text="${device.departmentName}">
+                                Department
+                            </td>
 
-                        <td th:text="${device.purchase != null && device.purchase.purchaseStatus != null ? device.purchase.purchaseStatus : 'Pending'}">
-                        </td>
-                        <td th:text="${device.purchase != null && device.purchase.cooAns != null ? device.purchase.cooAns : ' '}">
-                        </td>
+                            <td th:text="${device.allData[category]}">
+                                Category
+                            </td>
 
-                        <td th:text="${device.purchase != null && device.purchase.purchaseDeviceSenderToInventoryStatus != null ? device.purchase.purchaseDeviceSenderToInventoryStatus : ' '}">
-                        </td>
-                        <td th:text="${device.purchase != null && device.purchase.RequestTime != null ? device.purchase.RequestTime : ' '}">
-                        </td>
+                            <!-- Dynamic column values -->
+                            <td th:each="individualColumn : ${requestColumns}"
+                                th:if="${individualColumn.visibleType == 'yes'}"
+                                th:classappend="${individualColumn.dataType == 'textarea'}
+                                    ? 'compact-textarea-cell' : ''">
 
-                        <td >
-                            <div class="d-flex justify-content-center align-items-center action-button-container">
-                            <button class="btn btn-primary btn-sm text-white fas"   th:data-purchasedevice-id="${device.purchase?.purchaseDeviceSenderToInventoryDeviceId}" th:data-request-id="${device.id}" th:if="${device.purchase?.purchaseDeviceSenderToInventoryStatus=='Pending'}" th:data-button-id="deliver" title="Accept Device From Purchase">
-                                ✔</button>
-                            </div>
+                                <!-- Textarea dynamic column -->
+                                <div th:if="${individualColumn.dataType == 'textarea'}"
+                                     class="expandable-text"
+                                     th:data-full-text="${device.allData[individualColumn.columnName]}"
+                                     th:text="${device.allData[individualColumn.columnName] ?: 'N/A'}">
+                                </div>
 
-                        </td>
+                                <!-- Other dynamic columns -->
+                                <div th:unless="${individualColumn.dataType == 'textarea'}"
+                                     th:text="${device.allData[individualColumn.columnName] ?: 'N/A'}">
+                                </div>
+                            </td>
 
+                            <!-- Purchase Status -->
+                            <td th:text="${
+                                device.purchase != null
+                                && device.purchase.purchaseStatus != null
+                                    ? device.purchase.purchaseStatus
+                                    : 'Pending'
+                            }">
+                            </td>
 
-                    </tr>
-                    </tbody>
+                            <!-- COO Status -->
+                            <td th:text="${
+                                device.purchase != null
+                                && device.purchase.cooAns != null
+                                    ? device.purchase.cooAns
+                                    : ' '
+                            }">
+                            </td>
 
-                </table>
+                            <!-- Purchase Device Delivery Status -->
+                            <td th:text="${
+                                device.purchase != null
+                                && device.purchase.purchaseDeviceSenderToInventoryStatus != null
+                                    ? device.purchase.purchaseDeviceSenderToInventoryStatus
+                                    : ' '
+                            }">
+                            </td>
+
+                            <!-- Request Time -->
+                            <td th:text="${
+                                device.purchase != null
+                                && device.purchase.RequestTime != null
+                                    ? device.purchase.RequestTime
+                                    : ' '
+                            }">
+                            </td>
+
+                            <!-- Actions -->
+                            <td>
+                                <div class="d-flex justify-content-center align-items-center action-button-container">
+
+                                    <button class="btn btn-primary btn-sm text-white fas"
+                                            th:data-purchasedevice-id="${device.purchase?.purchaseDeviceSenderToInventoryDeviceId}"
+                                            th:data-request-id="${device.id}"
+                                            th:if="${device.purchase?.purchaseDeviceSenderToInventoryStatus == 'Pending'}"
+                                            th:data-button-id="deliver"
+                                            title="Accept Device From Purchase"
+                                            onclick="event.stopPropagation();">
+                                        ✔
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>
-
 
 </body>
 </html>

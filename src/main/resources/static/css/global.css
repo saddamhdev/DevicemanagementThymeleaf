@@ -266,5 +266,108 @@ input[type="text"], input[type="date"], select {
 
         /*globally table sorting end*/
 
+/* Keep table rows compact */
+#requestTableBody tr {
+    height: auto !important;
+    min-height: 0 !important;
+}
 
+#requestTableBody td {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    vertical-align: middle !important;
+}
 
+/* Prevent tracking cell from increasing row height */
+#requestTableBody .view-device-status {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+/* Description column */
+#requestTableBody .description-cell {
+    min-width: 250px;
+    max-width: 350px;
+    height: auto !important;
+    padding: 8px 10px !important;
+    text-align: left;
+    vertical-align: middle !important;
+    white-space: normal !important;
+}
+
+.description-item {
+    margin: 0 0 4px 0;
+    padding: 0;
+}
+
+.description-item:last-of-type {
+    margin-bottom: 0;
+}
+
+.description-textarea-item,
+.description-normal-item {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
+.description-label {
+    font-weight: 600;
+}
+
+/* Expandable textarea content */
+.expandable-text {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    line-height: 1.4;
+
+    /* Preserve line breaks but remove unnecessary spacing */
+    white-space: pre-line !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.expandable-text-content {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+    white-space: pre-line !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.text-toggle-button {
+    display: inline;
+    margin: 0 0 0 5px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #007bff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.text-toggle-button:hover {
+    color: #0056b3;
+}
+
+.text-toggle-button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.view-info-icon {
+    display: block;
+    margin: 4px 0 0 0 !important;
+    padding: 0;
+    line-height: 1;
+    cursor: pointer;
+}
