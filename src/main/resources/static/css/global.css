@@ -1,3 +1,82 @@
+/* ===== Google Translate ===== */
+.language-item {
+    color: white;
+    cursor: default !important;
+}
+
+.language-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
+#google_translate_element {
+    flex: 1;
+    min-width: 0;
+    height: 34px;
+    overflow: hidden;
+}
+
+#google_translate_element .goog-te-combo {
+    display: block !important;
+    width: 100% !important;
+    height: 34px !important;
+    margin: 0 !important;
+    padding: 4px 8px !important;
+    color: #212529 !important;
+    background: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 5px !important;
+    outline: none !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    line-height: normal !important;
+}
+
+#google_translate_element .goog-te-combo:focus {
+    border-color: #86b7fe !important;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25) !important;
+}
+
+#google_translate_element .goog-te-gadget {
+    width: 100% !important;
+    height: 34px !important;
+    overflow: hidden !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+#google_translate_element .goog-te-gadget a,
+#google_translate_element .goog-logo-link,
+#google_translate_element .goog-te-gadget img {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+body > .skiptranslate,
+.VIpgJd-ZVi9od-ORHb,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+}
+
+html,
+body {
+    top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.goog-text-highlight {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
 
 
 /* ===== Table Scrollable Wrapper ===== */

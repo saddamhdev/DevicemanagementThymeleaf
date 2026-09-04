@@ -1,3 +1,53 @@
+function hideGoogleTranslateBanner() {
+    document.querySelectorAll(
+        '.goog-te-banner-frame, iframe.goog-te-banner-frame, body > .skiptranslate, ' +
+        '.VIpgJd-ZVi9od-ORHb, .VIpgJd-ZVi9od-ORHb-OEVmcd, ' +
+        '.VIpgJd-ZVi9od-aZ2wEe-wOHMyf'
+    ).forEach(function (element) {
+        element.style.setProperty('display', 'none', 'important');
+        element.style.setProperty('visibility', 'hidden', 'important');
+        element.style.setProperty('height', '0', 'important');
+    });
+
+    document.documentElement.style.setProperty('top', '0', 'important');
+    document.body.style.setProperty('top', '0', 'important');
+    document.body.style.setProperty('margin-top', '0', 'important');
+}
+
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        {
+            pageLanguage: 'en',
+            includedLanguages: 'en,bn',
+            autoDisplay: false
+        },
+        'google_translate_element'
+    );
+
+    hideGoogleTranslateBanner();
+}
+
+function initializeGoogleTranslate() {
+    if (!document.getElementById('google_translate_element')) {
+        return;
+    }
+
+    new MutationObserver(hideGoogleTranslateBanner).observe(
+        document.documentElement,
+        { childList: true, subtree: true }
+    );
+
+    if (!document.querySelector('script[data-google-translate]')) {
+        const script = document.createElement('script');
+        script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        script.async = true;
+        script.dataset.googleTranslate = 'true';
+        document.head.appendChild(script);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializeGoogleTranslate);
+
 window.sortState = {};  // Make global if needed elsewhere  // For multiple tables, use keys like "userTable-0"
 function getAuthToken() {
     const token = localStorage.getItem('token');
@@ -696,7 +746,7 @@ window.trackDeviceRequestData = function (row, clickedElement) {
        let htmlToAdd = categoryName && categoryName.trim()
            ? `
                <div class="text-center mb-3 p-3 border rounded bg-light shadow-sm">
-                  
+
                    <h6 class="fw-semibold text-primary mb-2">
                        📌 Serial Number: <span class="text-dark">${sn}</span>
                    </h6>

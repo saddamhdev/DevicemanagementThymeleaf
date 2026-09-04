@@ -1,55 +1,172 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+</head>
 
 <body>
+
 <div th:fragment="leftOffCanvas">
 
-    <div class="offcanvas offcanvas-start show sideoffcanvus" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" style="background-color:#1d4961" >
-        <div class="offcanvas-body ">
-            <div class="d-flex flex-column align-items-center justify-content-center" style="margin-left:50px">
-                <img th:src="@{/img/sn.png}" alt="User Image"
-                     class="rounded-circle"
-                     style="width: 80px; height: 80px; object-fit: cover; border: 3px solid white;">
-                <div class="text-white mt-2 mb-2 fw-bold">
-                    <i class="fas fa-user-tie me-1"></i>
-                    <span th:text="${#strings.replace(departmentUserName, 'Department', '').trim()}"></span>
-                </div>
+    <div class="offcanvas offcanvas-start show sideoffcanvus"
+         data-bs-scroll="true"
+         data-bs-backdrop="false"
+         tabindex="-1"
+         id="offcanvasScrolling"
+         aria-labelledby="offcanvasScrollingLabel"
+         style="background-color:#1d4961">
 
+        <div class="offcanvas-body">
+
+            <!-- User information -->
+            <div class="d-flex flex-column align-items-center justify-content-center"
+                 style="margin-left:50px">
+
+                <img th:src="@{/img/sn.png}"
+                     src="/img/sn.png"
+                     alt="User Image"
+                     class="rounded-circle"
+                     style="
+                        width:80px;
+                        height:80px;
+                        object-fit:cover;
+                        border:3px solid white;
+                     ">
+
+                <div class="text-white mt-2 mb-2 fw-bold">
+
+                    <i class="fas fa-user-tie me-1"></i>
+
+                    <span th:text="${#strings.replace(
+                        departmentUserName,
+                        'Department',
+                        ''
+                    ).trim()}">
+                        Central IT
+                    </span>
+
+                </div>
             </div>
 
+            <!-- Sidebar menu -->
             <ul class="list-group">
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'analyticFragment')">
-                    <i class="fas fa-home me-2"></i> Home
-                </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'addUser')">
-                    <i class="fas fa-user-plus me-2"></i> User List
-                </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'Request')">
-                    <i class="fas fa-laptop me-2"></i>New Device Request
-                </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'deviceInformation')">
-                    <i class="fas fa-list me-2"></i> Device List
-                </li>
-                <li th:if="${viewStatus =='Yes'}"  class="list-group-item leftListBgColor" onclick="toggleListItem(this,'AllCentralDeviceInformation')">
-                    <i class="fas fa-list me-2"></i> Central Device List
-                </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'serviceRequest')">
-                    <i class="fas fa-tools me-2"></i> Device Servicing List
+
+                <!-- Home -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'analyticFragment'
+                    )">
+
+                    <i class="fas fa-home me-2"></i>
+                    <span>Home</span>
                 </li>
 
-                <li class="list-group-item leftListBgColor" onclick="location.href='/clearCache'">
-                    <i class="fas fa-broom me-2"></i> Clear Cache
+                <!-- User list -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'addUser'
+                    )">
+
+                    <i class="fas fa-user-plus me-2"></i>
+                    <span>User List</span>
                 </li>
-                <li class="list-group-item leftListBgColor" onclick="toggleListItem(this,'Documentation')">
-                    <i class="fas fa-book me-2"></i> Documentation
+
+                <!-- New device request -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'Request'
+                    )">
+
+                    <i class="fas fa-laptop me-2"></i>
+                    <span>New Device Request</span>
                 </li>
-                <li class="list-group-item leftListBgColor" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+
+                <!-- Device list -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'deviceInformation'
+                    )">
+
+                    <i class="fas fa-list me-2"></i>
+                    <span>Device List</span>
                 </li>
+
+                <!-- Central device list -->
+                <li th:if="${viewStatus == 'Yes'}"
+                    class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'AllCentralDeviceInformation'
+                    )">
+
+                    <i class="fas fa-list me-2"></i>
+                    <span>Central Device List</span>
+                </li>
+
+                <!-- Device servicing list -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'serviceRequest'
+                    )">
+
+                    <i class="fas fa-tools me-2"></i>
+                    <span>Device Servicing List</span>
+                </li>
+
+                <!-- Clear cache -->
+                <!--<li class="list-group-item leftListBgColor"
+                    onclick="location.href='/clearCache'">
+
+                    <i class="fas fa-broom me-2"></i>
+                    <span>Clear Cache</span>
+                </li>-->
+
+                <!-- Documentation -->
+                <li class="list-group-item leftListBgColor"
+                    onclick="toggleListItem(
+                        this,
+                        'Documentation'
+                    )">
+
+                    <i class="fas fa-book me-2"></i>
+                    <span>Documentation</span>
+                </li>
+                <!-- Language selector -->
+                <li class="list-group-item leftListBgColor language-item">
+
+                    <div class="language-wrapper">
+
+                        <div id="google_translate_element"></div>
+
+                    </div>
+                </li>
+                <!-- Logout -->
+                <li class="list-group-item leftListBgColor"
+                    data-bs-toggle="modal"
+                    data-bs-target="#logoutConfirmModal">
+
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    <span>Logout</span>
+                </li>
+
+
+
             </ul>
+
         </div>
     </div>
+
 </div>
 
 </body>
