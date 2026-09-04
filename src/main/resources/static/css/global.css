@@ -77,6 +77,10 @@ body {
     box-shadow: none !important;
 }
 
+html.google-translated-bengali body {
+    font-family: "SolaimanLipi", "Noto Sans Bengali", "Segoe UI", sans-serif;
+}
+
 
 
 /* ===== Table Scrollable Wrapper ===== */

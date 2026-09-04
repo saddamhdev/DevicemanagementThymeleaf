@@ -25,6 +25,20 @@ function googleTranslateElementInit() {
     );
 
     hideGoogleTranslateBanner();
+    applyGoogleTranslateFont();
+}
+
+function applyGoogleTranslateFont() {
+    const translationCookie = document.cookie
+        .split('; ')
+        .find(cookie => cookie.startsWith('googtrans='));
+    const translatedToBangla = translationCookie &&
+        decodeURIComponent(translationCookie).endsWith('/bn');
+
+    document.documentElement.classList.toggle(
+        'google-translated-bengali',
+        translatedToBangla || document.documentElement.lang.toLowerCase().startsWith('bn')
+    );
 }
 
 function initializeGoogleTranslate() {
@@ -32,7 +46,10 @@ function initializeGoogleTranslate() {
         return;
     }
 
-    new MutationObserver(hideGoogleTranslateBanner).observe(
+    new MutationObserver(function () {
+        hideGoogleTranslateBanner();
+        applyGoogleTranslateFont();
+    }).observe(
         document.documentElement,
         { childList: true, subtree: true }
     );
