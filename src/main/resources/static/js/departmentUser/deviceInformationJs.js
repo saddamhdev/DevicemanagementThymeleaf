@@ -166,9 +166,16 @@ function addDeviceInformation(){
                     </div>
                 </div>
                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
-                   <label for="calendar"  class="form-label dropdown-toggle custom-width">Using starting Date:</label>
-                   <input type="datetime-local" id="calendar" name="calendar" class="form-control" style="width: 100%;"  th:data-user-id=" ">
-               </div>
+                    <label for="calendar" class="form-label dropdown-toggle custom-width">
+                        Starting Date:
+                    </label>
+                    <input type="date"
+                           id="calendar"
+                           name="calendar"
+                           class="form-control"
+                           style="width: 100%;"
+                           th:data-user-id=" ">
+                </div>
                 <div class="mb-3" style="margin-left: 0%; text-align: left;">
                     <div class="dropdown">
                         <label for="userInputFieldAdd" class="form-label">User Name</label>
