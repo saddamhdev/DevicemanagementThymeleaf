@@ -41,6 +41,67 @@ function applyGoogleTranslateFont() {
     );
 }
 
+function getCurrentTranslateLanguage() {
+    const translationCookie = document.cookie
+        .split('; ')
+        .find(cookie => cookie.startsWith('googtrans='));
+    return translationCookie && decodeURIComponent(translationCookie).endsWith('/bn') ? 'bn' : 'en';
+}
+
+function updateLanguageToggle() {
+    const currentLanguage = getCurrentTranslateLanguage();
+    document.querySelectorAll('.lang-toggle-btn').forEach(function (button) {
+        const isActive = button.dataset.lang === currentLanguage;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', isActive);
+    });
+}
+
+function clearGoogleTranslateCookie() {
+    const expires = 'expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    const host = window.location.hostname;
+    document.cookie = 'googtrans=; ' + expires;
+    document.cookie = 'googtrans=; ' + expires + '; domain=' + host;
+    document.cookie = 'googtrans=; ' + expires + '; domain=.' + host;
+}
+
+function setPageLanguage(language) {
+    if (language === getCurrentTranslateLanguage()) {
+        return;
+    }
+
+    if (language === 'en') {
+        // Restoring the original page is most reliable by clearing the cookie and reloading
+        clearGoogleTranslateCookie();
+        window.location.reload();
+        return;
+    }
+
+    const combo = document.querySelector('#google_translate_element .goog-te-combo');
+    if (combo) {
+        combo.value = language;
+        combo.dispatchEvent(new Event('change'));
+        setTimeout(function () {
+            updateLanguageToggle();
+            applyGoogleTranslateFont();
+        }, 300);
+    } else {
+        // Translate widget not loaded yet: set the cookie and let Google apply it on reload
+        document.cookie = 'googtrans=/en/' + language + '; path=/';
+        window.location.reload();
+    }
+}
+
+document.addEventListener('click', function (event) {
+    const button = event.target.closest('.lang-toggle-btn');
+    if (button) {
+        event.preventDefault();
+        setPageLanguage(button.dataset.lang);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', updateLanguageToggle);
+
 function initializeGoogleTranslate() {
     if (!document.getElementById('google_translate_element')) {
         return;
@@ -64,6 +125,18 @@ function initializeGoogleTranslate() {
 }
 
 document.addEventListener('DOMContentLoaded', initializeGoogleTranslate);
+
+// Project uses date-only pickers: trim old saved date-time values ("2024-05-01T10:30" / "2024-05-01 10:30:00")
+// so they still prefill a <input type="date"> when set through jQuery .val()
+if (window.jQuery) {
+    jQuery.valHooks.date = {
+        set: function (element, value) {
+            const text = value == null ? '' : String(value);
+            element.value = /^\d{4}-\d{2}-\d{2}[T ]/.test(text) ? text.slice(0, 10) : text;
+            return true;
+        }
+    };
+}
 
 window.sortState = {};  // Make global if needed elsewhere  // For multiple tables, use keys like "userTable-0"
 function getAuthToken() {

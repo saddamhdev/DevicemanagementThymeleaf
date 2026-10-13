@@ -37,7 +37,7 @@ import java.util.Map;
 public class Login {
     List<String> inputTypes = Arrays.asList(
             "text", "password", "email", "url", "search", "tel", "number", "range",
-            "date", "month", "week", "time", "datetime-local", "color", "file",
+            "date", "month", "week", "time", "color", "file",
             "checkbox", "radio", "button", "submit", "reset", "textarea"
     );
     /*@Autowired

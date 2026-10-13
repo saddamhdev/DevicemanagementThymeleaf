@@ -1158,7 +1158,7 @@ window.initServicingListGeneral = function () {
                                                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
                                                                              break;
                                                                          case 'datetime-local':
-                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
                                                                              break;
                                                                          case 'color':
                                                                              categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
@@ -1893,7 +1893,7 @@ window.initServicingListGeneral = function () {
                                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
                                                                                             break;
                                                                                         case 'datetime-local':
-                                                                                            categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                                                                            categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
                                                                                             break;
                                                                                         case 'color':
                                                                                             categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
@@ -2995,7 +2995,7 @@ function selectionAndInputDeviceAddExtract(){
                     case 'color':
                         html += `<div class="mb-3">
                                   <label>${label}</label>
-                                  <input type="${type}" class="form-control" name="${name}">
+                                  <input type="${type === 'datetime-local' ? 'date' : type}" class="form-control" name="${name}">
                                  </div>`;
                         break;
 
@@ -3091,7 +3091,7 @@ function selectionAndInputDeviceAdd(){
                     case 'color':
                         html += `<div class="mb-3">
                                   <label>${label}</label>
-                                  <input type="${type}" class="form-control" name="${name}">
+                                  <input type="${type === 'datetime-local' ? 'date' : type}" class="form-control" name="${name}">
                                  </div>`;
                         break;
 

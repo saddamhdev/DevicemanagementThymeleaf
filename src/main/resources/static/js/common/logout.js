@@ -1,3 +1,10 @@
+// Project-wide: modals/forms close only via X or Close button,
+// not by clicking outside (backdrop) or pressing Esc
+if (window.bootstrap && bootstrap.Modal) {
+    bootstrap.Modal.Default.backdrop = 'static';
+    bootstrap.Modal.Default.keyboard = false;
+}
+
  $(document).ready(function () {
  // logout feature
         let logoutTimer;

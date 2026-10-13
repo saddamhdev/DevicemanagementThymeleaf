@@ -284,7 +284,7 @@ function addDeviceInformation(){
                                 categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
                                 break;
                             case 'datetime-local':
-                                categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
                                 break;
                             case 'color':
                                 categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
@@ -385,7 +385,7 @@ window.initDeviceInformationGeneral = function () {
                         </div>
                         <div class="mb-3" style="margin-left: 0%; text-align: left;">
                            <label for="calendar"  class="form-label dropdown-toggle custom-width">Using starting Date:</label>
-                           <input type="datetime-local" id="calendar" name="calendar" class="form-control" style="width: 100%;"  th:data-user-id=" ">
+                           <input type="date" id="calendar" name="calendar" class="form-control" style="width: 100%;"  th:data-user-id=" ">
                        </div>
 
 
@@ -639,7 +639,7 @@ window.initDeviceInformationGeneral = function () {
                                        categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
                                        break;
                                    case 'datetime-local':
-                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
                                        break;
                                    case 'color':
                                        categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
@@ -736,7 +736,7 @@ window.initDeviceInformationGeneral = function () {
                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="time" class="form-control" name="${column.columnName}"></div>`;
                                       break;
                                   case 'datetime-local':
-                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="datetime-local" class="form-control" name="${column.columnName}"></div>`;
+                                      categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="date" class="form-control" name="${column.columnName}"></div>`;
                                       break;
                                   case 'color':
                                       categoriesHtml += `<div class="mb-3"><label>${column.columnName} (${column.dataType})</label><input type="color" class="form-control" name="${column.columnName}"></div>`;
@@ -1171,7 +1171,7 @@ function selectionAndInputDeviceInfo() {
                     case 'color':
                         html += `<div class="mb-3">
                                   <label>${label}</label>
-                                  <input type="${type}" class="form-control" name="${name}">
+                                  <input type="${type === 'datetime-local' ? 'date' : type}" class="form-control" name="${name}">
                                  </div>`;
                         break;
 
