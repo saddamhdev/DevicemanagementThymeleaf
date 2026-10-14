@@ -937,7 +937,7 @@ public class purchase {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         // Generate current date and time
         String presentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -977,7 +977,7 @@ public class purchase {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
         String problemName = (String) payload.get("problemName");
         String solutionName = (String) payload.get("solutionName");
 
@@ -1413,7 +1413,7 @@ public class purchase {
         String deviceId=(String) payload.get("deviceId");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
         AddData device = addDataRepository.findByIdAndStatus(deviceId,"1");
         try {
             if (device != null) {

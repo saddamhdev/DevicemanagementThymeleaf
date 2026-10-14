@@ -365,7 +365,7 @@ public class customerCare {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 
@@ -424,7 +424,7 @@ public class customerCare {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 

@@ -1823,7 +1823,7 @@ public class SuperAdmin {
         List<String> links = (List<String>) payload.get("links");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         // Generate current date and time
         String presentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -1862,7 +1862,7 @@ public class SuperAdmin {
         List<String> links = (List<String>) payload.get("links");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
 
         // Generate current date and time
@@ -2243,7 +2243,7 @@ public class SuperAdmin {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 
@@ -2319,7 +2319,7 @@ public class SuperAdmin {
 
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 

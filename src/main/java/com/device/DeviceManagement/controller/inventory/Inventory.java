@@ -73,7 +73,7 @@ public class Inventory {
         List<String> deviceIds = (List<String>) payload.get("deviceIds");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
 
         // Generate current date and time
@@ -450,7 +450,7 @@ public class Inventory {
         List<String> deviceIds = (List<String>) payload.get("deviceIds");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
 
 
@@ -462,6 +462,9 @@ public class Inventory {
 
         if (optionalRequestData.isPresent()) {
             RequestData requestData = optionalRequestData.get();
+            if (requestData.getInventory() == null) {
+                requestData.setInventory(new RequestData.Inventory());
+            }
 
             // Update the inventory with the new deviceIds
             // RequestData.Inventory inventory = new RequestData.Inventory("Proposal", presentDateTime, deviceIds);
@@ -495,7 +498,7 @@ public class Inventory {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 
@@ -557,7 +560,7 @@ public class Inventory {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
         String problemName = (String) payload.get("problemName");
         String solutionName = (String) payload.get("solutionName");
 
@@ -629,7 +632,7 @@ public class Inventory {
         String deviceId=deviceIds.getFirst();
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
         System.out.println("Received requestId: " + requestId);
 
@@ -668,7 +671,7 @@ public class Inventory {
         String deviceId=(String) payload.get("deviceId");
         String departmentName = (String) payload.get("departmentName");
         String departmentUserName = (String) payload.get("departmentUserName");
-        String departmentUserId = (String) payload.get("departmentUserId");
+        String departmentUserId = String.valueOf(payload.get("departmentUserId"));
 
 
         // Generate current date and time
