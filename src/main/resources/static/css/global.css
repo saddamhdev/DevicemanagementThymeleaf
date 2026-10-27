@@ -500,3 +500,8 @@ input[type="text"], input[type="date"], select {
     line-height: 1;
     cursor: pointer;
 }
+
+/* Hide the chat icon globally */
+#chat-icon {
+    display: none !important;
+}
